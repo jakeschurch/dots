@@ -1,0 +1,16 @@
+diff --git a/Cython/Build/Dependencies.py b/Cython/Build/Dependencies.py
+index 28c48e..2b8fff 100644
+--- a/Cython/Build/Dependencies.py
++++ b/Cython/Build/Dependencies.py
+@@ -1084,6 +1084,11 @@ def cythonize(module_list, exclude=None, nthreads=0, aliases=None, quiet=False,
+ 
+     if N <= 1:
+         nthreads = 0
++    if nthreads:
++        import multiprocessing
++        if multiprocessing.get_start_method() == 'spawn':
++            print('Disabling parallel cythonization for "spawn" process start method.')
++            nthreads = 0
+     if nthreads:
+         # Requires multiprocessing (or Python >= 2.6)
+         try:

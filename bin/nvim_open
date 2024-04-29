@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+
+set -e
+
+# get first argument or default to "."
+DIR="${1:-.}"
+
+if [[ -d $"$DIR" ]]; then
+	if [[ "$(git top)" ]]; then
+		nvim -c ":Git | :only"
+	else
+		nvim -c ":Startify"
+	fi
+elif [[ ! -f $DIR ]]; then
+	utouch "$DIR" && nvim "$DIR"
+elif [[ -f $DIR ]]; then
+	if [[ $DIR =~ .*secret.*\.yaml ]]; then
+		sops "$DIR"
+	else
+		nvim "$DIR"
+	fi
+fi

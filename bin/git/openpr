@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+
+set -e
+set -o pipefail
+
+BODY="\
+### Description:
+
+$(git log --pretty='%s%n%b' $(git mainbranch)..HEAD)
+
+### Testing Strategy:
+
+local / orthog stomp
+
+### Screenshots (if applicable):
+
+### Checklist
+
+- [x] I have added any necessary comments to my code to ensure readability (if any)
+"
+
+# TITLE="$(git branch --show-current | sd '-' ' ' | rg --passthru -P '(OJ) (\d+)(.*)' -r '$1-$2:$3')"
+
+gh pr create --assignee="@me" --body="$BODY" $@
+gh pr view --web

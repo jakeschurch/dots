@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+
+set -e
+
+gh pr diff --patch

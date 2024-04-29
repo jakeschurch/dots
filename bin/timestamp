@@ -1,0 +1,7 @@
+#!/bin/bash
+# vim:filetype=bash
+
+CURRENT_TIME=$(date +%H:%M)
+
+echo "- $CURRENT_TIME: ${1:-$(cat /dev/stdin)}"
+

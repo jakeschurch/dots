@@ -1,0 +1,6 @@
+#!/bin/bash
+# vim:filetype=sh
+
+set -e
+
+shellcheck --format=diff "$1" | patch -p1

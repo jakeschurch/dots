@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+TODAY=$(date +"%Y-%m-%d")
+TOMORROW=$(date +"%Y-%m-%d" -d "+1days" )
+
+NOTES_PATH="$HOME/Documents/knowledge/personal/diary"
+TODAYS_NOTES="$NOTES_PATH/$TODAY.md"
+TOMORROWS_NOTES="$NOTES_PATH/$TOMORROW.md"
+
+TODOS=$(cat "$TODAYS_NOTES" | rg -e "- \[ \].*$")
+
+echo "$TODOS"
+echo "$TODAYS_NOTES"
+echo "$TOMORROWS_NOTES"
+
+echo -e "TODOS:\n\n$TODOS" >> "$TOMORROWS_NOTES"

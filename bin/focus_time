@@ -1,0 +1,4 @@
+#!/bin/bash
+# vim:filetype=bash
+
+[[ $DUNST_NOTIFY == 1 ]]; export DUNST_NOTIFY=0;

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+INPUT=$1
+
+DOTFILE_DIR=$HOME/.dots/ansible/files
+
+INPUT_PATH=$(readlink -f "$INPUT")
+DOTFILE_INPUT_PATH=${INPUT_PATH/#$HOME/$DOTFILE_DIR}
+
+if [ "$DOTFILE_INPUT_PATH" == "$INPUT_PATH" ]; then
+  echo "You're trying to backup already-stowed dotfiles. This is not allowed."
+  exit 1
+fi
+
+if [[ -d "$INPUT_PATH" && ! -d "$DOTFILE_INPUT_PATH" ]]; then
+  mkdir -p "$DOTFILE_INPUT_PATH"
+fi
+
+mv "$INPUT" "$DOTFILE_INPUT_PATH"
+ln -s "$DOTFILE_INPUT_PATH" "$INPUT_PATH"

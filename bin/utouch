@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+
+TEMPLATES_DIR="$HOME/Documents/Templates"
+
+INPUT=$1
+INPUT_EXT="${INPUT##*.}"
+
+if [ "$INPUT" == "$INPUT_EXT" ] && [[ "$PWD" == "$HOME/bin" ]]; then
+	INPUT_EXT="sh"
+fi
+
+if test -f "$INPUT"; then
+	echo "File exists"
+	exit 1
+fi
+
+TOUCH_TEMPLATE_FILE="$TEMPLATES_DIR/template.$INPUT_EXT.tpl"
+
+if test -f "$TOUCH_TEMPLATE_FILE"; then
+	cp "$TOUCH_TEMPLATE_FILE" "$INPUT"
+else
+	touch "$INPUT"
+fi
+
+chown "$(whoami)" "$INPUT"
+chmod u+rw "$INPUT"
+
+if grep -q "#!" "$INPUT"; then
+	chmod +x "$INPUT"
+fi

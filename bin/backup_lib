@@ -1,0 +1,4 @@
+#!/bin/bash
+# vim:filetype=bash
+
+rsync -r /data/books/engineering /mnt/usb0/Calibre Library/engineering

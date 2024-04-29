@@ -1,0 +1,4 @@
+#!/bin/bash
+# vim:filetype=bash
+
+betterlockscreen -l --off 5 && echo mem > /sys/power/state

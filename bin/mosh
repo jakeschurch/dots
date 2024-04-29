@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# vim:ft=sh
+
+mosh "$@"
+[ $? -eq 5 ] && ssh "$@"

@@ -1,0 +1,14 @@
+#!/bin/bash
+# vim:filetype=bash
+
+# if not a git repo
+if [ ! -d .git ]; then
+    echo "Not a git repo"
+    exit 1
+fi
+
+TODAY=$(date +%Y-%m-%d)
+
+git shortlog --author='Jake Schurch' --date-order --format='%as %h %s' "$@" \
+  | egrep "$TODAY" && exit 0 \
+  || echo "No commits found for $(git rev-parse --show-toplevel)" && exit 1

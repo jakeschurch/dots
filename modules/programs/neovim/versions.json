@@ -1,0 +1,342 @@
+[
+  {
+    "name": "windwp/nvim-autopairs",
+    "rev": "4f41e5940bc0443fdbe5f995e2a596847215cd2a",
+    "ref": "master"
+  },
+  {
+    "name": "weilbith/nvim-code-action-menu",
+    "rev": "8c7672a4b04d3cc4edd2c484d05b660a9cb34a1b",
+    "ref": "main"
+  },
+  {
+    "name": "vimwiki/vimwiki",
+    "rev": "69318e74c88ef7677e2496fd0a836446ceac61e8",
+    "ref": "dev"
+  },
+  {
+    "name": "tpope/vim-vinegar",
+    "rev": "bb1bcddf43cfebe05eb565a84ab069b357d0b3d6",
+    "ref": "master"
+  },
+  {
+    "name": "tpope/vim-unimpaired",
+    "rev": "6d44a6dc2ec34607c41ec78acf81657248580bf1",
+    "ref": "master"
+  },
+  {
+    "name": "tpope/vim-repeat",
+    "rev": "24afe922e6a05891756ecf331f39a1f6743d3d5a",
+    "ref": "master"
+  },
+  {
+    "name": "tpope/vim-git",
+    "rev": "105fd5559bd9df3f1204ecdcac2a587614e1a4be",
+    "ref": "master"
+  },
+  {
+    "name": "tpope/vim-fugitive",
+    "rev": "dac8e5c2d85926df92672bf2afb4fc48656d96c7",
+    "ref": "master"
+  },
+  {
+    "name": "tpope/vim-dispatch",
+    "rev": "4c695bc052cad2ae6b980aebbe48d046466e27ae",
+    "ref": "master"
+  },
+  {
+    "name": "soywod/himalaya",
+    "rev": "ccddfeb799a4d330c8ee462e2cdf230703816619",
+    "ref": "master"
+  },
+  {
+    "name": "saadparwaiz1/cmp_luasnip",
+    "rev": "05a9ab28b53f71d1aece421ef32fee2cb857a843",
+    "ref": "master"
+  },
+  {
+    "name": "ruifm/gitlinker.nvim",
+    "rev": "cc59f732f3d043b626c8702cb725c82e54d35c25",
+    "ref": "master"
+  },
+  {
+    "name": "ray-x/cmp-treesitter",
+    "rev": "13e4ef8f4dd5639fca2eb9150e68f47639a9b37d",
+    "ref": "master"
+  },
+  {
+    "name": "rafamadriz/friendly-snippets",
+    "rev": "ea068f1becd91bcd4591fceb6420d4335e2e14d3",
+    "ref": "main"
+  },
+  {
+    "name": "pwntester/octo.nvim",
+    "rev": "5646539320cd62af6ff28f48ec92aeb724c68e18",
+    "ref": "master"
+  },
+  {
+    "name": "phaazon/hop.nvim",
+    "rev": "1a1eceafe54b5081eae4cb91c723abd1d450f34b",
+    "ref": "master"
+  },
+  {
+    "name": "p00f/nvim-ts-rainbow",
+    "rev": "ef95c15a935f97c65a80e48e12fe72d49aacf9b9",
+    "ref": "master"
+  },
+  {
+    "name": "onsails/lspkind-nvim",
+    "rev": "1735dd5a5054c1fb7feaf8e8658dbab925f4f0cf",
+    "ref": "master"
+  },
+  {
+    "name": "nvimtools/none-ls.nvim",
+    "rev": "88821b67e6007041f43b802f58e3d9fa9bfce684",
+    "ref": "main"
+  },
+  {
+    "name": "nvimtools/none-ls-extras.nvim",
+    "rev": "f0746bf4f1a21d6e1d2002f671fb9b46d2146de7",
+    "ref": "main"
+  },
+  {
+    "name": "nvimdev/lspsaga.nvim",
+    "rev": "f20985499cd8ff0fbbfe8e7c770428ef764fc3be",
+    "ref": "main"
+  },
+  {
+    "name": "nvim-treesitter/playground",
+    "rev": "ba48c6a62a280eefb7c85725b0915e021a1a0749",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-treesitter/nvim-treesitter-textobjects",
+    "rev": "23b820146956b3b681c19e10d3a8bc0cbd9a1d4c",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-treesitter/nvim-treesitter",
+    "rev": "19c6b0c4c9b35962e45b782e2b85a3214d2ac4d5",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-telescope/telescope.nvim",
+    "rev": "7d1698f3d88b448e0639974248cc17f49b7b8acf",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-telescope/telescope-ui-select.nvim",
+    "rev": "6e51d7da30bd139a6950adf2a47fda6df9fa06d2",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-telescope/telescope-dap.nvim",
+    "rev": "8c88d9716c91eaef1cdea13cb9390d8ef447dbfe",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-lualine/lualine.nvim",
+    "rev": "0a5a66803c7407767b799067986b4dc3036e1983",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-lua/popup.nvim",
+    "rev": "b7404d35d5d3548a82149238289fa71f7f6de4ac",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-lua/plenary.nvim",
+    "rev": "5129a3693c482fcbc5ab99a7706ffc4360b995a0",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-lua/lsp-status.nvim",
+    "rev": "54f48eb5017632d81d0fd40112065f1d062d0629",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-lua/completion-nvim",
+    "rev": "87b0f86da3dffef63b42845049c648b5d90f1c4d",
+    "ref": "master"
+  },
+  {
+    "name": "neovim/nvim-lspconfig",
+    "rev": "da338c8d7e33fbb810368a808781f56224b4fea7",
+    "ref": "master"
+  },
+  {
+    "name": "mhinz/vim-startify",
+    "rev": "4e089dffdad46f3f5593f34362d530e8fe823dcf",
+    "ref": "master"
+  },
+  {
+    "name": "m-demare/hlargs.nvim",
+    "rev": "0f2dbf02ff948e8fc8ebe07b215f3174a12bbe3c",
+    "ref": "main"
+  },
+  {
+    "name": "lukas-reineke/indent-blankline.nvim",
+    "rev": "3d08501caef2329aba5121b753e903904088f7e6",
+    "ref": "master"
+  },
+  {
+    "name": "lukas-reineke/cmp-rg",
+    "rev": "677a7874ee8f1afc648c2e7d63a97bc21a7663c5",
+    "ref": "master"
+  },
+  {
+    "name": "lewis6991/impatient.nvim",
+    "rev": "47302af74be7b79f002773011f0d8e85679a7618",
+    "ref": "main"
+  },
+  {
+    "name": "lewis6991/gitsigns.nvim",
+    "rev": "035da036e68e509ed158414416c827d022d914bd",
+    "ref": "main"
+  },
+  {
+    "name": "kylechui/nvim-surround",
+    "rev": "a4e30d33add8a9743b4f518b3a788b3c8e5def71",
+    "ref": "main"
+  },
+  {
+    "name": "kyazdani42/nvim-web-devicons",
+    "rev": "beb6367ab8496c9e43f22e0252735fdadae1872d",
+    "ref": "master"
+  },
+  {
+    "name": "junegunn/vim-emoji",
+    "rev": "9ed6515401a6e20a9781ba508db7d67a5e4e231f",
+    "ref": "master"
+  },
+  {
+    "name": "junegunn/limelight.vim",
+    "rev": "86aaec1700b27618d33d6182f44691d84d2cb6e5",
+    "ref": "master"
+  },
+  {
+    "name": "junegunn/fzf.vim",
+    "rev": "503bb6fe9c16764ce9458ee404b0b27a9572883b",
+    "ref": "master"
+  },
+  {
+    "name": "junegunn/fzf",
+    "rev": "767f1255ab3247398d6f1d20180904c7f6e2d566",
+    "ref": "master"
+  },
+  {
+    "name": "jubnzv/virtual-types.nvim",
+    "rev": "d652ec0b1781bbb0e83dc588fb62d638006cf61e",
+    "ref": "master"
+  },
+  {
+    "name": "jparise/vim-graphql",
+    "rev": "c1d6af3b93ec135e7e2fc182d4cae6cd0d9e20b1",
+    "ref": "master"
+  },
+  {
+    "name": "jpalardy/vim-slime",
+    "rev": "3bf51ad24ba9c4f0c1a5ef90378e59b5b91ca0e4",
+    "ref": "main"
+  },
+  {
+    "name": "jmckiern/vim-venter",
+    "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
+    "ref": "master"
+  },
+  {
+    "name": "hrsh7th/nvim-cmp",
+    "rev": "8f3c541407e691af6163e2447f3af1bd6e17f9a3",
+    "ref": "main"
+  },
+  {
+    "name": "hrsh7th/cmp-path",
+    "rev": "91ff86cd9c29299a64f968ebb45846c485725f23",
+    "ref": "main"
+  },
+  {
+    "name": "hrsh7th/cmp-nvim-lsp",
+    "rev": "5af77f54de1b16c34b23cba810150689a3a90312",
+    "ref": "main"
+  },
+  {
+    "name": "hrsh7th/cmp-emoji",
+    "rev": "e8398e2adf512a03bb4e1728ca017ffeac670a9f",
+    "ref": "main"
+  },
+  {
+    "name": "hrsh7th/cmp-cmdline",
+    "rev": "d250c63aa13ead745e3a40f61fdd3470efde3923",
+    "ref": "main"
+  },
+  {
+    "name": "hrsh7th/cmp-buffer",
+    "rev": "3022dbc9166796b644a841a02de8dd1cc1d311fa",
+    "ref": "main"
+  },
+  {
+    "name": "goolord/alpha-nvim",
+    "rev": "41283fb402713fc8b327e60907f74e46166f4cfd",
+    "ref": "main"
+  },
+  {
+    "name": "gbprod/none-ls-shellcheck.nvim",
+    "rev": "0f84461241e76e376a95fb7391deac82dc3efdbf",
+    "ref": "main"
+  },
+  {
+    "name": "folke/which-key.nvim",
+    "rev": "4433e5ec9a507e5097571ed55c02ea9658fb268a",
+    "ref": "main"
+  },
+  {
+    "name": "folke/trouble.nvim",
+    "rev": "b9cf677f20bb2faa2dacfa870b084e568dca9572",
+    "ref": "main"
+  },
+  {
+    "name": "ellisonleao/gruvbox.nvim",
+    "rev": "6e4027ae957cddf7b193adfaec4a8f9e03b4555f",
+    "ref": "main"
+  },
+  {
+    "name": "elkowar/yuck.vim",
+    "rev": "9b5e0370f70cc30383e1dabd6c215475915fe5c3",
+    "ref": "master"
+  },
+  {
+    "name": "b3nj5m1n/kommentary",
+    "rev": "d5a111a3bc4109a8f913a5863c9092b3b3801482",
+    "ref": "main"
+  },
+  {
+    "name": "aymericbeaumet/vim-symlink",
+    "rev": "fec2d1a72c6875557109ce6113f26d3140b64374",
+    "ref": "master"
+  },
+  {
+    "name": "akinsho/toggleterm.nvim",
+    "rev": "066cccf48a43553a80a210eb3be89a15d789d6e6",
+    "ref": "main"
+  },
+  {
+    "name": "RRethy/nvim-treesitter-textsubjects",
+    "rev": "9f9a6b307fb122f13708f78483222abd43b7bb3a",
+    "ref": "master"
+  },
+  {
+    "name": "L3MON4D3/LuaSnip",
+    "rev": "8f3d3465ba5c7ade0a8adb41eca5736f291a3fa8",
+    "ref": "master"
+  },
+  {
+    "name": "JoosepAlviste/nvim-ts-context-commentstring",
+    "rev": "a6382f744f584bbf71d0a563af789af7190aabda",
+    "ref": "main"
+  },
+  {
+    "name": "Exafunction/codeium.vim",
+    "rev": "31dd2962c81759be007895db6ce089feec397c86",
+    "ref": "main"
+  }
+]

@@ -1,0 +1,10 @@
+#!/bin/bash
+# vim:ft=bash
+
+if [ "$(uname)" = "Linux" ]; then
+  xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'
+  exit 1
+else
+  echo "showkeys cannot be used with non-linux systems"
+  exit 0
+fi

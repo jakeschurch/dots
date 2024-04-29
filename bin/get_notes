@@ -1,0 +1,11 @@
+#!/bin/bash
+# vim:filetype=bash
+
+set -e
+
+WIKI_DIR="$HOME/Documents/wiki"
+
+notes=$(grep -f -R -n "NOTE:" "$WIKI_DIR"/** | awk -F ':' '{print $1 ":"$2"$"}')
+
+IFS="$ " arr=("$notes")
+echo "${arr[@]}"

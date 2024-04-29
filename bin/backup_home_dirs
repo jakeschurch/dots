@@ -1,0 +1,15 @@
+#!/bin/bash
+# vim:filetype=bash
+
+# backup home directories to /data/backup/.
+DIRS=(Documents Downloads Desktop Pictures Music Movies Templates Videos)
+
+SRC_PREFIX=/data/backup-fick/jake
+DEST_PREFIX=$HOME/mnt/nas
+
+for dir in ${DIRS[@]}; do
+      echo "Backing up $SRC_PREFIX/$dir to $DEST_PREFIX/$dir"
+      rsync -azuvhP $SRC_PREFIX/$dir $DEST_PREFIX &
+done
+
+wait

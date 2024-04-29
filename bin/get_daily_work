@@ -1,0 +1,17 @@
+#!/bin/bash
+# vim:filetype=bash
+
+set -e
+
+PROJECTS=$(fd --hidden "\.git$" ~/Projects ~/work ~/.dots --exec dirname)
+YESTERDAY=$(date -d 'yesterday' +%F)
+
+echo -e "\n# WORK DONE" | scribe
+
+for project in $PROJECTS; do
+  cd "$project" || exit
+  work=$(standup --since="$YESTERDAY")
+
+  [[ "$?" -eq 0 ]] && echo -e "\n$project\n$work" | scribe;
+
+done

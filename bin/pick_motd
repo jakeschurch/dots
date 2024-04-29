@@ -1,0 +1,16 @@
+#!/bin/bash
+# vim:filetype=sh
+
+function personal_motd {
+  local MOTD_FILE=~/.dots/ansible/files/Templates/motd
+
+  MOTD_FILE_LEN=$(wc -l $MOTD_FILE | awk '{print $1}')
+
+  if [[ $MOTD_FILE_LEN -gt 1 ]]; then
+    selected_line=$(($RANDOM % $MOTD_FILE_LEN))
+  fi
+
+  cat $MOTD_FILE | head -n ${selected_line:-1} | tail -n 1
+}
+
+personal_motd

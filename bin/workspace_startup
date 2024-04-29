@@ -1,0 +1,12 @@
+#!/bin/sh
+
+WORKSPACE_CONFIG="$XDG_CONFIG_DIR/i3/workspaces"
+
+media_ws_name="media"
+code_ws_name="code"
+
+i3-resurrect restore -w $media_ws_name -d "$WORKSPACE_CONFIG" --programs-only
+i3-resurrect restore -w $media_ws_name -d "$WORKSPACE_CONFIG" --layout-only
+
+i3-resurrect restore -w $code_ws_name -d "$WORKSPACE_CONFIG" --programs-only
+i3-resurrect restore -w $code_ws_name -d "$WORKSPACE_CONFIG" --layout-only

@@ -1,0 +1,90 @@
+# i3blocks config file
+#
+# Please see man i3blocks for a complete reference!
+# The man page is also hosted at http://vivien.github.io/i3blocks
+#
+# List of valid properties:
+#
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# short_text
+# signal
+# urgent
+
+# Global properties
+#
+# The top properties below are applied to every block, but can be overridden.
+# Each block command defaults to the script name to avoid boilerplate.
+# Change $SCRIPT_DIR to the location of your scripts!
+command=~/.config/i3blocks/scripts/$BLOCK_NAME
+separator_block_width=30
+
+# This displays "ARTIST - SONG" if a music is playing.
+# Supported players are: spotify, vlc, audacious, xmms2, mplayer, and others.
+[mediaplayer]
+instance=spotify
+command=~/.config/i3blocks/scripts/mediaplayer.pl
+interval=5
+signal=10
+separator=false
+
+[volume]
+label=VOL
+interval=once
+signal=10
+STEP=5%
+command=~/.config/i3blocks/scripts/vol.sh
+
+[cpu_usage]
+command=~/.config/i3blocks/scripts/cpu_usage.pl
+label=CPU
+interval=10
+DECIMALS=0
+align=left
+
+[memory]
+label=MEM
+interval=20
+command=~/.config/i3blocks/scripts/mem.sh
+align=left
+
+[iface]
+color=#00FF00
+interval=10
+command=~/.config/i3blocks/scripts/iface.sh
+align=left
+
+[time]
+command=date '+%F %I:%M %p'
+interval=1
+
+[weather]
+command=~/.config/i3blocks/scripts/weather.sh -tc '{fahrenheit}' '<' 0
+instance=Boston
+interval=60
+markup=none
+
+# Key indicators
+#
+# Add the following bindings to i3 config file:
+#
+# bindsym --release Caps_Lock exec pkill -SIGRTMIN+11 i3blocks
+# bindsym --release Num_Lock  exec pkill -SIGRTMIN+11 i3blocks
+#[keyindicator]
+#KEY=CAPS
+#markup=pango
+#interval=once
+#signal=11
+
+#[keyindicator]
+#KEY=NUM
+#markup=pango
+#interval=once
+#signal=11

@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+echo `date` >> $HOME/Documents/statistics/speed.txt && speedtest-cli --simple >> $HOME/Documents/statistics/speed.txt

@@ -1,0 +1,6 @@
+#!/bin/bash
+# vim:ft=bash
+
+NOTE=${@:-$(cat /dev/stdin)}
+
+echo -e "$NOTE" | timestamp | scribe

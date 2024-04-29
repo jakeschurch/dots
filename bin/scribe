@@ -1,0 +1,14 @@
+#!/bin/bash
+# vim:filetype=bash
+
+# read user input
+NOTE=${@:-$(cat /dev/stdin)}
+
+DIARY_FILE="$HOME/Documents/wiki/diary/$(date +%Y-%m-%d).md"
+
+if [ ! -f "$DIARY_FILE" ]; then
+  touch "$DIARY_FILE"
+  # echo -e "\n# NOTES" >> "$DIARY_FILE"
+fi
+
+echo -e "$NOTE" >> "$DIARY_FILE"

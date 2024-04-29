@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+
+set -e
+
+BODY=$(gh pr view $1 --comments)
+
+gh pr view $1 --comments
+gh pr checks

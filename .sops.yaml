@@ -1,0 +1,5 @@
+---
+creation_rules:
+  - encrypted_regex: "((?i)(pass|secret($|[^N])|key|token|^data$|^stringData))"
+    path_regex: .*.yaml
+    pgp: E21838ED2B9D48C64D4FFB26A4A11F543715299A

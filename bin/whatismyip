@@ -1,0 +1,4 @@
+#!/bin/bash
+# vim:filetype=bash
+
+curl ifconfig.me$@
