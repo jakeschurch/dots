@@ -1,5 +1,6 @@
 #!/bin/sh
 # Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
+# shellcheck disable=all
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

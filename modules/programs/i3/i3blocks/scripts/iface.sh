@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=all
+
 # Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
 # Copyright (C) 2014 Alexander Keller <github@nycroth.com>
 
@@ -69,5 +71,3 @@ esac
 # echo "$LABEL$IPADDR" # full text
 echo "Connected" # full text
 echo "$LABEL$IPADDR" # short text
-
-
