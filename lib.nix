@@ -13,7 +13,7 @@
       modules = [
         inputs.nix-index-database.darwinModules.nix-index
 
-        (import ./darwin-configuration.nix {inherit pkgs user;})
+        ./darwin-configuration.nix
         ./modules/homebrew.nix
         home-manager.darwinModules.home-manager
         {

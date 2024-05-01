@@ -1,6 +1,7 @@
 {
   pkgs,
   user,
+  inputs,
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
@@ -64,4 +65,5 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   services.nix-daemon.enable = true;
 
   nix.gc.automatic = true;
+  nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 }

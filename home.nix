@@ -27,8 +27,6 @@
           done
         '');
     };
-
-    packages = with pkgs; [noto-fonts-emoji jetbrains-mono];
   };
 
   programs.home-manager.enable = true;
@@ -44,6 +42,21 @@
   };
 
   manual.manpages.enable = true;
+
+  home.packages = let
+    repl_path = builtins.toString ./.;
+    my-nix-repl = pkgs.writeShellScriptBin "nix-repl" ''
+      if [ -f "${repl_path}/repl.nix" ]; then
+        nix repl "${repl_path}/repl.nix" "$@"
+      else
+        nix repl "$@"
+      fi
+    '';
+  in
+    [
+      my-nix-repl
+    ]
+    ++ (with pkgs; [noto-fonts-emoji jetbrains-mono]);
 
   nix = {
     registry = {
