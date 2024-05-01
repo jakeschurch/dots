@@ -77,6 +77,7 @@ in {
         watch
         grex
         nix-output-monitor
+        nvd
         bc
         gotop
         ccache

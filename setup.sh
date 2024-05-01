@@ -20,7 +20,7 @@ create_ccache_dir
 
 # use nom if available, otherwise use nix to build it
 if command -v nom &> /dev/null; then
-  nom build .#  --show-trace
+  nom build .# --impure  --show-trace && nvd diff /run/current-system result
 else
   nix build .#  --show-trace
 fi && sudo ./result/activate

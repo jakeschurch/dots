@@ -41,7 +41,7 @@
     sandbox = true;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
     keep-derivations = false;
-    pure-eval = true;
+    pure-eval = false;
     extra-trusted-substituters = [
       "s3://nix-cache?profile=default&scheme=https&endpoint=s3.jakeschurch.com&trusted=1"
     ];
