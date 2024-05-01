@@ -46,12 +46,24 @@
   manual.manpages.enable = true;
 
   nix = {
+    registry = {
+      nixpkgs.to = {
+        type = "path";
+        inherit (pkgs) path;
+        narHash =
+          builtins.readFile
+          (pkgs.runCommandLocal "get-nixpkgs-hash"
+            {nativeBuildInputs = [pkgs.nix];}
+            "nix-hash --type sha256 --sri ${pkgs.path} > $out");
+      };
+    };
+    package = lib.mkForce pkgs.nixFlakes;
     settings = {
       auto-optimise-store = true;
       allowed-users = ["*"];
       trusted-users = ["root" "@wheel" "jake" "jakeschurch"];
       builders = "@/etc/nix/machines";
-      extra-experimental-features = "nix-command flakes";
+      experimental-features = ["nix-command flakes"];
       fallback = true;
 
       cores = 0;

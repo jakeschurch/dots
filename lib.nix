@@ -12,9 +12,6 @@
 
       modules = [
         inputs.nix-index-database.darwinModules.nix-index
-        ({lib, ...}: {
-          nix.registry = lib.mapAttrs (_: flake: {inherit flake;}) inputs;
-        })
 
         (import ./darwin-configuration.nix {inherit pkgs user;})
         ./modules/homebrew.nix
@@ -41,9 +38,7 @@
       modules = [
         ./home.nix
         inputs.nix-index-database.hmModules.nix-index
-        ({lib, ...}: {
-          nix.registry = lib.mapAttrs (_: flake: {inherit flake;}) inputs;
-          nix.package = pkgs.nixFlakes;
+        (_: {
           environment.pathsToLink = ["/share/zsh"];
 
           home = {
