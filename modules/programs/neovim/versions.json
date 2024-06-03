@@ -1,7 +1,7 @@
 [
   {
     "name": "windwp/nvim-autopairs",
-    "rev": "4f41e5940bc0443fdbe5f995e2a596847215cd2a",
+    "rev": "c15de7e7981f1111642e7e53799e1211d4606cb9",
     "ref": "master"
   },
   {
@@ -36,7 +36,7 @@
   },
   {
     "name": "tpope/vim-fugitive",
-    "rev": "dac8e5c2d85926df92672bf2afb4fc48656d96c7",
+    "rev": "4f59455d2388e113bd510e85b310d15b9228ca0d",
     "ref": "master"
   },
   {
@@ -46,7 +46,7 @@
   },
   {
     "name": "soywod/himalaya",
-    "rev": "ccddfeb799a4d330c8ee462e2cdf230703816619",
+    "rev": "f9b92e6e7a6281ab13408b508a11193af9f75674",
     "ref": "master"
   },
   {
@@ -61,12 +61,12 @@
   },
   {
     "name": "ray-x/cmp-treesitter",
-    "rev": "13e4ef8f4dd5639fca2eb9150e68f47639a9b37d",
+    "rev": "958fcfa0d8ce46d215e19cc3992c542f576c4123",
     "ref": "master"
   },
   {
     "name": "rafamadriz/friendly-snippets",
-    "rev": "ea068f1becd91bcd4591fceb6420d4335e2e14d3",
+    "rev": "e11b09bf10706bb74e16e4c3d11b2274d62e687f",
     "ref": "main"
   },
   {
@@ -91,17 +91,17 @@
   },
   {
     "name": "nvimtools/none-ls.nvim",
-    "rev": "88821b67e6007041f43b802f58e3d9fa9bfce684",
+    "rev": "c2dd47284f5f800fe86a6f848de4114bc83408cf",
     "ref": "main"
   },
   {
     "name": "nvimtools/none-ls-extras.nvim",
-    "rev": "f0746bf4f1a21d6e1d2002f671fb9b46d2146de7",
+    "rev": "336e84b9e43c0effb735b08798ffac382920053b",
     "ref": "main"
   },
   {
     "name": "nvimdev/lspsaga.nvim",
-    "rev": "f20985499cd8ff0fbbfe8e7c770428ef764fc3be",
+    "rev": "31017128cbca6e31376f4c7826c39568404aa863",
     "ref": "main"
   },
   {
@@ -111,17 +111,17 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter-textobjects",
-    "rev": "23b820146956b3b681c19e10d3a8bc0cbd9a1d4c",
+    "rev": "fd41b7ccc5490a3a99c734d1ee418b68d06c48a9",
     "ref": "master"
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "19c6b0c4c9b35962e45b782e2b85a3214d2ac4d5",
+    "rev": "a80fe081b4c5890980561e0de2458f64aaffbfc7",
     "ref": "master"
   },
   {
     "name": "nvim-telescope/telescope.nvim",
-    "rev": "7d1698f3d88b448e0639974248cc17f49b7b8acf",
+    "rev": "dfa230be84a044e7f546a6c2b0a403c739732b86",
     "ref": "master"
   },
   {
@@ -146,7 +146,7 @@
   },
   {
     "name": "nvim-lua/plenary.nvim",
-    "rev": "5129a3693c482fcbc5ab99a7706ffc4360b995a0",
+    "rev": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683",
     "ref": "master"
   },
   {
@@ -161,7 +161,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "da338c8d7e33fbb810368a808781f56224b4fea7",
+    "rev": "74e14808cdb15e625449027019406e1ff6dda020",
     "ref": "master"
   },
   {
@@ -171,12 +171,17 @@
   },
   {
     "name": "m-demare/hlargs.nvim",
-    "rev": "0f2dbf02ff948e8fc8ebe07b215f3174a12bbe3c",
+    "rev": "30fe1b3de2b7614f061be4fc9c71984a2b87e50a",
     "ref": "main"
   },
   {
     "name": "lukas-reineke/indent-blankline.nvim",
-    "rev": "3d08501caef2329aba5121b753e903904088f7e6",
+    "rev": "d98f537c3492e87b6dc6c2e3f66ac517528f406f",
+    "ref": "master"
+  },
+  {
+    "name": "lukas-reineke/headlines.nvim",
+    "rev": "618ef1b2502c565c82254ef7d5b04402194d9ce3",
     "ref": "master"
   },
   {
@@ -191,17 +196,17 @@
   },
   {
     "name": "lewis6991/gitsigns.nvim",
-    "rev": "035da036e68e509ed158414416c827d022d914bd",
+    "rev": "75dc649106827183547d3bedd4602442340d2f7f",
     "ref": "main"
   },
   {
     "name": "kylechui/nvim-surround",
-    "rev": "a4e30d33add8a9743b4f518b3a788b3c8e5def71",
+    "rev": "f1f0699a1d49f28e607ffa4361f1bbe757ac5ebc",
     "ref": "main"
   },
   {
     "name": "kyazdani42/nvim-web-devicons",
-    "rev": "beb6367ab8496c9e43f22e0252735fdadae1872d",
+    "rev": "b77921fdc44833c994fdb389d658ccbce5490c16",
     "ref": "master"
   },
   {
@@ -211,17 +216,17 @@
   },
   {
     "name": "junegunn/limelight.vim",
-    "rev": "86aaec1700b27618d33d6182f44691d84d2cb6e5",
+    "rev": "785c1e17fe90c587ebca88920baa3146cd6e30fa",
     "ref": "master"
   },
   {
     "name": "junegunn/fzf.vim",
-    "rev": "503bb6fe9c16764ce9458ee404b0b27a9572883b",
+    "rev": "0a80e43f9027ec64213d602dbb0b22d65a072ca8",
     "ref": "master"
   },
   {
     "name": "junegunn/fzf",
-    "rev": "767f1255ab3247398d6f1d20180904c7f6e2d566",
+    "rev": "3ee1fc203406debab432dbf3cb67f37ea7cb3d30",
     "ref": "master"
   },
   {
@@ -236,7 +241,7 @@
   },
   {
     "name": "jpalardy/vim-slime",
-    "rev": "3bf51ad24ba9c4f0c1a5ef90378e59b5b91ca0e4",
+    "rev": "ca59df2570e1a12f9ddfa90b6118df4d87453fcd",
     "ref": "main"
   },
   {
@@ -246,7 +251,7 @@
   },
   {
     "name": "hrsh7th/nvim-cmp",
-    "rev": "8f3c541407e691af6163e2447f3af1bd6e17f9a3",
+    "rev": "5260e5e8ecadaf13e6b82cf867a909f54e15fd07",
     "ref": "main"
   },
   {
@@ -256,7 +261,7 @@
   },
   {
     "name": "hrsh7th/cmp-nvim-lsp",
-    "rev": "5af77f54de1b16c34b23cba810150689a3a90312",
+    "rev": "39e2eda76828d88b773cc27a3f61d2ad782c922d",
     "ref": "main"
   },
   {
@@ -286,17 +291,17 @@
   },
   {
     "name": "folke/which-key.nvim",
-    "rev": "4433e5ec9a507e5097571ed55c02ea9658fb268a",
+    "rev": "4b7167f8fb2dba3d01980735e3509e172c024c29",
     "ref": "main"
   },
   {
     "name": "folke/trouble.nvim",
-    "rev": "b9cf677f20bb2faa2dacfa870b084e568dca9572",
+    "rev": "915179759c9459b69faae90a38da6fc1ca6b90d7",
     "ref": "main"
   },
   {
     "name": "ellisonleao/gruvbox.nvim",
-    "rev": "6e4027ae957cddf7b193adfaec4a8f9e03b4555f",
+    "rev": "f99a08abc5ab0b9b5b0e7a33211a439155c60a61",
     "ref": "main"
   },
   {
@@ -316,27 +321,27 @@
   },
   {
     "name": "akinsho/toggleterm.nvim",
-    "rev": "066cccf48a43553a80a210eb3be89a15d789d6e6",
+    "rev": "fee58a0473fd92b28c34f8f724e4918b15ba30a3",
     "ref": "main"
   },
   {
     "name": "RRethy/nvim-treesitter-textsubjects",
-    "rev": "9f9a6b307fb122f13708f78483222abd43b7bb3a",
+    "rev": "1428108f18ce9d8cc4481dcedebeeb490eabf395",
     "ref": "master"
   },
   {
     "name": "L3MON4D3/LuaSnip",
-    "rev": "8f3d3465ba5c7ade0a8adb41eca5736f291a3fa8",
+    "rev": "2b6860d15aaab01d3fb90859c0ba97f20ad7bc5f",
     "ref": "master"
   },
   {
     "name": "JoosepAlviste/nvim-ts-context-commentstring",
-    "rev": "a6382f744f584bbf71d0a563af789af7190aabda",
+    "rev": "cb064386e667def1d241317deed9fd1b38f0dc2e",
     "ref": "main"
   },
   {
     "name": "Exafunction/codeium.vim",
-    "rev": "31dd2962c81759be007895db6ce089feec397c86",
+    "rev": "289eb724e5d6fab2263e94a1ad6e54afebefafb2",
     "ref": "main"
   }
 ]
