@@ -70,13 +70,14 @@
             "nix-hash --type sha256 --sri ${pkgs.path} > $out");
       };
     };
-    package = lib.mkForce pkgs.nixFlakes;
+    package = lib.mkForce pkgs.nixUnstable;
+
     settings = {
       auto-optimise-store = true;
       allowed-users = ["*"];
       trusted-users = ["root" "@wheel" "jake" "jakeschurch"];
       builders = "@/etc/nix/machines";
-      experimental-features = ["nix-command flakes"];
+      experimental-features = ["nix-command flakes repl-flake"];
       fallback = true;
 
       cores = 0;
@@ -106,10 +107,11 @@
       max-free = ${toString (1024 * 1024 * 1024)}
 
       builders-use-substitutes = true
+      extra-nix-path = nixpkgs=flake:nixpkgs
 
       # diff-hook = /etc/nix/my-diff-hook
       run-diff-hook = false
-      post-build-hook = /etc/nix/upload-to-cache.sh
+      # post-build-hook = /etc/nix/upload-to-cache.sh
 
       http-connections = 0
       keep-failed = false

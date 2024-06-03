@@ -22,5 +22,5 @@ create_ccache_dir
 if command -v nom &> /dev/null; then
   nom build .# --impure  --show-trace && nvd diff /run/current-system result
 else
-  nix build .#  --show-trace
-fi && sudo ./result/activate
+  nix build .#  --show-trace --extra-experimental-features 'nix-command flakes'
+fi && ./result/activate-user && sudo ./result/activate

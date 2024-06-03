@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-# install nix as single-user installation
-sh <(curl -L https://nixos.org/nix/install) --no-daemon
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+
+echo "extra-experimental-features = nix-command flakes repl-flake" | sudo tee -a /etc/nix/nix.conf
