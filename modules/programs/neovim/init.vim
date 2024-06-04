@@ -21,6 +21,7 @@ vim.cmd [[
 
   iab <expr> TODAY strftime("%Y-%m-%d")
   iab <expr> TIME strftime("%H:%M")
+  iab <expr> todo "TODO(@jake:" . strftime("%Y-%m-%d") . ")"
 ]]
 EOF
 
