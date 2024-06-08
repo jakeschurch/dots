@@ -44,6 +44,8 @@
     pure-eval = false;
     extra-trusted-substituters = [
       "s3://nix-cache?profile=default&scheme=https&endpoint=s3.jakeschurch.com&trusted=1"
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org/"
     ];
     keep-outputs = false;
     keep-going = false;

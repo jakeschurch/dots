@@ -54,7 +54,7 @@ in {
       NIX_CONF_DIR = "${config.home.homeDirectory}/.config/nix";
       NIX_PATH = concatSessionList ([
           "${config.home.homeDirectory}/.nix-defexpr/channels"
-          "/nix/var/nix/profiles/per-user/root/channels"
+          # "/nix/var/nix/profiles/per-user/root/channels"
         ]
         ++ lib.optionals pkgs.stdenv.isDarwin [
           "darwin-config=${config.home.homeDirectory}/.dots/config/nixpkgs/darwin-configuration.nix"

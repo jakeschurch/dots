@@ -1,6 +1,7 @@
 _: {
   ".." = "cd ../";
 
+  open-resume = "zathura ~/Projects/resume/Schurch-Jake-2024-Resume.pdf &";
   docker = "colima";
   # ssh = "mosh";
   man = "batman";

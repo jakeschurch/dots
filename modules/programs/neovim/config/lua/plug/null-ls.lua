@@ -5,6 +5,8 @@ local lsp_status_ok, lsp = pcall(require, "lsp")
 null_ls.setup({
 	sources = {
 		-- Generic
+		require("none-ls.formatting.trim_newlines"),
+		require("none-ls.formatting.trim_whitespace"),
 		-- null_ls.builtins.code_actions.prose_lint,
 		--
 		--	-- Python
@@ -43,7 +45,6 @@ null_ls.setup({
 
 		require("none-ls.code_actions.eslint"),
 		require("none-ls.diagnostics.eslint"),
-		null_ls.builtins.diagnostics.tsc,
 
 		-- Lua
 		null_ls.builtins.formatting.stylua,
