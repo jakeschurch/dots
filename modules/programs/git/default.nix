@@ -46,7 +46,7 @@ in {
     includes = [
       {
         path = "~/.config/git/config.work";
-        condition = "gitdir:~/Projects/work/jf";
+        condition = "gitdir:~/Projects/work";
       }
     ];
     extraConfig = {
@@ -160,7 +160,12 @@ in {
   };
   xdg = {
     configFile = {
-      "git/config.work".text = "[user]\nemail = jakeschurch@gmail.com\n";
+      "git/config.work".text = ''
+      [user]
+        name = Jake Schurch
+        email = jakeschurch@gmail.com
+        signingkey = D43F2816596BFF67F80B049651BD69A43BB80786
+      '';
       "git/commit-template".source = ./git-commit-template;
       "git/gitignore".source = ./gitignore;
     };

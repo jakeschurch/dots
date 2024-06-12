@@ -10,7 +10,7 @@
     activation = {
       darwinFileLimits =
         lib.mkIf
-        (pkgs.system == "x86_64-darwin" || pkgs.system == "aarch64-darwin")
+        (pkgs.stdenv.isDarwin)
         (lib.hm.dag.entryAfter ["writeBoundary"] ''
           #launchctl limit maxfiles 5000000 5000000
           #ulimit -n 10240
@@ -18,7 +18,7 @@
 
       aliasApplications =
         lib.mkIf
-        (pkgs.system == "x86_64-darwin" || pkgs.system == "aarch64-darwin")
+        pkgs.stdenv.isDarwin
         (lib.hm.dag.entryAfter ["writeBoundary"] ''
           app_folder=$(echo ~/Applications);
           for app in $(find "$genProfilePath/home-path/Applications" -type l); do

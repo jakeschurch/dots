@@ -14,6 +14,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "/etc"
     "/info"
   ];
+
   users.users."${user}".home = "/Users/${user}";
 
   nix.configureBuildUsers = true;

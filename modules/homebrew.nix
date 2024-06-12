@@ -21,17 +21,20 @@ lib.mkIf pkgs.stdenv.isDarwin {
     ];
 
     taps = [
-      "homebrew/cask-drivers"
       "homebrew/services"
     ];
 
     casks = [
+      "around"
       "balenaetcher"
+      "notion"
       "caffeine"
       "hammerspoon"
       "spotify"
       "yubico-yubikey-manager"
       "yubico-authenticator"
+      "notion"
+      "postman"
     ];
   };
 }

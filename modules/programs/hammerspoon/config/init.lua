@@ -13,6 +13,9 @@ hs.grid.setMargins("0x0")
 hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
 
 local appOpenBindings = {
+	[singleKey("n", "notion")] = function()
+		hs.application.launchOrFocus("notion")
+	end,
 	[singleKey("c", "browser")] = function()
 		hs.application.launchOrFocus("Google Chrome")
 	end,

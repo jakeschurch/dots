@@ -90,6 +90,7 @@
       regex
       sql
       ssh_config
+      terraform
       vim
       vimdoc
       yaml
