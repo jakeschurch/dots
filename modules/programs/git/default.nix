@@ -1,10 +1,15 @@
 {pkgs, ...}: let
   gitBin = "${pkgs.git}/bin/git";
   fzfBin = "${pkgs.fzf}/bin/fzf";
+  difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
+    difft --display inline "$@"
+  '';
 in {
   # git dependencies
   home.packages = with pkgs; [
     git-extras
+    difftastic
+    difftastic-inline
     perlPackages.TermReadKey
   ];
 
@@ -81,10 +86,25 @@ in {
 
       interactive.singleKey = true;
 
+      difftool = {
+        prompt = false;
+        difftastic = {
+          cmd = "difftastic-inline \"$LOCAL\" \"$REMOTE\"";
+        };
+      };
+
+      pager = {
+        difftool = true;
+      };
+
       diff = {
         tool = "neovim";
         colorMoved = "default";
         algorithm = "minimal";
+        external = "difftastic-inline";
+        sopsdiffer = {
+          textconv = "sops -d";
+        };
       };
 
       merge = {
@@ -127,7 +147,10 @@ in {
       remote = {origin = {prune = true;};};
       rerere = {enabled = true;};
       grep = {extendedRegexp = true;};
-      init = {defaultBranch = "main";};
+      init = {
+        defaultBranch = "main";
+        templateDir = "~/.config/git/templates";
+      };
       branch = {sort = "committerdate";};
       column = {ui = "always";};
       fetch = {
@@ -135,39 +158,18 @@ in {
         writeCommitGraph = true;
       };
     };
-
-    delta = {
-      enable = true;
-
-      options = {
-        features = "side-by-side line-numbers decorations whitespace-error-style = 22 reverse";
-        line-numbers = true;
-        side-by-side = true;
-        hyperlinks = true;
-        hyperlinks-file-link-format = "file-line://{path}:{line}";
-        dark = true;
-        plus-style = "syntax #012800";
-        minus-style = "syntax #340001";
-        syntax-theme = "Monokai Extended";
-        navigate = true;
-        decorations = {
-          commit-decoration-style = "bold yellow box ul";
-          file-style = "bold yellow ul";
-          hunk-header-decoration-style = "cyan ul";
-        };
-      };
-    };
   };
   xdg = {
     configFile = {
       "git/config.work".text = ''
-      [user]
-        name = Jake Schurch
-        email = jakeschurch@gmail.com
-        signingkey = D43F2816596BFF67F80B049651BD69A43BB80786
+        [user]
+          name = Jake Schurch
+          email = jakeschurch@gmail.com
+          signingkey = D43F2816596BFF67F80B049651BD69A43BB80786
       '';
       "git/commit-template".source = ./git-commit-template;
       "git/gitignore".source = ./gitignore;
+      "git/templates".source = ./templates;
     };
   };
 }

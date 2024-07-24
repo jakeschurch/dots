@@ -161,9 +161,13 @@ in {
       nodePackages.dockerfile-language-server-nodejs
     ];
 
-    terraform = with pkgs; [
-      terraform-lsp
-      terraform
+    hcl = with pkgs; [
+      terraform-ls
+      terragrunt
+      terraform-docs
+      tflint
+      tfenv
+      packer
     ];
 
     ansible = with pkgs; [
@@ -194,6 +198,7 @@ in {
 
       codespell
       nodePackages.yaml-language-server
+      yamllint
       nodePackages.vscode-json-languageserver
     ];
 

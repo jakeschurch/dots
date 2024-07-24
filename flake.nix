@@ -4,6 +4,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     # inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    tfenv.url = "github:cjlarose/tfenv-nix";
     unstable.url = "nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -74,6 +75,7 @@
     neovim-nightly,
     lexical-lsp,
     nixd,
+    tfenv,
     ...
   } @ inputs: let
     supportedSystems = [
@@ -143,6 +145,7 @@
               nixd.overlays.default
               neovim-nightly.overlays.default
               nixGL.overlay
+              tfenv.overlays.default
             ]
             ++ import ./overlays.nix {pkgs = import nixpkgs {inherit system;};};
         };

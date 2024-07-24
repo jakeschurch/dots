@@ -14,7 +14,6 @@ lib.mkIf pkgs.stdenv.isDarwin {
 
     brews = [
       "detect-secrets"
-      "tfenv"
       "gettext"
       "openssl"
       "yajl"

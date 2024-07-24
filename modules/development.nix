@@ -22,6 +22,7 @@ in {
         # latex
         # texlive.combined.scheme-medium
 
+        yabai
         moreutils
         cloudflared
         tmux
@@ -40,6 +41,7 @@ in {
 
         kubelogin-oidc
         docker
+        lazydocker
         docker-credential-helpers
         pass
         colima
@@ -56,7 +58,7 @@ in {
         coreutils
         man
         expect
-        git-extras
+        difftastic
 
         arion
 
@@ -72,7 +74,7 @@ in {
 
         yq
 
-        awscli
+        awscli2
         entr
         watch
         grex
@@ -144,6 +146,8 @@ in {
         source <(cat /etc/static/profiles/per-user/jake/share/zsh/site-functions/_*) 2>/dev/null 1>&2
       '';
       initExtra = ''
+        setopt autocd
+
         source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
 
         bindkey "''${key[Up]}" up-line-or-search
@@ -151,9 +155,17 @@ in {
 
         bindkey '^I' expand-or-complete
 
-        source <(colima completion zsh)
+        # source <(colima completion zsh)
         source <(kubectl completion zsh)
         eval "$(direnv hook zsh)"
+
+        autoload -z edit-command-line
+        zle -N edit-command-line
+        bindkey -M vicmd v edit-command-line
+
+        export AWS_PROFILE="fg-staging"
+        export AWS_REGION="us-west-2"
+        export PG_VERSION="15"
 
         autopair-init
       '';

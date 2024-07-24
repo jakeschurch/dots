@@ -15,7 +15,7 @@ require("lualine").setup({
 		icons_enabled = true,
 	},
 	sections = {
-		lualine_a = {},
+		lualine_a = { "mode" },
 		lualine_b = {
 			{
 				"branch",
@@ -29,6 +29,8 @@ require("lualine").setup({
 				end,
 			},
 			{ "diff", source = diff_source },
+			{ "searchcount" },
+			{ "selectioncount" },
 			{
 				"diagnostics",
 				require("lsp-status").diagnostics,
@@ -42,6 +44,7 @@ require("lualine").setup({
 	inactive_sections = {
 		lualine_a = {},
 		lualine_b = {},
+		lualine_c = { "filename" },
 		lualine_x = { "location" },
 		lualine_y = {},
 		lualine_z = {},

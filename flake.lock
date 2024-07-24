@@ -264,11 +264,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1714043624,
-        "narHash": "sha256-Xn2r0Jv95TswvPlvamCC46wwNo8ALjRCMBJbGykdhcM=",
+        "lastModified": 1717476296,
+        "narHash": "sha256-ScHe38Tr+TxGURC17kby4mIIxOG3aJvZWXzPM79UnEk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "86853e31dc1b62c6eeed11c667e8cdd0285d4411",
+        "rev": "095ef64aa3b2ab4a4f1bf07f29997e21e3a5576a",
         "type": "github"
       },
       "original": {
@@ -514,11 +514,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1714782413,
-        "narHash": "sha256-tbg0MEuKaPcUrnmGCu4xiY5F+7LW2+ECPKVAJd2HLwM=",
+        "lastModified": 1719234068,
+        "narHash": "sha256-1AjSIedDC/aERt24KsCUftLpVppW61S7awfjGe7bMio=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "651b4702e27a388f0f18e1b970534162dec09aff",
+        "rev": "90bd1b26e23760742fdcb6152369919098f05417",
         "type": "github"
       },
       "original": {
@@ -556,6 +556,7 @@
         "nixGL": "nixGL",
         "nixd": "nixd",
         "nixpkgs": "nixpkgs_3",
+        "tfenv": "tfenv",
         "treefmt-nix": "treefmt-nix",
         "unstable": "unstable"
       }
@@ -617,6 +618,40 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tfenv": {
+      "inputs": {
+        "tfenv": "tfenv_2"
+      },
+      "locked": {
+        "lastModified": 1686207455,
+        "narHash": "sha256-tsajIKtxMF483OZbxBv6c4TlthJGDj1cFsdWNhenEdA=",
+        "owner": "cjlarose",
+        "repo": "tfenv-nix",
+        "rev": "63d3916a84355e27bb7a84549f63508b4ff93caf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cjlarose",
+        "repo": "tfenv-nix",
+        "type": "github"
+      }
+    },
+    "tfenv_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1664641260,
+        "narHash": "sha256-UNvLJQB47IRcNZpoUGXTW2g63ApijnIB3oUb7Zu4lUY=",
+        "owner": "tfutils",
+        "repo": "tfenv",
+        "rev": "1ccfddb22005b34eacaf06a9c33f58f14e816ec9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tfutils",
+        "repo": "tfenv",
         "type": "github"
       }
     },

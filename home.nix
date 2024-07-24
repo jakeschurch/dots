@@ -10,7 +10,7 @@
     activation = {
       darwinFileLimits =
         lib.mkIf
-        (pkgs.stdenv.isDarwin)
+        pkgs.stdenv.isDarwin
         (lib.hm.dag.entryAfter ["writeBoundary"] ''
           #launchctl limit maxfiles 5000000 5000000
           #ulimit -n 10240
@@ -20,10 +20,14 @@
         lib.mkIf
         pkgs.stdenv.isDarwin
         (lib.hm.dag.entryAfter ["writeBoundary"] ''
-          app_folder=$(echo ~/Applications);
+          app_folder="/Applications/Nix Apps"
+          rm -rf "$app_folder"
+          mkdir -p "$app_folder"
           for app in $(find "$genProfilePath/home-path/Applications" -type l); do
-            $DRY_RUN_CMD rm -f $app_folder/$(basename $app)
-            $DRY_RUN_CMD /usr/bin/osascript -e "tell app \"Finder\"" -e "make new alias file at POSIX file \"$app_folder\" to POSIX file \"$app\"" -e "set name of result to \"$(basename $app)\"" -e "end tell"
+              app_target="$app_folder/$(basename $app)"
+              real_app="$(readlink $app)"
+              echo "mkalias \"$real_app\" \"$app_target\"" >&2
+              $DRY_RUN_CMD ${pkgs.mkalias}/bin/mkalias "$real_app" "$app_target"
           done
         '');
     };

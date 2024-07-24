@@ -7,6 +7,7 @@ null_ls.setup({
 		-- Generic
 		require("none-ls.formatting.trim_newlines"),
 		require("none-ls.formatting.trim_whitespace"),
+		none_ls.builtins.diagnostics.write_good,
 		-- null_ls.builtins.code_actions.prose_lint,
 		--
 		--	-- Python
@@ -32,7 +33,9 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.mypy,
 
 		-- Shell
-		null_ls.builtins.formatting.shfmt,
+		null_ls.builtins.formatting.shfmt.with({
+			extra_args = { "-i", "2", "-ci" },
+		}),
 		null_ls.builtins.formatting.shellharden,
 		require("none-ls-shellcheck.diagnostics"),
 		require("none-ls-shellcheck.code_actions"),
@@ -108,7 +111,10 @@ null_ls.setup({
 
 		-- vim
 		--null_ls.builtins.diagnostics.vint,
+		require("null-ls-embedded").nls_source.with({
+			filetypes = { "markdown", "html", "heex", "leex", "yaml", "lua", "vim" },
+		}),
 	},
-	debug = true,
+	debug = false,
 	on_attach = lsp.common_on_attach,
 })

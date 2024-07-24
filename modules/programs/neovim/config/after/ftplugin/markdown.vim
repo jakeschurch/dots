@@ -17,3 +17,28 @@ setlocal formatoptions = "tqclnjaw"
 
 noremap <buffer> <leader>l :VimwikiToggleListItem<cr>
 vmap <buffer> <leader>l :VimwikiToggleListItem<cr>
+
+let g:limelight_priority = -1
+let g:limelight_paragraph_span = 3
+
+lua <<EOF
+local goyo_group = vim.api.nvim_create_augroup("GoyoGroup", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+    desc = "Hide lualine on goyo enter",
+    group = goyo_group,
+    pattern = "GoyoEnter",
+    callback = function()
+        require("lualine").hide()
+        vim.cmd[[Limelight]]
+    end,
+})
+vim.api.nvim_create_autocmd("User", {
+    desc = "Show lualine after goyo exit",
+    group = goyo_group,
+    pattern = "GoyoLeave",
+    callback = function()
+        require("lualine").hide({ unhide = true })
+        vim.cmd[[Limelight!]]
+    end,
+})
+EOF

@@ -1,4 +1,5 @@
 require("windows")
+require("spaces")
 
 local MOD = "cmd"
 
@@ -13,6 +14,9 @@ hs.grid.setMargins("0x0")
 hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
 
 local appOpenBindings = {
+	[singleKey("a", "around")] = function()
+		hs.application.launchOrFocus("around")
+	end,
 	[singleKey("n", "notion")] = function()
 		hs.application.launchOrFocus("notion")
 	end,
@@ -36,9 +40,7 @@ local appOpenBindings = {
 	end,
 }
 hs.hotkey.bind({ MOD }, "o", spoon.RecursiveBinder.recursiveBind(appOpenBindings))
-hs.hotkey.bind({ MOD }, "<CR>", hs.application.launchOrFocus("wezterm"))
 
 hs.hotkey.bind({ "cmd" }, "r", function()
 	hs.reload()
-	hs.alert.show("Config loaded")
 end)

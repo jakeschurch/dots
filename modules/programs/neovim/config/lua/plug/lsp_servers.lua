@@ -43,7 +43,7 @@ return {
 	hls = {},
 	dockerls = {},
 	bashls = {},
-	terraform_lsp = {},
+	terraformls = {},
 	gopls = {},
 	tsserver = {},
 	eslint = { cmd = { "eslint", "--stdin" } },

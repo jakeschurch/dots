@@ -1,49 +1,35 @@
-local spaces = require("hs.spaces")
-local fnutils = require("hs.funtils")
+local function execYabai(args)
+	local command = string.format("/etc/static/profiles/per-user/jake/bin/yabai %s", args)
+	print(string.format("yabai: %s", command))
+	os.execute(command)
+end
 
-local M = {
-	focusSpace = function(spaceNum)
-		for index, space in ipairs(spaces.allSpaces()) do
-			if spaceNum ~= index then
-				spaces.gotoSpace(space)
-			end
-		end
-	end,
-
-	newSpace = function()
-		spaces.addScreenToSpace(hs.screen.mainScreen())
-	end,
-
-	moveWindowToSpace = function(spaceNum)
-		local currentWindow = hs.window.focusedWindow()
-
-		for index, space in ipairs(spaces.allSpaces()) do
-			if spaceNum == index then
-				spaces.moveWindowToSpace(currentWindow, space)
-			end
-		end
-	end,
-
-	removeSpace = function()
-		local currentSpace = hs.spaces.focusedSpace()
-		local windowsInSpace = hs.spaces.windowsForSpace(currentSpace)
-		local nextSpace = nil
-
-		for _, space in ipairs(spaces.allSpaces()) do
-			if space ~= currentSpace then
-				nextSpace = space
-				break
-			end
-		end
-
-		for _, window in ipairs(windowsInSpace) do
-			spaces.moveWindowToSpace(window, nextSpace)
-		end
-
-		hs.spaces.gotoSpace(nextSpace)
-
-		hs.spaces.removeSpace(currentSpace)
-	end,
+-- throw/focus monitors
+local targets = {
+	-- x = "recent",
+	N = "prev",
+	n = "next",
 }
+for key, target in pairs(targets) do
+	hs.hotkey.bind({ "ctrl", "alt" }, key, function()
+		execYabai(string.format("-m display --focus %s", target))
+	end)
+	hs.hotkey.bind({ "ctrl", "cmd" }, key, function()
+		execYabai(string.format("-m window --display %s", target))
+		execYabai(string.format("-m display --focus %s", target))
+	end)
+end
+-- numbered monitors
+for i = 1, 5 do
+	hs.hotkey.bind({ "cmd" }, tostring(i), function()
+		execYabai(string.format("-m display --focus %s", i))
+	end)
+	hs.hotkey.bind({ "cmd", "shift" }, tostring(i), function()
+		execYabai(string.format("-m window --display %s", i))
+		execYabai(string.format("-m display --focus %s", i))
+	end)
+end
 
-return M
+return {
+	execYabai = execYabai,
+}

@@ -2,7 +2,8 @@ _: {
   ".." = "cd ../";
 
   open-resume = "zathura ~/Projects/resume/Schurch-Jake-2024-Resume.pdf &";
-  docker = "colima";
+  nix-setup = "~/.dots/./setup.sh";
+  # docker = "colima";
   # ssh = "mosh";
   man = "batman";
   ap = "ansible-playbook";
