@@ -20,7 +20,7 @@ create_ccache_dir
 
 # use nom if available, otherwise use nix to build it
 if command -v nom &> /dev/null; then
-  nom build .# --impure  
+  nom build .# --impure --show-trace 
 else
   nix build .#  --show-trace --extra-experimental-features 'nix-command flakes'
 fi && ./result/activate-user && sudo ./result/activate

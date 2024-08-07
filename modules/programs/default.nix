@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./lf.nix
     ./eww
     ./git
     ./hammerspoon
@@ -8,6 +9,7 @@
     ./kitty.nix
     ./neovim
     ./ranger
+    ./terragrunt.nix
     ./rofi
     ./slack.nix
     ./ssh.nix

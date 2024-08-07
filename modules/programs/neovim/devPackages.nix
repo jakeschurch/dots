@@ -163,7 +163,6 @@ in {
 
     hcl = with pkgs; [
       terraform-ls
-      terragrunt
       terraform-docs
       tflint
       tfenv

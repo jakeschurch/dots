@@ -21,6 +21,8 @@ in {
         download-nixpkgs-cache-index
         # latex
         # texlive.combined.scheme-medium
+        _1password
+        gh
 
         yabai
         moreutils
@@ -138,7 +140,7 @@ in {
       defaultKeymap = "vicmd";
       enableCompletion = lib.mkForce true;
       syntaxHighlighting.enable = true;
-      enableAutosuggestions = true;
+      autosuggestion.enable = true;
       initExtraBeforeCompInit = ''
         export ZSH_COMPDUMP=~/.zcompdump
         fpath+=(/etc/static/profiles/per-user/jake/share/zsh/site-functions /etc/static/profiles/per-user/jake/share/zsh/$ZSH_VERSION/functions /etc/static/profiles/per-user/jake/share/zsh/ /etc/static/profiles/per-user/jake/share/zsh/vendor-completions )
@@ -210,21 +212,6 @@ in {
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableZshIntegration = true;
-    };
-
-    gh = {
-      enable = true;
-      settings = {
-        git_protocol = "ssh";
-        editor = "nvim";
-        aliases = {
-          prdiff = "pr diff --patch";
-          myprs = "prlist --author=@me | awk '{print $1}' | xargs -n 1 gh prview";
-          prlist = "pr list --state=open \"$@\"";
-          co = "pr checkout";
-          pv = "pr view";
-        };
-      };
     };
 
     starship = {

@@ -128,7 +128,7 @@ telescope.setup({
 			"*~",
 			"*.lock",
 			"tags",
-			"%.git/*",
+			-- "%.git/*",
 			".DS_Store",
 			"__pycache__",
 		},

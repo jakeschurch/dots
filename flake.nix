@@ -1,8 +1,7 @@
 {
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    # inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     tfenv.url = "github:cjlarose/tfenv-nix";
     unstable.url = "nixpkgs/nixos-unstable";
@@ -11,7 +10,7 @@
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixGL = {
       url = "github:guibou/nixGL";
@@ -23,13 +22,7 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     nix-pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
 
-    neovim-nightly = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      flake = true;
-      inputs.nixpkgs.follows = "unstable";
-    };
-
-    darwin.url = "github:LnL7/nix-darwin";
+    darwin.url = "github:LnL7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixd.url = "github:nix-community/nixd";
@@ -72,7 +65,6 @@
     home-manager,
     darwin,
     nixGL,
-    neovim-nightly,
     lexical-lsp,
     nixd,
     tfenv,
@@ -82,6 +74,7 @@
       "x86_64-linux"
       "x86_64-darwin"
       "aarch64-darwin"
+      "aarch64-linux"
     ];
   in
     flake-utils.lib.eachSystem supportedSystems
@@ -114,6 +107,7 @@
                 lib =
                   prev.lib
                   // import ./lib.nix {
+                    inherit nixpkgs;
                     inherit (nixpkgs) lib;
                     inherit system pkgs home-manager darwin inputs;
                   };
@@ -143,7 +137,6 @@
             )
             ++ [
               nixd.overlays.default
-              neovim-nightly.overlays.default
               nixGL.overlay
               tfenv.overlays.default
             ]
@@ -181,16 +174,7 @@
           inherit pre-commit-check;
         };
 
-        apps = {
-          darwin-nixos-vm = {
-            type = "app";
-            program = toString (
-              pkgs.writers.writeBash "darwin-vm" ''
-                nix run nixpkgs#darwin.builder
-              ''
-            );
-          };
-        };
+        apps = {};
       }
     );
 }

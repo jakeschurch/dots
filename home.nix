@@ -5,7 +5,7 @@
   ...
 }: {
   home = {
-    stateVersion = "23.11";
+    stateVersion = "24.05";
 
     activation = {
       darwinFileLimits =
@@ -74,7 +74,6 @@
             "nix-hash --type sha256 --sri ${pkgs.path} > $out");
       };
     };
-    package = lib.mkForce pkgs.nixUnstable;
 
     settings = {
       auto-optimise-store = true;

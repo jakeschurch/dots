@@ -1,6 +1,7 @@
 {
   lib,
   darwin,
+  nixpkgs,
   system,
   pkgs,
   home-manager,
@@ -28,6 +29,7 @@
       specialArgs = {
         inherit inputs system pkgs user;
         inherit (pkgs) lib;
+        inherit nixpkgs;
       };
     };
 

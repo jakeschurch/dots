@@ -30,6 +30,10 @@ _: {
   xclip = "xclip -sel clip <";
 
   nix-gc = "nix-collect-garbage";
+  tg = "terragrunt";
+  tg_plan = "terragrunt run-all plan --terragrunt-source $(git rev-parse --show-toplevel)";
+  tg_init = "terragrunt run-all init --terragrunt-source $(git rev-parse --show-toplevel)";
+  tg_apply = "terragrunt run-all apply --terragrunt-source $(git rev-parse --show-toplevel)";
 
   groot = "cd $(git top)";
   ka = "kubectl apply -f";

@@ -26,7 +26,6 @@ cmp.setup({
 		end,
 	},
 	mapping = cmp.mapping.preset.insert({
-
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-e>"] = cmp.mapping.abort(),
@@ -69,7 +68,7 @@ cmp.setup({
 		{ name = "luasnip" }, -- For luasnip users.
 		-- { name = "rg",        keyword_length = 4 },
 		{ name = "emoji", insert = true },
-		{ name = "buffer", keyword_length = 4 },
+		{ name = "buffer", keyword_length = 3 },
 		{ name = "path" },
 	}),
 })
@@ -91,7 +90,10 @@ cmp.setup.cmdline({ ":" }, {
 	sources = {
 		{ name = "path" },
 		{ name = "buffer" },
+		{ name = "nvim_lsp" },
+		{ name = "cmdline" },
 	},
+	matching = { disallow_symbol_nonprefix_matching = false },
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).

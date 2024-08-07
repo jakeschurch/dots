@@ -5,9 +5,9 @@ local lsp_status_ok, lsp = pcall(require, "lsp")
 null_ls.setup({
 	sources = {
 		-- Generic
-		require("none-ls.formatting.trim_newlines"),
-		require("none-ls.formatting.trim_whitespace"),
-		none_ls.builtins.diagnostics.write_good,
+		-- require("none-ls.formatting.trim_newlines"),
+		-- require("none-ls.formatting.trim_whitespace"),
+		-- require("none-ls.diagnostics.write_good"),
 		-- null_ls.builtins.code_actions.prose_lint,
 		--
 		--	-- Python
@@ -111,9 +111,9 @@ null_ls.setup({
 
 		-- vim
 		--null_ls.builtins.diagnostics.vint,
-		require("null-ls-embedded").nls_source.with({
-			filetypes = { "markdown", "html", "heex", "leex", "yaml", "lua", "vim" },
-		}),
+		-- require("null-ls-embedded").nls_source.with({
+		-- 	filetypes = { "markdown", "html", "heex", "leex", "yaml", "lua", "vim" },
+		-- }),
 	},
 	debug = false,
 	on_attach = lsp.common_on_attach,

@@ -107,7 +107,6 @@ in {
   home.packages = devPackages;
 
   programs.neovim = {
-    package = pkgs.neovim-nightly;
     defaultEditor = true;
     # TODO: extraPackages = myPerlPackages;
     extraConfig =
