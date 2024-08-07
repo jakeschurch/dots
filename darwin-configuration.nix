@@ -15,6 +15,22 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "/info"
   ];
 
+  nix.linux-builder = {
+    enable = true;
+    ephemeral = true;
+    maxJobs = 4;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 40 * 1024;
+          memorySize = 8 * 1024;
+        };
+        cores = 4;
+      };
+    };
+  };
+
+  nix.distributedBuilds = true;
   users.users."${user}".home = "/Users/${user}";
 
   nix.configureBuildUsers = true;
@@ -22,8 +38,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   documentation.enable = true;
   documentation.doc.enable = true;
 
-  fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override {
       fonts = ["FiraCode" "DroidSansMono" "Hack" "JetBrainsMono"];
     })
