@@ -24,6 +24,8 @@ in {
         _1password
         gh
 
+        act
+
         yabai
         moreutils
         cloudflared
