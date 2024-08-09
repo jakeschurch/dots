@@ -1,7 +1,7 @@
 [
   {
     "name": "windwp/nvim-autopairs",
-    "rev": "e38c5d837e755ce186ae51d2c48e1b387c4425c6",
+    "rev": "4a39f2dcbe1967ddc3a0f76f863540dd3aa7871a",
     "ref": "master"
   },
   {
@@ -71,7 +71,7 @@
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "aa5dfa573220a0a511a25ee14ce1570b6c23e56a",
+    "rev": "0134169886958f3874f16eed7fe73d906a3e7e17",
     "ref": "master"
   },
   {
@@ -111,12 +111,12 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter-textobjects",
-    "rev": "33a17515b79ddb10d750320fa994098bdc3e93ef",
+    "rev": "ca93cb2c34b67ab22d01976fc90bc95627a3317f",
     "ref": "master"
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "c79b068f395817c39ed147d4ee76855c36b846e6",
+    "rev": "176e4464736c1feca190d77f481ed5972b513516",
     "ref": "master"
   },
   {
@@ -161,7 +161,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "6c505d4220b521f3b0e7b645f6ce45fa914d0eed",
+    "rev": "652386deae739e38fa1bcf2f06e3e7de9b3436ba",
     "ref": "master"
   },
   {
@@ -176,7 +176,7 @@
   },
   {
     "name": "lukas-reineke/indent-blankline.nvim",
-    "rev": "3fe94b8034dd5241cb882bb73847303b58857ecf",
+    "rev": "dddb5d21811c319eb6e51a993d8fb44b193aae3f",
     "ref": "master"
   },
   {
@@ -191,7 +191,7 @@
   },
   {
     "name": "lewis6991/gitsigns.nvim",
-    "rev": "58bd9e98d8e3c5a1c98af312e85247ee1afd3ed2",
+    "rev": "562dc47189ad3c8696dbf460d38603a74d544849",
     "ref": "main"
   },
   {
@@ -226,7 +226,7 @@
   },
   {
     "name": "junegunn/fzf",
-    "rev": "4e85f72f0ee237bef7a1617e0cf8c811a4091d72",
+    "rev": "c423c496a15b96cfc3c3fbd09135bcdc0c8e6b6e",
     "ref": "master"
   },
   {
@@ -281,7 +281,7 @@
   },
   {
     "name": "goolord/alpha-nvim",
-    "rev": "41283fb402713fc8b327e60907f74e46166f4cfd",
+    "rev": "36e4baca9533ec87afa948fe20a0a1c4897a6a6e",
     "ref": "main"
   },
   {
@@ -321,7 +321,7 @@
   },
   {
     "name": "akinsho/toggleterm.nvim",
-    "rev": "8ed0f52006d3207ec6c94de7db62da840937ef2a",
+    "rev": "137d06fb103952a0fb567882bb8527e2f92d327d",
     "ref": "main"
   },
   {
@@ -331,7 +331,7 @@
   },
   {
     "name": "L3MON4D3/LuaSnip",
-    "rev": "7552e6504ee95a9c8cfc6db53e389122ded46cd4",
+    "rev": "b84eeb3641b08324287587b426ec974b888390d9",
     "ref": "master"
   },
   {
@@ -341,7 +341,7 @@
   },
   {
     "name": "Exafunction/codeium.vim",
-    "rev": "e0342fde9474fdd0a36ff9692fe0031b7611a19f",
+    "rev": "0b74f274b82c00eaad4b5b5cd8b2e76f872d19f1",
     "ref": "main"
   }
 ]
