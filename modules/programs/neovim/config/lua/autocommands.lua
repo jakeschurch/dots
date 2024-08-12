@@ -15,7 +15,7 @@ augroup END
 hi myTodo cterm=bold,italic gui=bold,italic guibg=#32302f guifg=#fabd2f
 
 " trim new lines
-autocmd BufWritePre * silent! :%s#\v($\n)+%$##
+autocmd BufWritePre * silent! :%s/\s\+$//e
 
 augroup HiglightTODO
 autocmd!
