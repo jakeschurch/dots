@@ -12,9 +12,6 @@ _: {
   du = "dust";
   fg = " fg";
   find = "fd";
-  g = "git";
-  gco = "git checkout";
-  gs = "git switch -c";
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   m = "pipenv run python manage.py";
@@ -30,10 +27,6 @@ _: {
   xclip = "xclip -sel clip <";
 
   nix-gc = "nix-collect-garbage";
-  tg = "terragrunt";
-  tg_plan = "terragrunt run-all plan --terragrunt-source $(git rev-parse --show-toplevel)";
-  tg_init = "terragrunt run-all init --terragrunt-source $(git rev-parse --show-toplevel)";
-  tg_apply = "terragrunt run-all apply --terragrunt-source $(git rev-parse --show-toplevel)";
 
   groot = "cd $(git top)";
   ka = "kubectl apply -f";

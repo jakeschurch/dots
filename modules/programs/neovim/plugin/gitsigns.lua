@@ -1,12 +1,5 @@
 require("gitsigns").setup({
-	-- signs = {
-	-- 	add = { hl = "GitSignsAdd", text = "+", numhl = "GitSignsAddNr", link = "GitSignsAddLn" },
-	-- 	change = { hl = "GitSignsChange", text = "│", numhl = "GitSignsChangeNr", link = "GitSignsChangeLn" },
-	-- 	delete = { hl = "GitSignsDelete", text = "_", numhl = "GitSignsDeleteNr", link = "GitSignsDeleteLn" },
-	-- 	topdelete = { hl = "GitSignsDelete", text = "‾", numhl = "GitSignsDeleteNr", link = "GitSignsDeleteLn" },
-	-- 	changedelete = { hl = "GitSignsChange", text = "~", numhl = "GitSignsChangeNr", link = "GitSignsChangeLn" },
-	-- 	untracked = { hl = "GitSignsAdd", text = "┆", numhl = "GitSignsAddNr", link = "GitSignsAddLn" },
-	-- },
+	signs_staged_enable = true,
 	signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
 	numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
 	linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
@@ -49,23 +42,19 @@ require("gitsigns").setup({
 		-- Navigation
 		map("n", "]c", function()
 			if vim.wo.diff then
-				return "]c"
+				vim.cmd.normal({ "]c", bang = true })
+			else
+				gs.nav_hunk("next")
 			end
-			vim.schedule(function()
-				gs.next_hunk()
-			end)
-			return "<Ignore>"
-		end, { expr = true })
+		end)
 
 		map("n", "[c", function()
 			if vim.wo.diff then
-				return "[c"
+				vim.cmd.normal({ "[c", bang = true })
+			else
+				gs.nav_hunk("prev")
 			end
-			vim.schedule(function()
-				gs.prev_hunk()
-			end)
-			return "<Ignore>"
-		end, { expr = true })
+		end)
 
 		-- Actions
 		map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>")
@@ -89,3 +78,5 @@ require("gitsigns").setup({
 		map("x", "ih", ":<C-U>Gitsigns select_hunk<CR>")
 	end,
 })
+
+require("gruvbox").load()

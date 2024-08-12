@@ -5,6 +5,12 @@
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+  environment.extraOutputsToInstall = [
+    "doc"
+    "info"
+    "devdoc"
+  ];
+
   environment.pathsToLink = [
     "/share/zsh"
     "/share"
@@ -13,6 +19,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "/doc"
     "/etc"
     "/info"
+    "/share/doc"
   ];
 
   nix.linux-builder = {
@@ -23,9 +30,9 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       virtualisation = {
         darwin-builder = {
           diskSize = 40 * 1024;
-          memorySize = 8 * 1024;
+          memorySize = 4 * 1024;
         };
-        cores = 4;
+        cores = 3;
       };
     };
   };
@@ -37,6 +44,8 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   documentation.enable = true;
   documentation.doc.enable = true;
+  documentation.man.enable = true;
+  documentation.info.enable = true;
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {

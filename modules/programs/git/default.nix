@@ -13,6 +13,12 @@ in {
     perlPackages.TermReadKey
   ];
 
+  home.shellAliases = {
+    g = "git";
+    gco = "git checkout";
+    gs = "git switch -c";
+  };
+
   programs.git = {
     enable = true;
     userName = "Jake Schurch";

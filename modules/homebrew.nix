@@ -9,7 +9,7 @@ lib.mkIf pkgs.stdenv.isDarwin {
     onActivation = {
       cleanup = "uninstall";
       autoUpdate = false;
-      upgrade = false;
+      upgrade = true;
     };
 
     brews = [
