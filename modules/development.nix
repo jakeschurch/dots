@@ -40,10 +40,13 @@ in {
         bat-extras.prettybat
         wget
         lsd
+
         k9s
         kubectl
-
+        kubectx
+        kubernetes-helm
         kubelogin-oidc
+
         docker
         lazydocker
         docker-credential-helpers
@@ -88,6 +91,9 @@ in {
         gotop
         ccache
       ]
+      ++ (lib.optionals pkgs.stdenv.isDarwin [
+        arc-browser
+      ])
       ++ (lib.optionals pkgs.stdenv.isLinux [
         nixgl.nixGLIntel
         rofi

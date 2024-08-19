@@ -1,3 +1,5 @@
+vim.api.nvim_set_hl(0, "Search", {})
+vim.api.nvim_set_hl(0, "CurSearch", {})
 local function diff_source()
 	local gitsigns = vim.b.gitsigns_status_dict
 	if gitsigns then
@@ -29,14 +31,16 @@ require("lualine").setup({
 				end,
 			},
 			{ "diff", source = diff_source },
-			{ "searchcount" },
-			{ "selectioncount" },
 			{
 				"diagnostics",
 				require("lsp-status").diagnostics,
 			},
 		},
-		lualine_c = { "filename" },
+		lualine_c = {
+			"filename",
+			"searchcount",
+			"selectioncount",
+		},
 		lualine_x = { "filetype" },
 		lualine_y = { "os.date('%d-%b %r')", "progress" },
 		lualine_z = { "location" },

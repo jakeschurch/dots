@@ -1,14 +1,12 @@
-local status_ok, null_ls = pcall(require, "null-ls")
+local _status_ok, null_ls = pcall(require, "null-ls")
 
-local lsp_status_ok, lsp = pcall(require, "lsp")
+local _lsp_status_ok, lsp = pcall(require, "lsp")
 
 null_ls.setup({
 	sources = {
 		-- Generic
-		-- require("none-ls.formatting.trim_newlines"),
-		-- require("none-ls.formatting.trim_whitespace"),
-		-- require("none-ls.diagnostics.write_good"),
-		-- null_ls.builtins.code_actions.prose_lint,
+		require("none-ls.formatting.trim_newlines"),
+		require("none-ls.formatting.trim_whitespace"),
 		--
 		--	-- Python
 		null_ls.builtins.formatting.black,
@@ -52,8 +50,6 @@ null_ls.setup({
 		-- Lua
 		null_ls.builtins.formatting.stylua,
 
-		null_ls.builtins.formatting.prettier_d_slim,
-
 		-- Spelling
 		null_ls.builtins.completion.spell.with({
 			filetypes = { "txt", "markdown", "vimwiki" },
@@ -69,10 +65,6 @@ null_ls.setup({
 		null_ls.builtins.code_actions.statix,
 		null_ls.builtins.formatting.alejandra,
 		null_ls.builtins.diagnostics.deadnix,
-
-		-- haskell
-		null_ls.builtins.formatting.brittany,
-		null_ls.builtins.formatting.cabal_fmt,
 
 		-- Git
 		null_ls.builtins.diagnostics.gitlint,

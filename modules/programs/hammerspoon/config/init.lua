@@ -21,7 +21,7 @@ local appOpenBindings = {
 		hs.application.launchOrFocus("notion")
 	end,
 	[singleKey("c", "browser")] = function()
-		hs.application.launchOrFocus("Google Chrome")
+		hs.application.launchOrFocus("Arc")
 	end,
 	[singleKey("return", "terminal")] = function()
 		hs.application.launchOrFocus("wezterm")
