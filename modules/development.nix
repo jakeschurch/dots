@@ -139,7 +139,7 @@ in {
       bashrcExtra = ''
         set -o vi
 
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
+        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh &
       '';
     };
 
@@ -151,23 +151,21 @@ in {
       autosuggestion.enable = true;
       initExtraBeforeCompInit = ''
         export ZSH_COMPDUMP=~/.zcompdump
-        fpath+=(/etc/static/profiles/per-user/jake/share/zsh/site-functions /etc/static/profiles/per-user/jake/share/zsh/$ZSH_VERSION/functions /etc/static/profiles/per-user/jake/share/zsh/ /etc/static/profiles/per-user/jake/share/zsh/vendor-completions )
-        # workaround for site-functions completion bug
-        source <(cat /etc/static/profiles/per-user/jake/share/zsh/site-functions/_*) 2>/dev/null 1>&2
+        fpath+=(/etc/static/profiles/per-user/jake/share/zsh/site-functions /etc/static/profiles/per-user/jake/share/zsh/$ZSH_VERSION/functions /etc/static/profiles/per-user/jake/share/zsh/ /etc/static/profiles/per-user/jake/share/zsh/vendor-completions)
       '';
       initExtra = ''
         setopt autocd
-
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
 
         bindkey "''${key[Up]}" up-line-or-search
         ZSH_HIGHLIGHT_HIGHLIGHTERS+=brackets
 
         bindkey '^I' expand-or-complete
 
-        # source <(colima completion zsh)
-        source <(kubectl completion zsh)
-        eval "$(direnv hook zsh)"
+        source <(colima completion zsh) &
+        source <(kubectl completion zsh) &
+        eval "$(direnv hook zsh)" &
+        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh &
+        autopair-init &
 
         autoload -z edit-command-line
         zle -N edit-command-line
@@ -176,8 +174,6 @@ in {
         export AWS_PROFILE="fg-staging"
         export AWS_REGION="us-west-2"
         export PG_VERSION="15"
-
-        autopair-init
       '';
       zplug = {
         enable = true;
@@ -198,9 +194,13 @@ in {
 
     fish = {
       enable = false;
-      shellInit = ''
+      interactiveShellInit = ''
+        set fish_greeting
         fish_vi_key_bindings
       '';
+      plugins = with pkgs.fishPlugins; [
+        autopair
+      ];
     };
 
     fzf = {
@@ -227,7 +227,6 @@ in {
       enableBashIntegration = true;
       enableZshIntegration = true;
       enableFishIntegration = true;
-      enableIonIntegration = false;
       settings = {
         add_newline = true;
         character = {
