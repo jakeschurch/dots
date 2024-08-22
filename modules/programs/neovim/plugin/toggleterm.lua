@@ -11,7 +11,7 @@ end
 vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
 
 require("toggleterm").setup({
-	close_on_exit = true,
+	close_on_exit = false,
 	direction = "float",
 	open_mapping = [[<c-\>]],
 	persist_size = true,
