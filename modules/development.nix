@@ -25,6 +25,9 @@ in {
         _1password
         gh
 
+        steam
+        notion-app-enhanced
+
         act
         gnused
 
