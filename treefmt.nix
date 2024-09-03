@@ -4,10 +4,19 @@ _: {
     "*.nix"
     "!./Templates/flake.nix"
   ];
+
+  settings.formatter.stylua.options = [
+    "--indent-type"
+    "Spaces"
+    "--indent-width"
+    "2"
+    "--column-width"
+    "80"
+  ];
+
   programs = {
     # lua
     stylua.enable = true;
-
     shellcheck.enable = true;
 
     # nix

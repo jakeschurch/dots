@@ -1,29 +1,29 @@
 function hs.screen.get(screen_name)
-	local allScreens = hs.screen.allScreens()
-	for _, screen in ipairs(allScreens) do
-		if screen:name() == screen_name then
-			return screen
-		end
-	end
+  local allScreens = hs.screen.allScreens()
+  for _, screen in ipairs(allScreens) do
+    if screen:name() == screen_name then
+      return screen
+    end
+  end
 end
 
 function hs.screen.withFocusedWindow(func)
-	local win = hs.window.focusedWindow()
-	if win == nil then
-		return
-	end
-	return func(win)
+  local win = hs.window.focusedWindow()
+  if win == nil then
+    return
+  end
+  return func(win)
 end
 
 -- Returns the width of the current screen size
 -- isFullscreen = false removes the toolbar
 -- and dock sizes
 function hs.screen.minWidth(screen, isFullscreen)
-	local screen_frame = screen:frame()
-	if isFullscreen then
-		screen_frame = screen:fullFrame()
-	end
-	return screen_frame.w
+  local screen_frame = screen:frame()
+  if isFullscreen then
+    screen_frame = screen:fullFrame()
+  end
+  return screen_frame.w
 end
 
 --
@@ -31,34 +31,37 @@ end
 -- isFullscreen = false removes the toolbar
 -- and dock sizes
 function hs.screen.minHeight(screen, isFullscreen)
-	local screen_frame = screen:frame()
-	if isFullscreen then
-		screen_frame = screen:fullFrame()
-	end
-	return screen_frame.h
+  local screen_frame = screen:frame()
+  if isFullscreen then
+    screen_frame = screen:fullFrame()
+  end
+  return screen_frame.h
 end
 
 function hs.screen.minX(refScreen)
-	return refScreen:frame().x
+  return refScreen:frame().x
 end
 
 function hs.screen.minY(refScreen)
-	return refScreen:frame().y
+  return refScreen:frame().y
 end
 
 function hs.screen.almostMinX(refScreen)
-	local min_x = refScreen:frame().x
-		+ (
-			((refScreen:frame().w - hs.screen.minWidth(refScreen)) / 2)
-			- ((refScreen:frame().w - hs.screen.minWidth()) / 4)
-		)
-	return min_x
+  local min_x = refScreen:frame().x
+    + (
+      ((refScreen:frame().w - hs.screen.minWidth(refScreen)) / 2)
+      - ((refScreen:frame().w - hs.screen.minWidth()) / 4)
+    )
+  return min_x
 end
 
 function hs.screen.almostMinY(refScreen)
-	local min_y = refScreen:frame().y
-		+ (((refScreen:frame().h - hs.screen.minHeight()) / 2) - ((refScreen:frame().h - hs.screen.minHeight()) / 4))
-	return min_y
+  local min_y = refScreen:frame().y
+    + (
+      ((refScreen:frame().h - hs.screen.minHeight()) / 2)
+      - ((refScreen:frame().h - hs.screen.minHeight()) / 4)
+    )
+  return min_y
 end
 
 -- Returns the frame of the available screen
@@ -66,138 +69,138 @@ end
 -- isFullscreen = false removes the toolbar
 -- and dock sizes
 function hs.screen.minFrame(refScreen, isFullscreen)
-	local result = {
-		x = hs.screen.minX(refScreen),
-		y = hs.screen.minY(refScreen),
-		w = hs.screen.minWidth(refScreen, isFullscreen),
-		h = hs.screen.minHeight(refScreen, isFullscreen),
-	}
-	return result
+  local result = {
+    x = hs.screen.minX(refScreen),
+    y = hs.screen.minY(refScreen),
+    w = hs.screen.minWidth(refScreen, isFullscreen),
+    h = hs.screen.minHeight(refScreen, isFullscreen),
+  }
+  return result
 end
 
 hs.window.move = {
-	-- +-----------------+
-	-- |        |        |
-	-- |        |  HERE  |
-	-- |        |        |
-	-- +-----------------+
-	right = function()
-		return hs.screen.withFocusedWindow(function(win)
-			local minFrame = hs.screen.minFrame(win:screen(), false)
-			minFrame.x = minFrame.x + (minFrame.w / 2)
-			minFrame.w = minFrame.w / 2
-			win:setFrame(minFrame)
-		end)
-	end,
+  -- +-----------------+
+  -- |        |        |
+  -- |        |  HERE  |
+  -- |        |        |
+  -- +-----------------+
+  right = function()
+    return hs.screen.withFocusedWindow(function(win)
+      local minFrame = hs.screen.minFrame(win:screen(), false)
+      minFrame.x = minFrame.x + (minFrame.w / 2)
+      minFrame.w = minFrame.w / 2
+      win:setFrame(minFrame)
+    end)
+  end,
 
-	-- +-----------------+
-	-- |        |        |
-	-- |  HERE  |        |
-	-- |        |        |
-	-- +-----------------+
-	left = function()
-		return hs.screen.withFocusedWindow(function(win)
-			local minFrame = hs.screen.minFrame(win:screen(), false)
-			minFrame.w = minFrame.w / 2
-			win:setFrame(minFrame)
-		end)
-	end,
+  -- +-----------------+
+  -- |        |        |
+  -- |  HERE  |        |
+  -- |        |        |
+  -- +-----------------+
+  left = function()
+    return hs.screen.withFocusedWindow(function(win)
+      local minFrame = hs.screen.minFrame(win:screen(), false)
+      minFrame.w = minFrame.w / 2
+      win:setFrame(minFrame)
+    end)
+  end,
 
-	-- +-----------------+
-	-- |      HERE       |
-	-- +-----------------+
-	-- |                 |
-	-- +-----------------+
-	up = function()
-		return hs.screen.withFocusedWindow(function(win)
-			local minFrame = hs.screen.minFrame(win:screen(), false)
-			minFrame.h = minFrame.h / 2
-			win:setFrame(minFrame)
-		end)
-	end,
+  -- +-----------------+
+  -- |      HERE       |
+  -- +-----------------+
+  -- |                 |
+  -- +-----------------+
+  up = function()
+    return hs.screen.withFocusedWindow(function(win)
+      local minFrame = hs.screen.minFrame(win:screen(), false)
+      minFrame.h = minFrame.h / 2
+      win:setFrame(minFrame)
+    end)
+  end,
 
-	-- +-----------------+
-	-- |                 |
-	-- +-----------------+
-	-- |      HERE       |
-	-- +-----------------+
-	down = function()
-		return hs.screen.withFocusedWindow(function(win)
-			local minFrame = hs.screen.minFrame(win:screen(), false)
-			minFrame.y = minFrame.y + minFrame.h / 2
-			minFrame.h = minFrame.h / 2
-			win:setFrame(minFrame)
-		end)
-	end,
+  -- +-----------------+
+  -- |                 |
+  -- +-----------------+
+  -- |      HERE       |
+  -- +-----------------+
+  down = function()
+    return hs.screen.withFocusedWindow(function(win)
+      local minFrame = hs.screen.minFrame(win:screen(), false)
+      minFrame.y = minFrame.y + minFrame.h / 2
+      minFrame.h = minFrame.h / 2
+      win:setFrame(minFrame)
+    end)
+  end,
 }
 
 hs.window.focus = {
 
-	north = function()
-		return hs.screen.withFocusedWindow(function(win)
-			return win.focusWindowNorth(nil, false, true)
-		end)
-	end,
+  north = function()
+    return hs.screen.withFocusedWindow(function(win)
+      return win.focusWindowNorth(nil, false, true)
+    end)
+  end,
 
-	east = function()
-		return hs.screen.withFocusedWindow(function(win)
-			return win.focusWindowEast(nil, false, true)
-		end)
-	end,
+  east = function()
+    return hs.screen.withFocusedWindow(function(win)
+      return win.focusWindowEast(nil, false, true)
+    end)
+  end,
 
-	south = function()
-		return hs.screen.withFocusedWindow(function(win)
-			return win.focusWindowSouth(nil, false, true)
-		end)
-	end,
+  south = function()
+    return hs.screen.withFocusedWindow(function(win)
+      return win.focusWindowSouth(nil, false, true)
+    end)
+  end,
 
-	west = function()
-		return hs.screen.withFocusedWindow(function(win)
-			return win.focusWindowWest(nil, false, true)
-		end)
-	end,
+  west = function()
+    return hs.screen.withFocusedWindow(function(win)
+      return win.focusWindowWest(nil, false, true)
+    end)
+  end,
 }
 
 hs.window.action = {
 
-	move = function(screenNum)
-		return hs.screen.withFocusedWindow(function(win)
-			win:moveToScreen(hs.screen.find(screenNum))
-		end)
-	end,
+  move = function(screenNum)
+    return hs.screen.withFocusedWindow(function(win)
+      win:moveToScreen(hs.screen.find(screenNum))
+    end)
+  end,
 
-	toggleFullscreen = function()
-		return hs.screen.withFocusedWindow(function(win)
-			win:toggleFullscreen()
-		end)
+  toggleFullscreen = function()
+    return hs.screen.withFocusedWindow(function(win)
+      win:toggleFullscreen()
+    end)
 
-		-- REVIEW
-		-- local f = win:frame()
-		-- local screen = win:screen()
-		-- local max = screen:frame()
+    -- REVIEW
+    -- local f = win:frame()
+    -- local screen = win:screen()
+    -- local max = screen:frame()
 
-		-- f.x = max.x
-		-- f.y = max.y
-		-- f.w = max.w
-		-- f.h = max.h
-		-- win:setFrame(f)
-		-- redrawBorder()
-	end,
+    -- f.x = max.x
+    -- f.y = max.y
+    -- f.w = max.w
+    -- f.h = max.h
+    -- win:setFrame(f)
+    -- redrawBorder()
+  end,
 
-	close = function()
-		return hs.screen.withFocusedWindow(function(win)
-			win:close()
-		end)
-	end,
+  close = function()
+    return hs.screen.withFocusedWindow(function(win)
+      win:close()
+    end)
+  end,
 
-	switch = {
-		next = function()
-			hs.window.switcher.nextWindow()
-		end,
-		prev = function()
-			hs.window.switcher.prevWindow()
-		end,
-	},
+  switch = {
+    next = function()
+      hs.window.switcher.nextWindow()
+    end,
+    prev = function()
+      hs.window.switcher.prevWindow()
+    end,
+  },
 }
 
 -- +------------------+
@@ -210,8 +213,8 @@ hs.window.action = {
 -- Where the window's size is equal to
 -- the smaller available screen size
 function hs.window.fullscreenCenter(win)
-	local minFrame = hs.screen.minFrame(win:screen(), false)
-	win:setFrame(minFrame)
+  local minFrame = hs.screen.minFrame(win:screen(), false)
+  win:setFrame(minFrame)
 end
 
 -- +------------------+
@@ -222,14 +225,15 @@ end
 -- |                  |
 -- +------------------+
 function hs.window.fullscreenAlmostCenter(win)
-	local offsetW = hs.screen.minX(win:screen()) - hs.screen.almostMinX(win:screen())
-	local screen = win:screen()
-	win:setFrame({
-		x = hs.screen.almostMinX(screen),
-		y = hs.screen.minY(screen),
-		w = hs.screen.minWidth(isFullscreen) + (2 * offsetW),
-		h = hs.screen.minHeight(screen, isFullscreen),
-	})
+  local offsetW = hs.screen.minX(win:screen())
+    - hs.screen.almostMinX(win:screen())
+  local screen = win:screen()
+  win:setFrame({
+    x = hs.screen.almostMinX(screen),
+    y = hs.screen.minY(screen),
+    w = hs.screen.minWidth(isFullscreen) + (2 * offsetW),
+    h = hs.screen.minHeight(screen, isFullscreen),
+  })
 end
 
 -- It like fullscreen but with minY and minHeight values
@@ -241,22 +245,22 @@ end
 -- |                  |
 -- +------------------+
 function hs.window.fullscreenWidth(win)
-	local minFrame = hs.screen.minFrame(win:screen(), false)
-	win:setFrame({
-		x = hs.screen.almostMinX(win:screen()),
-		y = hs.screen.minY(win:screen()),
-		w = minFrame.w,
-		h = minFrame.h,
-	})
+  local minFrame = hs.screen.minFrame(win:screen(), false)
+  win:setFrame({
+    x = hs.screen.almostMinX(win:screen()),
+    y = hs.screen.minY(win:screen()),
+    w = minFrame.w,
+    h = minFrame.h,
+  })
 end
 
 function focus(callback)
-	local win = hs.window.focusedWindow()
-	if win == nil then
-		return
-	end
+  local win = hs.window.focusedWindow()
+  if win == nil then
+    return
+  end
 
-	return callback(win)
+  return callback(win)
 end
 
 hs.hotkey.bind({ "cmd" }, "f", hs.window.action.toggleFullscreen)

@@ -14,33 +14,37 @@ hs.grid.setMargins("0x0")
 hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
 
 local appOpenBindings = {
-	[singleKey("a", "around")] = function()
-		hs.application.launchOrFocus("around")
-	end,
-	[singleKey("n", "notion")] = function()
-		hs.application.launchOrFocus("notion")
-	end,
-	[singleKey("c", "browser")] = function()
-		hs.application.launchOrFocus("Arc")
-	end,
-	[singleKey("return", "terminal")] = function()
-		hs.application.launchOrFocus("wezterm")
-	end,
+  [singleKey("a", "around")] = function()
+    hs.application.launchOrFocus("around")
+  end,
+  [singleKey("n", "notion")] = function()
+    hs.application.launchOrFocus("notion")
+  end,
+  [singleKey("c", "browser")] = function()
+    hs.application.launchOrFocus("Arc")
+  end,
+  [singleKey("return", "terminal")] = function()
+    hs.application.launchOrFocus("wezterm")
+  end,
 
-	[singleKey("s", "slack")] = function()
-		hs.application.launchOrFocus("Slack")
-	end,
+  [singleKey("s", "slack")] = function()
+    hs.application.launchOrFocus("Slack")
+  end,
 
-	[singleKey("z", "zoom")] = function()
-		hs.application.launchOrFocus("zoom.us")
-	end,
+  [singleKey("z", "zoom")] = function()
+    hs.application.launchOrFocus("zoom.us")
+  end,
 
-	[singleKey("w", "whatsapp")] = function()
-		hs.application.launchOrFocus("whatsapp")
-	end,
+  [singleKey("w", "whatsapp")] = function()
+    hs.application.launchOrFocus("whatsapp")
+  end,
 }
-hs.hotkey.bind({ MOD }, "o", spoon.RecursiveBinder.recursiveBind(appOpenBindings))
+hs.hotkey.bind(
+  { MOD },
+  "o",
+  spoon.RecursiveBinder.recursiveBind(appOpenBindings)
+)
 
 hs.hotkey.bind({ "cmd" }, "r", function()
-	hs.reload()
+  hs.reload()
 end)
