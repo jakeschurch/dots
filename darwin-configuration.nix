@@ -22,30 +22,40 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "/share/doc"
   ];
 
-  nix.linux-builder = {
-    enable = true;
-    ephemeral = true;
-    maxJobs = 4;
-    config = {
-      virtualisation = {
-        darwin-builder = {
-          diskSize = 40 * 1024;
-          memorySize = 4 * 1024;
+  nix = {
+    linux-builder = {
+      enable = true;
+      ephemeral = true;
+      maxJobs = 4;
+      config = {
+        virtualisation = {
+          darwin-builder = {
+            diskSize = 40 * 1024;
+            memorySize = 4 * 1024;
+          };
+          cores = 3;
         };
-        cores = 3;
       };
     };
+
+    distributedBuilds = true;
+
+    configureBuildUsers = true;
+
+    gc.automatic = true;
+
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
   };
 
-  nix.distributedBuilds = true;
   users.users."${user}".home = "/Users/${user}";
 
-  nix.configureBuildUsers = true;
-
-  documentation.enable = true;
-  documentation.doc.enable = true;
-  documentation.man.enable = true;
-  documentation.info.enable = true;
+  documentation = {
+    enable = true;
+    doc.enable = true;
+    man.enable = true;
+    info.enable = true;
+  };
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {
@@ -88,9 +98,4 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   # Keep nix-daemon updated.
   services.nix-daemon.enable = true;
-
-  nix.gc.automatic = true;
-
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
-  nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 }
