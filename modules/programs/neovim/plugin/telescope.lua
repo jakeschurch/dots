@@ -97,6 +97,7 @@ telescope.setup({
 
 				["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
 				["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
+				["<C-h>"] = "which_key",
 			},
 			n = {
 				["<esc>"] = actions.close,
@@ -125,10 +126,8 @@ telescope.setup({
 		},
 		file_ignore_patterns = {
 			"node_modules",
-			"*~",
 			"*.lock",
 			"tags",
-			-- "%.git/*",
 			".DS_Store",
 			"__pycache__",
 		},
@@ -177,11 +176,25 @@ telescope.setup({
 })
 
 local keymap = require("utils").keymap
-keymap("n", "<leader>jk", ":lua require('telescope.builtin').find_files({cwd = get_cwd()})<cr>", {})
-keymap("n", "<C-p>", ':lua require("telescope.builtin").find_files({ cwd = get_cwd() })<cr>', {})
-keymap("n", "<leader>jj", ":lua require('telescope.builtin').live_grep{ cwd = get_cwd(), }<cr>", {})
-keymap("n", "<leader>jh", ':lua require("telescope.builtin").live_grep{ cwd = "$HOME", }<cr>', {})
-keymap("n", "<leader>bb", ":lua require('telescope.builtin').buffers()<cr>", {})
+local builtin = require("telescope.builtin")
 
-require("telescope").load_extension("ui-select")
-require("telescope").load_extension("fzf")
+keymap("n", "<leader>jk", builtin.git_files)
+
+keymap("n", "<C-p>", function()
+	builtin.find_files({ cwd = get_cwd() })
+end)
+
+keymap("n", "<leader>jj", function()
+	builtin.live_grep({ cwd = get_cwd() })
+end)
+
+keymap("n", "<leader>jh", function()
+	builtin.live_grep({ cwd = os.getenv("HOME") })
+end)
+keymap("n", "<leader>bb", builtin.buffers)
+keymap("n", "<leader>fm", builtin.man_pages)
+keymap("n", "<leader>fh", builtin.help_tags)
+keymap("n", "<leader>fc", builtin.command_history)
+
+telescope.load_extension("ui-select")
+telescope.load_extension("fzf")

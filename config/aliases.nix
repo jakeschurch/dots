@@ -4,6 +4,7 @@ _: {
   aws_prod_ca = "export AWS_PROFILE=fg-production-ca-central-1 && export AWS_REGION=ca-central-1";
   aws_prod_eu = "export AWS_PROFILE=fg-production-eu-west-1 && export AWS_REGION=eu-west-1";
   aws_staging = "export AWS_PROFILE=fg-staging && export AWS_REGION=us-west-2";
+  k9s = "k9s --headless";
 
   open-resume = "zathura ~/Projects/resume/Schurch-Jake-2024-Resume.pdf &";
   nix-setup = "~/.dots/./setup.sh";

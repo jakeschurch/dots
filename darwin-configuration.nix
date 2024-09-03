@@ -90,5 +90,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   services.nix-daemon.enable = true;
 
   nix.gc.automatic = true;
+
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
   nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 }

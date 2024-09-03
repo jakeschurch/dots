@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
   download-nixpkgs-cache-index = pkgs.writeShellScriptBin "download-nixpkgs-cache-index" ''
@@ -147,18 +148,30 @@ in {
       enable = true;
       defaultKeymap = "vicmd";
       enableCompletion = lib.mkForce true;
-      syntaxHighlighting.enable = true;
+      syntaxHighlighting = {
+        enable = true;
+        highlighters = ["brackets"];
+      };
       autosuggestion.enable = true;
       initExtraBeforeCompInit = ''
         export ZSH_COMPDUMP=~/.zcompdump
         fpath+=(/etc/static/profiles/per-user/jake/share/zsh/site-functions /etc/static/profiles/per-user/jake/share/zsh/$ZSH_VERSION/functions /etc/static/profiles/per-user/jake/share/zsh/ /etc/static/profiles/per-user/jake/share/zsh/vendor-completions)
       '';
+      autocd = true;
+      history = {
+        size = 100000;
+        path = "${config.xdg.dataHome}/zsh/history";
+        extended = true;
+      };
+      envExtra = ''
+        export AWS_PROFILE="fg-staging"
+        export AWS_REGION="us-west-2"
+        export PG_VERSION="15"
+      '';
       initExtra = ''
         setopt autocd
 
         bindkey "''${key[Up]}" up-line-or-search
-        ZSH_HIGHLIGHT_HIGHLIGHTERS+=brackets
-
         bindkey '^I' expand-or-complete
 
         source <(colima completion zsh) &
@@ -170,10 +183,6 @@ in {
         autoload -z edit-command-line
         zle -N edit-command-line
         bindkey -M vicmd v edit-command-line
-
-        export AWS_PROFILE="fg-staging"
-        export AWS_REGION="us-west-2"
-        export PG_VERSION="15"
       '';
       zplug = {
         enable = true;

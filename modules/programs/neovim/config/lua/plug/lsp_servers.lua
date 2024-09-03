@@ -46,7 +46,9 @@ return {
 	terraformls = {},
 	gopls = {},
 	tsserver = {},
-	eslint = { cmd = { "eslint", "--stdin" } },
+	eslint = {
+		cmd = { "eslint", "--stdin", "-c", "$(fd --hidden 'eslint*rc')" },
+	},
 	jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
 	lua_ls = {
 		cmd = { "lua-language-server" },

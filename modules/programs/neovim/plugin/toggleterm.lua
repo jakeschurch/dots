@@ -3,7 +3,7 @@ local keymap = require("utils").keymap
 ---@diagnostic disable-next-line: unused-function
 function _G.set_terminal_keymaps()
 	local opts = { buffer = 0 }
-	keymap("t", "<esc><esc>", [[<C-\><C-n>]], opts)
+	keymap("t", "<alt><esc>", [[<C-\><C-n>]], opts)
 	keymap("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
 end
 

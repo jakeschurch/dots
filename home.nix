@@ -8,6 +8,10 @@
     stateVersion = "24.05";
 
     activation = {
+      diff = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        # REVIEW
+        # ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
+      '';
       darwinFileLimits =
         lib.mkIf
         pkgs.stdenv.isDarwin

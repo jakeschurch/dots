@@ -48,7 +48,9 @@ null_ls.setup({
 		require("none-ls.diagnostics.eslint"),
 
 		-- Lua
-		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.formatting.stylua.with({
+			extra_args = { "--indent-type", "Spaces", "--indent-width", "2" },
+		}),
 
 		-- Spelling
 		null_ls.builtins.completion.spell.with({

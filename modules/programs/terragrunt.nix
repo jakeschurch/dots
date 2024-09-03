@@ -21,7 +21,8 @@ in {
       tg_state = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) state";
     };
 
-    # home.sessionVariables.TF_PLUGIN_CACHE_DIR = TF_PLUGIN_CACHE_DIR;
+    sessionVariables = {inherit TF_PLUGIN_CACHE_DIR;};
+
     activation.terragrunt-setup = lib.hm.dag.entryAfter ["writeBoundary"] ''
       if [ ! -d ${TF_PLUGIN_CACHE_DIR} ]; then
         mkdir -p ${TF_PLUGIN_CACHE_DIR}
