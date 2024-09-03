@@ -2,6 +2,7 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.flake = true;
 
     tfenv.url = "github:cjlarose/tfenv-nix";
     unstable.url = "nixpkgs/nixos-unstable";
@@ -94,6 +95,7 @@
             ];
             packageOverrides = _pkgs: {
               inherit lexical-lsp;
+              inherit (nixpkgs) narHash;
               unstable = import unstable {
                 inherit system;
                 config.allowUnfree = true;

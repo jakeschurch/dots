@@ -70,12 +70,7 @@
     registry = {
       nixpkgs.to = {
         type = "path";
-        inherit (pkgs) path;
-        narHash =
-          builtins.readFile
-          (pkgs.runCommandLocal "get-nixpkgs-hash"
-            {nativeBuildInputs = [pkgs.nix];}
-            "nix-hash --type sha256 --sri ${pkgs.path} > $out");
+        inherit (pkgs) path narHash;
       };
     };
 
