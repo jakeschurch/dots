@@ -30,7 +30,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       config = {
         virtualisation = {
           darwin-builder = {
-            diskSize = 40 * 1024;
+            diskSize = 60 * 1024;
             memorySize = 4 * 1024;
           };
           cores = 3;

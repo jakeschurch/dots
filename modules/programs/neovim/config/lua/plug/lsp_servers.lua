@@ -47,7 +47,7 @@ return {
   gopls = {},
   tsserver = {},
   eslint = {
-    cmd = { "eslint", "--stdin", "-c", "$(fd --hidden 'eslint*rc')" },
+    cmd = { "eslint", "--stdin" },
   },
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   lua_ls = {

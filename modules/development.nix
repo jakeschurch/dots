@@ -26,6 +26,7 @@ in {
         gh
 
         act
+        gnused
 
         yabai
         moreutils
