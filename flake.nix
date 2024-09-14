@@ -28,6 +28,9 @@
 
     nixd.url = "github:nix-community/nixd";
     nixd.inputs.nixpkgs.follows = "nixpkgs";
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
   };
 
   nixConfig = {
@@ -59,16 +62,10 @@
   outputs = {
     self,
     nixpkgs,
-    treefmt-nix,
-    nix-pre-commit-hooks,
     flake-utils,
     unstable,
     home-manager,
     darwin,
-    nixGL,
-    lexical-lsp,
-    nixd,
-    tfenv,
     ...
   } @ inputs: let
     supportedSystems = [
@@ -83,7 +80,7 @@
       system: let
         inherit (inputs.unstable.lib) optionalAttrs;
 
-        pkgs = import nixpkgs {
+        pkgs = import inputs.nixpkgs {
           inherit system;
 
           config = {
@@ -94,7 +91,10 @@
               "electron-19.1.9"
             ];
             packageOverrides = _pkgs: {
-              inherit lexical-lsp;
+              inherit (inputs) lexical-lsp;
+              inherit (nixpkgs) narHash;
+              neovim = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+
               unstable = import unstable {
                 inherit system;
                 config.allowUnfree = true;
@@ -137,16 +137,17 @@
               }
             )
             ++ [
-              nixd.overlays.default
-              nixGL.overlay
-              tfenv.overlays.default
+              inputs.nixd.overlays.default
+              inputs.nixGL.overlay
+              inputs.tfenv.overlays.default
             ]
             ++ import ./overlays.nix {pkgs = import nixpkgs {inherit system;};};
         };
 
-        treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
         pre-commit-check = import ./pre-commit-hooks.nix {
-          inherit pkgs system nix-pre-commit-hooks;
+          inherit pkgs system;
+          inherit (inputs) nix-pre-commit-hooks;
         };
       in rec {
         darwinConfigurations.curiosity = pkgs.lib.mkDarwinHome {user = "jake";};

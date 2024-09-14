@@ -108,6 +108,7 @@ in {
 
   programs.neovim = {
     defaultEditor = true;
+    package = pkgs.neovim;
     # TODO: extraPackages = myPerlPackages;
     extraConfig =
       luaConfig ''

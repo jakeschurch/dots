@@ -115,6 +115,11 @@ in {
       alejandra
       deadnix
       nil
+      rnix-lsp
+    ];
+
+    graphql = with pkgs.nodePackages; [
+      graphql-language-service-cli
     ];
 
     typescript = with pkgs; [
@@ -127,7 +132,6 @@ in {
       nodePackages.webpack
       nodePackages.webpack-cli
 
-      nodejs
       nodePackages.neovim
     ];
 
@@ -143,6 +147,7 @@ in {
       luarocks
       sumneko-lua-language-server
       stylua
+      luaPackages.jsregexp
     ];
 
     haskell = with pkgs; [

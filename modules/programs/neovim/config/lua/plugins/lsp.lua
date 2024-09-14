@@ -13,6 +13,13 @@ local common_capabilities = vim.tbl_extend(
   { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
 )
 
+lsp.util = { default_config = {} }
+lsp.util.default_config = vim.tbl_extend("force", lsp.util.default_config, {
+  on_attach = function(client)
+    client.server_capabilities.semanticTokensProvider = nil
+  end,
+})
+
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
@@ -31,9 +38,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
 
 local lsp_formatting = function(bufnr)
   vim.lsp.buf.format({
-    filter = function(_client)
-      return true
-      -- return client.name == "null-ls"
+    filter = function(client)
+      return client.name == "null-ls"
     end,
     timeout_ms = 5000,
     bufnr = bufnr,
@@ -81,9 +87,20 @@ function lsp.common_on_attach(client, bufnr)
   end
 
   lsp_status.on_attach(client, bufnr)
+
+  if client.supports_method("textDocument/formatting") then
+    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = augroup,
+      buffer = bufnr,
+      callback = function()
+        lsp_formatting(bufnr)
+      end,
+    })
+  end
 end
 
-for server, config in pairs(require("plug.lsp_servers")) do
+for server, config in pairs(require("plugins.lsp_servers")) do
   config.on_attach = lsp.common_on_attach
   config.capabilities = common_capabilities
   config.capabilities.offsetEncoding = { "utf-16" }

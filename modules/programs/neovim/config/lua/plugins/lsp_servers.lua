@@ -45,11 +45,12 @@ return {
   bashls = {},
   terraformls = {},
   gopls = {},
-  tsserver = {},
+  ts_ls = {},
   eslint = {
     cmd = { "eslint", "--stdin" },
   },
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
+  graphql = {},
   lua_ls = {
     cmd = { "lua-language-server" },
     settings = {

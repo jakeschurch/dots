@@ -70,7 +70,9 @@ null_ls.setup({
       args = { "--builtin", "clear,rare,code,usage,code", "-" },
     }),
     null_ls.builtins.hover.dictionary,
-    null_ls.builtins.diagnostics.vale,
+    -- null_ls.builtins.diagnostics.vale.with({
+    --   args = {},
+    -- }),
 
     -- Nix
     null_ls.builtins.diagnostics.statix,
@@ -101,7 +103,6 @@ null_ls.setup({
       extra_args = { "--dialect", "postgres" },
     }),
     null_ls.builtins.formatting.sqlfluff.with({
-      args = { "format", "--disable-progress-bar", "-" },
       extra_args = { "--dialect", "postgres" },
     }),
 

@@ -6,13 +6,13 @@ require("impatient")
 require("maps")
 require("options")
 require("autocommands")
-require("plugins")
+require("get_plugins")
 
 
 vim.cmd [[
   iabbrev fp functional programming
 
-  let winfixbuf = "off" 
+  let winfixbuf = "off"
 
   nmap <leader>gh :diffget //2<CR>
   nmap <leader>gp :diffget //3<CR>

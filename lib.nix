@@ -49,5 +49,11 @@
           };
         })
       ];
+
+      extraSpecialArgs = {
+        inherit inputs system pkgs user;
+        inherit (pkgs) lib;
+        inherit nixpkgs;
+      };
     };
 }

@@ -67,18 +67,23 @@ cmp.setup({
     ghost_text = true,
   },
   completion = {
-    keyword_length = 4,
+    keyword_length = 2,
     completeopt = "menu,noselect",
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
-    { name = "treesitter" },
     { name = "luasnip" }, -- For luasnip users.
-    -- { name = "rg",        keyword_length = 4 },
+    { name = "treesitter" },
+    -- { name = "rg", keyword_length = 4 },
     { name = "emoji", insert = true },
-    { name = "buffer", keyword_length = 3 },
-    { name = "path" },
+    -- { name = "buffer", keyword_length = 3 },
+    -- { name = "path" },
   }),
+  performance = {
+    debounce = 10, -- default is 60ms
+    throttle = 10, -- default is 30ms
+    max_entries = 15,
+  },
 })
 
 -- Set configuration for specific filetype.

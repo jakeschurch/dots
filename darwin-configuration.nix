@@ -10,6 +10,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "info"
     "devdoc"
   ];
+  ids.gids.nixbld = 30000;
 
   environment.pathsToLink = [
     "/share/zsh"
