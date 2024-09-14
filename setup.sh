@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 create_ccache_dir() {
 
@@ -19,8 +19,8 @@ create_ccache_dir() {
 create_ccache_dir
 
 # use nom if available, otherwise use nix to build it
-if command -v nom &>/dev/null; then
-  nom build .#
+if command -v nom &> /dev/null; then
+  nom build .# 
 else
-  nix build .#  --show-trace --extra-experimental-features 'nix-command flakes'
+  nix build .#  --extra-experimental-features 'nix-command flakes'
 fi && ./result/activate-user && sudo ./result/activate

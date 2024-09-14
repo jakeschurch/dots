@@ -21,7 +21,7 @@
 
     lexical-lsp.url = "github:lexical-lsp/lexical";
     treefmt-nix.url = "github:numtide/treefmt-nix";
-    nix-pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    nix-pre-commit-hooks.url = "github:cachix/git-hooks.nix";
 
     darwin.url = "github:LnL7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -95,7 +95,6 @@
             ];
             packageOverrides = _pkgs: {
               inherit lexical-lsp;
-              inherit (nixpkgs) narHash;
               unstable = import unstable {
                 inherit system;
                 config.allowUnfree = true;

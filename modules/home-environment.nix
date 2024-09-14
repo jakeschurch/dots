@@ -52,6 +52,7 @@ in {
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "{config.home.homeDirectory}/.cache/.nix-hex";
       NIX_CONF_DIR = "${config.home.homeDirectory}/.config/nix";
+      NIX_CONF = "${config.home.homeDirectory}/.config/nix/nix.conf";
       NIX_PATH = concatSessionList ([
           "${config.home.homeDirectory}/.nix-defexpr/channels"
           # "/nix/var/nix/profiles/per-user/root/channels"

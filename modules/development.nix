@@ -25,9 +25,6 @@ in {
         _1password
         gh
 
-        steam
-        notion-app-enhanced
-
         act
         gnused
 
@@ -62,6 +59,8 @@ in {
         tealdeer
         direnv
         nix-direnv
+        nix-tree
+
         fd
         sd
         tokei
@@ -101,6 +100,7 @@ in {
       ])
       ++ (lib.optionals pkgs.stdenv.isLinux [
         nixgl.nixGLIntel
+        steam
         rofi
         etcher
         postgresql_16
