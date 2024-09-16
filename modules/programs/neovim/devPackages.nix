@@ -115,7 +115,6 @@ in {
       alejandra
       deadnix
       nil
-      rnix-lsp
     ];
 
     graphql = with pkgs.nodePackages; [

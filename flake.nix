@@ -1,7 +1,7 @@
 {
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*.tar.gz";
     nixpkgs.flake = true;
 
     tfenv.url = "github:cjlarose/tfenv-nix";

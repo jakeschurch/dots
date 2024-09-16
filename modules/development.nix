@@ -178,15 +178,16 @@ in {
         bindkey "''${key[Up]}" up-line-or-search
         bindkey '^I' expand-or-complete
 
-        source <(colima completion zsh) &
-        source <(kubectl completion zsh) &
-        eval "$(direnv hook zsh)" &
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh &
-        autopair-init &
+        source <(colima completion zsh)
+        source <(kubectl completion zsh)
+        eval "$(direnv hook zsh)"
+        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
+        autopair-init
 
         autoload -z edit-command-line
         zle -N edit-command-line
         bindkey -M vicmd v edit-command-line
+
       '';
       zplug = {
         enable = true;
