@@ -1,6 +1,6 @@
 {
   programs.kitty = {
-    enable = false;
+    enable = true;
     theme = "Gruvbox Dark Soft";
     keybindings = {
       # window movements
@@ -19,14 +19,12 @@
       "kitty_mod+shift+k" = "move_window up";
       "kitty_mod+shift+l" = "move_window right";
 
-      "kitty_mod+shift+v" = "launch --location=vsplit --cwd=current";
-
       "kitty_mod+e" = "kitten hints";
 
       "kitty_mod+v" = "paste_from_clipboard";
       "kitty_mod+c" = "copy_from_clipboard";
-      "kitty_mod+enter" = "new_window";
-      "kitty_mod+shift+enter" = "launch --cwd=current";
+      "kitty_mod+enter" = "launch --location=hsplit --cwd=current";
+      "kitty_mod+shift+enter" = "launch --location=vsplit --cwd=current";
       "kitty_mod+q" = "close_window";
       "kitty_mod+r" = "start_resizing_window";
       "kitty_mod+shift+f" = "toggle_fullscreen";
@@ -48,12 +46,12 @@
       "kitty_mod+p>h" = "kitten hints --type hash --program -";
     };
     extraConfig = ''
-      font_family      Hack Regular Nerd Font Complete
-      bold_font        Hack Bold Nerd Font Complete
-      italic_font      Hack Italic Nerd Font Complete
-      bold_italic_font Hack Bold Italic Nerd Font Complete
+      font_family      JetBrains Mono Regular
+      bold_font        JetBrains Mono Bold
+      italic_font      JetBrains Mono Italic
+      bold_italic_font JetBrains Mono Bold Italic
 
-      open_url_with firefox-developer-edition
+      open_url_with $BROWSER
       open_url_modifiers kitty_mod
 
       map kitty_mod+1 goto_tab 1
@@ -68,7 +66,7 @@
       map kitty_mod+0 goto_tab 10
     '';
     settings = {
-      enabled_layouts = "splits:split_axis=horizonal";
+      enabled_layouts = "splits:split_axis=horizontal";
       clear_all_shortcuts = "yes";
       font_size = "13.0";
       kitty_mod = "alt";
@@ -92,13 +90,13 @@
       cursor_shape = "block";
       draw_minimal_borders = "yes";
       focus_follows_mouse = "yes";
-      hide_window_decorations = "yes";
+      hide_window_decorations = "no";
       inactive_border_color = "#83c07c";
       remember_window_size = "no";
       single_window_margin_width = "-1";
       window_border_width = "8.0";
       window_margin_width = "0.38 1 0.38 1";
-      window_padding_width = "10";
+      window_padding_width = "5";
 
       adjust_line_height = 0;
       adjust_column_width = 0;

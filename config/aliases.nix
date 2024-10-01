@@ -1,9 +1,9 @@
 {pkgs, ...}: {
   ".." = "cd ../";
-  aws_prod_us = "export AWS_PROFILE=fg-production && export AWS_REGION=us-west-2";
-  aws_prod_ca = "export AWS_PROFILE=fg-production-ca-central-1 && export AWS_REGION=ca-central-1";
-  aws_prod_eu = "export AWS_PROFILE=fg-production-eu-west-1 && export AWS_REGION=eu-west-1";
-  aws_staging = "export AWS_PROFILE=fg-staging && export AWS_REGION=us-west-2";
+  aws_us_prod = "export AWS_PROFILE=fg-production && export AWS_REGION=us-west-2";
+  aws_ca_prod = "export AWS_PROFILE=fg-production-ca-central-1 && export AWS_REGION=ca-central-1";
+  aws_eu_prod = "export AWS_PROFILE=fg-production-eu-west-1 && export AWS_REGION=eu-west-1";
+  aws_stg = "export AWS_PROFILE=fg-staging && export AWS_REGION=us-west-2";
   k9s = "k9s --headless";
   sed = "${pkgs.gnused}/bin/sed";
   gsed = "${pkgs.gnused}/bin/sed";
@@ -22,16 +22,21 @@
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   m = "pipenv run python manage.py";
-  vi = "nvim_open";
-  nvim = "nvim_open";
-  n = "nvim_open";
+  vi = "${pkgs.neovim}/bin/nvim";
+  nvim = "${pkgs.neovim}/bin/nvim";
+  n = "${pkgs.neovim}/bin/nvim";
+
   r = "ranger";
   restart = "reboot";
-  tf = "terraform";
+  tf = "tofu";
   vim = "nvim_open";
   sf = "fish && source ~/.config/fish/config.fish";
   now = ''date -u +"%H:%M:%S"'';
   xclip = "xclip -sel clip <";
+
+  grep = "${pkgs.gnugrep}/bin/grep";
+  egrep = "${pkgs.gnugrep}/bin/egrep";
+  fgrep = "${pkgs.gnugrep}/bin/fgrep";
 
   nix-gc = "nix-collect-garbage";
 

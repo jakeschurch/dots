@@ -8,7 +8,7 @@ lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
     onActivation = {
       cleanup = "uninstall";
-      autoUpdate = false;
+      autoUpdate = true;
       upgrade = true;
     };
 

@@ -2,7 +2,9 @@ local Rule = require("nvim-autopairs.rule")
 local npairs = require("nvim-autopairs")
 
 npairs.setup({
-  enable_check_bracket_line = true,
+  enable_check_bracket_line = true, -- Avoid jumping to the next line with brackets
+  map_cr = true, -- Map Enter for the correct behavior inside brackets
+  fast_wrap = {},
   check_ts = true,
 })
 

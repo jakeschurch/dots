@@ -77,106 +77,111 @@
   in
     flake-utils.lib.eachSystem supportedSystems
     (
-      system: let
-        inherit (inputs.unstable.lib) optionalAttrs;
+      system:
+        with nixpkgs.lib; let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
 
-        pkgs = import inputs.nixpkgs {
-          inherit system;
+            config = {
+              allowUnfree = true;
+              # replaceStdenv = {pkgs}: pkgs.ccacheStdenv;
 
-          config = {
-            allowUnfree = true;
-            # replaceStdenv = {pkgs}: pkgs.ccacheStdenv;
+              allowUnfreePredicate = pkg:
+                builtins.elem (lib.getName pkg) [
+                  "terraform-1.9.6"
+                ];
 
-            permittedInsecurePackages = [
-              "electron-19.1.9"
-            ];
-            packageOverrides = _pkgs: {
-              inherit (inputs) lexical-lsp;
-              inherit (nixpkgs) narHash;
-              neovim = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+              permittedInsecurePackages = [
+                "electron-19.1.9"
+              ];
+              packageOverrides = _pkgs: {
+                inherit (inputs) lexical-lsp;
+                inherit (nixpkgs) narHash;
 
-              unstable = import unstable {
-                inherit system;
-                config.allowUnfree = true;
+                neovim = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
+
+                unstable = import unstable {
+                  inherit system;
+                  config.allowUnfree = true;
+                };
               };
             };
+
+            overlays =
+              nixpkgs.lib.singleton (
+                _final: prev: {
+                  lib =
+                    prev.lib
+                    // import ./lib.nix {
+                      inherit nixpkgs;
+                      inherit (nixpkgs) lib;
+                      inherit system pkgs home-manager darwin inputs;
+                    };
+                }
+              )
+              ++ nixpkgs.lib.singleton (
+                final: prev: {
+                  # Add access to x86 packages system is running Apple Silicon
+                  apple-silicon = optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+                    pkgs-x86 = import inputs.unstable {
+                      system = "x86_64-darwin";
+                      inherit (pkgs) config;
+                    };
+                  };
+
+                  pkgs-x86 = optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+                    inherit
+                      (final.pkgs-x86)
+                      julia_18-bin
+                      ;
+                  };
+
+                  cython = prev.python3Packages.cython.overrideAttrs (prevAttrs: {
+                    patches = prevAttrs.patches ++ [./patches/disable_spawn.patch];
+                  });
+                }
+              )
+              ++ [
+                inputs.nixd.overlays.default
+                inputs.nixGL.overlay
+                inputs.tfenv.overlays.default
+              ]
+              ++ import ./overlays.nix {pkgs = import nixpkgs {inherit system;};};
           };
 
-          overlays =
-            nixpkgs.lib.singleton (
-              _final: prev: {
-                lib =
-                  prev.lib
-                  // import ./lib.nix {
-                    inherit nixpkgs;
-                    inherit (nixpkgs) lib;
-                    inherit system pkgs home-manager darwin inputs;
-                  };
-              }
-            )
-            ++ nixpkgs.lib.singleton (
-              final: prev: {
-                # Add access to x86 packages system is running Apple Silicon
-                apple-silicon = optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-                  pkgs-x86 = import inputs.unstable {
-                    system = "x86_64-darwin";
-                    inherit (pkgs) config;
-                  };
-                };
+          treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+          pre-commit-check = import ./pre-commit-hooks.nix {
+            inherit pkgs system;
+            inherit (inputs) nix-pre-commit-hooks;
+          };
+        in rec {
+          darwinConfigurations.curiosity = pkgs.lib.mkDarwinHome {user = "jake";};
+          homeConfigurations.apollo = pkgs.lib.mkHmHome {user = "jake";};
 
-                pkgs-x86 = optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
-                  inherit
-                    (final.pkgs-x86)
-                    julia_18-bin
-                    ;
-                };
+          packages.default =
+            if pkgs.stdenv.isLinux
+            then homeConfigurations.apollo.activationPackage
+            else
+              darwinConfigurations
+              .curiosity
+              .config
+              .system
+              .build
+              .toplevel;
 
-                cython = prev.python3Packages.cython.overrideAttrs (prevAttrs: {
-                  patches = prevAttrs.patches ++ [./patches/disable_spawn.patch];
-                });
-              }
-            )
-            ++ [
-              inputs.nixd.overlays.default
-              inputs.nixGL.overlay
-              inputs.tfenv.overlays.default
-            ]
-            ++ import ./overlays.nix {pkgs = import nixpkgs {inherit system;};};
-        };
+          devShells.default = pkgs.mkShell {
+            shellHook = ''
+              ${self.checks.${system}.pre-commit-check.shellHook}
+            '';
+          };
 
-        treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-        pre-commit-check = import ./pre-commit-hooks.nix {
-          inherit pkgs system;
-          inherit (inputs) nix-pre-commit-hooks;
-        };
-      in rec {
-        darwinConfigurations.curiosity = pkgs.lib.mkDarwinHome {user = "jake";};
-        homeConfigurations.apollo = pkgs.lib.mkHmHome {user = "jake";};
+          formatter = (treefmtEval pkgs).config.build.wrapper;
 
-        packages.default =
-          if pkgs.stdenv.isLinux
-          then homeConfigurations.apollo.activationPackage
-          else
-            darwinConfigurations
-            .curiosity
-            .config
-            .system
-            .build
-            .toplevel;
+          checks = {
+            inherit pre-commit-check;
+          };
 
-        devShells.default = pkgs.mkShell {
-          shellHook = ''
-            ${self.checks.${system}.pre-commit-check.shellHook}
-          '';
-        };
-
-        formatter = (treefmtEval pkgs).config.build.wrapper;
-
-        checks = {
-          inherit pre-commit-check;
-        };
-
-        apps = {};
-      }
+          apps = {};
+        }
     );
 }

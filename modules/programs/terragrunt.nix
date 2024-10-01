@@ -1,13 +1,7 @@
-{
-  pkgs,
-  lib,
-  ...
-}: let
-  TF_PLUGIN_CACHE_DIR = "$HOME/.terraform.d/plugin-cache";
-in {
+{pkgs, ...}: {
   home = {
     packages = with pkgs; [
-      terragrunt
+      unstable.terragrunt
     ];
 
     shellAliases = {
@@ -21,12 +15,12 @@ in {
       tg_state = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) state";
     };
 
-    sessionVariables = {inherit TF_PLUGIN_CACHE_DIR;};
+    # sessionVariables = {inherit TF_PLUGIN_CACHE_DIR;};
 
-    activation.terragrunt-setup = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      if [ ! -d ${TF_PLUGIN_CACHE_DIR} ]; then
-        mkdir -p ${TF_PLUGIN_CACHE_DIR}
-      fi
-    '';
+    # activation.terragrunt-setup = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    #   if [ ! -d ${TF_PLUGIN_CACHE_DIR} ]; then
+    #     mkdir -p ${TF_PLUGIN_CACHE_DIR}
+    #   fi
+    # '';
   };
 }

@@ -1,7 +1,7 @@
 [
   {
     "name": "windwp/nvim-autopairs",
-    "rev": "fd2badc24e675f947162a16c124d395bde80dbd6",
+    "rev": "ee297f215e95a60b01fde33275cc3c820eddeebe",
     "ref": "master"
   },
   {
@@ -41,12 +41,12 @@
   },
   {
     "name": "stevearc/oil.nvim",
-    "rev": "f60bb7f793477d99ef1acf39e920bf2ca4e644de",
+    "rev": "9e6fb844fe4cce13d9e3f6a7c970cbc669bb1629",
     "ref": "master"
   },
   {
     "name": "soywod/himalaya",
-    "rev": "681837b48df0960125ddd84cb1c0b7d60b46eb32",
+    "rev": "2386d0f5178befb11bf7fb360dfc872de268bf2f",
     "ref": "master"
   },
   {
@@ -66,12 +66,12 @@
   },
   {
     "name": "rafamadriz/friendly-snippets",
-    "rev": "00ebcaa159e817150bd83bfe2d51fa3b3377d5c4",
+    "rev": "00ba9dd3df89509f95437b8d595553707c46d5ea",
     "ref": "main"
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "aad50e07e86cf0b55caeb3b6f39cbaafdab9989c",
+    "rev": "d192850101d2d87bb570cea1b04eec22d784846d",
     "ref": "master"
   },
   {
@@ -86,12 +86,12 @@
   },
   {
     "name": "onsails/lspkind-nvim",
-    "rev": "cff4ae321a91ee3473a92ea1a8c637e3a9510aec",
+    "rev": "59c3f419af48a2ffb2320cea85e44e5a95f71664",
     "ref": "master"
   },
   {
     "name": "nvimtools/none-ls.nvim",
-    "rev": "9b98991e15dce8fc502993e23caac2528b8b667f",
+    "rev": "0e0a940477cc08fa7b1799384a1d668058ed4e61",
     "ref": "main"
   },
   {
@@ -111,17 +111,17 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter-textobjects",
-    "rev": "bf8d2ad35d1d1a687eae6c065c3d524f7ab61b23",
+    "rev": "4a2d05ec24eaa6b655c7d19092a3b6c0219d46b9",
     "ref": "master"
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "583395810e40373c1394d2e2e2393a63213ccbcd",
+    "rev": "da61d31a3d51f38a78a739392aabf79e7b2f523f",
     "ref": "master"
   },
   {
     "name": "nvim-telescope/telescope.nvim",
-    "rev": "927c10f748e49c543b2d544c321a1245302ff324",
+    "rev": "eae0d8fbde590b0eaa2f9481948cd6fd7dd21656",
     "ref": "master"
   },
   {
@@ -146,7 +146,7 @@
   },
   {
     "name": "nvim-lua/plenary.nvim",
-    "rev": "ec289423a1693aeae6cd0d503bac2856af74edaa",
+    "rev": "2d9b06177a975543726ce5c73fca176cedbffe9d",
     "ref": "master"
   },
   {
@@ -161,7 +161,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "0d027de8820917db548486564d0d5b17af4b3db4",
+    "rev": "aa615f62300465eef5115e0b7dfcf6dedc274f5d",
     "ref": "master"
   },
   {
@@ -191,7 +191,7 @@
   },
   {
     "name": "lewis6991/gitsigns.nvim",
-    "rev": "1ef74b546732f185d0f806860fa5404df7614f28",
+    "rev": "863903631e676b33e8be2acb17512fdc1b80b4fb",
     "ref": "main"
   },
   {
@@ -201,7 +201,7 @@
   },
   {
     "name": "kyazdani42/nvim-web-devicons",
-    "rev": "9154484705968658e9aab2b894d1b2a64bf9f83d",
+    "rev": "6b53401918a9033a41159d012160c5fb5eb249ae",
     "ref": "master"
   },
   {
@@ -221,12 +221,12 @@
   },
   {
     "name": "junegunn/fzf.vim",
-    "rev": "c5ce7908ee86af7d4090d2007086444afb6ec1c9",
+    "rev": "ec75ffbfd50630bf2b8d444d89487e149bacf7f3",
     "ref": "master"
   },
   {
     "name": "junegunn/fzf",
-    "rev": "2191a44e36216791623cb166cc45f7a66f0bda34",
+    "rev": "e76aa37fd402f994ff194a02e47576fba928e8f4",
     "ref": "master"
   },
   {
@@ -281,7 +281,7 @@
   },
   {
     "name": "goolord/alpha-nvim",
-    "rev": "b6f4129302db197a7249e67a90de3f2b676de13e",
+    "rev": "bf3c8bb8c02ed3d9644cc5bbc48e2bdc39349cd7",
     "ref": "main"
   },
   {
@@ -291,7 +291,7 @@
   },
   {
     "name": "folke/which-key.nvim",
-    "rev": "bfec3d6bc0a9b0b2cb11644642f78c2c3915eef0",
+    "rev": "fb070344402cfc662299d9914f5546d840a22126",
     "ref": "main"
   },
   {
@@ -301,7 +301,7 @@
   },
   {
     "name": "ellisonleao/gruvbox.nvim",
-    "rev": "7a1b23e4edf73a39642e77508ee6b9cbb8c60f9e",
+    "rev": "49d9c0b150ba70efcd831ec7b3cb8ee740067045",
     "ref": "main"
   },
   {
@@ -331,7 +331,7 @@
   },
   {
     "name": "MeanderingProgrammer/render-markdown.nvim",
-    "rev": "044f2d6d76712de69a79b25a7cd8311cb505a9f4",
+    "rev": "e91b042b3865d2d040a0e21e0a3b13fb57f24094",
     "ref": "main"
   },
   {
@@ -341,12 +341,12 @@
   },
   {
     "name": "JoosepAlviste/nvim-ts-context-commentstring",
-    "rev": "375c2d86cee6674afd75b4f727ce3a80065552f7",
+    "rev": "44fd461b879d80a21d5041f312f070f22551c0bc",
     "ref": "main"
   },
   {
     "name": "Exafunction/codeium.vim",
-    "rev": "fa65fa942aaf1aef73b6dbe3cc0faa713b738fbe",
+    "rev": "5644ac5a0e098ca0cf5deed1c909c3fa5e9901f3",
     "ref": "main"
   }
 ]

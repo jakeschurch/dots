@@ -5,7 +5,7 @@ vim.wo.signcolumn = "yes"
 
 require("lspsaga").setup({
   ui = {
-    debounce = 100,
+    debounce = 250,
     code_action = "✋",
     -- TODO: make colors gruvbox
     colors = {

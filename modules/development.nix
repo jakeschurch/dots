@@ -26,7 +26,9 @@ in {
         gh
 
         act
+
         gnused
+        gnugrep
 
         yabai
         moreutils
@@ -42,6 +44,9 @@ in {
         bat-extras.prettybat
         wget
         lsd
+
+        opentofu
+        unstable.terraform
 
         k9s
         kubectl
@@ -254,7 +259,20 @@ in {
           format = "on [$hostname](bold red) ";
         };
         cmd_duration = {min_time = 300000;};
-        aws = {disabled = false;};
+        aws = {
+          disabled = false;
+          symbol = "☁️ ";
+        };
+        kubernetes = {
+          disabled = false;
+          contexts = [
+            {
+              context_pattern = ".*/(?<cluster>fg-.*?)";
+              context_alias = "$cluster";
+              symbol = "🚢 ";
+            }
+          ];
+        };
         time = {
           disabled = false;
           use_12hr = true;

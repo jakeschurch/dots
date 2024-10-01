@@ -8,10 +8,7 @@
     stateVersion = "24.05";
 
     activation = {
-      diff = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        # REVIEW
-        # ${pkgs.nvd}/bin/nvd --nix-bin-dir=${pkgs.nix}/bin diff /run/current-system "$systemConfig"
-      '';
+      diff = lib.hm.dag.entryAnywhere "${pkgs.nvd}/bin/nvd diff $oldGenPath $newGenPath\n";
       darwinFileLimits =
         lib.mkIf
         pkgs.stdenv.isDarwin
@@ -28,10 +25,10 @@
           rm -rf "$app_folder"
           mkdir -p "$app_folder"
           for app in $(find "$genProfilePath/home-path/Applications" -type l); do
-              app_target="$app_folder/$(basename $app)"
-              real_app="$(readlink $app)"
-              echo "mkalias \"$real_app\" \"$app_target\"" >&2
-              $DRY_RUN_CMD ${pkgs.mkalias}/bin/mkalias "$real_app" "$app_target"
+          app_target="$app_folder/$(basename $app)"
+          real_app="$(readlink $app)"
+          echo "mkalias \"$real_app\" \"$app_target\"" >&2
+          $DRY_RUN_CMD ${pkgs.mkalias}/bin/mkalias "$real_app" "$app_target"
           done
         '');
     };
@@ -55,9 +52,9 @@
     repl_path = builtins.toString ./.;
     my-nix-repl = pkgs.writeShellScriptBin "nix-repl" ''
       if [ -f "${repl_path}/repl.nix" ]; then
-        nix repl "${repl_path}/repl.nix" "$@"
+      nix repl "${repl_path}/repl.nix" "$@"
       else
-        nix repl "$@"
+      nix repl "$@"
       fi
     '';
   in

@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 configs.setup({
   ensure_installed = {},
@@ -17,7 +17,7 @@ configs.setup({
     additional_vim_regex_highlighting = true,
   },
   indent = {
-    enable = true,
+    enable = false,
     disable = { "json" },
   },
   rainbow = {

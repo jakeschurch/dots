@@ -11,7 +11,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     "devdoc"
   ];
   ids.gids.nixbld = 30000;
-  ids.uids.nixbld = 1000;
+  ids.uids.nixbld = 350;
 
   environment.pathsToLink = [
     "/share/zsh"
@@ -100,4 +100,5 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   # Keep nix-daemon updated.
   services.nix-daemon.enable = true;
+  system.stateVersion = 5;
 }

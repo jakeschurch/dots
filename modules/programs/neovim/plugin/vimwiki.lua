@@ -2,8 +2,8 @@ vim.treesitter.language.register("markdown", "vimwiki")
 
 local g = vim.g
 
-g.vimwiki_folding = "list"
 g.automatic_nested_syntaxes = 1
+g.vimwiki_autowriteall = 1
 -- g.vimwiki_filetypes = { "markdown" }
 -- g.vimwiki_sync_branch = "main"
 -- g.vimwiki_ext = "markdown"

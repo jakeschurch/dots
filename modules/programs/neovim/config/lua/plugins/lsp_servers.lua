@@ -21,7 +21,14 @@ return {
     },
     cmd = { "emmet-ls", "--stdio" },
   },
-  nil_ls = {},
+  -- enable autoArchive
+  nil_ls = {
+    cmd = { "nil", "--stdio" },
+    settings = {
+      -- enable autoArchive
+      autoArchive = true,
+    },
+  },
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },

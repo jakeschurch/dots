@@ -22,14 +22,15 @@ require("toggleterm").setup({
   insert_mappings = true,
   hide_numbers = true,
   size = 80,
+  scrollback = 1000,
 
   start_in_insert = true,
   float_opts = {
-    border = "single",
-    winblend = 0,
-    highlights = {
-      border = "Normal",
-      background = "Normal",
-    },
+    border = "curved",
+    -- winblend = 0,
+    -- highlights = {
+    --   border = "Normal",
+    --   background = "Normal",
+    -- },
   },
 })

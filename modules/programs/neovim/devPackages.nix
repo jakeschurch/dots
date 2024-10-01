@@ -89,7 +89,7 @@ in {
       pipenv
       pyright
       pylint
-      (python311.withPackages (ps:
+      (python312.withPackages (ps:
         with ps; [
           setuptools # Required by pylama for some reason
           proselint
@@ -169,7 +169,7 @@ in {
       terraform-ls
       terraform-docs
       tflint
-      tfenv
+      # tfenv
       packer
     ];
 
