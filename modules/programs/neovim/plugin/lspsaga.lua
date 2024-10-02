@@ -6,7 +6,7 @@ vim.wo.signcolumn = "yes"
 require("lspsaga").setup({
   ui = {
     debounce = 250,
-    code_action = "✋",
+    code_action = "☝️",
     -- TODO: make colors gruvbox
     colors = {
       --float window normal background color
@@ -112,3 +112,17 @@ keymap("n", "]g", "<cmd>Lspsaga diagnostic_jump_next<CR>")
 -- Call hierarchy
 keymap("n", "<Leader>hc", "<cmd>Lspsaga incoming_calls<CR>")
 keymap("n", "<Leader>ho", "<cmd>Lspsaga outgoing_calls<CR>")
+
+vim.keymap.set(
+  "n",
+  "<leader>qf",
+  "<cmd>Lspsaga code_action<cr>",
+  { noremap = true, silent = true }
+)
+
+vim.keymap.set(
+  "v",
+  "<leader>qf",
+  "<cmd>Lspsaga code_action<cr>",
+  { noremap = true, silent = true }
+)

@@ -45,7 +45,6 @@ in {
         wget
         lsd
 
-        opentofu
         unstable.terraform
 
         k9s

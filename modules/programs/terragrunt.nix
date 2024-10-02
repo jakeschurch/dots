@@ -5,14 +5,14 @@
     ];
 
     shellAliases = {
-      tg = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel)";
-      tgr = "terragrunt run-all --terragrunt-source $(git rev-parse --show-toplevel)";
-      tg_plan = "terragrunt run-all plan --terragrunt-source $(git rev-parse --show-toplevel)";
-      tg_refresh = "terragrunt run-all refresh --terragrunt-source $(git rev-parse --show-toplevel)";
-      tg_init = "terragrunt run-all init --terragrunt-source $(git rev-parse --show-toplevel)";
-      tg_apply = "terragrunt run-all apply --terragrunt-source $(git rev-parse --show-toplevel)";
-      tg_import = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) import";
-      tg_state = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) state";
+      tg = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) --terragrunt-forward-tf-stdout";
+      tgr = "tg run-all";
+      tg_plan = "tg plan";
+      tg_refresh = "tgr refresh";
+      tg_init = "tgr init";
+      tg_apply = "tgr apply";
+      tg_import = "tg import";
+      tg_state = "tg state";
     };
 
     # sessionVariables = {inherit TF_PLUGIN_CACHE_DIR;};

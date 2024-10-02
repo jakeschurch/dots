@@ -128,8 +128,9 @@ telescope.setup({
       "node_modules",
       "*.lock",
       "tags",
-      ".DS_Store",
+      "\\.DS_Store",
       "__pycache__",
+      "\\.git",
     },
     layout_strategy = "vertical",
     layout_config = {

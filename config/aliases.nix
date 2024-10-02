@@ -22,14 +22,14 @@
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   m = "pipenv run python manage.py";
-  vi = "${pkgs.neovim}/bin/nvim";
-  nvim = "${pkgs.neovim}/bin/nvim";
-  n = "${pkgs.neovim}/bin/nvim";
+  vi = "nvim";
+  nvim = "nvim";
+  n = "nvim";
+  vim = "nvim";
 
   r = "ranger";
   restart = "reboot";
-  tf = "tofu";
-  vim = "nvim_open";
+  tf = "terraform";
   sf = "fish && source ~/.config/fish/config.fish";
   now = ''date -u +"%H:%M:%S"'';
   xclip = "xclip -sel clip <";

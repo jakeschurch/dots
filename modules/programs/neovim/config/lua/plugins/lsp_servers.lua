@@ -1,5 +1,3 @@
-local lspconfig = require("lspconfig")
-
 return {
   emmet_ls = {
     filetypes = {
@@ -21,13 +19,8 @@ return {
     },
     cmd = { "emmet-ls", "--stdio" },
   },
-  -- enable autoArchive
   nil_ls = {
-    cmd = { "nil", "--stdio" },
-    settings = {
-      -- enable autoArchive
-      autoArchive = true,
-    },
+    cmd = { "nil" },
   },
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },

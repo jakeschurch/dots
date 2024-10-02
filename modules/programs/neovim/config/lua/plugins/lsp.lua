@@ -16,7 +16,16 @@ local common_capabilities = vim.tbl_extend(
 lsp.util = { default_config = {} }
 lsp.util.default_config = vim.tbl_extend("force", lsp.util.default_config, {
   on_attach = function(client)
+    -- Enable code action capabilities
+    client.server_capabilities.codeActionProvider = true
     client.server_capabilities.semanticTokensProvider = nil
+    -- Enable some LSP features if necessary
+    client.server_capabilities.completionProvider = true
+    -- Enable auto-import and completion features, if supported
+    client.server_capabilities.textDocument.completion.completionItem.resolveSupport =
+      {
+        properties = { "documentation", "detail", "additionalTextEdits" },
+      }
   end,
 })
 
@@ -76,8 +85,6 @@ function lsp.common_on_attach(client, bufnr)
   vim.keymap.set("n", "gp", "<cmd>Lspsaga peek_definition<cr>", opts)
   vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", opts)
 
-  vim.keymap.set("n", "<leader>qf", "<cmd>Lspsaga code_action<cr>", opts)
-  vim.keymap.set("v", "<leader>qf", "<cmd>Lspsaga code_action<cr>", opts)
   vim.keymap.set("n", "<space>f", function()
     vim.lsp.buf.format({ async = true })
   end, opts)

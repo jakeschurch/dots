@@ -80,11 +80,6 @@
     "ref": "master"
   },
   {
-    "name": "p00f/nvim-ts-rainbow",
-    "rev": "ef95c15a935f97c65a80e48e12fe72d49aacf9b9",
-    "ref": "master"
-  },
-  {
     "name": "onsails/lspkind-nvim",
     "rev": "59c3f419af48a2ffb2320cea85e44e5a95f71664",
     "ref": "master"
@@ -210,16 +205,6 @@
     "ref": "master"
   },
   {
-    "name": "junegunn/limelight.vim",
-    "rev": "0c8cc7f503a775c505dc9c67f1f5041ab4d5f1fd",
-    "ref": "master"
-  },
-  {
-    "name": "junegunn/goyo.vim",
-    "rev": "fa0263d456dd43f5926484d1c4c7022dfcb21ba9",
-    "ref": "master"
-  },
-  {
     "name": "junegunn/fzf.vim",
     "rev": "ec75ffbfd50630bf2b8d444d89487e149bacf7f3",
     "ref": "master"
@@ -238,11 +223,6 @@
     "name": "jparise/vim-graphql",
     "rev": "9caa247f88991ebfa45df21cbe1c8bec50039f6b",
     "ref": "master"
-  },
-  {
-    "name": "jpalardy/vim-slime",
-    "rev": "f6bbbeb8f18393f2177cdcef764f3e0e1d7e9328",
-    "ref": "main"
   },
   {
     "name": "jmckiern/vim-venter",

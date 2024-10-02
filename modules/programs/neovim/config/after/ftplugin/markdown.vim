@@ -29,16 +29,15 @@ vim.api.nvim_create_autocmd("User", {
     pattern = "GoyoEnter",
     callback = function()
         require("lualine").hide()
-        vim.cmd[[Limelight]]
     end,
 })
+
 vim.api.nvim_create_autocmd("User", {
     desc = "Show lualine after goyo exit",
     group = goyo_group,
     pattern = "GoyoLeave",
     callback = function()
         require("lualine").hide({ unhide = true })
-        vim.cmd[[Limelight!]]
     end,
 })
 EOF

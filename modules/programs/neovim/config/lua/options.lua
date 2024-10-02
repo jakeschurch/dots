@@ -23,7 +23,7 @@ local options = {
   breakindent = true,
   breakindentopt = "min:4,shift:4",
   clipboard = "unnamedplus",
-  cmdheight = 0,
+  cmdheight = 1,
   cursorline = true,
   expandtab = true,
   hidden = true,
@@ -88,7 +88,7 @@ vim.opt.foldenable = false
 
 if vim.fn.executable("rg") == 1 then
   vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"
-  vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
+  vim.opt.grepprg = "rg --vimgrep --pcre2 --no-heading --smart-case"
 end
 
 for k, v in pairs(options) do

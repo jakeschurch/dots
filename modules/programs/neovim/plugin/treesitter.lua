@@ -20,11 +20,6 @@ configs.setup({
     enable = false,
     disable = { "json" },
   },
-  rainbow = {
-    enable = false,
-    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-    max_file_lines = 500,
-  },
   textobjects = {
     select = {
       enable = true,
