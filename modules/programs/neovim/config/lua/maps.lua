@@ -91,3 +91,68 @@ vim.api.nvim_set_keymap(
   ":lua ToggleBoolean()<CR>",
   { noremap = true, silent = true }
 )
+
+function ToggleLocationList()
+  local loclist_exists = false
+  -- Check if the location list is open for the current window
+  for _, win in ipairs(vim.fn.getwininfo()) do
+    if win.loclist == 1 and win.winid == vim.api.nvim_get_current_win() then
+      loclist_exists = true
+      break
+    end
+  end
+
+  if loclist_exists then
+    vim.cmd("lclose")
+  else
+    vim.cmd("lopen")
+  end
+end
+
+-- Optionally, map this function to a keybinding, e.g., <leader>l
+vim.api.nvim_set_keymap(
+  "n",
+  "<leader>l",
+  ":lua ToggleLocationList()<CR>",
+  { noremap = true, silent = true }
+)
+
+-- Smart paste in insert mode (adjusts indentation after pasting)
+function SmartPasteInsert()
+  -- Turn off 'paste' mode to respect indentation settings
+  vim.opt.paste = false
+  -- Use normal mode commands to re-indent the last pasted block
+  vim.cmd("normal! `[v`]=")
+end
+
+-- Smart paste in normal mode (adjusts indentation after pasting)
+function SmartPasteNormal()
+  -- Turn off 'paste' mode to respect indentation settings
+  vim.opt.paste = false
+  -- Use visual selection to re-indent the pasted block
+  vim.cmd("normal! `[v`]=")
+end
+
+-- Key mappings for smart pasting
+-- In insert mode, use <C-r> to paste with automatic indentation
+vim.api.nvim_set_keymap(
+  "i",
+  "<C-r>",
+  "<C-o>:lua SmartPasteInsert()<CR>",
+  { noremap = true, silent = true }
+)
+
+-- In normal mode, use p to paste with automatic indentation
+vim.api.nvim_set_keymap(
+  "n",
+  "p",
+  "p:lua SmartPasteNormal()<CR>",
+  { noremap = true, silent = true }
+)
+
+vim.api.nvim_set_keymap(
+  "n",
+  "P",
+  "P:lua SmartPasteNormal()<CR>",
+  { noremap = true, silent = true }
+)
