@@ -131,6 +131,7 @@ telescope.setup({
       "\\.DS_Store",
       "__pycache__",
       "\\.git",
+      "result",
     },
     layout_strategy = "vertical",
     layout_config = {

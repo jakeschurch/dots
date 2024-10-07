@@ -1,5 +1,4 @@
 local toggleterm = require("toggleterm")
-local keymap = require("utils").keymap
 
 function table.contains(table, element)
   for _, value in pairs(table) do
@@ -40,6 +39,7 @@ toggleterm.setup({
     --   background = "Normal",
     -- },
   },
+  -- for filetype repl mapping based on current filetype
   shell = function()
     local ft = vim.bo.filetype
     -- check if ft exists in ft_shell_map
@@ -55,12 +55,11 @@ toggleterm.setup({
 ---@diagnostic disable-next-line: unused-function
 function _G.set_terminal_keymaps()
   local opts = { buffer = 0 }
-  vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts)
+  vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
   vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
   vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
   vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
   vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
-  vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
 end
 
 -- if you only want these mappings for toggle term use term://*toggleterm#* instead
@@ -75,6 +74,6 @@ vim.keymap.set({ "n", "v" }, "<space>h", function()
   )
 end)
 
-vim.cmd(
-  'autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>'
-)
+-- vim.cmd(
+--   'autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>'
+-- )
