@@ -215,7 +215,7 @@ cmp.setup({
   performance = {
     debounce = 10, -- default is 60ms
     throttle = 10, -- default is 30ms
-    max_entries = 15,
+    max_entries = 3,
   },
 })
 
