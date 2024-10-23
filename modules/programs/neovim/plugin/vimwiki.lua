@@ -3,9 +3,6 @@ vim.treesitter.language.register("markdown", "vimwiki")
 vim.cmd([[
 let g:vimwiki_tag_format = {'pre': '\(^[ -]*tags\s*: .*\)\@<=',
 \ 'pre_mark': '@', 'post_mark': '', 'sep': '>><<'}
-
-" Unmap the '-' keybinding in normal mode for Vimwiki
-autocmd FileType vimwiki silent! nunmap <buffer> -
 ]])
 
 local g = vim.g
@@ -23,14 +20,24 @@ local syntax = "markdown"
 local syntax_ext = ".md"
 
 g.vimwiki_list = {
-  { path = "~/Documents/wiki/personal", syntax = syntax, ext = syntax_ext },
-  { path = "~/Documents/wiki/engineering", syntax = syntax, ext = syntax_ext },
-  { path = "~/Documents/wiki/ventures", syntax = syntax, ext = syntax_ext },
-  { path = "~/Documents/wiki/work", syntax = syntax, ext = syntax_ext },
   {
     path = "~/Documents/wiki/work/fieldguide",
     syntax = syntax,
     ext = syntax_ext,
   },
-  { path = "~/Documents/wiki/books", syntax = syntax, ext = syntax_ext },
+  { path = "~/Documents/wiki/personal", syntax = syntax, ext = syntax_ext },
 }
+
+-- Remap '-' to <CMD>Oil<CR> in Vimwiki and Markdown filetypes
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "vimwiki", "markdown" },
+  callback = function()
+    vim.api.nvim_buf_set_keymap(
+      0,
+      "n",
+      "-",
+      "<CMD>Oil<CR>",
+      { noremap = true, silent = true }
+    )
+  end,
+})

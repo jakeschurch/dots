@@ -45,7 +45,29 @@ return {
   bashls = {},
   terraformls = {},
   gopls = {},
-  ts_ls = {},
+  ts_ls = {
+    root_dir = function(fname)
+      return require("lspconfig").util.root_pattern(
+        "package.json",
+        "tsconfig.json",
+        ".git"
+      )(fname)
+    end,
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      },
+      suggest = {
+        completeFunctionCalls = true,
+      },
+    },
+  },
   eslint = {
     cmd = { "eslint", "--stdin" },
   },

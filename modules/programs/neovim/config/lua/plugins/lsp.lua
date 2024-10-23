@@ -5,6 +5,7 @@ local virtualtypes = require("virtualtypes")
 local lsp_status = require("lsp-status")
 lsp_status.register_progress()
 
+vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 local common_capabilities = vim.tbl_extend(
   "force",
   vim.lsp.protocol.make_client_capabilities(),
@@ -72,7 +73,7 @@ function lsp.common_on_attach(client, bufnr)
   vim.keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
   vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, opts)
-  vim.keymap.set("n", "gy", "<cmd>lspsaga goto_type_definition<CR>", opts)
+  vim.keymap.set("n", "gy", "<cmd>Lspsaga goto_type_definition<CR>", opts)
 
   vim.keymap.set("n", "<leader>o", "<Cmd>Lspsaga outline<cr>", opts)
   vim.keymap.set("n", "gr", "<Cmd>Lspsaga finder<cr>", opts)

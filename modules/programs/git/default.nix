@@ -36,6 +36,7 @@ in {
       empty = "commit --allow-empty";
       fixup = "commit --fixup";
       noedit = "commit --amend --no-edit";
+      lastupdated = "log -1 --format='%ad' --";
       fp = "push --force-with-lease";
       grep = "grep --break --heading";
       hard = "reset --hard HEAD";

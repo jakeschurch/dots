@@ -92,6 +92,7 @@
       sql
       ssh_config
       terraform
+      typescript
       vim
       vimdoc
       yaml
@@ -100,13 +101,11 @@
 in {
   home.sessionVariables.EDITOR = "nvim";
 
-  xdg = {
-    configFile = {
-      "nvim".source = ./config;
-      "nvim".recursive = true;
-      "nvim/spell/en.utf-8.add".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
-      "nvim/spell/en.utf-8.add.spl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add.spl";
-    };
+  xdg.configFile = {
+    "nvim".source = ./config;
+    "nvim".recursive = true;
+    "nvim/spell/en.utf-8.add".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
+    "nvim/spell/en.utf-8.add.spl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add.spl";
   };
 
   home.packages = devPackages;
