@@ -21,7 +21,6 @@
   find = "fd";
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
-  m = "pipenv run python manage.py";
   vi = "nvim";
   nvim = "nvim";
   n = "nvim";
@@ -37,6 +36,8 @@
   grep = "${pkgs.gnugrep}/bin/grep";
   egrep = "${pkgs.gnugrep}/bin/egrep";
   fgrep = "${pkgs.gnugrep}/bin/fgrep";
+
+  git = "${pkgs.git}/bin/git";
 
   nix-gc = "nix-collect-garbage";
 

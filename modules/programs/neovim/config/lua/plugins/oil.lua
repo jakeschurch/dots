@@ -33,6 +33,7 @@ function ToggleOilPreview()
 end
 
 oil.setup({
+  watch_for_changes = false,
   columns = {
     "icon",
     "mtime",
@@ -49,6 +50,8 @@ oil.setup({
     ["<C-l>"] = false,
     ["<C-w>"] = false,
     ["<C-h>"] = false,
+    ["h"] = "actions.parent",
+    ["l"] = "actions.select",
   },
   preview = {
     layout = "right",

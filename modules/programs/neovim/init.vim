@@ -10,8 +10,6 @@ require("get_plugins")
 
 
 vim.cmd [[
-  iabbrev fp functional programming
-
   let winfixbuf = "off"
 
   nmap <leader>gh :diffget //2<CR>

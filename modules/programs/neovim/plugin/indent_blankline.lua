@@ -5,7 +5,7 @@ local highlight = {
 
 require("ibl").setup({
   scope = { enabled = false },
-  indent = { highlight = highlight, tab_char = "⋅", char = "|" },
+  indent = { highlight = highlight, tab_char = { "⋅" }, char = "|" },
   whitespace = {
     highlight = highlight,
     remove_blankline_trail = false,

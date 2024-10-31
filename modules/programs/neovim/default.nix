@@ -99,7 +99,10 @@
       yuck
     ]);
 in {
-  home.sessionVariables.EDITOR = "nvim";
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    PSQL_EDITOR = "nvim";
+  };
 
   xdg.configFile = {
     "nvim".source = ./config;

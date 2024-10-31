@@ -133,26 +133,26 @@ function SmartPasteNormal()
   vim.cmd("normal! `[v`]=")
 end
 
--- Key mappings for smart pasting
--- In insert mode, use <C-r> to paste with automatic indentation
-vim.api.nvim_set_keymap(
-  "i",
-  "<C-r>",
-  "<C-o>:lua SmartPasteInsert()<CR>",
-  { noremap = true, silent = true }
-)
+-- -- Key mappings for smart pasting
+-- -- In insert mode, use <C-r> to paste with automatic indentation
+-- vim.api.nvim_set_keymap(
+--   "i",
+--   "<C-r>",
+--   "<C-o>:lua SmartPasteInsert()<CR>",
+--   { noremap = true, silent = true }
+-- )
 
 -- In normal mode, use p to paste with automatic indentation
-vim.api.nvim_set_keymap(
-  "n",
-  "p",
-  "p:lua SmartPasteNormal()<CR>",
-  { noremap = true, silent = true }
-)
-
-vim.api.nvim_set_keymap(
-  "n",
-  "P",
-  "P:lua SmartPasteNormal()<CR>",
-  { noremap = true, silent = true }
-)
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "p",
+--   "p:lua SmartPasteNormal()<CR>",
+--   { noremap = true, silent = true }
+-- )
+--
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "P",
+--   "P:lua SmartPasteNormal()<CR>",
+--   { noremap = true, silent = true }
+-- )

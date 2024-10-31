@@ -179,6 +179,11 @@ in {
       initExtra = ''
         setopt autocd
 
+        autoload -U up-line-or-beginning-search
+        autoload -U down-line-or-beginning-search
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+
         bindkey "''${key[Up]}" up-line-or-search
         bindkey '^I' expand-or-complete
 

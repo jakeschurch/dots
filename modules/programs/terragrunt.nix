@@ -5,7 +5,7 @@
     ];
 
     shellAliases = {
-      tg = "terragrunt --terragrunt-source $(git rev-parse --show-toplevel) --terragrunt-forward-tf-stdout";
+      tg = "terragrunt --terragrunt-source-map git::git@github.com:fieldguide/infrastructure.git=$(git rev-parse --show-toplevel) --terragrunt-forward-tf-stdout";
       tgr = "tg run-all";
       tg_plan = "tg plan";
       tg_refresh = "tgr refresh";

@@ -34,7 +34,7 @@
   };
 
   nixConfig = {
-    experimental-features = "nix-command flakes";
+    experimental-features = "nix-command flakes pipe-operators";
     warn-dirty = false;
     sandbox = true;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];

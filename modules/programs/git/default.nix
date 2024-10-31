@@ -21,6 +21,7 @@ in {
 
   programs.git = {
     enable = true;
+    package = pkgs.unstable.git;
     userName = "Jake Schurch";
     userEmail = "jakeschurch@gmail.com";
     signing = {key = "6A8B32A193C5727F7ED7CBCEDCE52B50B91728F9";};
@@ -145,7 +146,7 @@ in {
         editor = "nvim";
         preloadIndex = true;
         untrackedCache = true;
-        fsmonitor = true;
+        fsmonitor = "";
         commitgraph = true;
       };
 

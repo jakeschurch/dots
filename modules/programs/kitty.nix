@@ -1,6 +1,6 @@
 {
   programs.kitty = {
-    enable = true;
+    enable = false;
     theme = "Gruvbox Dark Soft";
     keybindings = {
       # window movements

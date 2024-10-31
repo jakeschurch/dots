@@ -1,0 +1,53 @@
+-- vim: set ft=sql
+
+-- Tab-complete entries as uppercase
+\set COMP_KEYWORD_CASE upper
+
+-- Expanded output
+\x auto
+\set HISTCONTROL ignoredups
+\set VERBOSITY verbose
+
+-- Separate history entries by host + dbname
+\set HISTFILE ~/.cache/psql-history/.psql_history-:HOST-:DBNAME
+
+-- Custom db null values
+\pset null '(null)'
+
+-- Prompt for starting queries
+\set PROMPT1 '%M %n@%/%R%#%x '
+-- Prompt for query fragments by <CR>
+\set PROMPT2 '%M %n@%/%R%#%x '
+
+-- Custom editor
+\set PSQL_EDITOR nvim
+
+-- Rollback on error in interactive sessions
+\set ON_ERROR_ROLLBACK interactive
+
+-- Display query times
+\timing
+\encoding unicode
+
+-- Custom commands
+\set clear '\\! clear;'
+
+\set version 'SELECT version();'
+
+\set conninfo 'SELECT usename, count(*) FROM pg_stat_activity GROUP BY usename;'
+
+\set activity 'SELECT datname, pid, usename, application_name, client_addr, client_hostname, client_port, query, state FROM pg_stat_activity;'
+
+\set waits 'SELECT pid, query, wait_event, now() - query_start AS "totaltime", backend_start FROM pg_stat_activity WHERE query !~ ''%IDLE%'' AND wait_event IS NOT NULL;'
+
+\set dbsize 'SELECT datname, pg_size_pretty(pg_database_size(datname)) AS db_size FROM pg_database ORDER BY db_size;'
+
+\set tablesize 'SELECT nspname || ''.'' || relname AS " relation ", pg_size_pretty(pg_relation_size(C.oid)) AS " size " FROM pg_class C LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace) WHERE nspname NOT IN (''pg_catalog'', ''information_schema'') ORDER BY pg_relation_size(C.oid) DESC LIMIT 40;'
+
+\set uselesscol 'SELECT nspname, relname, attname, typname, (stanullfrac * 100)::int AS null_percent, CASE WHEN stadistinct >= 0 THEN stadistinct ELSE abs(stadistinct) * reltuples END AS distinct, CASE WHEN stakind1 = 1 THEN stavalues1 WHEN stakind2 = 1 THEN stavalues2 ELSE NULL END AS values FROM pg_class c JOIN pg_namespace ns ON (ns.oid = c.relnamespace) JOIN pg_attribute a ON (c.oid = a.attrelid) JOIN pg_type t ON (t.oid = a.atttypid) JOIN pg_statistic s ON (c.oid = s.starelid AND a.attnum = s.staattnum) WHERE nspname NOT LIKE E''pg\\_%'' AND nspname != ''information_schema'' AND relkind = ''r'' AND NOT attisdropped AND attstattarget != 0 AND reltuples >= 100 AND stadistinct BETWEEN 0 AND 1 ORDER BY nspname, relname, attname;'
+
+\set uptime 'SELECT now() - pg_postmaster_start_time() AS uptime;'
+
+\set longqueries 'SELECT pid, application_name, backend_type, now() - query_start AS query_age, now() - xact_start AS xact_age, state, substr(regexp_replace(query, E''\\s*'', E'' ''), 1, 30) AS query FROM pg_stat_activity WHERE state != ''idle'' AND pid != pg_backend_pid() ORDER BY xact_start DESC;'
+
+\set sh '\\!'

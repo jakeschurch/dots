@@ -28,11 +28,11 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     linux-builder = {
       enable = true;
       ephemeral = true;
-      maxJobs = 4;
+      maxJobs = 10;
       config = {
         virtualisation = {
           darwin-builder = {
-            diskSize = 60 * 1024;
+            diskSize = 120 * 1024;
             memorySize = 4 * 1024;
           };
           cores = 3;

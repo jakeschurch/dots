@@ -48,9 +48,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
 
 local lsp_formatting = function(bufnr)
   vim.lsp.buf.format({
-    filter = function(client)
-      return client.name == "null-ls"
-    end,
+    -- filter = function(client)
+    --   return client.name == "null-ls"
+    -- end,
     timeout_ms = 5000,
     bufnr = bufnr,
   })
