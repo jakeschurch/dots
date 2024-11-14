@@ -1,7 +1,7 @@
 vim.treesitter.language.register("markdown", "vimwiki")
 
 vim.cmd([[
-let g:vimwiki_tag_format = {'pre': '\(^[ -]*tags\s*: .*\)\@<=',
+let g:vimwiki_tag_format = {'pre': '',
 \ 'pre_mark': '@', 'post_mark': '', 'sep': '>><<'}
 ]])
 
@@ -24,14 +24,30 @@ g.vimwiki_list = {
     path = "~/Documents/wiki/work/fieldguide",
     syntax = syntax,
     ext = syntax_ext,
+    auto_tags = 1,
+    auto_generate_tags = 1,
   },
-  { path = "~/Documents/wiki/personal", syntax = syntax, ext = syntax_ext },
+  {
+    path = "~/Documents/wiki/personal",
+    syntax = syntax,
+    ext = syntax_ext,
+    auto_tags = 1,
+    auto_generate_tags = 1,
+  },
 }
 
 -- Remap '-' to <CMD>Oil<CR> in Vimwiki and Markdown filetypes
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "vimwiki", "markdown" },
   callback = function()
+    vim.api.nvim_buf_set_keymap(
+      0,
+      "n",
+      "<Tab>",
+      "codeium#Accept",
+      { noremap = true, silent = true }
+    )
+
     vim.api.nvim_buf_set_keymap(
       0,
       "n",

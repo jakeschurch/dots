@@ -17,20 +17,18 @@
           #ulimit -n 10240
         '');
 
-      aliasApplications =
-        lib.mkIf
-        pkgs.stdenv.isDarwin
-        (lib.hm.dag.entryAfter ["writeBoundary"] ''
-          app_folder="/Applications/Nix Apps"
-          rm -rf "$app_folder"
-          mkdir -p "$app_folder"
-          for app in $(find "$genProfilePath/home-path/Applications" -type l); do
-          app_target="$app_folder/$(basename $app)"
-          real_app="$(readlink $app)"
-          echo "mkalias \"$real_app\" \"$app_target\"" >&2
-          $DRY_RUN_CMD ${pkgs.mkalias}/bin/mkalias "$real_app" "$app_target"
-          done
-        '');
+      aliasApplications = lib.mkIf pkgs.stdenv.isDarwin (lib.hm.dag.entryAfter ["writeBarrier"] ''
+        new_nix_apps="${config.home.homeDirectory}/Applications/Nix"
+        rm -rf "$new_nix_apps"
+        mkdir -p "$new_nix_apps"
+        find -H -L "$newGenPath/home-files/Applications" -maxdepth 1 -name "*.app" -type d -print | while read -r app; do
+          real_app=$(readlink -f "$app")
+          app_name=$(basename "$app")
+          target_app="$new_nix_apps/$app_name"
+          echo "Alias '$real_app' to '$target_app'"
+          ${pkgs.mkalias}/bin/mkalias "$real_app" "$target_app"
+        done
+      '');
     };
   };
 

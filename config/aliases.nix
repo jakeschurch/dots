@@ -22,9 +22,9 @@
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   vi = "nvim";
-  nvim = "nvim";
-  n = "nvim";
-  vim = "nvim";
+  nvim = "nvim-open";
+  n = "nvim-open";
+  # vim = "nvim";
 
   r = "ranger";
   restart = "reboot";

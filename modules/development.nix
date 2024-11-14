@@ -71,7 +71,6 @@ in {
         (aspellWithDicts (ds: with ds; [en en-computers en-science]))
         (ripgrep.override {withPCRE2 = true;})
         coreutils
-        man
         expect
         difftastic
 
@@ -99,9 +98,6 @@ in {
         gotop
         ccache
       ]
-      ++ (lib.optionals pkgs.stdenv.isDarwin [
-        arc-browser
-      ])
       ++ (lib.optionals pkgs.stdenv.isLinux [
         nixgl.nixGLIntel
         steam
@@ -142,6 +138,7 @@ in {
     command-not-found.enable = false;
     nix-index.enable = true;
     info.enable = true;
+    man.enable = true;
 
     bash = {
       enable = true;

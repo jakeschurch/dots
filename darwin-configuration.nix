@@ -5,24 +5,33 @@
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
-  environment.extraOutputsToInstall = [
-    "doc"
-    "info"
-    "devdoc"
-  ];
   ids.gids.nixbld = 30000;
   ids.uids.nixbld = 350;
 
-  environment.pathsToLink = [
-    "/share/zsh"
-    "/share"
-    "/bin"
-    "/usr/bin"
-    "/doc"
-    "/etc"
-    "/info"
-    "/share/doc"
-  ];
+  environment = {
+    extraOutputsToInstall = [
+      "man"
+      "info"
+      "doc"
+      "devdoc"
+    ];
+
+    systemPackages = with pkgs; [
+      raycast
+      arc-browser
+    ];
+
+    pathsToLink = [
+      "/share/zsh"
+      "/share"
+      "/bin"
+      "/usr/bin"
+      "/doc"
+      "/etc"
+      "/info"
+      "/share/doc"
+    ];
+  };
 
   nix = {
     linux-builder = {
@@ -48,7 +57,10 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
     registry.nixpkgs.flake = inputs.nixpkgs;
     nixPath = ["nixpkgs=${inputs.nixpkgs}"];
+    optimise.automatic = true;
   };
+
+  home-manager.backupFileExtension = "bak";
 
   users.users."${user}".home = "/Users/${user}";
 

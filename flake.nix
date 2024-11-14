@@ -34,12 +34,12 @@
   };
 
   nixConfig = {
-    experimental-features = "nix-command flakes pipe-operators";
+    experimental-features = "nix-command flakes";
     warn-dirty = false;
     sandbox = true;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
     keep-derivations = false;
-    pure-eval = false;
+    pure-eval = true;
     extra-trusted-substituters = [
       "s3://nix-cache?profile=default&scheme=https&endpoint=s3.jakeschurch.com&trusted=1"
       "https://nix-community.cachix.org"

@@ -127,7 +127,7 @@ in {
       nodePackages.prettier
       nodePackages.eslint
       nodePackages.typescript
-      nodePackages.typescript-language-server
+      unstable.nodePackages.typescript-language-server
       nodePackages.webpack
       nodePackages.webpack-cli
 
