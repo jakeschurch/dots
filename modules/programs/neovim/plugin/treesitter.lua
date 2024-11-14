@@ -3,8 +3,9 @@ if not status_ok then
   return
 end
 
-vim.o.foldmethod = "expr"
-vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
 configs.setup({
   ensure_installed = {},
@@ -14,10 +15,10 @@ configs.setup({
   highlight = {
     enable = true,
     disable = {},
-    additional_vim_regex_highlighting = true,
+    additional_vim_regex_highlighting = false,
   },
   indent = {
-    enable = false,
+    enable = true,
     disable = { "json" },
   },
   textobjects = {

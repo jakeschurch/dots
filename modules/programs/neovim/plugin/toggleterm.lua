@@ -21,7 +21,7 @@ toggleterm.setup({
   open_mapping = [[<c-\>]],
   persist_size = true,
   shade_filetypes = {},
-  shade_terminals = true,
+  shade_terminals = false,
   shading_factor = "3",
   start_in_insert = true,
   insert_mappings = true,
@@ -52,9 +52,44 @@ toggleterm.setup({
   end,
 })
 
+vim.api.nvim_create_augroup("disable_folding_toggleterm", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = "disable_folding_toggleterm",
+  pattern = "toggleterm",
+  callback = function(ev)
+    local bufnr = ev.buf
+    vim.api.nvim_buf_set_option(bufnr, "foldmethod", "manual")
+    vim.api.nvim_buf_set_option(bufnr, "foldtext", "foldtext()")
+  end,
+})
+
+vim.api.nvim_create_user_command("ToggleTermClear", function()
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    local buf_num = vim.api.nvim_buf_get_number(buf)
+
+    if buf_name:find("toggleterm#") then
+      local term_id = buf_num
+      vim.cmd(string.format("bdelete! %d", term_id))
+      require("toggleterm.terminal").Terminal
+        :new({ direction = "vertical" })
+        :toggle()
+    end
+  end
+end, {})
+
 ---@diagnostic disable-next-line: unused-function
 function _G.set_terminal_keymaps()
   local opts = { buffer = 0 }
+  vim.keymap.set(
+    "t",
+    "<C-x>",
+    "<cmd>ToggleTermClear<CR>",
+    { noremap = true, silent = true }
+  )
   vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
   vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
   vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
