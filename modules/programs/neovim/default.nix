@@ -54,7 +54,7 @@
   in
     mkConfig (confFiles [./plugin]);
 
-  treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withPlugins (ts-plugins:
+  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (ts-plugins:
     with ts-plugins; [
       awk
       bash
@@ -102,6 +102,7 @@ in {
   home.sessionVariables = {
     EDITOR = "nvim";
     PSQL_EDITOR = "nvim";
+    VIMRUNTIME = "${pkgs.neovim}/share/nvim/runtime";
   };
 
   xdg.configFile = {
@@ -137,7 +138,7 @@ in {
       generatePluginRevs
       ++ [
         treesitter-plugins
-        pkgs.vimPlugins.telescope-fzf-native-nvim
+        pkgs.unstable.vimPlugins.telescope-fzf-native-nvim
       ];
   };
 }
