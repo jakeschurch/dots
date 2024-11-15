@@ -60,6 +60,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function(ev)
     local bufnr = ev.buf
     vim.api.nvim_buf_set_option(bufnr, "foldmethod", "manual")
+    vim.api.nvim_buf_set_option(bufnr, "foldexpr", "0")
     vim.api.nvim_buf_set_option(bufnr, "foldtext", "foldtext()")
   end,
 })
