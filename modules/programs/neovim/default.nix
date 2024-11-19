@@ -98,7 +98,6 @@ in {
           -- lua
           local status, ts_install = pcall(require, "nvim-treesitter.install")
           ts_install.compilers = { "${pkgs.gcc}/bin/gcc" }
-
         EOF
       ''
       pluginConf

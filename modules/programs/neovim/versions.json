@@ -220,11 +220,6 @@
     "ref": "master"
   },
   {
-    "name": "jparise/vim-graphql",
-    "rev": "f2e77545b4ed1f8104a0014e9b75cff257c3cc27",
-    "ref": "master"
-  },
-  {
     "name": "jmckiern/vim-venter",
     "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
     "ref": "master"

@@ -54,9 +54,17 @@ toggleterm.setup({
 
 vim.api.nvim_create_augroup("disable_folding_toggleterm", { clear = true })
 
-vim.api.nvim_create_autocmd("FileType", {
+local toggleterm_pattern = {
+  "term://*#toggleterm#*",
+  "term://*::toggleterm::*",
+  "*.ts",
+  "*.graphql",
+  "*.tsx",
+}
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre" }, {
+  pattern = toggleterm_pattern,
   group = "disable_folding_toggleterm",
-  pattern = "toggleterm",
   callback = function(ev)
     local bufnr = ev.buf
     vim.api.nvim_buf_set_option(bufnr, "foldmethod", "manual")

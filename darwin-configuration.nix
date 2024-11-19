@@ -10,6 +10,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   environment = {
     extraOutputsToInstall = [
+      "share"
       "man"
       "info"
       "doc"
@@ -22,7 +23,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     ];
 
     pathsToLink = [
-      "/share/zsh"
       "/share"
       "/bin"
       "/usr/bin"

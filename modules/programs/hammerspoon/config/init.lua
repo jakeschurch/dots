@@ -38,6 +38,9 @@ local appOpenBindings = {
   [singleKey("w", "whatsapp")] = function()
     hs.application.launchOrFocus("whatsapp")
   end,
+  [singleKey("m", "spotify")] = function()
+    hs.application.launchOrFocus("spotify")
+  end,
 }
 hs.hotkey.bind(
   { MOD },

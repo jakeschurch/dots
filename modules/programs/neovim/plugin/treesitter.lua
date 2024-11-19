@@ -14,12 +14,31 @@ configs.setup({
   autopairs = { enable = true },
   highlight = {
     enable = true,
-    disable = {},
+    disable = function(lang, buf)
+      local should_ignore_lang = function(lang)
+        local langs_to_ignore = {
+          "terminal",
+          "toggleterm",
+          "graphql",
+        }
+
+        for _, lang_to_ignore in pairs(langs_to_ignore) do
+          if lang == lang_to_ignore then
+            return true
+          end
+        end
+        return false
+      end
+
+      local max_size = 1024 * 1024 -- 1MB
+      local file_size = vim.fn.getfsize(vim.api.nvim_buf_get_name(buf))
+      return file_size > max_size or should_ignore_lang(lang)
+    end,
     additional_vim_regex_highlighting = false,
   },
   indent = {
     enable = true,
-    disable = { "json" },
+    disable = { "json", "toggleterm", "terminal" },
   },
   textobjects = {
     select = {

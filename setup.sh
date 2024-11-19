@@ -2,8 +2,9 @@
 
 set -Eeuo pipefail
 
-create_ccache_dir() {
+FLAKE_DIR=~/.dots
 
+create_ccache_dir() {
   if [ ! -d /nix/var/cache/ccache ]; then
     sudo mkdir -m0770 -p /nix/var/cache/ccache
 
@@ -16,11 +17,19 @@ create_ccache_dir() {
 
 }
 
-create_ccache_dir
+build_flake() {
+  if [ ! -d "$FLAKE_DIR" ]; then
+    echo "Cloning jakeschurch/dots"
+    git clone https://github.com/jakeschurch/dots.git "$FLAKE_DIR"
+  fi
 
-# use nom if available, otherwise use nix to build it
-if command -v nom &> /dev/null; then
-  nom build .#
-else
-  nix build .#  --extra-experimental-features 'nix-command flakes'
-fi && ./result/activate-user && sudo ./result/activate
+  # use nom if available, otherwise use nix to build it
+  if command -v nom &>/dev/null; then
+    nom build "$FLAKE_DIR" "$@"
+  else
+    nix build "$FLAKE_DIR" --extra-experimental-features 'nix-command flakes' "$@"
+  fi && "$FLAKE_DIR"/result/activate-user && sudo "$FLAKE_DIR"/result/activate
+}
+
+create_ccache_dir
+build_flake "$@"

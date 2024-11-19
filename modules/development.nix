@@ -53,7 +53,7 @@ in {
         kubernetes-helm
         kubelogin-oidc
 
-        docker
+        unstable.docker
         lazydocker
         docker-credential-helpers
         pass
@@ -160,7 +160,7 @@ in {
       autosuggestion.enable = true;
       initExtraBeforeCompInit = ''
         export ZSH_COMPDUMP=~/.zcompdump
-        fpath+=(/etc/static/profiles/per-user/jake/share/zsh/site-functions /etc/static/profiles/per-user/jake/share/zsh/$ZSH_VERSION/functions /etc/static/profiles/per-user/jake/share/zsh/ /etc/static/profiles/per-user/jake/share/zsh/vendor-completions)
+        fpath+=("${config.home.profileDirectory}"/share/zsh/site-functions "${config.home.profileDirectory}"/share/zsh/$ZSH_VERSION/functions "${config.home.profileDirectory}"/share/zsh/vendor-completions)
       '';
       autocd = true;
       history = {
@@ -175,6 +175,8 @@ in {
       '';
       initExtra = ''
         setopt autocd
+
+        autoload -Uz compinit
 
         autoload -U up-line-or-beginning-search
         autoload -U down-line-or-beginning-search

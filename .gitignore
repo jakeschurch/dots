@@ -1,5 +1,5 @@
 result
-result/
+result/*
 .direnv
 .git
 .git/*

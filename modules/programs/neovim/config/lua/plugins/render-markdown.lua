@@ -75,9 +75,9 @@ for _, keyword in ipairs(keywords) do
     keyword:lower() .. ":",
   }
 
-  for kw_variant in ipairs(keyword_variations) do
+  for _, kw_variant in ipairs(keyword_variations) do
     vim.api.nvim_create_autocmd("FileType", {
-      pattern = "markdown",
+      pattern = { "*.md", "*.wiki" },
       group = group,
       command = "iabbrev " .. kw_variant .. " " .. callout_keyword,
     })

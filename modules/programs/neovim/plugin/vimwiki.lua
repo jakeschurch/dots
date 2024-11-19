@@ -10,7 +10,6 @@ local g = vim.g
 g.automatic_nested_syntaxes = 1
 g.vimwiki_autowriteall = 1
 g.vimwiki_auto_chdir = 1
-g.vimwiki_commentstring = "# %s"
 
 g.vimwiki_filetypes = { "markdown" }
 -- g.vimwiki_sync_branch = "main"

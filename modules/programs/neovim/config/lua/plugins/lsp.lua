@@ -5,7 +5,8 @@ local virtualtypes = require("virtualtypes")
 local lsp_status = require("lsp-status")
 lsp_status.register_progress()
 
-vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
+vim.lsp.set_log_level(vim.lsp.log_levels.INFO)
+
 local common_capabilities = vim.tbl_extend(
   "force",
   vim.lsp.protocol.make_client_capabilities(),
