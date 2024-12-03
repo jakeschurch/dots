@@ -91,9 +91,9 @@ function lsp.common_on_attach(client, bufnr)
     vim.lsp.buf.format({ async = true })
   end, opts)
 
-  if client.supports_method("textDocument/codeLens") then
-    virtualtypes.on_attach(client, bufnr)
-  end
+  -- if client.supports_method("textDocument/codeLens") then
+  -- virtualtypes.on_attach(client, bufnr)
+  -- end
 
   lsp_status.on_attach(client, bufnr)
 

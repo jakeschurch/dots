@@ -54,15 +54,8 @@ in {
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
       NIX_CONF_DIR = "${config.home.homeDirectory}/.config/nix";
       NIX_CONF = "${config.home.homeDirectory}/.config/nix/nix.conf";
-      NIX_PATH = concatSessionList ([
-          "${config.home.homeDirectory}/.nix-defexpr/channels"
-          # "/nix/var/nix/profiles/per-user/root/channels"
-        ]
-        ++ lib.optionals pkgs.stdenv.isDarwin [
-          "darwin-config=${config.home.homeDirectory}/.dots/config/nixpkgs/darwin-configuration.nix"
-        ]);
       PAGER = "bat";
-      MANPAGER = "man";
+      MANPAGER = "batman";
       HISTSIZE = "50000";
       HISTCONTROL = concatSessionList [
         "ignoredups"

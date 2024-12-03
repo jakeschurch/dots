@@ -62,6 +62,11 @@ in {
         condition = "gitdir:~/Projects/work";
       }
     ];
+
+    hooks = {
+      prepare-commit-msg = ./templates/hooks/prepare-commit-msg;
+    };
+
     extraConfig = {
       gc.auto = 200;
 

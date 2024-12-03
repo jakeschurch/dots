@@ -125,6 +125,8 @@ telescope.setup({
       },
     },
     file_ignore_patterns = {
+      ".terragrunt-cache",
+      ".terragrunt-cache/*",
       "node_modules",
       "node_modules/*",
       "*.lock",

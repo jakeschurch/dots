@@ -9,6 +9,7 @@
     ./kitty.nix
     ./neovim
     ./ranger
+    ./ripgrep.nix
     ./terragrunt.nix
     ./rofi
     ./slack.nix

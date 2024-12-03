@@ -51,6 +51,71 @@ snippet log
 		done
 	}
 
+snippet select
+  __select_option() {
+    local prompt=\$1
+    shift
+
+    # Ensure that the options are properly passed as an array
+    local -a options
+    options=("$@")
+
+    # Check if there are any options
+    if [ ${#options[@]} -eq 0 ]; then
+      echo "No options provided!"
+      return 1
+    fi
+
+    # Display the options with numbers
+    echo "$prompt" >&2
+    for i in "${!options[@]}"; do
+      echo "$((i + 1))) ${options[i]}" >&2
+    done
+
+    # Read user input (selection)
+    local choice
+    while :; do
+      read -r -p "Enter the number of your choice: " choice
+
+      # Validate that the choice is within the correct range
+      if [[ "$choice" -ge 1 && "$choice" -le "${#options[@]}" ]]; then
+        # Return the selected option (indexed correctly)
+        echo "${options[$((choice - 1))]}"
+        break
+      else
+        echo "Invalid choice. Please select a valid option." >&2
+      fi
+    done
+  }
+
+  _multiselect() {
+    # \$1: Options
+    # \$2: Prompt
+
+    local options prompt
+
+    prompt="\$1"
+    shift
+    read -r -a options <<<"$(printf '%s\n' "$*")"
+
+    if [ "$prompt" = "" ]; then
+      echo "ERROR: prompt is required"
+      exit 1
+    fi
+
+    if [ ${#options[@]} -eq 0 ]; then
+      echo "ERROR: options are required"
+      exit 1
+    fi
+
+    if command -v fzf &>/dev/null; then
+      printf "%s\n" "${options[@]}" |
+        fzf --cycle --reverse --info=hidden --height=~100% --prompt="$prompt"
+    else
+      __select_option "$prompt" "$@"
+    fi
+  }
+
 
 snippet flags
 	while [[ $# -gt 0 ]]; do
@@ -59,6 +124,5 @@ snippet flags
 				${1}="\$1"
 				shift
 				;;
-			shift
 		esac
 	done

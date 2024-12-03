@@ -7,7 +7,7 @@ _SHA1=$3
 /usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
 
 STORY_PREFIX="$(git symbolic-ref --short HEAD | grep -Eo 'sc-[0-9]+')"
-if [[ "$STORY_PREFIX" -ne "" ]] && ! grep -q "$STORY_PREFIX" "$COMMIT_MSG_FILE"; then
+if [[ "$STORY_PREFIX" -ne "" ]] && ! grep -q "$STORY_PREFIX" "$(head -n 1 "$COMMIT_MSG_FILE")"; then
   sed -i.bak "1s/^/\[$STORY_PREFIX\] /" "$COMMIT_MSG_FILE"
 fi
 

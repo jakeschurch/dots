@@ -22,7 +22,7 @@ in {
         download-nixpkgs-cache-index
         # latex
         # texlive.combined.scheme-medium
-        _1password
+        _1password-cli
         gh
 
         act
@@ -45,7 +45,9 @@ in {
         wget
         lsd
 
-        unstable.terraform
+        terraform
+        asciinema
+        asciinema-agg
 
         k9s
         kubectl
@@ -69,7 +71,6 @@ in {
         sd
         tokei
         (aspellWithDicts (ds: with ds; [en en-computers en-science]))
-        (ripgrep.override {withPCRE2 = true;})
         coreutils
         expect
         difftastic

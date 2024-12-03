@@ -16,8 +16,6 @@
       };
     };
 
-  pluginConf = pkgs.callPackage ./plugins.nix {};
-
   pluginVersionLock = let
     readJsonFile = with builtins; file: fromJSON (readFile file);
   in
@@ -78,6 +76,8 @@ in {
   };
 
   xdg.configFile = {
+    "nvim/lua/plugin".source = ./plugin;
+    "nvim/lua/plugin".recursive = true;
     "nvim".source = ./config;
     "nvim".recursive = true;
     "nvim/spell/en.utf-8.add".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
@@ -100,7 +100,6 @@ in {
           ts_install.compilers = { "${pkgs.gcc}/bin/gcc" }
         EOF
       ''
-      pluginConf
     ];
 
     viAlias = true;

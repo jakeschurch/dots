@@ -34,6 +34,8 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   };
 
   nix = {
+    settings.trusted-users = ["root" "@wheel" "jake" "jakeschurch"];
+
     linux-builder = {
       enable = true;
       ephemeral = true;
@@ -50,7 +52,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     };
 
     distributedBuilds = true;
-
     configureBuildUsers = true;
 
     gc.automatic = true;

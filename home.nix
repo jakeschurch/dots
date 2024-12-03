@@ -62,9 +62,6 @@
     ++ (with pkgs; [noto-fonts-emoji jetbrains-mono]);
 
   nix = {
-    registry = {
-    };
-
     settings = {
       auto-optimise-store = true;
       allowed-users = ["*"];

@@ -11,7 +11,7 @@
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixGL = {
       url = "github:guibou/nixGL";
@@ -35,15 +35,10 @@
   nixConfig = {
     experimental-features = "nix-command flakes";
     warn-dirty = false;
-    sandbox = true;
+    sandbox = false;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
     keep-derivations = false;
     pure-eval = true;
-    extra-trusted-substituters = [
-      "s3://nix-cache?profile=default&scheme=https&endpoint=s3.jakeschurch.com&trusted=1"
-      "https://nix-community.cachix.org"
-      "https://cache.nixos.org/"
-    ];
     keep-outputs = false;
     keep-going = false;
     keep-failed = false;

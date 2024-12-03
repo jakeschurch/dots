@@ -108,7 +108,6 @@ null_ls.setup({
 
     -- elixir
     null_ls.builtins.diagnostics.credo,
-    null_ls.builtins.formatting.mix,
 
     -- html, css
     -- null_ls.builtins.diagnostics.stylelint,
