@@ -1,11 +1,12 @@
 {
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*.tar.gz";
-    nixpkgs.flake = true;
+    nixpkgs.url = "nixpkgs/nixos-24.11";
+
+    unstable.url = "nixpkgs/nixpkgs-unstable";
 
     tfenv.url = "github:cjlarose/tfenv-nix";
-    unstable.url = "nixpkgs/nixos-unstable";
+
     flake-utils.url = "github:numtide/flake-utils";
 
     nix-index-database.url = "github:Mic92/nix-index-database";
@@ -20,8 +21,13 @@
     };
 
     lexical-lsp.url = "github:lexical-lsp/lexical";
+    lexical-lsp.inputs.nixpkgs.follows = "nixpkgs";
+
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     nix-pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    nix-pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
 
     darwin.url = "github:LnL7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -30,15 +36,16 @@
     nixd.inputs.nixpkgs.follows = "nixpkgs";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
   };
 
   nixConfig = {
-    experimental-features = "nix-command flakes";
+    experimental-features = "nix-command flakes pipe-operators";
     warn-dirty = false;
     sandbox = false;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
     keep-derivations = false;
-    pure-eval = true;
+    pure-eval = false;
     keep-outputs = false;
     keep-going = false;
     keep-failed = false;
@@ -58,8 +65,6 @@
     nixpkgs,
     flake-utils,
     unstable,
-    home-manager,
-    darwin,
     ...
   } @ inputs: let
     supportedSystems = [
