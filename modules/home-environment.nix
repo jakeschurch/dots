@@ -52,8 +52,6 @@ in {
       NIX_PROFILES = config.home.profileDirectory;
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
-      NIX_CONF_DIR = "${config.home.homeDirectory}/.config/nix";
-      NIX_CONF = "${config.home.homeDirectory}/.config/nix/nix.conf";
       PAGER = "bat";
       MANPAGER = "batman";
       HISTSIZE = "50000";

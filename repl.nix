@@ -5,6 +5,6 @@ in
   {inherit flake;}
   // flake
   // builtins
-  // nixpkgs
+  // nixpkgs.pkgs
   // nixpkgs.lib
-  // flake
+  // flake.darwinConfigurations

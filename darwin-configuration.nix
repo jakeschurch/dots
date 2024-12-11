@@ -1,7 +1,6 @@
 {
   pkgs,
   user,
-  inputs,
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
@@ -34,10 +33,16 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   };
 
   nix = {
-    settings.trusted-users = ["root" "@wheel" "jake" "jakeschurch"];
+    distributedBuilds = true;
+    configureBuildUsers = true;
+
+    optimise.automatic = true;
+    gc = {
+      automatic = true;
+    };
 
     linux-builder = {
-      enable = true;
+      enable = pkgs.stdenv.isDarwin;
       ephemeral = true;
       maxJobs = 10;
       config = {
@@ -50,15 +55,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
         };
       };
     };
-
-    distributedBuilds = true;
-    configureBuildUsers = true;
-
-    gc.automatic = true;
-
-    registry.nixpkgs.flake = inputs.nixpkgs;
-    nixPath = ["nixpkgs=${inputs.nixpkgs}"];
-    optimise.automatic = true;
   };
 
   home-manager.backupFileExtension = "bak";

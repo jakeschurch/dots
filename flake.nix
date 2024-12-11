@@ -112,9 +112,10 @@
                   lib =
                     prev.lib
                     // import ./lib.nix {
-                      inherit nixpkgs;
+                      inherit inputs;
                       inherit (nixpkgs) lib;
-                      inherit system pkgs home-manager darwin inputs;
+                      inherit pkgs;
+                      inherit system;
                     };
                 }
               )

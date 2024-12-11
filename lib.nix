@@ -1,21 +1,27 @@
 {
   lib,
-  darwin,
-  nixpkgs,
   system,
   pkgs,
-  home-manager,
   inputs,
-}: {
+}:
+with inputs; let
+  specialArgs = {
+    inherit inputs system pkgs;
+    inherit (pkgs) lib;
+    self = builtins.getFlake (toString ./.);
+  };
+in {
   mkDarwinHome = {user}:
     darwin.lib.darwinSystem {
       inherit system pkgs;
 
       modules = [
+        {_module.args = specialArgs;}
         inputs.nix-index-database.darwinModules.nix-index
-
         ./darwin-configuration.nix
         ./modules/homebrew.nix
+        ./nix.nix
+
         home-manager.darwinModules.home-manager
         {
           home-manager = {
@@ -26,11 +32,7 @@
         }
       ];
 
-      specialArgs = {
-        inherit inputs system pkgs user;
-        inherit (pkgs) lib;
-        inherit nixpkgs;
-      };
+      specialArgs = specialArgs // {inherit user;};
     };
 
   mkHmHome = {user}:
@@ -38,6 +40,7 @@
       inherit pkgs;
 
       modules = [
+        ./nix.nix
         ./home.nix
         inputs.nix-index-database.hmModules.nix-index
         (_: {
@@ -46,14 +49,11 @@
           home = {
             homeDirectory = "/home/${user}";
             username = user;
+            enableNixpkgsReleaseCheck = false;
           };
         })
       ];
 
-      extraSpecialArgs = {
-        inherit inputs system pkgs user;
-        inherit (pkgs) lib;
-        inherit nixpkgs;
-      };
+      extraSpecialArgs = specialArgs // {inherit user;};
     };
 }
