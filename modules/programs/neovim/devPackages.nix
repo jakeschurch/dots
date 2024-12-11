@@ -131,7 +131,7 @@ in {
       nodePackages.webpack
       nodePackages.webpack-cli
 
-      nodePackages.neovim
+      # nodePackages.neovim
     ];
 
     shell = with pkgs; [

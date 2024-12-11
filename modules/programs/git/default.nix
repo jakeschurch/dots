@@ -63,10 +63,6 @@ in {
       }
     ];
 
-    hooks = {
-      prepare-commit-msg = ./templates/hooks/prepare-commit-msg;
-    };
-
     extraConfig = {
       gc.auto = 200;
 
@@ -151,7 +147,7 @@ in {
         editor = "nvim";
         preloadIndex = true;
         untrackedCache = true;
-        fsmonitor = "";
+        fsmonitor = false;
         commitgraph = true;
       };
 
@@ -172,9 +168,14 @@ in {
       };
     };
   };
+
   xdg = {
     configFile = {
+      "git/work-hooks".source = ./templates/hooks;
       "git/config.work".text = ''
+        [core]
+          hooksPath = ~/.config/git/work-hooks
+
         [user]
           name = Jake Schurch
           email = jakeschurch@gmail.com

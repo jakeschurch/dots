@@ -8,8 +8,8 @@ lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
     onActivation = {
       cleanup = "uninstall";
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
     };
 
     brews = [
