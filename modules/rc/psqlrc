@@ -1,4 +1,4 @@
--- vim: set ft=sql
+-- vim:ft=sql
 
 -- Tab-complete entries as uppercase
 \set COMP_KEYWORD_CASE upper
@@ -15,9 +15,9 @@
 \pset null '(null)'
 
 -- Prompt for starting queries
-\set PROMPT1 '%M %n@%/%R%#%x '
+\set PROMPT1 '%M %n@%/%R%#%x \n '
 -- Prompt for query fragments by <CR>
-\set PROMPT2 '%M %n@%/%R%#%x '
+\set PROMPT2 '=> '
 
 -- Custom editor
 \set PSQL_EDITOR nvim
@@ -50,4 +50,4 @@
 
 \set longqueries 'SELECT pid, application_name, backend_type, now() - query_start AS query_age, now() - xact_start AS xact_age, state, substr(regexp_replace(query, E''\\s*'', E'' ''), 1, 30) AS query FROM pg_stat_activity WHERE state != ''idle'' AND pid != pg_backend_pid() ORDER BY xact_start DESC;'
 
-\set sh '\\!'
+\set : '\\!'

@@ -3,5 +3,5 @@
     (ripgrep.override {withPCRE2 = true;})
   ];
 
-  home.file."rgignore".text = pkgs.callPackage ../../config/ignore.nix {};
+  home.file.".rgignore".text = pkgs.callPackage ../../config/ignore.nix {};
 }

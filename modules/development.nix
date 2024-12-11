@@ -104,7 +104,6 @@ in {
         steam
         rofi
         etcher
-        postgresql_16
         spotify
         docker
         wmctrl
