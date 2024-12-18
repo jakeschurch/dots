@@ -5,7 +5,7 @@ snippet trap_error
     local func_name=${FUNCNAME[1]:-main}              # Function name or 'main' if not in a function
     local script_name=$(basename "${BASH_SOURCE[1]}") # Script name where the error occurred
 
-    echo "Error: Script '${script_name}', function '${func_name}', line ${line_no}, exit code ${exit_code}" >&2
+    echo "Error: Script '\${script_name}', function '\${func_name}', line \${line_no}, exit code \${exit_code}" >&2
     exit 1
   }
 

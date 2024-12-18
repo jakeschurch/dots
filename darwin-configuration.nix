@@ -17,7 +17,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     ];
 
     systemPackages = with pkgs; [
-      raycast
       arc-browser
     ];
 

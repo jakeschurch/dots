@@ -39,7 +39,7 @@
       git_rebase
       gitcommit
       gitignore
-      # go
+      go
       graphql
       haskell
       hcl

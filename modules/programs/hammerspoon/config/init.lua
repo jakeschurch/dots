@@ -38,8 +38,13 @@ local appOpenBindings = {
   [singleKey("w", "whatsapp")] = function()
     hs.application.launchOrFocus("whatsapp")
   end,
+
   [singleKey("m", "spotify")] = function()
     hs.application.launchOrFocus("spotify")
+  end,
+
+  [singleKey(",", "notion calendar")] = function()
+    hs.application.launchOrFocus("notion calendar")
   end,
 }
 hs.hotkey.bind(

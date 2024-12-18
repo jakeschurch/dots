@@ -31,7 +31,7 @@
   },
   {
     "name": "tpope/vim-fugitive",
-    "rev": "320b18fba2a4f2fe3c8225c778c687e0d2620384",
+    "rev": "fcb4db52e7f65b95705aa58f0f2df1312c1f2df2",
     "ref": "master"
   },
   {
@@ -41,12 +41,12 @@
   },
   {
     "name": "stevearc/oil.nvim",
-    "rev": "7a55ede5e745e31ea8e4cb5483221524922294bf",
+    "rev": "dba037598843973b8c54bc5ce0318db4a0da439d",
     "ref": "master"
   },
   {
     "name": "soywod/himalaya",
-    "rev": "4953aae860e3a683c4dbaf89338e8a0f2e5ff436",
+    "rev": "118a3f9779f51331d580002aa8ff5a63e3c21490",
     "ref": "master"
   },
   {
@@ -71,7 +71,7 @@
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "dfb292d81fe844d85199bb041c55981899c95fde",
+    "rev": "38f572d87e400863288a570a37acca680f94c11a",
     "ref": "master"
   },
   {
@@ -86,7 +86,7 @@
   },
   {
     "name": "nvimtools/none-ls.nvim",
-    "rev": "c279e541f73a2deea9deb5231b9c037678dd6353",
+    "rev": "40dc2e983560acaea29d6312b33fafba37b0c272",
     "ref": "main"
   },
   {
@@ -111,7 +111,7 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "337b503688eccb3046547661e4c738e674548fcf",
+    "rev": "102bc74e093ef54aab57a368db15befeb9ba9d58",
     "ref": "master"
   },
   {
@@ -156,7 +156,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "5a812abc65d529ea7673059a348814c21d7f87ff",
+    "rev": "9f2c279cf9abe584f03bfeb37c6658d68e3ff49d",
     "ref": "master"
   },
   {
@@ -196,7 +196,7 @@
   },
   {
     "name": "kyazdani42/nvim-web-devicons",
-    "rev": "e73d2774d12d0ecf9e05578d692ba1ea50508cf2",
+    "rev": "0eb18da56e2ba6ba24de7130a12bcc4e31ad11cb",
     "ref": "master"
   },
   {
@@ -211,7 +211,7 @@
   },
   {
     "name": "junegunn/fzf",
-    "rev": "bb55045596d6d08445f3c6d320c3ec2b457462d1",
+    "rev": "0476a65fca287a1cd17ae3cbdfd8155eb0fb40ad",
     "ref": "master"
   },
   {
@@ -226,7 +226,7 @@
   },
   {
     "name": "hrsh7th/nvim-cmp",
-    "rev": "3403e2e9391ed0a28c3afddd8612701b647c8e26",
+    "rev": "98e8b9d593a5547c126a39212d6f5e954a2d85dd",
     "ref": "main"
   },
   {
@@ -266,7 +266,7 @@
   },
   {
     "name": "folke/which-key.nvim",
-    "rev": "9b365a6428a9633e3eeb34dbef1b791511c54f70",
+    "rev": "8ab96b38a2530eacba5be717f52e04601eb59326",
     "ref": "main"
   },
   {
@@ -311,7 +311,7 @@
   },
   {
     "name": "MeanderingProgrammer/render-markdown.nvim",
-    "rev": "e41b0002fe4196825450ab5a6343300c40791d51",
+    "rev": "0022a579ac7355966be5ade77699b88c76b6a549",
     "ref": "main"
   },
   {

@@ -24,6 +24,7 @@ lib.mkIf pkgs.stdenv.isDarwin {
     ];
 
     casks = [
+      "raycast"
       "steam"
       "around"
       "balenaetcher"
