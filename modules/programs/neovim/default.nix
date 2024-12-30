@@ -30,38 +30,54 @@
       bash
       comment
       css
+      desktop
       dhall
+      diff
       dockerfile
       elixir
       embedded_template
       func
       git_config
       git_rebase
+      gitattributes
+      gitcommit
       gitcommit
       gitignore
       go
+      gomod
       graphql
       haskell
       hcl
       heex
+      heex
+      html
       html
       javascript
+      jq
       jq
       json
       latex
       lua
+      luadoc
+      make
       make
       markdown
       markdown_inline
       mermaid
+      ninja
       nix
       passwd
       promql
       python
       regex
+      rust
       sql
       ssh_config
+      sxhkdrc
+      templ
       terraform
+      toml
+      tsx
       typescript
       vim
       vimdoc
@@ -71,6 +87,7 @@
 in {
   home.sessionVariables = {
     EDITOR = "nvim";
+    MANPAGER = "${pkgs.neovim}/bin/nvim +Man!";
     PSQL_EDITOR = "nvim";
     VIMRUNTIME = "${pkgs.neovim}/share/nvim/runtime";
   };

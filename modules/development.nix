@@ -176,6 +176,12 @@ in {
       initExtra = ''
         setopt autocd
 
+        typeset -A key
+        key[Up]=$'\e[A'
+        key[Down]=$'\e[B'
+        key[Right]=$'\e[C'
+        key[Left]=$'\e[D'
+
         autoload -Uz compinit
 
         autoload -U up-line-or-beginning-search
