@@ -31,7 +31,7 @@
   },
   {
     "name": "tpope/vim-fugitive",
-    "rev": "fcb4db52e7f65b95705aa58f0f2df1312c1f2df2",
+    "rev": "174230d6a7f2df94705a7ffd8d5413e27ec10a80",
     "ref": "master"
   },
   {
@@ -40,13 +40,18 @@
     "ref": "master"
   },
   {
+    "name": "theHamsta/nvim-dap-virtual-text",
+    "rev": "df66808cd78b5a97576bbaeee95ed5ca385a9750",
+    "ref": "master"
+  },
+  {
     "name": "stevearc/oil.nvim",
-    "rev": "dba037598843973b8c54bc5ce0318db4a0da439d",
+    "rev": "ba858b662599eab8ef1cba9ab745afded99cb180",
     "ref": "master"
   },
   {
     "name": "soywod/himalaya",
-    "rev": "118a3f9779f51331d580002aa8ff5a63e3c21490",
+    "rev": "5eeda248fd90d161c8b346604f603d4a0a37ec6d",
     "ref": "master"
   },
   {
@@ -57,6 +62,11 @@
   {
     "name": "ruifm/gitlinker.nvim",
     "rev": "cc59f732f3d043b626c8702cb725c82e54d35c25",
+    "ref": "master"
+  },
+  {
+    "name": "rcarriga/nvim-dap-ui",
+    "rev": "e94d98649dccb6a3884b66aabc2e07beb279e535",
     "ref": "master"
   },
   {
@@ -71,7 +81,7 @@
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "38f572d87e400863288a570a37acca680f94c11a",
+    "rev": "48fb9a2efe06d6b57c64ca1ebc540fc1b8722272",
     "ref": "master"
   },
   {
@@ -86,7 +96,7 @@
   },
   {
     "name": "nvimtools/none-ls.nvim",
-    "rev": "40dc2e983560acaea29d6312b33fafba37b0c272",
+    "rev": "02144ef2b86a816b5dec69783e311bb6feff7d82",
     "ref": "main"
   },
   {
@@ -96,7 +106,7 @@
   },
   {
     "name": "nvimdev/lspsaga.nvim",
-    "rev": "2710a0ad97b5aaff404cd4756c296df454b3f726",
+    "rev": "5fce15331ac6c3a3ec3ac91ab0e85ed82f5cbba0",
     "ref": "main"
   },
   {
@@ -111,7 +121,7 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "102bc74e093ef54aab57a368db15befeb9ba9d58",
+    "rev": "4b222913486ec0a5983efa82b0649a2ab87cf1f0",
     "ref": "master"
   },
   {
@@ -127,6 +137,11 @@
   {
     "name": "nvim-telescope/telescope-dap.nvim",
     "rev": "783366bd6c1e7fa0a5c59c07db37f49c805a28df",
+    "ref": "master"
+  },
+  {
+    "name": "nvim-neotest/nvim-nio",
+    "rev": "a428f309119086dc78dd4b19306d2d67be884eee",
     "ref": "master"
   },
   {
@@ -156,7 +171,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "9f2c279cf9abe584f03bfeb37c6658d68e3ff49d",
+    "rev": "8b15a1a597a59f4f5306fad9adfe99454feab743",
     "ref": "master"
   },
   {
@@ -165,8 +180,13 @@
     "ref": "master"
   },
   {
+    "name": "mfussenegger/nvim-dap",
+    "rev": "ffb077e65259f13be096ea6d603e3575a76b214a",
+    "ref": "master"
+  },
+  {
     "name": "m-demare/hlargs.nvim",
-    "rev": "53ec5d8ca6ed012de5545ba83ea1eb3d636b09fb",
+    "rev": "023021a330956eecf54e1015ecba55900d284365",
     "ref": "main"
   },
   {
@@ -196,7 +216,7 @@
   },
   {
     "name": "kyazdani42/nvim-web-devicons",
-    "rev": "0eb18da56e2ba6ba24de7130a12bcc4e31ad11cb",
+    "rev": "4adeeaa7a32d46cf3b5833341358c797304f950a",
     "ref": "master"
   },
   {
@@ -211,7 +231,7 @@
   },
   {
     "name": "junegunn/fzf",
-    "rev": "0476a65fca287a1cd17ae3cbdfd8155eb0fb40ad",
+    "rev": "b8d2b0df7e1241c09eff21dbb63ebcc841efc824",
     "ref": "master"
   },
   {
@@ -226,7 +246,7 @@
   },
   {
     "name": "hrsh7th/nvim-cmp",
-    "rev": "98e8b9d593a5547c126a39212d6f5e954a2d85dd",
+    "rev": "b555203ce4bd7ff6192e759af3362f9d217e8c89",
     "ref": "main"
   },
   {
@@ -301,7 +321,7 @@
   },
   {
     "name": "akinsho/toggleterm.nvim",
-    "rev": "87b2d6a3cab8e2bd9a0255427074285f0365398d",
+    "rev": "e76134e682c1a866e3dfcdaeb691eb7b01068668",
     "ref": "main"
   },
   {
@@ -311,7 +331,7 @@
   },
   {
     "name": "MeanderingProgrammer/render-markdown.nvim",
-    "rev": "0022a579ac7355966be5ade77699b88c76b6a549",
+    "rev": "6fbd1491abc104409f119685de5353c35c97c005",
     "ref": "main"
   },
   {

@@ -1,9 +1,0 @@
-vim.cmd([[
-let g:vimspector_enable_mappings = 'HUMAN'
-nmap <Leader>bi <Plug>VimspectorBalloonEval
-" for visual mode, the visually selected text
-xmap <Leader>bi <Plug>VimspectorBalloonEval
-
-let g:vimspector_install_gadgets = ['debugpy', 'debugger-for-chrome']
-
-]])

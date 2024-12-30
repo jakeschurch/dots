@@ -86,11 +86,13 @@ in {
 
   devPackages = {
     python = with pkgs; [
+      vimPlugins.nvim-dap-python
       pipenv
       pyright
       pylint
       (python312.withPackages (ps:
         with ps; [
+          debugpy
           setuptools # Required by pylama for some reason
           proselint
           toolz
@@ -130,6 +132,8 @@ in {
       unstable.nodePackages.typescript-language-server
       nodePackages.webpack
       nodePackages.webpack-cli
+
+      vscode-js-debug
 
       # nodePackages.neovim
     ];
@@ -190,6 +194,8 @@ in {
     go = with pkgs; [
       go
       gopls
+      golint
+      delve
     ];
 
     html = with pkgs; [
@@ -198,7 +204,6 @@ in {
 
     misc = with pkgs; [
       tree-sitter
-
       codespell
       nodePackages.yaml-language-server
       yamllint
