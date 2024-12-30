@@ -5,6 +5,8 @@
 
     unstable.url = "nixpkgs/nixpkgs-unstable";
 
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
+
     tfenv.url = "github:cjlarose/tfenv-nix";
 
     flake-utils.url = "github:numtide/flake-utils";

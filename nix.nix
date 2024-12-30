@@ -62,8 +62,6 @@ with inputs; {
       };
     };
 
-    # package = pkgs;
-
     extraOptions = ''
       accept-flake-config = true
       min-free = ${toString (100 * 1024 * 1024)}

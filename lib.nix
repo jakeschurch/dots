@@ -21,6 +21,7 @@ in {
         ./darwin-configuration.nix
         ./modules/homebrew.nix
         ./nix.nix
+        inputs.determinate.darwinModules.default
 
         home-manager.darwinModules.home-manager
         {
@@ -42,6 +43,7 @@ in {
       modules = [
         ./nix.nix
         ./home.nix
+        inputs.determinate.homeModules.default
         inputs.nix-index-database.hmModules.nix-index
         (_: {
           environment.pathsToLink = ["/share/zsh"];
