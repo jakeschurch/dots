@@ -5,14 +5,28 @@
       "${x}/*"
     ];
   dirEntries = (map addDirEntries [
-    "node_modules"
-    "result"
+    "venv"
     "\.direnv"
     "\.git"
-    "\.terragrunt-cache"
-    "\.terraform"
-    "\.venv"
     "\.mypy_cache"
-  ]) |> lib.flatten |> lib.strings.concatLines;
+    "\.pytest_cache"
+    "\.terraform"
+    "\.terragrunt-cache"
+    "\.venv"
+    "build"
+    "dist"
+    "node_modules"
+    "result"
+    "\.venv"
+  ]) ++ [
+      "*.pyc"
+      "*.pyo"
+      "tags"
+      "~*"
+      ".DS_Store"
+
+  ]
+  |> lib.flatten
+  |> lib.strings.concatLines;
 in
   dirEntries

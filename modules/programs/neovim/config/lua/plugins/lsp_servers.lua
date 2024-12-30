@@ -19,9 +19,7 @@ return {
     },
     cmd = { "emmet-ls", "--stdio" },
   },
-  nil_ls = {
-    cmd = { "nil" },
-  },
+  nil_ls = {},
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },

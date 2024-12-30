@@ -7,14 +7,6 @@ lsp_status.register_progress()
 
 vim.lsp.set_log_level(vim.lsp.log_levels.INFO)
 
-local common_capabilities = vim.tbl_extend(
-  "force",
-  vim.lsp.protocol.make_client_capabilities(),
-  require("cmp_nvim_lsp").default_capabilities(),
-  lsp_status.capabilities,
-  { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
-)
-
 lsp.util = { default_config = {} }
 lsp.util.default_config = vim.tbl_extend("force", lsp.util.default_config, {
   on_attach = function(client)
@@ -25,11 +17,19 @@ lsp.util.default_config = vim.tbl_extend("force", lsp.util.default_config, {
     client.server_capabilities.completionProvider = true
     -- Enable auto-import and completion features, if supported
     client.server_capabilities.textDocument.completion.completionItem.resolveSupport =
-      {
-        properties = { "documentation", "detail", "additionalTextEdits" },
-      }
+    {
+      properties = { "documentation", "detail", "additionalTextEdits" },
+    }
   end,
 })
+
+local common_capabilities = vim.tbl_extend(
+  "force",
+  vim.lsp.protocol.make_client_capabilities(),
+  require("cmp_nvim_lsp").default_capabilities(),
+  lsp_status.capabilities,
+  { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+)
 
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
@@ -38,14 +38,14 @@ for type, icon in pairs(signs) do
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
-  vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-    float = true,
-    severity_sort = true,
-    signs = true,
-    underline = true,
-    update_in_insert = false,
-    virtual_text = true,
-  })
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+      float = true,
+      severity_sort = true,
+      signs = true,
+      underline = true,
+      update_in_insert = false,
+      virtual_text = true,
+    })
 
 local lsp_formatting = function(bufnr)
   vim.lsp.buf.format({
@@ -88,7 +88,7 @@ function lsp.common_on_attach(client, bufnr)
   vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", opts)
 
   vim.keymap.set("n", "<space>f", function()
-    vim.lsp.buf.format({ async = true })
+    lsp_formatting(bufnr)
   end, opts)
 
   -- if client.supports_method("textDocument/codeLens") then
