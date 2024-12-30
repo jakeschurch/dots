@@ -39,7 +39,6 @@ in {
         bat
         bat-extras.batdiff
         bat-extras.batgrep
-        bat-extras.batman
         bat-extras.batwatch
         bat-extras.prettybat
         wget
@@ -67,7 +66,6 @@ in {
         nix-direnv
         nix-tree
 
-        fd
         sd
         tokei
         (aspellWithDicts (ds: with ds; [en en-computers en-science]))
@@ -233,7 +231,7 @@ in {
 
     fzf = {
       enable = true;
-      defaultCommand = "rg --files --hidden --no-heading --height 40% --pcre2";
+      defaultCommand = "rg --files --hidden --no-heading --height 40% --pcre2 --ignore-file=~/.rgignore";
       defaultOptions = [
         "--extended"
         "--cycle"
@@ -242,6 +240,7 @@ in {
         "--sort"
         "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
       ];
+      fileWidgetCommand = "fd --type f --ignore --hidden";
       fileWidgetOptions = [
         "--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
       ];

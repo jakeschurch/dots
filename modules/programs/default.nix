@@ -1,19 +1,20 @@
 {...}: {
   imports = [
-    ./lf.nix
     ./eww
+    ./fd.nix
     ./git
     ./hammerspoon
     ./i3
     ./k9s
     ./kitty.nix
+    ./lf.nix
     ./neovim
     ./ranger
     ./ripgrep.nix
-    ./terragrunt.nix
     ./rofi
     ./slack.nix
     ./ssh.nix
+    ./terragrunt.nix
     ./wezterm
   ];
 }

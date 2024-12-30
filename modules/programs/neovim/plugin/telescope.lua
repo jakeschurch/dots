@@ -84,6 +84,7 @@ telescope.setup({
       "--no-heading",
       "--with-filename",
       "--line-number",
+      "--ignore-file=~/.rgignore",
       "--column",
       "--smart-case",
       "--pcre2",

@@ -11,7 +11,7 @@ with inputs; {
 
       allowed-users = ["*"];
       builders = "@/etc/nix/machines";
-      experimental-features = ["nix-command flakes"];
+      experimental-features = ["nix-command flakes pipe-operators"];
       fallback = true;
 
       cores = 0;

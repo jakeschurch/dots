@@ -12,7 +12,6 @@
   nix-setup = "~/.dots/./setup.sh";
   # docker = "colima";
   # ssh = "mosh";
-  man = "batman";
   ap = "ansible-playbook";
   cat = "bat";
   dc = "docker compose";

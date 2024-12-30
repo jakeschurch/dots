@@ -87,7 +87,7 @@
 in {
   home.sessionVariables = {
     EDITOR = "nvim";
-    MANPAGER = "${pkgs.neovim}/bin/nvim +Man!";
+    MANPAGER = "nvim +Man!";
     PSQL_EDITOR = "nvim";
     VIMRUNTIME = "${pkgs.neovim}/share/nvim/runtime";
   };
