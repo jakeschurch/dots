@@ -1,0 +1,35 @@
+k9s:
+  refreshRate: 2
+  maxConnRetry: 5
+  enableMouse: false
+  noExitOnCtrlC: true
+  ui:
+    headless: false
+    logoless: true
+    crumbsless: false
+    readOnly: false
+    noIcons: false
+  shellPod:
+    image: registry.k8s.io/e2e-test-images/agnhost:2.39
+    command: []
+    args: []
+    namespace: applications
+    limits:
+      cpu: 100m
+      memory: 100Mi
+  portForwardAddress: localhost
+  logger:
+    tail: 1000
+    buffer: 50000
+    sinceSeconds: 30
+    fullScreenLogs: false
+    textWrap: false
+    showTime: false
+  thresholds:
+    cpu:
+      critical: 90
+      warn: 70
+    memory:
+      critical: 90
+      warn: 70
+  screenDumpDir: /tmp/k9s-screens-jake
