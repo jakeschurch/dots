@@ -9,6 +9,7 @@ k9s:
     crumbsless: false
     readOnly: false
     noIcons: false
+    skin: gruvbox
   shellPod:
     image: registry.k8s.io/e2e-test-images/agnhost:2.39
     command: []

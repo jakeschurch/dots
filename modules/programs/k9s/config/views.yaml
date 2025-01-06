@@ -1,26 +1,23 @@
-k9s:
-  views:
-    v1/pods:
-      columns:
-        - AGE
-        - NAMESPACE
-        - NAME
-        - NODE
-        - STATUS
-        - READY
-    v1/services:
-      columns:
-        - AGE
-        - NAMESPACE
-        - NAME
-        - TYPE
-    v1/pvc:
-      columns:
-        - STORAGECLASS
-        - NAME
-        - CAPACITY
-        - AGE
-        - VOLUME
-        - STATUS
-        - NAMESPACE
+views:
+  v1/pods:
+    columns:
+      - AGE
+      - NAME
+      - STATUS
+      - READY
+  v1/services:
+    columns:
+      - AGE
+      - NAMESPACE
+      - NAME
+      - TYPE
+  v1/pvc:
+    columns:
+      - STORAGECLASS
+      - NAME
+      - CAPACITY
+      - AGE
+      - VOLUME
+      - STATUS
+      - NAMESPACE
 
