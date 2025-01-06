@@ -129,7 +129,8 @@ in {
       nodePackages.prettier
       nodePackages.eslint
       nodePackages.typescript
-      unstable.nodePackages.typescript-language-server
+      vtsls
+      vscode-langservers-extracted
       nodePackages.webpack
       nodePackages.webpack-cli
 

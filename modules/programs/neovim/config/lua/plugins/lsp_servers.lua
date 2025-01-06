@@ -56,39 +56,8 @@ return {
   bashls = {},
   terraformls = {},
   gopls = {},
-  ts_ls = {
-    flags = {
-      debounce_text_changes = 150, -- Reduce frequency of updates
-    },
-    init_options = {
-      maxTsServerMemory = 4096, -- Limit TS server memory (in MB)
-      disableAutomaticTypingAcquisition = true,
-    },
-    root_dir = function(fname)
-      return require("lspconfig").util.root_pattern(
-        "package.json",
-        "tsconfig.json",
-        ".git"
-      )(fname)
-    end,
-    typescript = {
-      inlayHints = {
-        includeInlayParameterNameHints = "all",
-        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayVariableTypeHints = true,
-        includeInlayPropertyDeclarationTypeHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayEnumMemberValueHints = true,
-      },
-      suggest = {
-        completeFunctionCalls = true,
-      },
-    },
-  },
-  eslint = {
-    cmd = { "eslint", "--stdin" },
-  },
+  vtsls = {},
+  eslint = {},
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   graphql = {},
   lua_ls = {
