@@ -99,7 +99,7 @@ end
 cmp.setup({
   snippet = {
     expand = function(args)
-      require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+      vim.snippet.expand(args.body)
     end,
   },
   window = {
@@ -167,8 +167,9 @@ cmp.setup({
     },
   },
   mapping = cmp.mapping.preset.insert({
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-d>"] = cmp.mapping.scroll_docs(4),
+
     ["<C-e>"] = cmp.mapping.abort(),
     ["<C-c>"] = cmp.mapping.abort(),
 
@@ -208,7 +209,6 @@ cmp.setup({
     { name = "luasnip" }, -- For luasnip users.
     { name = "treesitter" },
     -- { name = "rg", keyword_length = 4 },
-    { name = "emoji", insert = true },
     -- { name = "buffer", keyword_length = 3 },
     -- { name = "path" },
   }),
@@ -217,6 +217,15 @@ cmp.setup({
     throttle = 10, -- default is 30ms
     max_entries = 3,
   },
+})
+
+cmp.setup.filetype("markdown", {
+  sources = cmp.config.sources({
+    { name = "luasnip" }, -- For luasnip users.
+    { name = "buffer" },
+    { name = "path" },
+    { name = "emoji" },
+  }),
 })
 
 -- Set configuration for specific filetype.

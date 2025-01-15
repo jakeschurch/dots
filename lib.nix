@@ -33,7 +33,11 @@ in {
         }
       ];
 
-      specialArgs = specialArgs // {inherit user;};
+      specialArgs =
+        specialArgs
+        // {
+          inherit user;
+        };
     };
 
   mkHmHome = {user}:
@@ -56,6 +60,10 @@ in {
         })
       ];
 
-      extraSpecialArgs = specialArgs // {inherit user;};
+      extraSpecialArgs =
+        specialArgs
+        // {
+          inherit user;
+        };
     };
 }

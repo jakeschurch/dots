@@ -68,7 +68,14 @@ in {
 
         sd
         tokei
-        (aspellWithDicts (ds: with ds; [en en-computers en-science]))
+        (aspellWithDicts (
+          ds:
+            with ds; [
+              en
+              en-computers
+              en-science
+            ]
+        ))
         coreutils
         expect
         difftastic
@@ -174,6 +181,17 @@ in {
       initExtra = ''
         setopt autocd
 
+        function cd() {
+          # Check if the argument is a file (not a directory)
+          if [[ -f "$1" ]]; then
+            # If it's a file, change to its directory
+            builtin cd "$(dirname "$1")" || return
+          else
+            # Otherwise, call the original cd command
+            builtin cd "$@" || return
+          fi
+        }
+
         typeset -A key
         key[Up]=$'\e[A'
         key[Down]=$'\e[B'
@@ -199,7 +217,6 @@ in {
         autoload -z edit-command-line
         zle -N edit-command-line
         bindkey -M vicmd v edit-command-line
-
       '';
       zplug = {
         enable = true;
@@ -261,12 +278,16 @@ in {
           error_symbol = "[ 💔](bold red)";
           vicmd_symbol = "[ 💎](bold blue)";
         };
-        rust = {symbol = "🦀 ";};
+        rust = {
+          symbol = "🦀 ";
+        };
         hostname = {
           ssh_only = true;
           format = "on [$hostname](bold red) ";
         };
-        cmd_duration = {min_time = 300000;};
+        cmd_duration = {
+          min_time = 300000;
+        };
         aws = {
           disabled = false;
           symbol = "☁️ ";

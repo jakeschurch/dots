@@ -31,7 +31,7 @@
     nix-pre-commit-hooks.url = "github:cachix/git-hooks.nix";
     nix-pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
 
-    darwin.url = "github:LnL7/nix-darwin/master";
+    darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixd.url = "github:nix-community/nixd";
@@ -42,7 +42,7 @@
   };
 
   nixConfig = {
-    experimental-features = "nix-command flakes pipe-operators";
+    experimental-features = "nix-command flakes pipe-operators ca-derivations";
     warn-dirty = false;
     sandbox = false;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
@@ -76,8 +76,7 @@
       "aarch64-linux"
     ];
   in
-    flake-utils.lib.eachSystem supportedSystems
-    (
+    flake-utils.lib.eachSystem supportedSystems (
       system:
         with nixpkgs.lib; let
           pkgs = import inputs.nixpkgs {
@@ -163,13 +162,7 @@
           packages.default =
             if pkgs.stdenv.isLinux
             then homeConfigurations.apollo.activationPackage
-            else
-              darwinConfigurations
-              .curiosity
-              .config
-              .system
-              .build
-              .toplevel;
+            else darwinConfigurations.curiosity.config.system.build.toplevel;
 
           devShells.default = pkgs.mkShell {
             shellHook = ''

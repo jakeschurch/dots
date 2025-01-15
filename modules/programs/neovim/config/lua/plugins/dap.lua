@@ -3,8 +3,8 @@ cnoreabbrev bp lua require'dap'.toggle_breakpoint()<cr>
 cnoreabbrev bc lua require'dap'.continue()<cr>
 cnoreabbrev so lua require'dap'.step_over() <cr>
 cnoreabbrev si lua require'dap'.step_into()<cr>
-cnoreabbrev ro lua require'dap'.repl.open()<cr>
-cnoreabbrev rc lua require'dap'.ui.close()<cr>
+cnoreabbrev br lua require'dap'.repl.open()<cr>
+cnoreabbrev bq lua require'dap'.ui.close()<cr>
 ]])
 
 local dap = require("dap")

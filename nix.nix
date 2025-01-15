@@ -7,11 +7,16 @@
 with inputs; {
   nix = {
     settings = {
-      trusted-users = ["root" "@wheel" "jake" "jakeschurch"];
+      trusted-users = [
+        "root"
+        "@wheel"
+        "jake"
+        "jakeschurch"
+      ];
 
       allowed-users = ["*"];
       builders = "@/etc/nix/machines";
-      experimental-features = ["nix-command flakes pipe-operators"];
+      experimental-features = ["nix-command flakes pipe-operators ca-derivations"];
       fallback = true;
 
       cores = 0;
@@ -51,7 +56,12 @@ with inputs; {
 
     optimise.automatic = true;
 
-    nixPath = let path = toString ./.; in ["repl=${path}/repl.nix" "nixpkgs=${nixpkgs}"];
+    nixPath = let
+      path = toString ./.;
+    in [
+      "repl=${path}/repl.nix"
+      "nixpkgs=${nixpkgs}"
+    ];
 
     registry = {
       self.flake = self;

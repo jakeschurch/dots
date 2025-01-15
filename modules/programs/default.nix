@@ -1,5 +1,6 @@
-{config, ...}: {
+{...}: {
   imports = [
+    ./psql.nix
     ./eww
     ./fd.nix
     ./git

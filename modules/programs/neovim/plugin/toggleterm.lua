@@ -17,7 +17,7 @@ local ft_shell_map = {
 
 toggleterm.setup({
   close_on_exit = false,
-  direction = "vertical",
+  direction = "float",
   open_mapping = [[<c-\>]],
   persist_size = true,
   shade_filetypes = {},

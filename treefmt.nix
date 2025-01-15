@@ -1,5 +1,6 @@
 _: {
   projectRootFile = "flake.nix";
+
   settings.formatter.deadnix.includes = [
     "*.nix"
     "!./Templates/flake.nix"

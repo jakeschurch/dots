@@ -11,10 +11,16 @@ in {
         sha256 = "75533626f81f768c5f231c9702106c25b5772a8b6995caa2c58bcc4acc9107c9";
       };
       buildInputs = [TestIdentity];
-      propagatedBuildInputs = [Future StructDumb];
+      propagatedBuildInputs = [
+        Future
+        StructDumb
+      ];
       meta = {
         description = "Future-returning IO methods";
-        license = with lib.licenses; [artistic1 gpl1Plus];
+        license = with lib.licenses; [
+          artistic1
+          gpl1Plus
+        ];
       };
     };
 
@@ -25,29 +31,42 @@ in {
         url = "mirror://cpan/authors/id/P/PE/PEVANS/IO-Async-0.802.tar.gz";
         sha256 = "e582731577767c47eac435ef2904663d4a750b0e6802a4a6189a37f0cb308738";
       };
-      buildInputs = [FutureIO TestFatal TestIdentity TestMetricsAny TestRefcount];
-      propagatedBuildInputs = [Future StructDumb];
+      buildInputs = [
+        FutureIO
+        TestFatal
+        TestIdentity
+        TestMetricsAny
+        TestRefcount
+      ];
+      propagatedBuildInputs = [
+        Future
+        StructDumb
+      ];
       meta = {
         description = "Asynchronous event-driven programming";
-        license = with lib.licenses; [artistic1 gpl1Plus];
+        license = with lib.licenses; [
+          artistic1
+          gpl1Plus
+        ];
       };
     };
 
-    EvalSafe =
-      buildPerlPackage
-      {
-        pname = "Eval-Safe";
-        version = "0.02";
-        src = fetchurl {
-          url = "mirror://cpan/authors/id/M/MA/MATHIAS/Eval-Safe/Eval-Safe-0.02.tar.gz";
-          sha256 = "55a52c233e2dae86113f9f19b34f617edcfc8416f9bece671267bd1811b12111";
-        };
-        outputs = ["out" "dev"]; # no devdoc
-        meta = {
-          description = "Simplified safe evaluation of Perl code";
-          license = lib.licenses.mit;
-        };
+    EvalSafe = buildPerlPackage {
+      pname = "Eval-Safe";
+      version = "0.02";
+      src = fetchurl {
+        url = "mirror://cpan/authors/id/M/MA/MATHIAS/Eval-Safe/Eval-Safe-0.02.tar.gz";
+        sha256 = "55a52c233e2dae86113f9f19b34f617edcfc8416f9bece671267bd1811b12111";
       };
+      outputs = [
+        "out"
+        "dev"
+      ]; # no devdoc
+      meta = {
+        description = "Simplified safe evaluation of Perl code";
+        license = lib.licenses.mit;
+      };
+    };
 
     MsgPackRaw = buildPerlPackage {
       pname = "MsgPack-Raw";
@@ -56,10 +75,16 @@ in {
         url = "mirror://cpan/authors/id/J/JA/JACQUESG/MsgPack-Raw-0.05.tar.gz";
         sha256 = "8559e2b64cd98d99abc666edf2a4c8724c9534612616af11f4eb0bbd0d422dac";
       };
-      buildInputs = [TestPod TestPodCoverage];
+      buildInputs = [
+        TestPod
+        TestPodCoverage
+      ];
       meta = {
         description = "Perl bindings to the msgpack C library";
-        license = with lib.licenses; [artistic1 gpl1Plus];
+        license = with lib.licenses; [
+          artistic1
+          gpl1Plus
+        ];
       };
     };
 
@@ -70,7 +95,14 @@ in {
         url = "mirror://cpan/authors/id/J/JA/JACQUESG/Neovim-Ext-0.06.tar.gz";
         sha256 = "6d2ceb3062c96737dba556cb20463130fc4006871b25b7c4f66cd3819d4504b8";
       };
-      buildInputs = with pkgs.perlPackages; [ArchiveZip FileSlurper FileWhich ProcBackground TestPod TestPodCoverage];
+      buildInputs = with pkgs.perlPackages; [
+        ArchiveZip
+        FileSlurper
+        FileWhich
+        ProcBackground
+        TestPod
+        TestPodCoverage
+      ];
       propagatedBuildInputs = [
         ClassAccessor
 
@@ -79,7 +111,10 @@ in {
       ];
       meta = {
         description = "Perl bindings for neovim";
-        license = with lib.licenses; [artistic1 gpl1Plus];
+        license = with lib.licenses; [
+          artistic1
+          gpl1Plus
+        ];
       };
     };
   };
@@ -90,20 +125,22 @@ in {
       pipenv
       pyright
       pylint
-      (python312.withPackages (ps:
-        with ps; [
-          debugpy
-          setuptools # Required by pylama for some reason
-          proselint
-          toolz
-          pylama
-          black
-          isort
-          pip
-          flake8
-          neovim
-          mypy
-        ]))
+      (python312.withPackages (
+        ps:
+          with ps; [
+            debugpy
+            setuptools # Required by pylama for some reason
+            proselint
+            toolz
+            pylama
+            black
+            isort
+            pip
+            flake8
+            neovim
+            mypy
+          ]
+      ))
     ];
 
     elixir = with pkgs; [
@@ -112,7 +149,7 @@ in {
     ];
 
     nix = with pkgs; [
-      nixfmt
+      nixfmt-rfc-style
       statix
       alejandra
       deadnix
@@ -196,7 +233,22 @@ in {
       go
       gopls
       golint
+      golines
       delve
+      gofumpt
+      goimports-reviser
+    ];
+
+    markdown = with pkgs.python3Packages; [
+      mdformat
+      mdformat-gfm
+      mdformat-gfm-alerts
+      mdformat-admon
+      mdformat-frontmatter
+      mdformat-footnote
+      mdformat-simple-breaks
+      mdformat-tables
+      mdformat-beautysh
     ];
 
     html = with pkgs; [
@@ -209,6 +261,7 @@ in {
       nodePackages.yaml-language-server
       yamllint
       nodePackages.vscode-json-languageserver
+      semgrep
     ];
 
     sql = with pkgs; [

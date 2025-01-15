@@ -69,7 +69,12 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {
-      fonts = ["FiraCode" "DroidSansMono" "Hack" "JetBrainsMono"];
+      fonts = [
+        "FiraCode"
+        "DroidSansMono"
+        "Hack"
+        "JetBrainsMono"
+      ];
     })
   ];
 

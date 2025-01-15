@@ -24,7 +24,9 @@ in {
     package = pkgs.unstable.git;
     userName = "Jake Schurch";
     userEmail = "jakeschurch@gmail.com";
-    signing = {key = "6A8B32A193C5727F7ED7CBCEDCE52B50B91728F9";};
+    signing = {
+      key = "6A8B32A193C5727F7ED7CBCEDCE52B50B91728F9";
+    };
     aliases = {
       ai = "add --interactive";
       select-branch = "! f() { ${gitBin} checkout $(${gitBin} branch --all | ${fzfBin}); }; f";
@@ -122,7 +124,9 @@ in {
 
       mergetool = {
         keepBackup = false;
-        fugitive = {cmd = ''nvim -f -c "Gvdiffsplit!" "$MERGED"'';};
+        fugitive = {
+          cmd = ''nvim -f -c "Gvdiffsplit!" "$MERGED"'';
+        };
       };
 
       log = {
@@ -151,17 +155,33 @@ in {
         commitgraph = true;
       };
 
-      status = {submodulessummary = "1";};
-      checkout = {defaultRemote = "origin";};
-      remote = {origin = {prune = true;};};
-      rerere = {enabled = true;};
-      grep = {extendedRegexp = true;};
+      status = {
+        submodulessummary = "1";
+      };
+      checkout = {
+        defaultRemote = "origin";
+      };
+      remote = {
+        origin = {
+          prune = true;
+        };
+      };
+      rerere = {
+        enabled = true;
+      };
+      grep = {
+        extendedRegexp = true;
+      };
       init = {
         defaultBranch = "main";
         templateDir = "~/.config/git/templates";
       };
-      branch = {sort = "committerdate";};
-      column = {ui = "always";};
+      branch = {
+        sort = "committerdate";
+      };
+      column = {
+        ui = "always";
+      };
       fetch = {
         prune = true;
         writeCommitGraph = true;

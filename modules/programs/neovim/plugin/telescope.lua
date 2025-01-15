@@ -40,7 +40,7 @@ function lines_from(file)
   return lines
 end
 
-function get_cwd()
+local function get_cwd()
   local buffer_dir = require("telescope.utils").buffer_dir()
 
   if string.find(buffer_dir, "%.git") then

@@ -19,7 +19,12 @@ return {
     },
     cmd = { "emmet-ls", "--stdio" },
   },
-  nil_ls = {},
+  nil_ls = {
+    on_attach = function(client)
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentFormattingRangeProvider = false
+    end,
+  },
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },
@@ -36,15 +41,14 @@ return {
   rust_analyzer = {},
   elixirls = {
     cmd = { "elixir-ls" },
-    root_dir = function(fname)
-      return require("lspconfig").util.root_pattern("mix.exs", "rebar.config")(
-        fname
-      )
-    end,
+    root_dir = require("lspconfig").util.root_pattern(
+      "mix.exs",
+      "rebar.config"
+    ),
     settings = {
       elixirLS = {
         dialyzerEnabled = true,
-        fetchDeps = false,
+        fetchDeps = true,
         enableTestLenses = true,
         suggestSpecs = true,
       },
@@ -62,6 +66,10 @@ return {
   graphql = {},
   lua_ls = {
     cmd = { "lua-language-server" },
+    on_attach = function(client)
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentFormattingRangeProvider = false
+    end,
     settings = {
       Lua = {
         diagnostics = {

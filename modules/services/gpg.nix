@@ -4,7 +4,11 @@
   ...
 }:
 lib.mkIf (pkgs.system == "x86_64-linux") {
-  home.packages = with pkgs; [gnupg keybase keybase-gui];
+  home.packages = with pkgs; [
+    gnupg
+    keybase
+    keybase-gui
+  ];
 
   services.gpg-agent = {
     enable = true;

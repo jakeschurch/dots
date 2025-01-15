@@ -24,66 +24,68 @@
   # myPerlPackages = lib.attrValues myPkgs.myPerlPackages;
   devPackages = lib.flatten (lib.attrValues myPkgs.devPackages);
 
-  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (ts-plugins:
-    with ts-plugins; [
-      awk
-      bash
-      comment
-      css
-      desktop
-      dhall
-      diff
-      dockerfile
-      elixir
-      embedded_template
-      func
-      git_config
-      git_rebase
-      gitattributes
-      gitcommit
-      gitcommit
-      gitignore
-      go
-      gomod
-      graphql
-      haskell
-      hcl
-      heex
-      heex
-      html
-      html
-      javascript
-      jq
-      jq
-      json
-      latex
-      lua
-      luadoc
-      make
-      make
-      markdown
-      markdown_inline
-      mermaid
-      ninja
-      nix
-      passwd
-      promql
-      python
-      regex
-      rust
-      sql
-      ssh_config
-      sxhkdrc
-      templ
-      terraform
-      toml
-      tsx
-      typescript
-      vim
-      vimdoc
-      yaml
-      yuck
-    ]);
+  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (
+    ts-plugins:
+      with ts-plugins; [
+        awk
+        bash
+        comment
+        css
+        desktop
+        dhall
+        diff
+        dockerfile
+        elixir
+        embedded_template
+        func
+        git_config
+        git_rebase
+        gitattributes
+        gitcommit
+        gitcommit
+        gitignore
+        go
+        gomod
+        graphql
+        haskell
+        hcl
+        heex
+        heex
+        html
+        html
+        javascript
+        jq
+        jq
+        json
+        latex
+        lua
+        luadoc
+        make
+        make
+        markdown
+        markdown_inline
+        mermaid
+        ninja
+        nix
+        passwd
+        promql
+        python
+        regex
+        rust
+        sql
+        ssh_config
+        sxhkdrc
+        templ
+        terraform
+        toml
+        tsx
+        typescript
+        vim
+        vimdoc
+        yaml
+        yuck
+      ]
+  );
 in {
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -97,8 +99,10 @@ in {
     "nvim/lua/plugin".recursive = true;
     "nvim".source = ./config;
     "nvim".recursive = true;
-    "nvim/spell/en.utf-8.add".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
-    "nvim/spell/en.utf-8.add.spl".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add.spl";
+    "nvim/spell/en.utf-8.add".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
+    "nvim/spell/en.utf-8.add.spl".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add.spl";
   };
 
   home.packages = devPackages;

@@ -1,7 +1,7 @@
 [
   {
     "name": "windwp/nvim-autopairs",
-    "rev": "b464658e9b880f463b9f7e6ccddd93fb0013f559",
+    "rev": "3d02855468f94bf435db41b661b58ec4f48a06b7",
     "ref": "master"
   },
   {
@@ -46,12 +46,12 @@
   },
   {
     "name": "stevearc/oil.nvim",
-    "rev": "ba858b662599eab8ef1cba9ab745afded99cb180",
+    "rev": "09fa1d22f5edf0730824d2b222d726c8c81bbdc9",
     "ref": "master"
   },
   {
     "name": "soywod/himalaya",
-    "rev": "5eeda248fd90d161c8b346604f603d4a0a37ec6d",
+    "rev": "15a9a4a69fb6c92070e74311aa0e2d88553c89cf",
     "ref": "master"
   },
   {
@@ -66,7 +66,7 @@
   },
   {
     "name": "rcarriga/nvim-dap-ui",
-    "rev": "e94d98649dccb6a3884b66aabc2e07beb279e535",
+    "rev": "727c032a8f63899baccb42a1c26f27687e62fc5e",
     "ref": "master"
   },
   {
@@ -81,7 +81,7 @@
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "48fb9a2efe06d6b57c64ca1ebc540fc1b8722272",
+    "rev": "9f7467de546283cea2b63de849da7cdf5fc8d7cd",
     "ref": "master"
   },
   {
@@ -96,7 +96,7 @@
   },
   {
     "name": "nvimtools/none-ls.nvim",
-    "rev": "02144ef2b86a816b5dec69783e311bb6feff7d82",
+    "rev": "3291afdff94e5083c7d6a4e9e661c3682c4b9b2a",
     "ref": "main"
   },
   {
@@ -106,7 +106,7 @@
   },
   {
     "name": "nvimdev/lspsaga.nvim",
-    "rev": "5fce15331ac6c3a3ec3ac91ab0e85ed82f5cbba0",
+    "rev": "8084e8447bef3f94863949087707e6221a4e5df7",
     "ref": "main"
   },
   {
@@ -121,12 +121,12 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "4b222913486ec0a5983efa82b0649a2ab87cf1f0",
+    "rev": "f0c928dbe93533b7e35894a8f957f40150d1f663",
     "ref": "master"
   },
   {
     "name": "nvim-telescope/telescope.nvim",
-    "rev": "2eca9ba22002184ac05eddbe47a7fe2d5a384dfc",
+    "rev": "415af52339215926d705cccc08145f3782c4d132",
     "ref": "master"
   },
   {
@@ -156,7 +156,7 @@
   },
   {
     "name": "nvim-lua/plenary.nvim",
-    "rev": "2d9b06177a975543726ce5c73fca176cedbffe9d",
+    "rev": "3707cdb1e43f5cea73afb6037e6494e7ce847a66",
     "ref": "master"
   },
   {
@@ -171,7 +171,7 @@
   },
   {
     "name": "neovim/nvim-lspconfig",
-    "rev": "8b15a1a597a59f4f5306fad9adfe99454feab743",
+    "rev": "339ccc81e08793c3af9b83882a6ebd90c9cc0d3b",
     "ref": "master"
   },
   {
@@ -181,17 +181,17 @@
   },
   {
     "name": "mfussenegger/nvim-dap",
-    "rev": "ffb077e65259f13be096ea6d603e3575a76b214a",
+    "rev": "99807078c5089ed30e0547aa4b52c5867933f426",
     "ref": "master"
   },
   {
     "name": "m-demare/hlargs.nvim",
-    "rev": "023021a330956eecf54e1015ecba55900d284365",
+    "rev": "a5a7fdacc0ac2f7ca9d241e0e059cb85f0e733bc",
     "ref": "main"
   },
   {
     "name": "lukas-reineke/indent-blankline.nvim",
-    "rev": "259357fa4097e232730341fa60988087d189193a",
+    "rev": "7a698a1d7ed755af9f5a88733b23ca246ce2df28",
     "ref": "master"
   },
   {
@@ -206,7 +206,7 @@
   },
   {
     "name": "lewis6991/gitsigns.nvim",
-    "rev": "5f808b5e4fef30bd8aca1b803b4e555da07fc412",
+    "rev": "9541f5e8e24571723cb02a5c2bf078aeacc5a711",
     "ref": "main"
   },
   {
@@ -216,7 +216,7 @@
   },
   {
     "name": "kyazdani42/nvim-web-devicons",
-    "rev": "4adeeaa7a32d46cf3b5833341358c797304f950a",
+    "rev": "aafa5c187a15701a7299a392b907ec15d9a7075f",
     "ref": "master"
   },
   {
@@ -231,7 +231,7 @@
   },
   {
     "name": "junegunn/fzf",
-    "rev": "b8d2b0df7e1241c09eff21dbb63ebcc841efc824",
+    "rev": "3e7f032ec200f00f92fa53f9aecde4b989c7dd66",
     "ref": "master"
   },
   {
@@ -246,7 +246,7 @@
   },
   {
     "name": "hrsh7th/nvim-cmp",
-    "rev": "b555203ce4bd7ff6192e759af3362f9d217e8c89",
+    "rev": "8c82d0bd31299dbff7f8e780f5e06d2283de9678",
     "ref": "main"
   },
   {
@@ -286,12 +286,12 @@
   },
   {
     "name": "folke/which-key.nvim",
-    "rev": "8ab96b38a2530eacba5be717f52e04601eb59326",
+    "rev": "1f8d414f61e0b05958c342df9b6a4c89ce268766",
     "ref": "main"
   },
   {
     "name": "folke/trouble.nvim",
-    "rev": "46cf952fc115f4c2b98d4e208ed1e2dce08c9bf6",
+    "rev": "50481f414bd3c1a40122c1d759d7e424d5fafe84",
     "ref": "main"
   },
   {
@@ -306,7 +306,7 @@
   },
   {
     "name": "daliusd/ghlite.nvim",
-    "rev": "ddb149e7fd11818b4a9812ea95816519cc3bfd25",
+    "rev": "47537d51e477d3fa33321e70a46a6b9d3be4da47",
     "ref": "main"
   },
   {
@@ -331,12 +331,12 @@
   },
   {
     "name": "MeanderingProgrammer/render-markdown.nvim",
-    "rev": "6fbd1491abc104409f119685de5353c35c97c005",
+    "rev": "be3e3ab807059ddd247a802e8253b0cd3edef5a3",
     "ref": "main"
   },
   {
     "name": "L3MON4D3/LuaSnip",
-    "rev": "33b06d72d220aa56a7ce80a0dd6f06c70cd82b9d",
+    "rev": "c9b9a22904c97d0eb69ccb9bab76037838326817",
     "ref": "master"
   },
   {
@@ -346,7 +346,7 @@
   },
   {
     "name": "Exafunction/codeium.vim",
-    "rev": "d152e6cd3d814a44f36447bb0d21d51f6787fe9c",
+    "rev": "000de972de76f357c03da14f4f8dd9a969d4fe8c",
     "ref": "main"
   }
 ]

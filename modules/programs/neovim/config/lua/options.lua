@@ -46,8 +46,8 @@ local options = {
   foldenable = false,
 
   timeout = true,
-  timeoutlen = 500,
-  ttimeoutlen = 500,
+  timeoutlen = 1000,
+  ttimeoutlen = 1000,
   updatetime = 2000,
   redrawtime = 2000,
 

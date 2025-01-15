@@ -7,23 +7,22 @@ null_ls.setup({
     -- Generic
     require("none-ls.formatting.trim_newlines"),
     require("none-ls.formatting.trim_whitespace"),
-    --
+
     --	-- Python
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.isort,
-    -- REVIEW
-    -- null_ls.builtins.diagnostics.pylint.with({
-    -- 	extra_args = {
-    -- 		"--rcfile",
-    -- 		"~/.pylintrc",
-    -- 		"--disable=missing-module-docstring",
-    -- 		"--disable=missing-class-docstring",
-    -- 		"--disable=missing-function-docstring",
-    -- 	},
-    -- 	diagnostics_postprocess = function(diagnostic)
-    -- 		diagnostic.code = diagnostic.message_id
-    -- 	end,
-    -- }),
+    null_ls.builtins.diagnostics.pylint.with({
+      extra_args = {
+        "--rcfile",
+        "~/.pylintrc",
+        "--disable=missing-module-docstring",
+        "--disable=missing-class-docstring",
+        "--disable=missing-function-docstring",
+      },
+      diagnostics_postprocess = function(diagnostic)
+        diagnostic.code = diagnostic.message_id
+      end,
+    }),
 
     require("none-ls.diagnostics.flake8").with({
       extra_args = {
@@ -61,6 +60,11 @@ null_ls.setup({
         "80",
       },
     }),
+
+    -- Go
+    null_ls.builtins.formatting.gofumpt,
+    null_ls.builtins.formatting.goimports_reviser,
+    null_ls.builtins.formatting.golines,
 
     -- Spelling
     null_ls.builtins.completion.spell.with({
@@ -112,6 +116,24 @@ null_ls.setup({
     -- html, css
     -- null_ls.builtins.diagnostics.stylelint,
     -- null_ls.builtins.diagnostics.tidy,
+
+    -- markdown
+    null_ls.builtins.formatting.mdformat.with({
+      extra_args = {
+        "--wrap",
+        "80",
+        "--extensions",
+        "mdformat-admon",
+        "mdformat-gfm",
+        "mdformat-gfm-alerts",
+        "mdformat-frontmatter",
+        "mdformat-tables",
+        "mdformat-beautysh",
+        "mdformat-footnote",
+        "--code-formatters",
+        "sh",
+      },
+    }),
 
     -- vim
     --null_ls.builtins.diagnostics.vint,

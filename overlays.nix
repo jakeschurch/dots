@@ -2,7 +2,10 @@
   ccachedPkgs = [
     # "neovim-nightly"
   ];
-  ccacheStdenvPkgs = self: super: pkgs.lib.genAttrs ccachedPkgs (pn: super.${pn}.override {stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv;});
+  ccacheStdenvPkgs = self: super:
+    pkgs.lib.genAttrs ccachedPkgs (
+      pn: super.${pn}.override {stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv;}
+    );
 
   ccacheOverlay = _self: super: {
     ccacheWrapper = super.ccacheWrapper.override {

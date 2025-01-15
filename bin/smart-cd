@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+function smart_cd() {
+  # Check if the argument is a file (not a directory)
+  if [[ -f "$1" ]]; then
+    # If it's a file, change to its directory
+    builtin cd "$(dirname "$1")" || exit
+  else
+    # Otherwise, call the original cd command
+    builtin cd "$1" || exit
+  fi
+}
+
+smart_cd "$@"
