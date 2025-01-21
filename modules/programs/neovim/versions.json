@@ -81,7 +81,7 @@
   },
   {
     "name": "pwntester/octo.nvim",
-    "rev": "9f7467de546283cea2b63de849da7cdf5fc8d7cd",
+    "rev": "b4f00b00dec14fd396be979b04453336d6e83182",
     "ref": "master"
   },
   {
@@ -121,7 +121,7 @@
   },
   {
     "name": "nvim-treesitter/nvim-treesitter",
-    "rev": "f0c928dbe93533b7e35894a8f957f40150d1f663",
+    "rev": "5da195ac3dfafd08d8b10756d975f0e01e1d563a",
     "ref": "master"
   },
   {
@@ -206,7 +206,7 @@
   },
   {
     "name": "lewis6991/gitsigns.nvim",
-    "rev": "9541f5e8e24571723cb02a5c2bf078aeacc5a711",
+    "rev": "0797734e2bf229cc67b05e82a17e22a18f191913",
     "ref": "main"
   },
   {
@@ -231,7 +231,7 @@
   },
   {
     "name": "junegunn/fzf",
-    "rev": "3e7f032ec200f00f92fa53f9aecde4b989c7dd66",
+    "rev": "03760011d70f325731b7b3f8a0c3b065c1cfedfa",
     "ref": "master"
   },
   {
@@ -331,7 +331,7 @@
   },
   {
     "name": "MeanderingProgrammer/render-markdown.nvim",
-    "rev": "be3e3ab807059ddd247a802e8253b0cd3edef5a3",
+    "rev": "ad055861d17afe058bd835e82292e14a64b51b1d",
     "ref": "main"
   },
   {

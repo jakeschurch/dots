@@ -144,8 +144,10 @@ in {
     ];
 
     elixir = with pkgs; [
-      elixir_1_16
-      elixir-ls
+      elixir_1_18
+      (elixir-ls.override {
+        elixir = elixir_1_18;
+      })
     ];
 
     nix = with pkgs; [
