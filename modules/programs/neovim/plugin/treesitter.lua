@@ -63,18 +63,18 @@ configs.setup({
     move = {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
-      goto_next_start = {
-        ["]f"] = "@function.outer",
-      },
-      goto_next_end = {
-        ["]F"] = "@function.outer",
-      },
-      goto_previous_start = {
-        ["[f"] = "@function.outer",
-      },
-      goto_previous_end = {
-        ["[F"] = "@function.outer",
-      },
+      -- goto_next_start = {
+      --   ["]f"] = "@function.outer",
+      -- },
+      -- goto_next_end = {
+      --   ["]F"] = "@function.outer",
+      -- },
+      -- goto_previous_start = {
+      --   ["[f"] = "@function.outer",
+      -- },
+      -- goto_previous_end = {
+      --   ["[F"] = "@function.outer",
+      -- },
     },
   },
   playground = {

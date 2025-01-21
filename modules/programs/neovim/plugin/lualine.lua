@@ -1,3 +1,5 @@
+local lualine = require("lualine")
+
 vim.api.nvim_set_hl(0, "Search", {})
 vim.api.nvim_set_hl(0, "CurSearch", {})
 local function diff_source()
@@ -11,7 +13,7 @@ local function diff_source()
   end
 end
 
-require("lualine").setup({
+lualine.setup({
   options = {
     theme = "gruvbox",
     icons_enabled = true,
@@ -37,6 +39,12 @@ require("lualine").setup({
       },
     },
     lualine_c = {
+      {
+        "codeium",
+        fmt = require("codeium.virtual_text").set_statusbar_refresh(function()
+          require("lualine").refresh()
+        end),
+      },
       "filename",
       "searchcount",
       "selectioncount",

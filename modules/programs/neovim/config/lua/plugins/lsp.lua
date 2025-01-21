@@ -41,25 +41,25 @@ vim.api.nvim_create_user_command("Format", function()
   vim.lsp.buf.format({ async = true })
 end, {})
 
-local format_on_save_autocmd_id = nil
-
-function ToggleFormatOnSave()
-  if format_on_save_autocmd_id then
-    -- Remove the autocmd if it exists
-    vim.api.nvim_del_autocmd(format_on_save_autocmd_id)
-    format_on_save_autocmd_id = nil
-    print("Format on save disabled")
-  else
-    -- Create the autocmd if it doesn't exist
-    format_on_save_autocmd_id = vim.api.nvim_create_autocmd("BufWritePre", {
-      desc = "Format on save",
-      callback = function()
-        vim.lsp.buf.format({ async = true })
-      end,
-    })
-    print("Format on save enabled")
-  end
-end
+-- local format_on_save_autocmd_id = nil
+--
+-- function ToggleFormatOnSave()
+--   if format_on_save_autocmd_id then
+--     -- Remove the autocmd if it exists
+--     vim.api.nvim_del_autocmd(format_on_save_autocmd_id)
+--     format_on_save_autocmd_id = nil
+--     print("Format on save disabled")
+--   else
+--     -- Create the autocmd if it doesn't exist
+--     format_on_save_autocmd_id = vim.api.nvim_create_autocmd("BufWritePre", {
+--       desc = "Format on save",
+--       callback = function()
+--         vim.lsp.buf.format({ async = true })
+--       end,
+--     })
+--     print("Format on save enabled")
+--   end
+-- end
 
 vim.api.nvim_create_autocmd("LspAttach", {
   desc = "LSP actions",
