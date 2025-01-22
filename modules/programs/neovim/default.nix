@@ -5,6 +5,7 @@
   ...
 }: let
   myPkgs = import ./devPackages.nix {inherit pkgs;};
+  # nvimPlugins = pkgs.callPackage ./nvim-plugins.nix {};
 
   pluginGit = rev: ref: repo:
     pkgs.vimUtils.buildVimPlugin {
@@ -133,6 +134,7 @@ in {
     plugins =
       pluginVersionLock
       ++ [
+        pkgs.unstable.vimPlugins.avante-nvim
         treesitter-plugins
         pkgs.unstable.vimPlugins.telescope-fzf-native-nvim
       ];

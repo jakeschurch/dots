@@ -66,10 +66,6 @@ with inputs; {
     registry = {
       self.flake = self;
       nixpkgs.flake = nixpkgs;
-      nixpkgs.to = {
-        type = "path";
-        inherit (pkgs) path narHash;
-      };
     };
 
     extraOptions = ''

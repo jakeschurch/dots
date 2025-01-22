@@ -39,12 +39,6 @@ lualine.setup({
       },
     },
     lualine_c = {
-      {
-        "codeium",
-        fmt = require("codeium.virtual_text").set_statusbar_refresh(function()
-          require("lualine").refresh()
-        end),
-      },
       "filename",
       "searchcount",
       "selectioncount",

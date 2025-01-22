@@ -8,7 +8,6 @@ local fonts = {
 }
 
 return {
-
   keys = {
     {
       key = "r",

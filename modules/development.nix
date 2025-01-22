@@ -20,6 +20,7 @@ in {
     packages = with pkgs;
       [
         download-nixpkgs-cache-index
+        nix-update
         # latex
         # texlive.combined.scheme-medium
         _1password-cli
@@ -54,11 +55,11 @@ in {
         kubernetes-helm
         kubelogin-oidc
 
-        unstable.docker
         lazydocker
         docker-credential-helpers
         pass
         colima
+        docker-compose
 
         jq
         tealdeer
