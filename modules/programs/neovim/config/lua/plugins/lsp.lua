@@ -110,6 +110,7 @@ end
 
 for server, config in pairs(require("plugins.lsp_servers")) do
   -- Save the existing on_attach function if it exists
+  --
   local custom_on_attach = config.on_attach
 
   -- Wrap the custom on_attach with common_on_attach
@@ -125,6 +126,12 @@ for server, config in pairs(require("plugins.lsp_servers")) do
       custom_on_attach(client, bufnr)
     end
   end
+
+  config["root_dir"] = config["root_dir"]
+    or function(fname)
+      local util = require("lspconfig.util")
+      return util.root_pattern(".git")(fname) or vim.loop.os_homedir() or nil
+    end
 
   lsp_config[server].setup(config)
 end

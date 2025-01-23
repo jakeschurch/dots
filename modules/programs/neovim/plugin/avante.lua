@@ -197,12 +197,28 @@ avante.setup({
   provider = "copilot",
   auto_suggestions_provider = "copilot",
   windows = {
-    wrap = 40,
+    wrap = true,
+    width = 40,
     sidebar_header = {
       enabled = false,
     },
+    ask = {
+      floating = true,
+      start_insert = false,
+    },
+    input = {
+      height = 3,
+    },
   },
-  ask = {
-    floating = true,
+  suggestion = {
+    keymap = {
+      accept = false,
+    },
+  },
+  mappings = {
+    submit = {
+      normal = false,
+      insert = false,
+    },
   },
 })

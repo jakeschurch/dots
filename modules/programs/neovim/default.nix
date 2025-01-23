@@ -131,12 +131,129 @@ in {
     withPython3 = true;
     vimdiffAlias = true;
     coc.enable = false;
-    plugins =
+    plugins = with pkgs.unstable.vimPlugins;
       pluginVersionLock
       ++ [
-        pkgs.unstable.vimPlugins.avante-nvim
+        avante-nvim
         treesitter-plugins
-        pkgs.unstable.vimPlugins.telescope-fzf-native-nvim
+        telescope-fzf-native-nvim
+        nvim-lspconfig
+        copilot-cmp
+        copilot-lua
+        nvim-autopairs
+        vimwiki
+        vim-git
+        vim-fugitive
+        vim-dispatch
+        oil-nvim
+        cmp_luasnip
+        nvim-dap-ui
+        cmp-treesitter
+
+        nvim-code-action-menu
+
+        vim-unimpaired
+
+        vim-repeat
+
+        nvim-dap-virtual-text
+
+        gitlinker-nvim
+
+        nvim-dap-ui
+
+        cmp-treesitter
+
+        friendly-snippets
+
+        octo-nvim
+
+        hop-nvim
+
+        lspkind-nvim
+
+        none-ls-nvim
+
+        lspsaga-nvim
+
+        playground
+
+        nvim-treesitter-textobjects
+
+        nvim-treesitter
+
+        telescope-nvim
+
+        telescope-ui-select-nvim
+
+        telescope-dap-nvim
+
+        nvim-nio
+
+        lualine-nvim
+
+        popup-nvim
+
+        plenary-nvim
+
+        lsp-status-nvim
+
+        completion-nvim
+
+        nvim-lspconfig
+
+        vim-startify
+
+        nvim-dap
+
+        indent-blankline-nvim
+
+        cmp-rg
+
+        impatient-nvim
+
+        gitsigns-nvim
+
+        nvim-surround
+
+        nvim-web-devicons
+
+        vim-emoji
+
+        fzf-vim
+
+        virtual-types-nvim
+
+        nvim-cmp
+
+        cmp-path
+
+        cmp-nvim-lsp
+
+        cmp-emoji
+
+        cmp-cmdline
+
+        cmp-buffer
+
+        alpha-nvim
+
+        which-key-nvim
+
+        trouble-nvim
+
+        gruvbox-nvim
+
+        yuck-vim
+
+        kommentary
+
+        toggleterm-nvim
+
+        nvim-treesitter-textsubjects
+        render-markdown-nvim
+        luasnip
+        nvim-ts-context-commentstring
       ];
   };
 }

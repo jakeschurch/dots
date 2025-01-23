@@ -1,3 +1,5 @@
+---@diagnostic disable-next-line: unused-local
+local copilot_cmp = require("copilot_cmp").setup()
 local cmp = require("cmp")
 local compare = require("cmp.config.compare")
 local types = require("cmp.types")
@@ -84,28 +86,18 @@ local has_words_before = function()
       == nil
 end
 
----@type table<integer, integer>
-local modified_priority = {
-  [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-  [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-  [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-  [types.lsp.CompletionItemKind.Text] = 100, -- bottom
-}
----@param kind integer: kind of completion entry
-local function modified_kind(kind)
-  return modified_priority[kind] or kind
-end
-
 cmp.setup({
   snippet = {
     expand = function(args)
       vim.snippet.expand(args.body)
     end,
   },
+
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
+
   formatting = {
     fields = { "kind", "abbr", "menu" },
     format = lspkind.cmp_format({
@@ -133,9 +125,24 @@ cmp.setup({
     --   return vim_item
     -- end,
   },
+
   sorting = {
+    priority_weight = 2,
     -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
     comparators = {
+      require("copilot_cmp.comparators").prioritize,
+
+      -- Below is the default comparator list and order for nvim-cmp
+      cmp.config.compare.offset,
+      -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.kind,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
       compare.offset,
       compare.exact,
       function(entry1, entry2) -- sort by length ignoring "=~"
@@ -148,24 +155,24 @@ cmp.setup({
         end
       end,
       compare.recently_used,
-      function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-        local kind1 = modified_kind(entry1:get_kind())
-        local kind2 = modified_kind(entry2:get_kind())
-        if kind1 ~= kind2 then
-          return kind1 - kind2 < 0
-        end
-      end,
-      function(entry1, entry2) -- score by lsp, if available
-        local t1 = entry1.completion_item.sortText
-        local t2 = entry2.completion_item.sortText
-        if t1 ~= nil and t2 ~= nil and t1 ~= t2 then
-          return t1 < t2
-        end
-      end,
-      compare.score,
-      compare.order,
+      -- function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
+      --   local kind1 = modified_kind(entry1:get_kind())
+      --   local kind2 = modified_kind(entry2:get_kind())
+      --   if kind1 ~= kind2 then
+      --     return kind1 - kind2 < 0
+      --   end
+      -- end,
+      -- function(entry1, entry2) -- score by lsp, if available
+      --   local t1 = entry1.completion_item.sortText
+      --   local t2 = entry2.completion_item.sortText
+      --   if t1 ~= nil and t2 ~= nil and t1 ~= t2 then
+      --     return t1 < t2
+      --   end
+      -- end,
+      -- compare.order,
     },
   },
+
   mapping = cmp.mapping.preset.insert({
     ["<C-u>"] = cmp.mapping.scroll_docs(-4),
     ["<C-d>"] = cmp.mapping.scroll_docs(4),
@@ -173,15 +180,16 @@ cmp.setup({
     ["<C-e>"] = cmp.mapping.abort(),
     ["<C-c>"] = cmp.mapping.abort(),
 
-    ["<C-Space>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ["<C-Space>"] = cmp.mapping.confirm({ select = true }),
+
+    ["<Tab>"] = cmp.mapping.confirm({ select = true }),
 
     ["<C-p>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
         luasnip.jump(-1)
-      else
-        fallback()
       end
     end, { "i", "s" }),
 
@@ -192,25 +200,31 @@ cmp.setup({
         luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()
-      else
-        fallback()
       end
     end, { "i", "s" }),
   }),
+
   experimental = {
     ghost_text = true,
   },
+
   completion = {
-    keyword_length = 2,
+    keyword_length = 1,
     completeopt = "menu,noselect",
   },
+
   sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "luasnip" }, -- For luasnip users.
-    { name = "treesitter" },
-    -- { name = "rg", keyword_length = 4 },
-    -- { name = "buffer", keyword_length = 3 },
-    -- { name = "path" },
+    { name = "copilot", group_index = 2 },
+
+    { name = "nvim_lsp", group_index = 2 },
+    { name = "nvim_lsp_signature_help" },
+    { name = "luasnip", group_index = 2 },
+  }, {
+
+    { name = "treesitter", group_index = 2 },
+    { name = "rg", keyword_length = 4 },
+    { name = "buffer", keyword_length = 3 },
+    { name = "path" },
   }),
   performance = {
     debounce = 10, -- default is 60ms
@@ -221,6 +235,7 @@ cmp.setup({
 
 cmp.setup.filetype("markdown", {
   sources = cmp.config.sources({
+    { name = "copilot" },
     { name = "luasnip" }, -- For luasnip users.
     { name = "buffer" },
     { name = "path" },
@@ -231,6 +246,7 @@ cmp.setup.filetype("markdown", {
 -- Set configuration for specific filetype.
 cmp.setup.filetype("gitcommit", {
   sources = cmp.config.sources({
+    { name = "copilot", group_index = 2 },
     { name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
     { name = "path" },
     { name = "emoji" },
@@ -242,20 +258,37 @@ cmp.setup.filetype("gitcommit", {
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ ":" }, {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = "path" },
-    { name = "buffer" },
-    { name = "cmdline" },
-  },
+  sources = cmp.config.sources({
+    {
+      name = "cmdline",
+      option = {
+        ignore_cmds = {
+          "IncRename",
+        },
+      },
+    },
+  }),
   matching = { disallow_symbol_nonprefix_matching = false },
+  enabled = function()
+    local disabled = {
+      IncRename = true,
+    }
+    -- Get first word of cmdline
+    local cmd = vim.fn.getcmdline():match("%S+")
+    -- Return true if cmd isn't disabled
+    -- else call/return cmp.close(), which returns false
+    return not disabled[cmd] or cmp.close()
+  end,
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ "/", "?" }, {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = {
+  sources = cmp.config.sources({
+    { name = "cmdline" },
+  }, {
     { name = "buffer" },
-  },
+  }),
 })
 
 require("luasnip").config.set_config({

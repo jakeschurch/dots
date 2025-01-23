@@ -1,7 +1,7 @@
 require("utils").keymap(
   "n",
   "<leader>d",
-  "<cmd>Trouble diagnostics toggle<cr>",
+  "<cmd>Trouble diagnostics toggle.buf=0<cr>",
   { silent = true, noremap = true }
 )
 
