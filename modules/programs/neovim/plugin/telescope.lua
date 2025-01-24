@@ -10,16 +10,18 @@ local function get_git_dir()
 
   if status == 0 then
     local handle = io.popen(command)
-    local git_root_path = handle:read("*a")
-    print(git_root_path)
-    handle:close()
-    return git_root_path:gsub("[\n\r]", "")
-  else
-    return nil
+    if handle then
+      local git_root_path = handle:read("*a")
+      handle:close()
+      if git_root_path then
+        return git_root_path:gsub("[\n\r]", "")
+      end
+    end
   end
+  return nil
 end
 
-function file_exists(file)
+local function file_exists(file)
   local f = io.open(file, "rb")
   if f then
     f:close()
@@ -29,13 +31,15 @@ end
 
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist
-function lines_from(file)
+local function lines_from(file)
   if not file_exists(file) then
     return {}
   end
   local lines = {}
   for line in io.lines(file) do
-    lines[#lines + 1] = line
+    if line then
+      lines[#lines + 1] = line
+    end
   end
   return lines
 end
@@ -196,23 +200,24 @@ telescope.setup({
 local keymap = require("utils").keymap
 local builtin = require("telescope.builtin")
 
-keymap("n", "<leader>jk", builtin.git_files)
+local keymap_opts = { silent = true, noremap = true }
+keymap("n", "<leader>jk", builtin.git_files, opts)
 
-keymap("n", "<C-p>", function()
+vim.keymap.set("n", "<C-p>", function()
   builtin.find_files({ cwd = get_cwd() })
-end)
+end, keymap_opts)
 
 keymap("n", "<leader>jj", function()
-  builtin.live_grep({ cwd = get_cwd() })
+  builtin.live_grep({ cwd = get_cwd() }, keymap_opts)
 end)
 
 keymap("n", "<leader>jh", function()
   builtin.live_grep({ cwd = os.getenv("HOME") })
-end)
-keymap("n", "<leader>bb", builtin.buffers)
-keymap("n", "<leader>fm", builtin.man_pages)
-keymap("n", "<leader>fh", builtin.help_tags)
-keymap("n", "<leader>fc", builtin.command_history)
+end, keymap_opts)
+keymap("n", "<leader>bb", builtin.buffers, keymap_opts)
+keymap("n", "<leader>fm", builtin.man_pages, keymap_opts)
+keymap("n", "<leader>fh", builtin.help_tags, keymap_opts)
+keymap("n", "<leader>fc", builtin.command_history, keymap_opts)
 
 telescope.load_extension("ui-select")
 telescope.load_extension("fzf")

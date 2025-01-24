@@ -197,7 +197,12 @@ require("which-key").add({
 avante.setup({
   provider = "copilot",
   auto_suggestions_provider = "copilot",
+  behavior = {
+    auto_set_highlight_group = false,
+    auto_apply_diff_after_generation = false,
+  },
   windows = {
+    position = "smart",
     wrap = true,
     width = 40,
     sidebar_header = {
@@ -214,6 +219,15 @@ avante.setup({
   suggestion = {
     keymap = {
       accept = false,
+    },
+  },
+  file_selector = {
+    provider = "telescope",
+  },
+  highlights = {
+    diff = {
+      current = "DiffDelete",
+      incoming = "DiffAdd",
     },
   },
   mappings = {
