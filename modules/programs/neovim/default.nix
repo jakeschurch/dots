@@ -181,6 +181,7 @@ in {
         nvim-treesitter-textobjects
 
         nvim-treesitter
+        lsp_signature-nvim
 
         telescope-nvim
 

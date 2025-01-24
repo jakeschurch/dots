@@ -1,3 +1,16 @@
+local lsp_signature = require("lsp_signature")
+
+local lsp_signature_config = {
+  hint_enable = true,
+  hint_prefix = "",
+  floating_window = false,
+  floating_window_above_cur_line = false,
+  always_trigger = true,
+  hint_inline = function()
+    return false
+  end,
+}
+
 local lsp = {}
 local lsp_config = require("lspconfig")
 local virtualtypes = require("virtualtypes")
@@ -5,7 +18,7 @@ local lsp_status = require("lsp-status")
 
 lsp_status.register_progress()
 
-vim.lsp.set_log_level(vim.lsp.log_levels.INFO)
+vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 
 local lspconfig_defaults = lsp_config.util.default_config
 lspconfig_defaults.capabilities = vim.tbl_deep_extend(
@@ -41,26 +54,6 @@ vim.api.nvim_create_user_command("Format", function()
   vim.lsp.buf.format({ async = true })
 end, {})
 
--- local format_on_save_autocmd_id = nil
---
--- function ToggleFormatOnSave()
---   if format_on_save_autocmd_id then
---     -- Remove the autocmd if it exists
---     vim.api.nvim_del_autocmd(format_on_save_autocmd_id)
---     format_on_save_autocmd_id = nil
---     print("Format on save disabled")
---   else
---     -- Create the autocmd if it doesn't exist
---     format_on_save_autocmd_id = vim.api.nvim_create_autocmd("BufWritePre", {
---       desc = "Format on save",
---       callback = function()
---         vim.lsp.buf.format({ async = true })
---       end,
---     })
---     print("Format on save enabled")
---   end
--- end
-
 vim.api.nvim_create_autocmd("LspAttach", {
   desc = "LSP actions",
   callback = function(event)
@@ -83,7 +76,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "gh", "<cmd>Lspsaga finder<CR>", opts)
 
     vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>", opts)
-    vim.keymap.set("i", "<C-L>", "<cmd>Lspsaga signature_help<cr>", opts)
+    vim.keymap.set("i", "<C-L>", function()
+      vim.lsp.buf.signature_help()
+    end, opts)
 
     vim.keymap.set("n", "gp", "<cmd>Lspsaga peek_definition<cr>", opts)
     vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", opts)
@@ -116,6 +111,7 @@ for server, config in pairs(require("plugins.lsp_servers")) do
   -- Wrap the custom on_attach with common_on_attach
   config.on_attach = function(client, bufnr)
     lsp.common_on_attach(client, bufnr)
+    lsp_signature.on_attach(lsp_signature_config, bufnr)
 
     client.offset_encoding = "utf-16"
     config.capabilities = lspconfig_defaults.capabilities
@@ -130,7 +126,7 @@ for server, config in pairs(require("plugins.lsp_servers")) do
   config["root_dir"] = config["root_dir"]
     or function(fname)
       local util = require("lspconfig.util")
-      return util.root_pattern(".git")(fname) or vim.loop.os_homedir() or nil
+      return util.root_pattern(".git")(fname) or nil
     end
 
   lsp_config[server].setup(config)

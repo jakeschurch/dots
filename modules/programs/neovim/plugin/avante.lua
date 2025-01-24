@@ -9,6 +9,7 @@ local prefill_edit_window = function(request)
   if code_bufnr == nil or code_winid == nil then
     return
   end
+
   vim.api.nvim_buf_set_lines(code_bufnr, 0, -1, false, { request })
   -- Optionally set the cursor position to the end of the input
   vim.api.nvim_win_set_cursor(code_winid, { 1, #request + 1 })
@@ -204,7 +205,7 @@ avante.setup({
     },
     ask = {
       floating = true,
-      start_insert = false,
+      start_insert = true,
     },
     input = {
       height = 3,
@@ -216,9 +217,9 @@ avante.setup({
     },
   },
   mappings = {
-    submit = {
-      normal = false,
-      insert = false,
-    },
+    -- submit = {
+    --   normal = false,
+    --   insert = false,
+    -- },
   },
 })
