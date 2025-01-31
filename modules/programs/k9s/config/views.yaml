@@ -1,23 +1,21 @@
 views:
   v1/pods:
+    sortColumn: AGE:asc
     columns:
-      - AGE
       - NAME
-      - STATUS
       - READY
+      - STATUS
+      - RESTARTS
+      - CPU
+      - MEM
+      - "%CPU/R"
+      - "%CPU/L"
+      - "%MEM/R"
+      - "%MEM/L"
+      - AGE
   v1/services:
     columns:
-      - AGE
-      - NAMESPACE
       - NAME
       - TYPE
-  v1/pvc:
-    columns:
-      - STORAGECLASS
-      - NAME
-      - CAPACITY
+      - PORT
       - AGE
-      - VOLUME
-      - STATUS
-      - NAMESPACE
-

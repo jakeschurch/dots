@@ -92,11 +92,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
-  if client.server_capabilities.semanticTokensProvider then
-    client.server_capabilities.semanticTokensProvider = nil
-  end
+  -- if client.server_capabilities.semanticTokensProvider then
+  --   client.server_capabilities.semanticTokensProvider = nil
+  -- end
 
-  if client.supports_method("textDocument/codeLens") then
+  if
+    client.supports_method and client:supports_method("textDocument/codeLens")
+  then
     virtualtypes.on_attach(client, bufnr)
   end
 

@@ -47,6 +47,7 @@ in {
       ];
 
     sessionVariables = {
+      NIX_CONFIG = "/etc/nix/nix.conf";
       NIX_PROFILES = config.home.profileDirectory;
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";

@@ -203,8 +203,6 @@ in {
 
         nvim-lspconfig
 
-        vim-startify
-
         nvim-dap
 
         indent-blankline-nvim

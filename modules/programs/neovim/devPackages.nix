@@ -186,11 +186,14 @@ in {
     ];
 
     lua = with pkgs; [
-      lua5_4
+      (lua5_1.override {
+        packageOverrides = luaPackages: {
+          inherit (luaPackages) luafilesystem jsregexp;
+        };
+      })
       luarocks
       sumneko-lua-language-server
       stylua
-      luaPackages.jsregexp
     ];
 
     haskell = with pkgs; [

@@ -4,6 +4,8 @@
   config,
   ...
 }: let
+  kubectl-jq = pkgs.callPackage ./kubectl-jq.nix {};
+
   download-nixpkgs-cache-index = pkgs.writeShellScriptBin "download-nixpkgs-cache-index" ''
     download_nixpkgs_cache_index() {
     	filename="index-$(uname -m | sed 's/^arm64$/aarch64/')-$(uname | tr A-Z a-z)"
@@ -51,8 +53,10 @@ in {
 
         k9s
         kubectl
+        kubectl-jq
         kubectx
         kubernetes-helm
+        kubernetes-helmPlugins.helm-diff
         kubelogin-oidc
 
         lazydocker

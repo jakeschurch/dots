@@ -17,6 +17,8 @@ lualine.setup({
   options = {
     theme = "gruvbox",
     icons_enabled = true,
+    globalstatus = true,
+    disabled_filetypes = { "startify", "dashboard", "alpha" },
   },
   sections = {
     lualine_a = { "mode" },

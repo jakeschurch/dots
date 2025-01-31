@@ -201,7 +201,7 @@ local keymap = require("utils").keymap
 local builtin = require("telescope.builtin")
 
 local keymap_opts = { silent = true, noremap = true }
-keymap("n", "<leader>jk", builtin.git_files, opts)
+keymap("n", "<leader>jk", builtin.git_files, keymap_opts)
 
 vim.keymap.set("n", "<C-p>", function()
   builtin.find_files({ cwd = get_cwd() })
