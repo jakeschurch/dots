@@ -4,7 +4,7 @@
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
-  ids.gids.nixbld = 30000;
+ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
 
   environment = {
@@ -14,10 +14,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       "info"
       "doc"
       "devdoc"
-    ];
-
-    systemPackages = with pkgs; [
-      arc-browser
     ];
 
     pathsToLink = [

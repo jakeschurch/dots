@@ -24,18 +24,19 @@ lib.mkIf pkgs.stdenv.isDarwin {
     ];
 
     casks = [
-      "raycast"
-      "steam"
+      "arc"
       "around"
       "balenaetcher"
-      "notion"
       "caffeine"
       "hammerspoon"
-      "spotify"
-      "yubico-yubikey-manager"
-      "yubico-authenticator"
+      "notion"
       "notion"
       "postman"
+      "raycast"
+      "spotify"
+      "steam"
+      "yubico-authenticator"
+      "yubico-yubikey-manager"
     ];
   };
 }

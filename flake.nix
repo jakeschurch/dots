@@ -42,15 +42,8 @@
   };
 
   nixConfig = {
-    experimental-features = "nix-command flakes pipe-operators ca-derivations";
     warn-dirty = false;
-    sandbox = false;
     extra-sandbox-paths = ["/nix/var/cache/ccache"];
-    keep-derivations = false;
-    pure-eval = false;
-    keep-outputs = false;
-    keep-going = false;
-    keep-failed = false;
     allowed-impure-host-deps = [
       "/usr/bin/ditto" # for darwin builds
       "/bin/sh"

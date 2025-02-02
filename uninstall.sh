@@ -6,6 +6,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
 	sudo launchctl bootout system/org.nixos.activate-system
 	/nix/nix-installer uninstall
 	sudo rm /etc/ssl/certs/*
+else
+	/nix/nix-installer uninstall
 fi
 
-/nix/nix-installer uninstall

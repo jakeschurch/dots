@@ -5,3 +5,5 @@ result/*
 .direnv
 .git
 .git/*
+
+.pre-commit-config.yaml

@@ -24,7 +24,14 @@ local appOpenBindings = {
     hs.application.launchOrFocus("Arc")
   end,
   [singleKey("return", "terminal")] = function()
-    hs.application.launchOrFocus("wezterm")
+    local weztermPath = hs.execute("which wezterm"):gsub("%s+", "")
+    local app = hs.application.get("wezterm")
+
+    if app then
+      app:activate()
+    else
+      hs.execute(weztermPath)
+    end
   end,
 
   [singleKey("s", "slack")] = function()

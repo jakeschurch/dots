@@ -1,10 +1,4 @@
-{
-  pkgs,
-  inputs,
-  self,
-  ...
-}:
-with inputs; {
+{pkgs, ...}: {
   nix = {
     settings = {
       trusted-users = [
@@ -16,7 +10,7 @@ with inputs; {
 
       allowed-users = ["*"];
       builders = "@/etc/nix/machines";
-      experimental-features = ["nix-command flakes pipe-operators ca-derivations"];
+      experimental-features = ["nix-command flakes pipe-operators"];
       fallback = true;
 
       cores = 0;
@@ -48,25 +42,11 @@ with inputs; {
         "cache.flakehub.com-10:2GqeNlIp6AKp4EF2MVbE1kBOp9iBSyo0UPR9KoR0o1Y="
       ];
 
-      # always-allow-substitutes = true;
-      extra-trusted-substituters = ["https://cache.flakehub.com"];
-
+      always-allow-substitutes = true;
       warn-dirty = false;
     };
 
     optimise.automatic = true;
-
-    nixPath = let
-      path = toString ./.;
-    in [
-      "repl=${path}/repl.nix"
-      "nixpkgs=${nixpkgs}"
-    ];
-
-    registry = {
-      self.flake = self;
-      nixpkgs.flake = nixpkgs;
-    };
 
     extraOptions = ''
       accept-flake-config = true
@@ -81,11 +61,6 @@ with inputs; {
       # post-build-hook = /etc/nix/upload-to-cache.sh
 
       http-connections = 0
-      keep-failed = false
-      keep-going = false
-      keep-outputs = true
-      keep-derivations = false
-
       require-sigs = false
 
       ${pkgs.lib.optionalString (pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-linux") ''
