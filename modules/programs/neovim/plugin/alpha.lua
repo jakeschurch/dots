@@ -178,7 +178,7 @@ startify.section.bookmarks = {
 startify.section.bottom_buttons = {
   type = "group",
   val = {
-    startify.button("e", "New Buffer", "<cmd>edit <CR>"),
+    startify.button("e", "New Buffer", ":ene <BAR> startinsert <CR>"),
     startify.button("q", "Quit", "<cmd>q <CR>"),
   },
 }
@@ -189,7 +189,6 @@ startify.section.mru_cwd.val = { { type = "padding", val = 0 } }
 startify.opts.noautocmd = true
 
 startify.section.footer = {
-
   type = "text",
   val = require("alpha.fortune")(),
   opts = {
