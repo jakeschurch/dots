@@ -197,9 +197,10 @@ require("which-key").add({
 avante.setup({
   provider = "copilot",
   auto_suggestions_provider = "copilot",
-  behavior = {
+  behaviour = {
     auto_set_highlight_group = false,
     auto_apply_diff_after_generation = false,
+    minimize_diff = true,
   },
   windows = {
     position = "smart",

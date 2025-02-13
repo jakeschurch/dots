@@ -15,7 +15,7 @@
 
       cores = 0;
       max-jobs = "auto";
-      sandbox = pkgs.stdenv.isDarwin;
+      sandbox = false;
 
       trusted-substituters = [
         "https://nix-community.cachix.org"

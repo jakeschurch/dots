@@ -54,6 +54,7 @@ local appOpenBindings = {
     hs.application.launchOrFocus("notion calendar")
   end,
 }
+
 hs.hotkey.bind(
   { MOD },
   "o",

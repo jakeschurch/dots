@@ -43,7 +43,6 @@
         git_rebase
         gitattributes
         gitcommit
-        gitcommit
         gitignore
         go
         gomod
@@ -51,18 +50,15 @@
         haskell
         hcl
         heex
-        heex
-        html
         html
         javascript
-        jq
         jq
         json
         latex
         lua
         luadoc
         make
-        make
+        tree-sitter-hcl
         markdown
         markdown_inline
         mermaid
@@ -85,6 +81,8 @@
         vimdoc
         yaml
         yuck
+        gotmpl
+        helm
       ]
   );
 in {
@@ -131,7 +129,7 @@ in {
     withPython3 = true;
     vimdiffAlias = true;
     coc.enable = false;
-    plugins = with pkgs.unstable.vimPlugins;
+    plugins = with pkgs.vimPlugins;
       pluginVersionLock
       ++ [
         avante-nvim

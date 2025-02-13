@@ -1,4 +1,14 @@
 return {
+  yamlls = {},
+  helm_ls = {
+    settings = {
+      ["helm-ls"] = {
+        yamlls = {
+          path = "yaml-language-server",
+        },
+      },
+    },
+  },
   emmet_ls = {
     filetypes = {
       "astro",

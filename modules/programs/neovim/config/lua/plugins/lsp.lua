@@ -113,7 +113,10 @@ for server, config in pairs(require("plugins.lsp_servers")) do
   -- Wrap the custom on_attach with common_on_attach
   config.on_attach = function(client, bufnr)
     lsp.common_on_attach(client, bufnr)
-    lsp_signature.on_attach(lsp_signature_config, bufnr)
+
+    if client.server_capabilities.signatureHelpProvider then
+      lsp_signature.on_attach(lsp_signature_config, bufnr)
+    end
 
     client.offset_encoding = "utf-16"
     config.capabilities = lspconfig_defaults.capabilities

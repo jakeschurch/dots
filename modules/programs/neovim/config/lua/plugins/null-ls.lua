@@ -90,11 +90,15 @@ null_ls.setup({
     -- Terraform/hcl
     null_ls.builtins.formatting.terraform_fmt,
     null_ls.builtins.formatting.packer,
+    null_ls.builtins.formatting.hclfmt,
+    null_ls.builtins.diagnostics.terraform_validate,
+    null_ls.builtins.diagnostics.tfsec,
 
     null_ls.builtins.diagnostics.ansiblelint,
 
     -- Docs
     -- null_ls.builtins.diagnostics.yamllint,
+    null_ls.builtins.diagnostics.actionlint,
 
     -- null_ls.builtins.diagnostics.jsonlint,
     -- null_ls.builtins.formatting.tidy,
@@ -134,6 +138,11 @@ null_ls.setup({
         "sh",
       },
     }),
+    null_ls.builtins.diagnostics.todo_comments,
+    null_ls.builtins.diagnostics.trail_space,
+
+    -- docker
+    null_ls.builtins.diagnostics.hadolint,
 
     -- vim
     --null_ls.builtins.diagnostics.vint,

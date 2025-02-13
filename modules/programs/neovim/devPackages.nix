@@ -131,6 +131,7 @@ in {
             debugpy
             setuptools # Required by pylama for some reason
             proselint
+            poetry-core
             toolz
             pylama
             black
@@ -217,6 +218,8 @@ in {
       terraform-docs
       tflint
       # tfenv
+      tfsec
+      hclfmt
       packer
     ];
 
@@ -264,9 +267,12 @@ in {
       tree-sitter
       codespell
       nodePackages.yaml-language-server
+      actionlint
       yamllint
       nodePackages.vscode-json-languageserver
       semgrep
+      hadolint
+      helm-ls
     ];
 
     sql = with pkgs; [
