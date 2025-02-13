@@ -46,23 +46,19 @@ function ToggleQuickFix()
 end
 
 -- Optionally, map this function to a keybinding, e.g., <leader>q
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>q",
-  ":lua ToggleQuickFix()<CR>",
-  { noremap = true, silent = true }
-)
+vim.keymap.set("n", "<leader>q", function()
+  ToggleQuickFix()
+end, { noremap = true, silent = true })
 
 vim.cmd([[
 cnoremap %s/ %s/\v
 cnoremap s/ s/\v
 
-cnoreabbrev c G c
 cnoreabbrev a G add %
 ]])
 
 -- Define a function to toggle booleans
-function ToggleBoolean()
+function Toggle(direction)
   -- Get the word under the cursor
   local word = vim.fn.expand("<cword>")
 
@@ -80,17 +76,30 @@ function ToggleBoolean()
   if booleans[word] then
     vim.cmd("normal! ciw" .. booleans[word])
   else
-    print("No boolean to toggle")
+    local direction_mapping = {
+      ["down"] = "<C-X>",
+      ["up"] = "<C-A>",
+    }
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes(
+        direction_mapping[direction],
+        true,
+        false,
+        true
+      ),
+      "n",
+      true
+    )
   end
 end
 
--- Map <C-X> in normal mode to call the ToggleBoolean function
-vim.api.nvim_set_keymap(
-  "n",
-  "<C-X>",
-  ":lua ToggleBoolean()<CR>",
-  { noremap = true, silent = true }
-)
+vim.keymap.set("n", "<C-X>", function()
+  Toggle("down")
+end, { noremap = true, silent = true })
+
+vim.keymap.set("n", "<C-A>", function()
+  Toggle("up")
+end, { noremap = true, silent = true })
 
 function ToggleLocationList()
   local loclist_exists = false
@@ -109,13 +118,9 @@ function ToggleLocationList()
   end
 end
 
--- Optionally, map this function to a keybinding, e.g., <leader>l
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>l",
-  ":lua ToggleLocationList()<CR>",
-  { noremap = true, silent = true }
-)
+vim.keymap.set("n", "<leader>l", function()
+  ToggleLocationList()
+end, { noremap = true, silent = true })
 
 -- Smart paste in insert mode (adjusts indentation after pasting)
 function SmartPasteInsert()

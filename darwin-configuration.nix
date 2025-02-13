@@ -27,30 +27,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     ];
   };
 
-  nix = {
-    distributedBuilds = true;
-    configureBuildUsers = true;
-
-    optimise.automatic = true;
-    gc = {
-      automatic = true;
-    };
-
-    linux-builder = {
-      enable = pkgs.stdenv.isDarwin;
-      ephemeral = true;
-      maxJobs = 10;
-      config = {
-        virtualisation = {
-          darwin-builder = {
-            diskSize = 120 * 1024;
-            memorySize = 4 * 1024;
-          };
-          cores = 3;
-        };
-      };
-    };
-  };
+  nix.enable = false;
 
   home-manager.backupFileExtension = "bak";
 

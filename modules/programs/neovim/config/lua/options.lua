@@ -17,7 +17,7 @@ g.loaded_logiPat = 1
 g.loaded_rrhelper = 1
 
 local options = {
-  autoindent = true,
+  autoindent = false,
   autoread = true,
   backup = false,
   breakindent = true,
@@ -31,6 +31,7 @@ local options = {
   hlsearch = false,
   ignorecase = true,
   inccommand = "nosplit", -- real-time [:s]ubstitute
+  incsearch = true,
   infercase = true,
   list = true,
   listchars = "tab:  ,lead:⋅,trail:⋅,",

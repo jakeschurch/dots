@@ -27,7 +27,10 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
   vim.lsp.protocol.make_client_capabilities(),
   require("cmp_nvim_lsp").default_capabilities(),
   lsp_status.capabilities,
-  lspconfig_defaults.capabilities
+  lspconfig_defaults.capabilities,
+  -- File watching is disabled by default for neovim.
+  -- See: https://github.com/neovim/neovim/pull/22405
+  { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
 )
 
 vim.diagnostic.config({
@@ -92,9 +95,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
-  -- if client.server_capabilities.semanticTokensProvider then
-  --   client.server_capabilities.semanticTokensProvider = nil
-  -- end
+  if client.offset_encoding == nil then
+    client.offset_encoding = "utf-8"
+  end
 
   if
     client.supports_method and client:supports_method("textDocument/codeLens")
@@ -102,27 +105,25 @@ function lsp.common_on_attach(client, bufnr)
     virtualtypes.on_attach(client, bufnr)
   end
 
+  if client.server_capabilities.signatureHelpProvider then
+    lsp_signature.on_attach(lsp_signature_config, bufnr)
+  end
+
   lsp_status.on_attach(client, bufnr)
 end
 
 for server, config in pairs(require("plugins.lsp_servers")) do
-  -- Save the existing on_attach function if it exists
-  --
   local custom_on_attach = config.on_attach
 
-  -- Wrap the custom on_attach with common_on_attach
   config.on_attach = function(client, bufnr)
     lsp.common_on_attach(client, bufnr)
 
-    if client.server_capabilities.signatureHelpProvider then
-      lsp_signature.on_attach(lsp_signature_config, bufnr)
-    end
+    config.capabilities = vim.tbl_deep_extend(
+      "force",
+      lspconfig_defaults.capabilities,
+      { offsetEncoding = { "utf-8" } }
+    )
 
-    client.offset_encoding = "utf-16"
-    config.capabilities = lspconfig_defaults.capabilities
-    config.capabilities.offsetEncoding = { "utf-16" }
-
-    -- Call the custom on_attach if provided
     if custom_on_attach then
       custom_on_attach(client, bufnr)
     end

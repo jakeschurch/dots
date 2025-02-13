@@ -30,8 +30,16 @@ return {
     cmd = { "emmet-ls", "--stdio" },
   },
   nil_ls = {
-    handlers = {
-      ["textDocument/documentSymbol"] = function() end, -- Disable document symbol handler
+    cmd = {
+      "nil",
+      "--stdio",
+    },
+    settings = {
+      ["nil"] = {
+        formatting = {
+          command = { "alejandra" },
+        },
+      },
     },
   },
   pyright = {
@@ -89,10 +97,6 @@ return {
   graphql = {},
   lua_ls = {
     cmd = { "lua-language-server" },
-    on_attach = function(client)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentFormattingRangeProvider = false
-    end,
     settings = {
       Lua = {
         diagnostics = {

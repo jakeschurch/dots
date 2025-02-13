@@ -10,7 +10,7 @@
 
       allowed-users = ["*"];
       builders = "@/etc/nix/machines";
-      experimental-features = ["nix-command flakes pipe-operators"];
+      extra-experimental-features = ["nix-command flakes pipe-operators"];
       fallback = true;
 
       cores = 0;
@@ -47,6 +47,7 @@
     };
 
     optimise.automatic = true;
+    gc.automatic = true;
 
     extraOptions = ''
       accept-flake-config = true

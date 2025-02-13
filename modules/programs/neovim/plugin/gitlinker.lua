@@ -1,4 +1,6 @@
-require("gitlinker").setup({
+local gitlinker = require("gitlinker")
+
+gitlinker.setup({
   opts = {
     remote = nil, -- force the use of a specific remote
     -- adds current line nr in the url for normal mode
@@ -15,15 +17,16 @@ require("gitlinker").setup({
   },
 })
 
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>gy",
-  '<cmd>lua require"gitlinker".get_buf_range_url("n", {action_callback = require("gitlinker.actions").copy_to_clipboard})<cr>',
-  { silent = true }
-)
-vim.api.nvim_set_keymap(
-  "v",
-  "<leader>gy",
-  '<cmd>lua require"gitlinker".get_buf_range_url("v", {action_callback = require("gitlinker.actions").copy_to_clipboard})<cr>',
-  {}
-)
+vim.keymap.set("n", "<leader>gy", function()
+  gitlinker.get_buf_range_url(
+    "n",
+    { action_callback = require("gitlinker.actions").copy_to_clipboard }
+  )
+end, { silent = true })
+
+vim.keymap.set("v", "<leader>gy", function()
+  gitlinker.get_buf_range_url(
+    "v",
+    { action_callback = require("gitlinker.actions").copy_to_clipboard }
+  )
+end, {})

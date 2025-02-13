@@ -87,6 +87,7 @@
               permittedInsecurePackages = [
                 "electron-19.1.9"
               ];
+
               packageOverrides = _pkgs: {
                 inherit (inputs) lexical-lsp;
                 inherit (nixpkgs) narHash;

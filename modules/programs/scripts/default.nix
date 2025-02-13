@@ -1,59 +1,34 @@
 {
-  pkgs,
+  callPackage,
   python3Packages,
   jq,
   coreutils,
   ...
 }: let
-  parse_aws_config = pkgs.stdenv.mkDerivation rec {
+  mkScript = callPackage ./mkScript.nix {};
+
+  parse-aws-config = mkScript {
     pname = "parse_aws_config";
-    version = "0.0";
-
-    src = ./parse_aws_config.py; # Path to your Python script
-
+    src = ./parse_aws_config.py;
     nativeBuildInputs = with python3Packages; [configparser];
-
-    # Ensure the script is executable
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ${src} $out/bin/parse_aws_config
-      chmod +x $out/bin/parse_aws_config
-    '';
-
-    unpackPhase = "true";
-
-    meta = {
-      description = "Parse AWS config script";
-    };
+    description = "Parse AWS config script";
   };
 
-  aws-login = pkgs.stdenv.mkDerivation rec {
+  aws-login = mkScript {
     pname = "aws-login";
-    version = "0.0";
-
-    # The source Python file (no unpacking, just use the file directly)
     src = ./aws_profile_login.sh;
+    nativeBuildInputs = [jq coreutils parse-aws-config];
+    description = "AWS login script";
+  };
 
-    # Dependencies for the environment
-    nativeBuildInputs = [jq coreutils parse_aws_config];
-
-    # Skip the unpacking phase
-    unpackPhase = "true";
-
-    # Install phase: Copy the Python script to $out/bin and make it executable
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ${src} $out/bin/aws-login
-
-      # Make sure the script is executable
-      chmod +x $out/bin/aws-login
-    '';
-
-    meta = {
-      description = "AWS login script";
-    };
+  fg-commit-wrapper = mkScript {
+    pname = "fg-commit";
+    src = ./fg-commit-wrapper.sh;
+    nativeBuildInputs = [coreutils];
+    description = "Prepare commit message for fg features";
   };
 in [
-  parse_aws_config
+  parse-aws-config
   aws-login
+  fg-commit-wrapper
 ]
