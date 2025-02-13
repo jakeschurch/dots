@@ -191,11 +191,7 @@ in {
 
   xdg = {
     configFile = {
-      "git/work-hooks".source = ./templates/hooks;
       "git/config.work".text = ''
-        [core]
-          hooksPath = ~/.config/git/work-hooks
-
         [user]
           name = Jake Schurch
           email = jakeschurch@gmail.com

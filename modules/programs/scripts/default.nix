@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   python3Packages,
   jq,
@@ -23,7 +22,7 @@
 
     unpackPhase = "true";
 
-    meta = with lib; {
+    meta = {
       description = "Parse AWS config script";
     };
   };
@@ -50,7 +49,7 @@
       chmod +x $out/bin/aws-login
     '';
 
-    meta = with pkgs.lib; {
+    meta = {
       description = "AWS login script";
     };
   };

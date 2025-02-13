@@ -53,7 +53,7 @@ local avante_fix_bugs = "Fix the bugs inside the following codes if any"
 local avante_add_tests = "Implement tests for the following code"
 
 require("which-key").add({
-  { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "Avante" },
   {
     mode = { "n", "v" },
     {
@@ -197,17 +197,17 @@ require("which-key").add({
 avante.setup({
   provider = "copilot",
   auto_suggestions_provider = "copilot",
-  behaviour = {
-    auto_set_highlight_group = false,
-    auto_apply_diff_after_generation = false,
-    minimize_diff = true,
-  },
+  -- behaviour = {
+  --   auto_set_highlight_group = false,
+  --   auto_apply_diff_after_generation = false,
+  --   minimize_diff = true,
+  -- },
   windows = {
     position = "smart",
     wrap = true,
     width = 40,
     sidebar_header = {
-      enabled = false,
+      enabled = true,
     },
     ask = {
       floating = true,
@@ -230,11 +230,5 @@ avante.setup({
       current = "DiffDelete",
       incoming = "DiffAdd",
     },
-  },
-  mappings = {
-    -- submit = {
-    --   normal = false,
-    --   insert = false,
-    -- },
   },
 })

@@ -30,10 +30,9 @@ return {
     cmd = { "emmet-ls", "--stdio" },
   },
   nil_ls = {
-    on_attach = function(client)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentFormattingRangeProvider = false
-    end,
+    handlers = {
+      ["textDocument/documentSymbol"] = function() end, -- Disable document symbol handler
+    },
   },
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },

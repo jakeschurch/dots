@@ -12,7 +12,6 @@
     ./kitty.nix
     ./lf.nix
     ./neovim
-    ./ranger
     ./ripgrep.nix
     ./rofi
     ./slack.nix
