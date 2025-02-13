@@ -57,12 +57,11 @@ cnoremap s/ s/\v
 cnoreabbrev a G add %
 ]])
 
--- Define a function to toggle booleans
-function Toggle(direction)
-  -- Get the word under the cursor
-  local word = vim.fn.expand("<cword>")
+function Cycle(direction)
+  local line = vim.api.nvim_get_current_line()
+  local original_cursor = vim.api.nvim_win_get_cursor(0) -- Save original position
+  local col = original_cursor[2]
 
-  -- Define boolean mappings
   local booleans = {
     ["true"] = "false",
     ["false"] = "true",
@@ -72,33 +71,47 @@ function Toggle(direction)
     ["no"] = "yes",
   }
 
-  -- If the word is a known boolean, replace it with its opposite
-  if booleans[word] then
-    vim.cmd("normal! ciw" .. booleans[word])
-  else
-    local direction_mapping = {
-      ["down"] = "<C-X>",
-      ["up"] = "<C-A>",
-    }
-    vim.api.nvim_feedkeys(
-      vim.api.nvim_replace_termcodes(
-        direction_mapping[direction],
-        true,
-        false,
-        true
-      ),
-      "n",
-      true
-    )
+  for bool, replacement in pairs(booleans) do
+    local start_pos, end_pos = string.find(line, "%f[%a]" .. bool .. "%f[%A]") -- Match whole word
+
+    if start_pos then
+      vim.api.nvim_win_set_cursor(
+        0,
+        { vim.api.nvim_win_get_cursor(0)[1], start_pos - 1 }
+      )
+
+      vim.cmd("normal! ciw" .. replacement)
+
+      vim.api.nvim_win_set_cursor(0, { original_cursor[1], col })
+      return
+    end
   end
+
+  local direction_mapping = {
+    ["down"] = "<C-X>",
+    ["up"] = "<C-A>",
+  }
+
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(
+      direction_mapping[direction],
+      true,
+      false,
+      true
+    ),
+    "n",
+    true
+  )
+
+  vim.api.nvim_win_set_cursor(0, original_cursor)
 end
 
 vim.keymap.set("n", "<C-X>", function()
-  Toggle("down")
+  Cycle("down")
 end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-A>", function()
-  Toggle("up")
+  Cycle("up")
 end, { noremap = true, silent = true })
 
 function ToggleLocationList()
