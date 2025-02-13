@@ -1,4 +1,6 @@
-{...}: {
+{pkgs, ...}: {
+  home.packages = pkgs.callPackage ./scripts {};
+
   imports = [
     ./psql.nix
     ./eww
