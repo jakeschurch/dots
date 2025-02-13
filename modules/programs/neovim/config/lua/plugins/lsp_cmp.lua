@@ -281,6 +281,20 @@ cmp.setup.cmdline({ ":" }, {
   end,
 })
 
+local function close_cmp_in_cmdline()
+  cmp.close()
+  vim.cmd("stopinsert")
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes("<C-F>", true, true, true),
+    "n",
+    true
+  )
+end
+
+vim.keymap.set("c", "<C-F>", function()
+  close_cmp_in_cmdline()
+end, { noremap = true, silent = true })
+
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ "/", "?" }, {
   mapping = cmp.mapping.preset.cmdline(),
