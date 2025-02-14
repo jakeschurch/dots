@@ -1,24 +1,17 @@
 local telescope = require("telescope")
+local lga_actions = require("telescope-live-grep-args.actions")
 
 local actions = require("telescope.actions")
 local previewers = require("telescope.previewers")
 local themes = require("telescope.themes")
 
 local function get_git_dir()
-  local command = "git rev-parse --show-toplevel"
-  local status = os.execute(command)
-
-  if status == 0 then
-    local handle = io.popen(command)
-    if handle then
-      local git_root_path = handle:read("*a")
-      handle:close()
-      if git_root_path then
-        return git_root_path:gsub("[\n\r]", "")
-      end
-    end
+  local handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
+  local result = handle and handle:read("*a") or nil
+  if handle then
+    handle:close()
   end
-  return nil
+  return result and result:gsub("%s+$", "") or nil
 end
 
 local function file_exists(file)
@@ -92,6 +85,7 @@ telescope.setup({
       "--column",
       "--smart-case",
       "--pcre2",
+      "--trim",
     },
     path_display = { "truncate" },
     shorten_path = true,
@@ -111,6 +105,9 @@ telescope.setup({
     buffer_previewer_maker = previewers.buffer_previewer_maker,
     mappings = {
       i = {
+        ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+        -- freeze the current list and start a fuzzy search in the frozen list
+        ["<C-space>"] = actions.to_fuzzy_refine,
         ["<C-n>"] = actions.cycle_history_next,
         ["<C-p>"] = actions.cycle_history_prev,
 
@@ -151,7 +148,7 @@ telescope.setup({
       },
     },
     -- read from ~/.rgignore
-    file_ignore_patterns = lines_from("~/.rgignore"),
+    file_ignore_patterns = lines_from(vim.fn.expand("~/.rgignore")),
 
     layout_strategy = "vertical",
     layout_config = {
@@ -185,9 +182,13 @@ telescope.setup({
         preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
       },
     }),
+    fzy_native = {
+      override_generic_sorter = true,
+      override_file_sorter = true,
+    },
     fzf = {
       fuzzy = true,
-      override_generic_sorter = true,
+      override_generic_sorter = false,
       override_file_sorter = true,
       case_mode = "smart_case",
       themes = {},
@@ -197,27 +198,41 @@ telescope.setup({
   },
 })
 
-local keymap = require("utils").keymap
-local builtin = require("telescope.builtin")
+telescope.load_extension("live_grep_args")
+telescope.load_extension("ui-select")
+telescope.load_extension("fzf")
+telescope.load_extension("fzy_native")
 
+local builtin = require("telescope.builtin")
 local keymap_opts = { silent = true, noremap = true }
-keymap("n", "<leader>jk", builtin.git_files, keymap_opts)
+
+vim.keymap.set("n", "<leader>jk", builtin.git_files, keymap_opts)
 
 vim.keymap.set("n", "<C-p>", function()
   builtin.find_files({ cwd = get_cwd() })
 end, keymap_opts)
 
-keymap("n", "<leader>jj", function()
-  builtin.live_grep({ cwd = get_cwd() }, keymap_opts)
-end)
+vim.keymap.set("n", "<leader>jj", function()
+  builtin.live_grep({ cwd = get_cwd() })
+end, keymap_opts)
 
-keymap("n", "<leader>jh", function()
+local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
+vim.keymap.set(
+  "n",
+  "<leader>jh",
+  live_grep_args_shortcuts.grep_word_under_cursor,
+  keymap_opts
+)
+vim.keymap.set("n", "<leader>ji", function()
+  telescope.extensions.live_grep_args.live_grep_args({ cwd = get_cwd() })
+end, keymap_opts)
+
+vim.keymap.set("n", "<leader>jh", function()
   builtin.live_grep({ cwd = os.getenv("HOME") })
 end, keymap_opts)
-keymap("n", "<leader>bb", builtin.buffers, keymap_opts)
-keymap("n", "<leader>fm", builtin.man_pages, keymap_opts)
-keymap("n", "<leader>fh", builtin.help_tags, keymap_opts)
-keymap("n", "<leader>fc", builtin.command_history, keymap_opts)
-
-telescope.load_extension("ui-select")
-telescope.load_extension("fzf")
+vim.keymap.set("n", "<leader>bb", builtin.buffers, keymap_opts)
+vim.keymap.set("n", "<leader>fm", builtin.man_pages, keymap_opts)
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, keymap_opts)
+vim.keymap.set("n", "<leader>fk", builtin.keymaps, keymap_opts)
+vim.keymap.set("n", "<leader>fc", builtin.command_history, keymap_opts)
+vim.keymap.set("n", "<leader>fg", builtin.git_branches, keymap_opts)

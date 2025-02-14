@@ -28,6 +28,7 @@ in {
         _1password-cli
         gh
 
+        catimg
         act
 
         gnused

@@ -1,11 +1,11 @@
 {
-  callPackage,
+  pkgs,
   python3Packages,
   jq,
   coreutils,
   ...
 }: let
-  mkScript = callPackage ./mkScript.nix {};
+  mkScript = import ./mkScript.nix {inherit (pkgs) stdenv;};
 
   parse-aws-config = mkScript {
     pname = "parse_aws_config";
@@ -27,8 +27,19 @@
     nativeBuildInputs = [coreutils];
     description = "Prepare commit message for fg features";
   };
-in [
-  parse-aws-config
-  aws-login
-  fg-commit-wrapper
-]
+
+  motd = mkScript {
+    pname = "motd";
+    src = ./motd/motd.sh;
+    description = "Message of the day";
+  };
+in {
+  home.packages = [
+    parse-aws-config
+    aws-login
+    fg-commit-wrapper
+    motd
+  ];
+
+  home.file.".config/motd/quotes.json".source = ./motd/quotes.json;
+}

@@ -134,7 +134,6 @@ in {
       ++ [
         avante-nvim
         treesitter-plugins
-        telescope-fzf-native-nvim
         nvim-lspconfig
         copilot-cmp
         copilot-lua
@@ -182,6 +181,9 @@ in {
         lsp_signature-nvim
 
         telescope-nvim
+        telescope-fzf-native-nvim
+        telescope-fzy-native-nvim
+        telescope-live-grep-args-nvim
 
         telescope-ui-select-nvim
 
