@@ -1,4 +1,4 @@
-{stdenv, ...}: {
+stdenv: {
   pname,
   src,
   version ? "0.0",

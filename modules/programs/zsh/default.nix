@@ -80,6 +80,8 @@ in {
 
       # Autopair from zplug
       autopair-init
+
+      motd
     '';
     zplug = {
       enable = true;

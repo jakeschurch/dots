@@ -1,11 +1,6 @@
-{
-  pkgs,
-  python3Packages,
-  jq,
-  coreutils,
-  ...
-}: let
-  mkScript = import ./mkScript.nix {inherit (pkgs) stdenv;};
+{pkgs, ...}:
+with pkgs; let
+  mkScript = import ./mkScript.nix stdenv;
 
   parse-aws-config = mkScript {
     pname = "parse_aws_config";
