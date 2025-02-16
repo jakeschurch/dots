@@ -21,7 +21,7 @@ local appOpenBindings = {
     hs.application.launchOrFocus("notion")
   end,
   [singleKey("c", "browser")] = function()
-    hs.application.launchOrFocus("Arc")
+    hs.application.launchOrFocus("Google Chrome")
   end,
   [singleKey("return", "terminal")] = function()
     local weztermPath = hs.execute("which wezterm"):gsub("%s+", "")
@@ -61,6 +61,21 @@ hs.hotkey.bind(
   spoon.RecursiveBinder.recursiveBind(appOpenBindings)
 )
 
+-- Function to list all open window names
+local function listOpenWindows()
+  local windows = hs.window.allWindows() -- Get all open windows
+  for i, win in ipairs(windows) do
+    local appName = win:application():name() -- Get the application name
+    local windowTitle = win:title() -- Get the window title
+    print(string.format("Window %d: %s - %s", i, appName, windowTitle))
+  end
+end
+
+hs.hotkey.bind({ "cmd" }, "w", function()
+  listOpenWindows()
+end)
+
 hs.hotkey.bind({ "cmd" }, "r", function()
+  hs.alert.show("hs config reloaded")
   hs.reload()
 end)
