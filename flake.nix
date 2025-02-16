@@ -54,7 +54,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
-      # "ca-derivations"
+      "ca-derivations"
       "auto-allocate-uids"
     ];
 
@@ -67,7 +67,6 @@
     fsync-metadata = false;
 
     auto-allocate-uids = true;
-
     preallocate-contents = true;
 
     substituters = [
