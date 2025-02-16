@@ -4,6 +4,8 @@
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+  services.nix-daemon.enable = false;
+
   ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
 
@@ -26,8 +28,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       "/share/doc"
     ];
   };
-
-  nix.enable = false;
 
   home-manager.backupFileExtension = "bak";
 
@@ -83,8 +83,5 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
-
-  # Keep nix-daemon updated.
-  services.nix-daemon.enable = true;
   system.stateVersion = 5;
 }

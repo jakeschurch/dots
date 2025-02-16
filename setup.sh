@@ -14,17 +14,15 @@ create_ccache_dir() {
       sudo chown --reference=/nix/store /nix/var/cache/ccache
     fi
   fi
-
 }
 
-flake_args=('--accept-flake-config' "--extra-experimental-features" "nix-command flakes pipe-operators ca-derivations" "$*")
+flake_args=('--accept-flake-config' "--extra-experimental-features" "nix-command flakes ca-derivations")
+
+if [[ "$*" -gt 0 ]]; then
+  flake_args+=("$*")
+fi
 
 build_flake() {
-  if [ ! -d "$FLAKE_DIR" ]; then
-    echo "Cloning jakeschurch/dots"
-    git clone https://github.com/jakeschurch/dots.git "$FLAKE_DIR"
-  fi
-
   # use nom if available, otherwise use nix to build package
   if command -v nom &>/dev/null; then
     NIX_BIN="$(command -v nom)"
@@ -37,5 +35,4 @@ build_flake() {
     sudo "$FLAKE_DIR"/result/activate
 }
 
-create_ccache_dir
 build_flake "$@"

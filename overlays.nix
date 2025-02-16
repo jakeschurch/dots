@@ -1,4 +1,9 @@
-{pkgs}: let
+{
+  pkgs,
+  inputs,
+  system,
+  ...
+}: let
   ccachedPkgs = [
     # "neovim-nightly"
   ];
@@ -36,4 +41,21 @@
 in [
   ccacheOverlay
   ccacheStdenvPkgs
+  (
+    _final: prev: {
+      lib =
+        prev.lib
+        // import ./lib.nix {
+          inherit inputs;
+          inherit (prev) pkgs;
+        };
+
+      unstable = import inputs.unstable {inherit system;};
+      neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
+    }
+  )
+
+  inputs.neovim-nightly-overlay.overlays.default
+  inputs.nixGL.overlay
+  inputs.tfenv.overlays.default
 ]

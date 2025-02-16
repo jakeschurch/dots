@@ -1,29 +1,34 @@
 {
-  lib,
-  system,
   pkgs,
   inputs,
-}:
-with inputs; let
-  specialArgs = {
-    inherit inputs system pkgs;
-    inherit (pkgs) lib;
-    self = builtins.getFlake (toString ./.);
-  };
+  ...
+}: let
+  specialArgs =
+    {
+      inherit inputs;
+      inherit pkgs;
+      inherit (pkgs) system;
+    }
+    // inputs;
 in {
-  mkDarwinHome = {user}:
-    darwin.lib.darwinSystem {
-      inherit system pkgs;
+  mkDarwinHome = user:
+    inputs.darwin.lib.darwinSystem {
+      inherit (pkgs) system;
 
+      specialArgs =
+        specialArgs
+        // {
+          inherit inputs;
+          inherit (pkgs) lib;
+        };
       modules = [
         {_module.args = specialArgs;}
         inputs.nix-index-database.darwinModules.nix-index
-        ./darwin-configuration.nix
+        (import ./darwin-configuration.nix {inherit pkgs user;})
         ./modules/homebrew.nix
         ./nix.nix
-        inputs.determinate.darwinModules.default
+        inputs.home-manager.darwinModules.home-manager
 
-        home-manager.darwinModules.home-manager
         {
           home-manager = {
             useGlobalPkgs = true;
@@ -32,22 +37,15 @@ in {
           };
         }
       ];
-
-      specialArgs =
-        specialArgs
-        // {
-          inherit user;
-        };
     };
 
-  mkHmHome = {user}:
-    home-manager.lib.homeManagerConfiguration {
+  mkHmHome = user:
+    inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
 
       modules = [
         ./nix.nix
         ./home.nix
-        inputs.determinate.homeModules.default
         inputs.nix-index-database.hmModules.nix-index
         (_: {
           environment.pathsToLink = ["/share/zsh"];

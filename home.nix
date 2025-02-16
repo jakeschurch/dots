@@ -52,21 +52,8 @@
   manual.manpages.enable = true;
 
   home.enableNixpkgsReleaseCheck = false;
-  home.packages = let
-    repl_path = builtins.toString ./.;
-    my-nix-repl = pkgs.writeShellScriptBin "nix-repl" ''
-      if [ -f "${repl_path}/repl.nix" ]; then
-        nix repl -f "${repl_path}/repl.nix" "$@"
-      else
-        nix repl "$@"
-      fi
-    '';
-  in
-    [
-      my-nix-repl
-    ]
-    ++ (with pkgs; [
-      noto-fonts-emoji
-      jetbrains-mono
-    ]);
+  home.packages = with pkgs; [
+    noto-fonts-emoji
+    jetbrains-mono
+  ];
 }

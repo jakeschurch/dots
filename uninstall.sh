@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# vim:filetype=bash
 
-if [ "$(uname -s)" = "Darwin" ]; then
-	sudo rm /Library/LaunchDaemons/org.nixos.activate-system.plist
-	sudo launchctl bootout system/org.nixos.activate-system
-	/nix/nix-installer uninstall
-	sudo rm /etc/ssl/certs/*
-else
-	/nix/nix-installer uninstall
+if [ "$(uname -s)" == "Darwin" ]; then
+  nix --extra-experimental-features "nix-command flakes" run nix-darwin#darwin-uninstaller
 fi
 
+curl -sSf -L https://install.lix.systems/lix | sh -s -- uninstall

@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --determinate
+check_if_installed() {
+  if command -v nix &>/dev/null; then
+    echo "Nix is already installed."
+    exit 0
+  else
+    echo "Nix is not installed. Proceeding with installation..."
+  fi
+}
 
-echo "extra-experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
+install() {
+  curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+}
+
+main() {
+  check_if_installed
+  install
+  echo "Nix installation completed."
+}
+
+main

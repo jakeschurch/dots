@@ -1,10 +1,10 @@
-{ lib }:
-let
+{lib}: let
   addDirEntries = x: [
     x
     "${x}/"
     "${x}/*"
   ];
+
   dirEntries =
     (map addDirEntries [
       "venv"
@@ -27,9 +27,6 @@ let
       "tags"
       "~*"
       ".DS_Store"
-
-    ]
-    |> lib.flatten
-    |> lib.strings.concatLines;
+    ];
 in
-dirEntries
+  lib.strings.concatLines (lib.flatten dirEntries)
