@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  config,
   ...
 }: let
   kubectl-jq = pkgs.callPackage ./kubectl-jq.nix {};
@@ -158,87 +157,6 @@ in {
 
         source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh &
       '';
-    };
-
-    zsh = {
-      enable = true;
-      defaultKeymap = "vicmd";
-      enableCompletion = lib.mkForce true;
-      syntaxHighlighting = {
-        enable = true;
-        highlighters = ["brackets"];
-      };
-      autosuggestion.enable = true;
-      initExtraBeforeCompInit = ''
-        export ZSH_COMPDUMP=~/.zcompdump
-        fpath+=("${config.home.profileDirectory}"/share/zsh/site-functions "${config.home.profileDirectory}"/share/zsh/$ZSH_VERSION/functions "${config.home.profileDirectory}"/share/zsh/vendor-completions)
-      '';
-      autocd = true;
-      history = {
-        size = 100000;
-        path = "${config.xdg.dataHome}/zsh/history";
-        extended = true;
-      };
-      envExtra = ''
-        export AWS_PROFILE="fg-staging"
-        export AWS_REGION="us-west-2"
-        export PG_VERSION="15"
-      '';
-      initExtra = ''
-        setopt autocd
-
-        function cd() {
-          # Check if the argument is a file (not a directory)
-          if [[ -f "$1" ]]; then
-            # If it's a file, change to its directory
-            builtin cd "$(dirname "$1")" || return
-          else
-            # Otherwise, call the original cd command
-            builtin cd "$@" || return
-          fi
-        }
-
-        typeset -A key
-        key[Up]=$'\e[A'
-        key[Down]=$'\e[B'
-        key[Right]=$'\e[C'
-        key[Left]=$'\e[D'
-
-        autoload -Uz compinit
-
-        autoload -U up-line-or-beginning-search
-        autoload -U down-line-or-beginning-search
-        zle -N up-line-or-beginning-search
-        zle -N down-line-or-beginning-search
-
-        bindkey "''${key[Up]}" up-line-or-search
-        bindkey '^I' expand-or-complete
-
-        source <(colima completion zsh)
-        source <(kubectl completion zsh)
-        eval "$(direnv hook zsh)"
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
-        autopair-init
-
-        autoload -z edit-command-line
-        zle -N edit-command-line
-        bindkey -M vicmd v edit-command-line
-      '';
-      zplug = {
-        enable = true;
-        plugins = [
-          {name = "hlissner/zsh-autopair";}
-        ];
-      };
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "fzf"
-          "git"
-          "history-substring-search"
-          "vi-mode"
-        ];
-      };
     };
 
     fish = {
