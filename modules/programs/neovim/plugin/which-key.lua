@@ -5,8 +5,11 @@ end
 
 local setup = {
   plugins = {
-    marks = true, -- shows a list of your marks on ' and `
-    registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+    health = {
+      enabled = false,
+    },
+    marks = false, -- shows a list of your marks off ' and `
+    registers = false, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
     spelling = {
       enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
       suggestions = 20, -- how many suggestions should be shown in the list?
@@ -58,8 +61,7 @@ local setup = {
   ignore_missing = true, -- enable this to hide mappings for which you didn't specify a label
   hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " }, -- hide mapping boilerplate
   show_help = true, -- show help message on the command line when the popup is visible
-  triggers = "auto", -- automatically setup triggers
-  -- triggers = {"<leader>"} -- or specify a list manually
+  triggers = { "<leader>" },
   triggers_blacklist = {
     -- list of mode / prefixes that should never be hooked by WhichKey
     -- this is mostly relevant for key maps that start with a native binding
@@ -79,170 +81,42 @@ local leader_opts = {
 }
 
 local leader_mappings = {
+  [""] = {
+    S = { "<cmd>HopPattern<CR>", "Hop Word With Pattern" },
+    name = "Hop",
+    s = { "<cmd>HopPattern<CR>", "Hop Word With Pattern" },
+  },
+  ["["] = {
+    c = { "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", "Prev Hunk" },
+    name = "Backward Movements",
+  },
+  ["]"] = {
+    c = { "<cmd>lua require 'gitsigns'.next_hunk()<CR>", "Next Hunk" },
+    name = "Forward Movements",
+  },
   b = {
     b = {
       "<cmd>lua require('telescope.builtin').buffers()<CR>",
       "Show Buffers",
     },
-    -- d = {}, see Bclose
   },
-
-  -- TODO:
-  -- d = {
-  --   name = "Debug",
-  --   t = { "<cmd>lua require'dap'.toggle_breakpoint()<CR>", "Toggle Breakpoint" },
-  --   b = { "<cmd>lua require'dap'.step_back()<CR>", "Step Back" },
-  --   c = { "<cmd>lua require'dap'.continue()<CR>", "Continue" },
-  --   C = { "<cmd>lua require'dap'.run_to_cursor()<CR>", "Run To Cursor" },
-  --   d = { "<cmd>lua require'dap'.disconnect()<CR>", "Disconnect" },
-  --   g = { "<cmd>lua require'dap'.session()<CR>", "Get Session" },
-  --   i = { "<cmd>lua require'dap'.step_into()<CR>", "Step Into" },
-  --   o = { "<cmd>lua require'dap'.step_over()<CR>", "Step Over" },
-  --   u = { "<cmd>lua require'dap'.step_out()<CR>", "Step Out" },
-  --   p = { "<cmd>lua require'dap'.pause.toggle()<CR>", "Pause" },
-  --   r = { "<cmd>lua require'dap'.repl.toggle()<CR>", "Toggle Repl" },
-  --   s = { "<cmd>lua require'dap'.continue()<CR>", "Start" },
-  --   q = { "<cmd>lua require'dap'.close()<CR>", "Quit" },
-  --   l = { "<cmd>lua require'osv'.run_this()<CR>", "Debug Lua" },
-  -- },
-
-  ["["] = {
-    name = "Backward Movements",
-    c = { "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", "Prev Hunk" },
+  d = {
+    f = { "<cmd>lua require('utils.diff')()<CR>", "Diff With" },
   },
-
-  ["]"] = {
-    name = "Forward Movements",
-    c = { "<cmd>lua require 'gitsigns'.next_hunk()<CR>", "Next Hunk" },
-  },
-
-  -- f = {
-  --   name = "Find",
-  --   b = { "<cmd>Telescope git_branches<CR>", "Checkout branch" },
-  --   -- c = { "<cmd>Telescope colorscheme<CR>", "Colorscheme" },
-  --   f = {
-  --     [[<cmd>lua require('telescope.builtin').find_files()<CR>]],
-  --     "Find files",
-  --   },
-  --   F = {
-  --     "<cmd>lua require('telescope.builtin').find_files({no_ignore=true})<CR>",
-  --     "Find files but no ignore",
-  --   },
-  --   t = { "<cmd>Telescope live_grep theme=ivy<CR>", "Find Text" },
-  --   h = { "<cmd>Telescope help_tags<CR>", "Help" },
-  --   l = { "<cmd>Telescope resume<CR>", "Last Search" },
-  --   M = { "<cmd>Telescope man_pages<CR>", "Man Pages" },
-  --   r = { "<cmd>Telescope oldfiles<CR>", "Recent File" },
-  --   R = { "<cmd>Telescope registers<CR>", "Registers" },
-  --   k = { "<cmd>Telescope keymaps<CR>", "Keymaps" },
-  --   C = { "<cmd>Telescope commands<CR>", "Commands" },
-  -- },
-
   g = {
-    name = "Git",
-    f = { "<cmd>0Gclog<CR>", "File history" },
     L = { "", "Git Blame Information" },
-    l = { "<cmd>Gclog<CR>", "Git Log Information" },
-    o = { "<cmd>Telescope git_status<CR>", "Open changed file" },
     b = { "<cmd>Telescope git_branches<CR>", "Checkout branch" },
     c = { "<cmd>Telescope git_commits<CR>", "Checkout commit" },
+    f = { "<cmd>0Gclog<CR>", "File history" },
+    l = { "<cmd>Gclog<CR>", "Git Log Information" },
+    name = "Git",
+    o = { "<cmd>Telescope git_status<CR>", "Open changed file" },
   },
-
-  d = {
-    f = {
-      "<cmd>lua require('utils.diff')()<CR>",
-      "Diff With",
-    },
-  },
-
-  [""] = {
-    name = "Hop",
-    s = { "<cmd>HopPattern<CR>", "Hop Word With Pattern" },
-    S = { "<cmd>HopPattern<CR>", "Hop Word With Pattern" },
-  },
-
-  -- l = {
-  --   name = "LSP",
-  --   a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
-  --   d = {
-  --     "<cmd>Telescope lsp_document_diagnostics<CR>",
-  --     "Document Diagnostics",
-  --   },
-  --   w = {
-  --     "<cmd>Telescope lsp_workspace_diagnostics<CR>",
-  --     "Workspace Diagnostics",
-  --   },
-  --   f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format" },
-  --   i = { "<cmd>LspInfo<CR>", "Info" },
-  --   I = { "<cmd>LspInstallInfo<CR>", "Installer Info" },
-  --   l = { "<cmd>lua vim.lsp.codelens.run()<CR>", "CodeLens Action" },
-  --   q = { "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", "Quickfix" },
-  --   s = { "<cmd>Telescope lsp_document_symbols<CR>", "Document Symbols" },
-  --   S = {
-  --     "<cmd>Telescope lsp_dynamic_workspace_symbols<CR>",
-  --     "Workspace Symbols",
-  --   },
-  --   r = { '<cmd>lua require("renamer").rename()<CR>', "Rename" }
-  -- },
-
-  -- m = {
-  --   name = "Markdown",
-  --   p = { "<Plug>MarkdownPreview", "Preview Markdown" },
-  --   s = { "<Plug>MarkdownPreviewStop", "Stop Preview Markdown" }
-  -- },
-
-  -- p = {
-  --   name = "Packer",
-  --   c = { "<cmd>PackerCompile<CR>", "Compile" },
-  --   i = { "<cmd>PackerInstall<CR>", "Install" },
-  --   s = { "<cmd>PackerSync<CR>", "Sync" },
-  --   S = { "<cmd>PackerStatus<CR>", "Status" },
-  --   u = { "<cmd>PackerUpdate<CR>", "Update" },
-  -- },
-
-  -- r = {
-  --   name = "Code Runner",
-  --   r = { "<cmd>RunFile<CR>", "Run File" },
-  --   p = { "<cmd>RunProject<CR>", "Run Project" },
-  --   c = { "<cmd>RunClose<CR>", "Close" }
-  -- },
-
-  -- s = {
-  --   name = "Rust Tools",
-  --   r = { "<cmd>RustRunnables<CR>", "Runnables List" },
-  --   d = { "<cmd>RustDebuggables<CR>", "Debuggables List" },
-  --   e = { "<cmd>RustExpandMacro<CR>", "Expand Macro" },
-  --   j = { "<cmd>RustMoveItemDown<CR>", "Move Item Down" },
-  --   k = { "<cmd>RustMoveItemUp<CR>", "Move Item Up" },
-  --   K = { "<cmd>lua require('user.utils.rust-crate-doc')()<CR>", "Hover Me" },
-  --   R = { "<cmd>RustHoverRange<CR>", "Hover Range Me" },
-  --   o = { "<cmd>RustOpenCargo<CR>", "Open Cargo" },
-  --   l = { "<cmd>RustJoinLines<CR>", "Join Lines" },
-  --   v = { "<cmd>lua require('crates').show_versions_popup()<CR>", "Show Versions Popup" },
-  --   f = { "<cmd>lua require('crates').show_features_popup()<CR>", "Show Features Popup" },
-  --   D = { "<cmd>lua require('crates').show_dependencies_popup()<CR>", "Show Dependencies Popup" },
-  --   u = { "<cmd>lua require('crates').update_crate()<CR>", "Update Crate" },
-  --   U = { "<cmd>lua require('crates').update_all_crates()<CR>", "Update All Crates" },
-  --   p = { "<cmd>lua require('crates').upgrade_crate()<CR>", "Upgrade Crate" },
-  --   P = { "<cmd>lua require('crates').upgrade_all_crates()<CR>", "Upgrade All Crates" },
-  --   h = { "<cmd>lua require('crates').open_homepage()<CR>", "Open Homepage" }
-  -- },
-
-  -- t = {
-  --   name = "Terminal",
-  --   n = { "<cmd>lua _NODE_TOGGLE()<CR>", "Node" },
-  --   u = { "<cmd>lua _NCDU_TOGGLE()<CR>", "NCDU" },
-  --   t = { "<cmd>lua _HTOP_TOGGLE()<CR>", "Htop" },
-  --   p = { "<cmd>lua _PYTHON_TOGGLE()<CR>", "Python" },
-  --   f = { "<cmd>ToggleTerm direction=float<CR>", "Float" },
-  --   h = { "<cmd>ToggleTerm size=10 direction=horizontal<CR>", "Horizontal" },
-  --   v = { "<cmd>ToggleTerm size=80 direction=vertical<CR>", "Vertical" },
-  -- },
-
-  -- T = {
-  --   name = "Todo",
-  --   t = { "<cmd>TodoTelescope<CR>", "Show todos" },
-  -- },
+  mode = "n",
+  noremap = true,
+  nowait = true,
+  prefix = "<leader>",
+  silent = true,
 }
 
 which_key.setup(setup)

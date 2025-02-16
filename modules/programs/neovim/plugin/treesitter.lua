@@ -1,7 +1,4 @@
-local status_ok, configs = pcall(require, "nvim-treesitter.configs")
-if not status_ok then
-  return
-end
+local configs = require("nvim-treesitter.configs")
 
 vim.filetype.add({
   extension = {
@@ -14,7 +11,7 @@ vim.filetype.add({
   },
 })
 
-vim.opt.foldmethod = "expr"
+vim.opt.foldmethod = "manual"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
@@ -25,20 +22,7 @@ configs.setup({
   autopairs = { enable = true },
   highlight = {
     enable = true,
-    disable = function(lang, buf)
-      local langs_to_ignore = {
-        "terminal",
-        "toggleterm",
-        "graphql",
-      }
-
-      for _, lang_to_ignore in pairs(langs_to_ignore) do
-        if lang == lang_to_ignore then
-          return true
-        end
-      end
-      return false
-    end,
+    disable = { "terminal", "toggleterm", "graphql" },
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -48,11 +32,8 @@ configs.setup({
   textobjects = {
     select = {
       enable = true,
-      -- Automatically jump forward to textobj, similar to targets.vim
       lookahead = true,
-
       keymaps = {
-        -- You can use the capture groups defined in textobjects.scm
         ["al"] = "@loop.outer",
         ["il"] = "@loop.inner",
 
@@ -65,15 +46,11 @@ configs.setup({
         ["ac"] = "@class.outer",
         ["ic"] = "@class.inner",
       },
-      -- If you set this to `true` (default is `false`) then any textobject is
-      -- extended to include preceding xor succeeding whitespace. Succeeding
-      -- whitespace has priority in order to act similarly to eg the built-in
-      -- `ap`.
       include_surrounding_whitespace = false,
     },
     move = {
       enable = true,
-      set_jumps = true, -- whether to set jumps in the jumplist
+      set_jumps = true,
       -- goto_next_start = {
       --   ["]f"] = "@function.outer",
       -- },
@@ -89,7 +66,7 @@ configs.setup({
     },
   },
   playground = {
-    enable = true,
+    enable = false,
     disable = {},
     updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
     persist_queries = true, -- Whether the query persists across vim sessions
