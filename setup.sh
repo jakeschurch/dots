@@ -18,8 +18,8 @@ create_ccache_dir() {
 
 flake_args=('--accept-flake-config' "--extra-experimental-features" "nix-command flakes ca-derivations")
 
-if [[ "$*" -gt 0 ]]; then
-  flake_args+=("$*")
+if [[ "$#" -gt 0 ]]; then
+  flake_args+=($@)
 fi
 
 build_flake() {
