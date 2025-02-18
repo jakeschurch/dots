@@ -10,7 +10,7 @@
       inherit (pkgs) system;
     }
     // inputs;
-in {
+
   mkDarwinHome = user:
     inputs.darwin.lib.darwinSystem {
       inherit (pkgs) system;
@@ -24,16 +24,15 @@ in {
       modules = [
         {_module.args = specialArgs;}
         inputs.nix-index-database.darwinModules.nix-index
-        (import ./darwin-configuration.nix {inherit pkgs user;})
-        ./modules/homebrew.nix
-        ./nix.nix
+        (import ../darwin-configuration.nix {inherit pkgs user;})
+        ../modules/homebrew.nix
+        ../nix.nix
         inputs.home-manager.darwinModules.home-manager
-
         {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            users."${user}" = import ./home.nix;
+            users."${user}" = import ../home.nix;
           };
         }
       ];
@@ -44,8 +43,8 @@ in {
       inherit pkgs;
 
       modules = [
-        ./nix.nix
-        ./home.nix
+        ../nix.nix
+        ../home.nix
         inputs.nix-index-database.hmModules.nix-index
         (_: {
           environment.pathsToLink = ["/share/zsh"];
@@ -64,4 +63,10 @@ in {
           inherit user;
         };
     };
-}
+
+  mkHome = user:
+    if pkgs.stdenv.isLinux
+    then mkHmHome user
+    else mkDarwinHome user;
+in
+  mkHome

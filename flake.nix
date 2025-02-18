@@ -113,7 +113,12 @@
           basePkgs = system:
             import nixpkgs {
               inherit system;
-              config.allowUnfree = true;
+
+              config = {
+                allowUnfree = true;
+                cudaSupport = false;
+                allowBroken = true;
+              };
 
               allowUnfreePredicate = pkg:
                 builtins.elem (lib.getName pkg) [
@@ -141,11 +146,13 @@
               inherit pkgs system;
               inherit (inputs) nix-pre-commit-hooks;
             };
-        in rec {
-          pkgs = basePkgs system;
 
-          darwinConfigurations.curiosity = pkgs.lib.mkDarwinHome "jake";
-          homeConfigurations.apollo = pkgs.lib.mkHmHome "jake";
+          pkgs = basePkgs system;
+        in rec {
+          inherit (pkgs.lib) mkHome;
+
+          darwinConfigurations.curiosity = mkHome "jake";
+          homeConfigurations.apollo = mkHome "jake";
 
           packages.default =
             if pkgs.stdenv.isLinux
