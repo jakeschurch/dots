@@ -19,5 +19,6 @@ pkgs.stdenv.mkDerivation rec {
   unpackPhase = "true";
   meta = {
     inherit description;
+    mainProgram = pname;
   };
 }
