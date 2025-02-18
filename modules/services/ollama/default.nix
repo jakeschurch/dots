@@ -1,5 +1,10 @@
-{pkgs, ...}:
-with pkgs.lib; let
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
+with lib; let
   ollamaModels = [
     "codellama:13b-instruct"
   ];
@@ -22,7 +27,7 @@ in {
   launchd.agents.ollama-model-loader = mkIf (ollamaModels != [] && pkgs.stdenv.isDarwin) {
     enable = true;
     config = {
-      Program = getBin ollama-model-loader;
+      Program = getExe ollama-model-loader;
       EnvironmentVariables = {
         OLLAMA_MODELS = concatStringsSep " " ollamaModels;
         OLLAMA_PORT =
