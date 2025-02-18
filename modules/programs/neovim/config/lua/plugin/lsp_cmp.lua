@@ -1,5 +1,4 @@
 ---@diagnostic disable-next-line: unused-local
-local copilot_cmp = require("copilot_cmp").setup()
 local cmp = require("cmp")
 local compare = require("cmp.config.compare")
 local types = require("cmp.types")
@@ -130,7 +129,6 @@ cmp.setup({
     priority_weight = 2,
     -- https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/config/compare.lua
     comparators = {
-      require("copilot_cmp.comparators").prioritize,
 
       -- Below is the default comparator list and order for nvim-cmp
       cmp.config.compare.offset,
@@ -214,7 +212,6 @@ cmp.setup({
   },
 
   sources = cmp.config.sources({
-    { name = "copilot", group_index = 2 },
 
     { name = "nvim_lsp", group_index = 2 },
     { name = "nvim_lsp_signature_help" },
@@ -235,7 +232,6 @@ cmp.setup({
 
 cmp.setup.filetype("markdown", {
   sources = cmp.config.sources({
-    { name = "copilot" },
     { name = "luasnip" }, -- For luasnip users.
     { name = "buffer" },
     { name = "path" },
@@ -246,7 +242,6 @@ cmp.setup.filetype("markdown", {
 -- Set configuration for specific filetype.
 cmp.setup.filetype("gitcommit", {
   sources = cmp.config.sources({
-    { name = "copilot", group_index = 2 },
     { name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
     { name = "path" },
     { name = "emoji" },
