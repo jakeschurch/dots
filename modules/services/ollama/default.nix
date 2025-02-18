@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}:
+{pkgs, ...}:
 with pkgs.lib; let
   ollamaModels = [
     "codellama:13b-instruct"
