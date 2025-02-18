@@ -42,10 +42,10 @@ in [
   ccacheOverlay
   ccacheStdenvPkgs
   (
-    _final: prev: {
+    final: prev: {
       lib =
         prev.lib
-        // import ./lib.nix {
+        // import ./lib {
           inherit inputs;
           inherit (prev) pkgs;
         };
