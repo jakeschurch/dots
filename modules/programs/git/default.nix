@@ -40,6 +40,8 @@ in {
       fixup = "commit --fixup";
       noedit = "commit --amend --no-edit";
       lastupdated = "log -1 --format='%ad' --";
+      file-branches = "!f() { git log --all --branches --oneline --decorate -- \"$1\" | head -n 20; }; f";
+      file-stashes = "!f() { git stash list --format=\"%gd %s\" | awk '{print $1}' | xargs -I{} sh -c 'git show --name-only {} | grep -q \"$1\" && echo {}'; }; f";
       fp = "push --force-with-lease";
       grep = "grep --break --heading";
       hard = "reset --hard HEAD";

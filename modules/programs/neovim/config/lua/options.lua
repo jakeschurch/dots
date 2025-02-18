@@ -47,10 +47,9 @@ local options = {
   foldenable = false,
 
   timeout = true,
-  timeoutlen = 1000,
-  ttimeoutlen = 1000,
-  updatetime = 2000,
-  redrawtime = 2000,
+  timeoutlen = 350,
+  ttimeoutlen = 350,
+  redrawtime = 1000,
 
   scrolloff = 999,
   sidescroll = 5,
@@ -80,13 +79,9 @@ local options = {
   laststatus = 3,
 }
 
-vim.cmd([[ set nolist ]])
-
 vim.opt.mouse:append("a")
 vim.opt.shortmess:append("c")
 -- shortmess = "filnxtToOFIc",
-
-vim.opt.foldenable = false
 
 if vim.fn.executable("rg") == 1 then
   vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"

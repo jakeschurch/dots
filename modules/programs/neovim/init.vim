@@ -2,10 +2,10 @@ lua <<EOF
 
 vim.g.mapleader = " "
 
+require("autocommands")
+require("options")
 require("impatient")
 require("maps")
-require("options")
-require("autocommands")
 require("get_plugins")
 
 vim.cmd [[
@@ -37,8 +37,3 @@ function! Notes()
 endfunction
 
 nnoremap ]n :call Notes()<cr>
-
-function! GitStatus()
-  let [a,m,r] = GitGutterGetHunkSummary()
-  return printf('+%d ~%d -%d', a, m, r)
-endfunction

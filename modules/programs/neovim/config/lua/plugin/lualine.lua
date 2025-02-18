@@ -1,7 +1,5 @@
 local lualine = require("lualine")
 
-vim.api.nvim_set_hl(0, "Search", {})
-vim.api.nvim_set_hl(0, "CurSearch", {})
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
   if gitsigns then
@@ -18,7 +16,14 @@ lualine.setup({
     theme = "gruvbox",
     icons_enabled = true,
     globalstatus = true,
-    disabled_filetypes = { "startify", "dashboard", "alpha" },
+    disabled_filetypes = {
+      "startify",
+      "dashboard",
+      "alpha",
+      "terminal",
+      "toggleterm",
+      "Avante",
+    },
   },
   sections = {
     lualine_a = { "mode" },
