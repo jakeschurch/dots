@@ -10,8 +10,8 @@ if [ -z "$OLLAMA_PORT" ]; then
 fi
 
 # Check if OLLAMA_MODELS is set
-if [ -z "$OLLAMA_MODELS" ]; then
-  echo "Error: OLLAMA_MODELS is not set" >&2
+if [ -z "$OLLAMA_MODELS_STRINGIFIED" ]; then
+  echo "Error: no ollama models were not set" >&2
   exit 1
 fi
 
@@ -24,24 +24,26 @@ done
 # Debugging: Log environment variables
 env >/tmp/ollama-loader-env.txt
 
-# Debugging: Log the path to ollama
-which ollama >/tmp/ollama-loader-path.txt
-
 # Check if ollama is installed
 if ! command -v ollama &>/dev/null; then
+  echo "Error: ollama command not found" >/tmp/ollama-loader-path.txt
   echo "Error: ollama command not found" >&2
   exit 1
+else
+  # Debugging: Log the path to ollama
+  which ollama >/tmp/ollama-loader-path.txt
 fi
 
 # Define the models to download
-ollama_models=("$OLLAMA_MODELS")
-total=${#ollama_models[@]}
+OLLAMA_MODELS=("$")
+IFS=', ' read -r -a OLLAMA_MODELS <<<"$OLLAMA_MODELS_STRINGIFIED"
+total=${#OLLAMA_MODELS[@]}
 failed=0
 
 echo "Total models to download: $total" >>/tmp/ollama-loader.log
 
 # Download each model in parallel
-for model in "${ollama_models[@]}"; do
+for model in "${OLLAMA_MODELS[@]}"; do
   echo "Downloading model: $model" >>/tmp/ollama-loader.log
   ollama pull "$model" &
 done

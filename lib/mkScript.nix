@@ -6,19 +6,26 @@ pkgs: {
   nativeBuildInputs ? [],
   propagatedBuildInputs ? [],
   description ? null,
-}:
-pkgs.stdenv.mkDerivation rec {
-  inherit pname version src nativeBuildInputs buildInputs propagatedBuildInputs;
+}: let
+  propagatedBuildInputsPaths = pkgs.lib.concatStringsSep ":" (map pkgs.lib.getBin propagatedBuildInputs);
+in
+  pkgs.stdenv.mkDerivation {
+    inherit pname version src nativeBuildInputs propagatedBuildInputs;
 
-  installPhase = ''
-    mkdir -p $out/bin
-    cp ${src} $out/bin/${pname}
-    chmod +x $out/bin/${pname}
-  '';
+    buildInputs = buildInputs ++ [pkgs.makeWrapper];
 
-  unpackPhase = "true";
-  meta = {
-    inherit description;
-    mainProgram = pname;
-  };
-}
+    installPhase = ''
+        mkdir -p $out/bin
+        cp ${src} $out/bin/${pname}
+        chmod +x $out/bin/${pname}
+
+      wrapProgram $out/bin/${pname} \
+        --prefix PATH : "$PATH:${propagatedBuildInputsPaths}"
+    '';
+
+    unpackPhase = "true";
+    meta = {
+      inherit description;
+      mainProgram = pname;
+    };
+  }
