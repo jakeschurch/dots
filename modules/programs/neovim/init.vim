@@ -8,8 +8,8 @@ require("options")
 require("autocommands")
 require("get_plugins")
 
-
 vim.cmd [[
+
   let winfixbuf = "off"
 
   nmap <leader>gh :diffget //2<CR>

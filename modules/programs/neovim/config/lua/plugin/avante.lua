@@ -194,16 +194,28 @@ require("which-key").add({
   },
 })
 
+local ollama = require("plugin.ollama_local")
+
 avante.setup({
-  provider = "copilot",
-  auto_suggestions_provider = "copilot",
-  -- behaviour = {
-  --   auto_set_highlight_group = false,
-  --   auto_apply_diff_after_generation = false,
-  --   minimize_diff = true,
-  -- },
+  provider = "ollama_local",
+  auto_suggestions_provider = "ollama_local",
+  behaviour = {
+    auto_set_highlight_group = false,
+    auto_apply_diff_after_generation = false,
+    minimize_diff = true,
+    enable_token_counting = true,
+    enable_cursor_planning_mode = false,
+  },
+  cursor_applying_provider = "fastapply",
+  vendors = {
+    ollama_local = ollama,
+    fastapply = {
+      __inherited_from = "ollama_local",
+      model = "hf.co/Kortix/FastApply-7B-v1.0_GGUF:Q4_K_M",
+    },
+  },
   windows = {
-    position = "smart",
+    -- position = "smart",
     wrap = true,
     width = 40,
     sidebar_header = {

@@ -33,22 +33,35 @@
     VIMRUNTIME = "${pkgs.neovim-nightly}/share/nvim/runtime";
   };
 
-  xdg.configFile = with config.lib.file;
-  with config.home; {
-    "nvim/lua/plugin" = {
-      source = ./plugin;
-      recursive = true;
+  xdg.configFile = let
+    mapToXdgConfigFile = entryName: path: {
+      name = entryName;
+      value = {
+        source = path;
+        recursive = true;
+      };
     };
 
-    nvim = {
-      source = ./config;
-      recursive = true;
+    mapPairsToAttrs = fn: pairs: lib.mapAttrs' fn pairs;
+
+    bindings = {
+      "nvim/after" = ./config/after;
+      "nvim/lua" = ./config/lua;
+      "nvim/plugin" = ./config/plugin;
+      "nvim/snippets" = ./config/snippets;
     };
 
-    "nvim/spell/en.utf-8.add".source =
-      mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add";
+    inherit (config.lib.file) mkOutOfStoreSymlink;
+    inherit (config.home) homeDirectory;
 
-    "nvim/spell/en.utf-8.add.spl".source =
-      mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/programs/neovim/spell/en.utf-8.add.spl";
-  };
+    mkOutOfStoreNeovimSymlink = path: mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/programs/neovim/${path}";
+  in
+    (mapPairsToAttrs mapToXdgConfigFile bindings)
+    // {
+      "nvim/spell/en.utf-8.add".source =
+        mkOutOfStoreNeovimSymlink "spell/en.utf-8.add";
+
+      "nvim/spell/en.utf-8.add.spl".source =
+        mkOutOfStoreNeovimSymlink "spell/en.utf-8.add.spl";
+    };
 }
