@@ -13,6 +13,55 @@ hs.grid.setMargins("0x0")
 
 hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
 
+local function executeCommand(command)
+  local output, status, _, _ = hs.execute(command)
+  return output, status
+end
+
+local function getSystem()
+  return executeCommand("uname -s")
+end
+
+local function wrap(lambda)
+  return function()
+    lambda()
+  end
+end
+
+local powermenuBindings = {
+  [singleKey("l", "lockscreen")] = function()
+    local commandSet = {
+      Linux = wrap(executeCommand("locker.sh")),
+      Darwin = wrap(executeCommand("open -a ScreenSaverEngine")),
+    }
+    return commandSet[getSystem()]()
+  end,
+
+  [singleKey("p", "power off")] = function()
+    local commandSet = {
+      Linux = wrap(executeCommand("sudo poweroff")),
+      Darwin = wrap(executeCommand("sudo shutdown -h now")),
+    }
+    return commandSet[getSystem()]()
+  end,
+
+  [singleKey("r", "reboot")] = function()
+    local commandSet = {
+      Linux = wrap(executeCommand("sudo reboot")),
+      Darwin = wrap(executeCommand("sudo shutdown -r now")),
+    }
+    return commandSet[getSystem()]()
+  end,
+
+  [singleKey("s", "sleep")] = function()
+    local commandSet = {
+      Linux = wrap(executeCommand("systemctl suspend")),
+      Darwin = wrap(executeCommand("pmset sleepnow")),
+    }
+    return commandSet[getSystem()]()
+  end,
+}
+
 local appOpenBindings = {
   [singleKey("a", "around")] = function()
     hs.application.launchOrFocus("around")

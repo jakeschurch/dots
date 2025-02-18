@@ -106,6 +106,8 @@ return {
           library = {
             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+            ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = true,
+            [vim.fn.expand("~/.hammerspoon/Spoons")] = true,
           },
           maxPreload = 10000,
         },
