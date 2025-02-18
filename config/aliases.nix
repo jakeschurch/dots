@@ -11,7 +11,7 @@
   open-resume = "zathura ~/Projects/resume/Schurch-Jake-2024-Resume.pdf &";
   nix-setup = "~/.dots/./setup.sh";
   # docker = "colima";
-  # ssh = "mosh";
+  ssh = "ssh-wrapper";
   ap = "ansible-playbook";
   cat = "bat";
   dc = "docker compose";
@@ -21,8 +21,8 @@
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   vi = "nvim";
-  nvim = "nvim-open";
-  n = "nvim-open";
+  nvim = "nvim-wrapper";
+  n = "nvim-wrapper";
   # vim = "nvim";
 
   r = "ranger";
