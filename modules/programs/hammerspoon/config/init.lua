@@ -62,6 +62,12 @@ local powermenuBindings = {
   end,
 }
 
+hs.hotkey.bind(
+  { MOD },
+  "p",
+  spoon.RecursiveBinder.recursiveBind(powermenuBindings)
+)
+
 local appOpenBindings = {
   [singleKey("a", "around")] = function()
     hs.application.launchOrFocus("around")
