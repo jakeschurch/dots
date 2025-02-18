@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{pkgs, ...}:
 with pkgs; let
   parse-aws-config = lib.mkScript {
     pname = "parse_aws_config";

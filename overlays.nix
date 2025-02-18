@@ -42,7 +42,7 @@ in [
   ccacheOverlay
   ccacheStdenvPkgs
   (
-    final: prev: {
+    _final: prev: {
       lib =
         prev.lib
         // import ./lib {
