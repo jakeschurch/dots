@@ -1,5 +1,5 @@
 require("render-markdown").setup({
-  file_types = { "markdown", "vimwiki" },
+  file_types = { "markdown", "vimwiki", "Avante" },
   quote = {
     enabled = true,
     repeat_linebreak = true,

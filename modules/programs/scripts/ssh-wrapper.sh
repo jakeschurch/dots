@@ -3,8 +3,8 @@
 host="$1"
 shift
 
-if command -v mosh &>/dev/null && mosh --ssh="ssh $host $*" -- true &>/dev/null; then
-  exec mosh --ssh="ssh $host $*"
+if command -v mosh &>/dev/null && mosh --ssh="ssh $host" "$@" -- true &>/dev/null; then
+  exec mosh --ssh="ssh $host" "$@"
 else
-  exec ssh "$host $*"
+  exec ssh "$host" "$@"
 fi

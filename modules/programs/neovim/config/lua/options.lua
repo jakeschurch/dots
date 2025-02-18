@@ -77,7 +77,7 @@ local options = {
     foldsep = " ",
     foldclose = "",
   },
-  laststatus = 1,
+  laststatus = 3,
 }
 
 vim.cmd([[ set nolist ]])

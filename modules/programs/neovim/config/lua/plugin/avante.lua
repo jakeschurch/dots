@@ -2,6 +2,15 @@ require("avante_lib").load()
 
 local avante = require("avante")
 
+-- local llm_tools = require("avante.llm_tools")
+-- for _, tool in pairs(llm_tools.tools) do
+--   if tool.name == "search" then
+--     tool.name = "local_search"
+--   end
+-- end
+-- ---@diagnostic disable-next-line: inject-field
+-- llm_tools.tools.local_search = llm_tools.search
+
 local prefill_edit_window = function(request)
   require("avante.api").edit()
   local code_bufnr = vim.api.nvim_get_current_buf()
@@ -23,7 +32,7 @@ end
 
 -- NOTE: most templates are inspired from ChatGPT.nvim -> chatgpt-actions.json
 local avante_grammar_correction =
-  "Correct the text to standard English, but keep any code blocks inside intact."
+"Correct the text to standard English, but keep any code blocks inside intact."
 local avante_keywords = "Extract the main keywords from the following text"
 local avante_code_readability_analysis = [[
   You must identify any readability issues in the code snippet.
@@ -44,10 +53,10 @@ local avante_code_readability_analysis = [[
 local avante_optimize_code = "Optimize the following code"
 local avante_summarize = "Summarize the following text"
 local avante_translate =
-  "Translate this into Chinese, but keep any code blocks inside intact"
+"Translate this into Chinese, but keep any code blocks inside intact"
 local avante_explain_code = "Explain the following code"
 local avante_complete_code = "Complete the following codes written in "
-  .. vim.bo.filetype
+    .. vim.bo.filetype
 local avante_add_docstring = "Add docstring to the following codes"
 local avante_fix_bugs = "Fix the bugs inside the following codes if any"
 local avante_add_tests = "Implement tests for the following code"
@@ -139,7 +148,7 @@ require("which-key").add({
 })
 
 require("which-key").add({
-  { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "Avante" },
   {
     mode = { "v" },
     {
@@ -198,15 +207,15 @@ local ollama = require("plugin.ollama_local")
 
 avante.setup({
   provider = "ollama_local",
+  hints = { enabled = true },
+  debug = false,
   auto_suggestions_provider = "ollama_local",
   behaviour = {
-    auto_set_highlight_group = false,
+    auto_suggestions = true,
+    auto_set_highlight_group = true,
     auto_apply_diff_after_generation = false,
-    minimize_diff = true,
-    enable_token_counting = true,
-    enable_cursor_planning_mode = false,
+    minimize_diff = false,
   },
-  cursor_applying_provider = "fastapply",
   vendors = {
     ollama_local = ollama,
     fastapply = {
@@ -215,7 +224,6 @@ avante.setup({
     },
   },
   windows = {
-    -- position = "smart",
     wrap = true,
     width = 40,
     sidebar_header = {
@@ -224,14 +232,10 @@ avante.setup({
     ask = {
       floating = true,
       start_insert = true,
+      focus_on_apply = "ours",
     },
     input = {
       height = 3,
-    },
-  },
-  suggestion = {
-    keymap = {
-      accept = false,
     },
   },
   file_selector = {

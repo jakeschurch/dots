@@ -6,7 +6,8 @@
 }:
 with lib; let
   ollamaModels = [
-    "codellama:13b-instruct"
+    "codellama:7b"
+    "qwen2.5-coder:7b"
     "hf.co/Kortix/FastApply-7B-v1.0_GGUF:Q4_K_M"
   ];
 
@@ -43,7 +44,8 @@ in {
         SuccessfulExit = false;
       };
       ProcessType = "Background";
-      StartInterval = 10;
+      RunAtLoad = true;
+      StartInterval = 0;
     };
   };
 }

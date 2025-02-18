@@ -22,7 +22,7 @@ configs.setup({
   autopairs = { enable = true },
   highlight = {
     enable = true,
-    disable = { "terminal", "toggleterm", "graphql" },
+    disable = { "terminal", "toggleterm", "graphql", "Avante" },
     additional_vim_regex_highlighting = false,
   },
   indent = {

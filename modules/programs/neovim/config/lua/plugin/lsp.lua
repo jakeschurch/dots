@@ -22,7 +22,7 @@ vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 
 local lspconfig_defaults = lsp_config.util.default_config
 lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-  "force",
+  "keep",
   lspconfig_defaults,
   vim.lsp.protocol.make_client_capabilities(),
   require("cmp_nvim_lsp").default_capabilities(),
@@ -34,13 +34,13 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
 )
 
 vim.diagnostic.config({
-  virtual_text = true, -- Enable virtual text for diagnostics
-  underline = true, -- Underline the text with diagnostics
+  virtual_text = true,      -- Enable virtual text for diagnostics
+  underline = true,         -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
-  severity_sort = true, -- Sort diagnostics by severity
+  severity_sort = true,     -- Sort diagnostics by severity
   float = {
-    show_header = true, -- Show a header in the floating window
-    border = "rounded", -- Rounded border for floating windows
+    show_header = true,     -- Show a header in the floating window
+    border = "rounded",     -- Rounded border for floating windows
   },
   signs = {
     severity = {
@@ -95,12 +95,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
-  if client.offset_encoding == nil then
-    client.offset_encoding = "utf-8"
-  end
-
   if
-    client.supports_method and client:supports_method("textDocument/codeLens")
+      client.supports_method and client:supports_method("textDocument/codeLens")
   then
     virtualtypes.on_attach(client, bufnr)
   end
@@ -112,28 +108,30 @@ function lsp.common_on_attach(client, bufnr)
   lsp_status.on_attach(client, bufnr)
 end
 
-for server, config in pairs(require("plugins.lsp_servers")) do
+for server, config in pairs(require("plugin.lsp_servers")) do
   local custom_on_attach = config.on_attach
 
   config.on_attach = function(client, bufnr)
-    lsp.common_on_attach(client, bufnr)
-
-    config.capabilities = vim.tbl_deep_extend(
-      "force",
-      lspconfig_defaults.capabilities,
-      { offsetEncoding = { "utf-8" } }
-    )
-
     if custom_on_attach then
       custom_on_attach(client, bufnr)
     end
+
+    lsp.common_on_attach(client, bufnr)
   end
 
+  config.capabilities = vim.tbl_deep_extend(
+    "keep",
+    lsp_config.util.default_config.capabilities or {},
+    {
+      offsetEncoding = config.offsetEncoding or { "utf-8" },
+    }
+  )
+
   config["root_dir"] = config["root_dir"]
-    or function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(".git")(fname) or nil
-    end
+      or function(fname)
+        local util = require("lspconfig.util")
+        return util.root_pattern(".git")(fname) or nil
+      end
 
   lsp_config[server].setup(config)
 end
