@@ -7,7 +7,7 @@ local fonts = {
   "Noto Color Emoji",
 }
 
-return {
+local config = {
   keys = {
     {
       key = "r",
@@ -50,7 +50,7 @@ return {
       mods = "ALT",
       action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }),
     },
-    { key = "Space", mods = "ALT|SHIFT", action = "QuickSelect" },
+    -- { key = "Space", mods = "ALT|SHIFT", action = "QuickSelect" },
     {
       key = "q",
       mods = "ALT",
@@ -93,13 +93,14 @@ return {
     { key = "3", mods = "ALT", action = wezterm.action({ ActivateTab = 2 }) },
     { key = "4", mods = "ALT", action = wezterm.action({ ActivateTab = 3 }) },
     { key = "5", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
-    { key = "6", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
-    { key = "7", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
-    { key = "8", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
-    { key = "9", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
+    { key = "6", mods = "ALT", action = wezterm.action({ ActivateTab = 5 }) },
+    { key = "7", mods = "ALT", action = wezterm.action({ ActivateTab = 6 }) },
+    { key = "8", mods = "ALT", action = wezterm.action({ ActivateTab = 7 }) },
+    { key = "9", mods = "ALT", action = wezterm.action({ ActivateTab = 8 }) },
   },
-
   color_scheme = "Gruvbox dark, soft (base16)",
+  freetype_load_target = "Light",
+  font_shaper = "Harfbuzz",
   font = wezterm.font_with_fallback(fonts),
   font_size = 14.0,
   dpi = 96,
@@ -110,6 +111,7 @@ return {
   tab_bar_at_bottom = true,
   hide_tab_bar_if_only_one_tab = true,
   use_fancy_tab_bar = true,
+  harfbuzz_features = { "calt=0" },
   window_padding = {
     left = 8,
     right = 8,
@@ -198,3 +200,10 @@ return {
     },
   },
 }
+
+-- config.set_environment_variables = {
+--   TERMINFO_DIRS = '/Users/jake/.nix-profile/share/terminfo',
+-- }
+config.term = "wezterm"
+
+return config

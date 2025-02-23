@@ -8,7 +8,6 @@ pkgs: let
   #     sha256 = "sha256-REFF+4U0AjNwiK1ecbDPwF7C1jKRzITV29aolx+HI24=";
   #   };
   # });
-
   custom-sourced-nvim-plugins = let
     pluginGit = {
       rev,
@@ -44,7 +43,6 @@ pkgs: let
       oil-nvim
       cmp_luasnip
       nvim-dap-ui
-      cmp-treesitter
 
       nvim-code-action-menu
 
@@ -57,8 +55,6 @@ pkgs: let
       gitlinker-nvim
 
       nvim-dap-ui
-
-      cmp-treesitter
 
       friendly-snippets
 
@@ -74,9 +70,6 @@ pkgs: let
 
       playground
 
-      nvim-treesitter-textobjects
-
-      nvim-treesitter
       lsp_signature-nvim
 
       telescope-nvim
@@ -146,7 +139,6 @@ pkgs: let
 
       toggleterm-nvim
 
-      nvim-treesitter-textsubjects
       render-markdown-nvim
       luasnip
       nvim-ts-context-commentstring
@@ -155,6 +147,10 @@ pkgs: let
       trouble-nvim
     ]
     ++ (with pkgs.unstable.vimPlugins; [
+      nvim-treesitter-textobjects
+      cmp-treesitter
+      nvim-treesitter-textsubjects
+      nvim-treesitter
       plenary-nvim
       dressing-nvim
       nui-nvim

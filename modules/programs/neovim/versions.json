@@ -47,12 +47,5 @@
     "rev": "6557f20e631d2e9b2a9fd27a5c045d701a3a292c",
     "ref": "main",
     "sha256": "1afs3ydpa36iq3dm86ffy27jgk8ddg1gp177pwxmnvfbnwjcgpki"
-  },
-  {
-    "owner": "soywod",
-    "repo": "himalaya",
-    "rev": "55bd9247e778b26ef7570c9b4efa73d3c07823cd",
-    "ref": "master",
-    "sha256": "0rk2xr1c7nij98ig19i7b0i7gvmiwb8vl7bd255vnd313z6c37hz"
   }
 ]

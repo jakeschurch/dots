@@ -8,6 +8,9 @@
   sed = "${pkgs.gnused}/bin/sed";
   gsed = "${pkgs.gnused}/bin/sed";
 
+  catimg = "wezterm imgcat";
+  imgcat = "wezterm imgcat";
+
   open-resume = "zathura ~/Projects/resume/Schurch-Jake-2024-Resume.pdf &";
   nix-setup = "~/.dots/./setup.sh";
   # docker = "colima";

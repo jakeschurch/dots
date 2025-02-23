@@ -14,9 +14,9 @@ local lsp_signature_config = {
 local lsp = {}
 local lsp_config = require("lspconfig")
 local virtualtypes = require("virtualtypes")
-local lsp_status = require("lsp-status")
+-- local lsp_status = require("lsp-status")
 
-lsp_status.register_progress()
+-- lsp_status.register_progress()
 
 vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 
@@ -26,7 +26,6 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
   lspconfig_defaults,
   vim.lsp.protocol.make_client_capabilities(),
   require("cmp_nvim_lsp").default_capabilities(),
-  lsp_status.capabilities,
   lspconfig_defaults.capabilities,
   -- File watching is disabled by default for neovim.
   -- See: https://github.com/neovim/neovim/pull/22405
@@ -34,13 +33,13 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
 )
 
 vim.diagnostic.config({
-  virtual_text = true,      -- Enable virtual text for diagnostics
-  underline = true,         -- Underline the text with diagnostics
+  virtual_text = true, -- Enable virtual text for diagnostics
+  underline = true, -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
-  severity_sort = true,     -- Sort diagnostics by severity
+  severity_sort = true, -- Sort diagnostics by severity
   float = {
-    show_header = true,     -- Show a header in the floating window
-    border = "rounded",     -- Rounded border for floating windows
+    show_header = true, -- Show a header in the floating window
+    border = "rounded", -- Rounded border for floating windows
   },
   signs = {
     severity = {
@@ -96,7 +95,7 @@ function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   if
-      client.supports_method and client:supports_method("textDocument/codeLens")
+    client.supports_method and client:supports_method("textDocument/codeLens")
   then
     virtualtypes.on_attach(client, bufnr)
   end
@@ -105,7 +104,7 @@ function lsp.common_on_attach(client, bufnr)
     lsp_signature.on_attach(lsp_signature_config, bufnr)
   end
 
-  lsp_status.on_attach(client, bufnr)
+  -- lsp_status.on_attach(client, bufnr)
 end
 
 for server, config in pairs(require("plugin.lsp_servers")) do
@@ -128,10 +127,10 @@ for server, config in pairs(require("plugin.lsp_servers")) do
   )
 
   config["root_dir"] = config["root_dir"]
-      or function(fname)
-        local util = require("lspconfig.util")
-        return util.root_pattern(".git")(fname) or nil
-      end
+    or function(fname)
+      local util = require("lspconfig.util")
+      return util.root_pattern(".git")(fname) or nil
+    end
 
   lsp_config[server].setup(config)
 end

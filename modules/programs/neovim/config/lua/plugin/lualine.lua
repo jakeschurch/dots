@@ -42,7 +42,7 @@ lualine.setup({
       { "diff", source = diff_source },
       {
         "diagnostics",
-        require("lsp-status").diagnostics,
+        -- require("lsp-status").diagnostics,
       },
     },
     lualine_c = {

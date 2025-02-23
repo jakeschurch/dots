@@ -132,6 +132,9 @@
               packageOverrides = _pkgs: {
                 inherit (inputs) lexical-lsp;
                 inherit (nixpkgs) narHash;
+                terragrunt = pkgs.terragrunt.overrideAttrs (_oldAttrs: {
+                  version = "0.69.1";
+                });
               };
 
               overlays = import ./overlays.nix {

@@ -74,7 +74,10 @@ return {
   -- REVIEW tailwindcss = {},
   hls = {},
   dockerls = {},
-  bashls = {},
+  bashls = {
+    cmd = { "/etc/profiles/per-user/jake/bin/bash-language-server", "start" },
+    filetypes = { "sh", "bash" },
+  },
   terraformls = {},
   gopls = {
     settings = {

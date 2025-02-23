@@ -23,10 +23,10 @@ configs.setup({
   highlight = {
     enable = true,
     disable = { "terminal", "toggleterm", "graphql", "Avante" },
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = true,
   },
   indent = {
-    enable = true,
+    enable = false,
     disable = { "json", "toggleterm", "terminal" },
   },
   textobjects = {

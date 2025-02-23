@@ -3,18 +3,21 @@
   pkgs,
   config,
   ...
-}: {
-  home.packages = let
+}: let
+  extraPkgs = let
     getPkgs = pkgs': lib.flatten (lib.attrValues pkgs');
     pkgs' = import ./dev-packages.nix pkgs;
   in
     getPkgs pkgs';
+in {
+  home.packages = extraPkgs;
 
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
     defaultEditor = true;
     extraConfig = builtins.readFile ./init.vim;
+    extraPackages = extraPkgs;
 
     viAlias = true;
     vimAlias = true;
@@ -59,9 +62,9 @@
     (mapPairsToAttrs mapToXdgConfigFile bindings)
     // {
       "nvim/spell/en.utf-8.add".source =
-        mkOutOfStoreNeovimSymlink "spell/en.utf-8.add";
+        mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add";
 
       "nvim/spell/en.utf-8.add.spl".source =
-        mkOutOfStoreNeovimSymlink "spell/en.utf-8.add.spl";
+        mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add.spl";
     };
 }

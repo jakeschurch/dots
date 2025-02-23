@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 
 FLAKE_DIR=~/.dots
+NIX_CONFIG=/etc/nix/nix.conf
 
 create_ccache_dir() {
   if [ ! -d /nix/var/cache/ccache ]; then
@@ -16,10 +17,52 @@ create_ccache_dir() {
   fi
 }
 
+update_nix_config() {
+  local tmp="$(mktemp)"
+
+  cat <<EOF >"$tmp"
+
+always-allow-substitutes = true
+builders-use-substitutes = true
+cores = 0
+download-attempts = 3
+experimental-features = nix-command flakes ca-derivations auto-allocate-uids
+extra-nix-path = nixpkgs=flake:nixpkgs
+fsync-metadata = false
+http-connections = 0
+keep-derivations = true
+keep-outputs = true
+max-jobs = auto
+max-substitution-jobs = 0
+preallocate-contents = true
+pure-eval = true
+# sandbox = false
+substitute = true
+substituters = https://nix-community.cachix.org?priority=1 https://cache.lix.systems?priority=2 https://cache.nixos.org?priority=3
+trusted-public-keys = cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+trusted-users = root jake @wheel
+warn-dirty = false
+
+!include nix.custom.conf
+EOF
+
+  if sudo diff $NIX_CONFIG "$tmp" &>/dev/null; then
+
+    sudo mv $NIX_CONFIG /etc/nix/nix.conf.bak
+    sudo cp "$tmp" $NIX_CONFIG
+
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      sudo launchctl kickstart -k system/org.nixos.nix-daemon
+    fi
+  fi
+
+  rm "$tmp"
+}
+
 flake_args=('--accept-flake-config' "--extra-experimental-features" "nix-command flakes ca-derivations")
 
 if [[ "$#" -gt 0 ]]; then
-  flake_args+=($@)
+  flake_args+=("$@")
 fi
 
 build_flake() {
@@ -35,4 +78,5 @@ build_flake() {
     sudo "$FLAKE_DIR"/result/activate
 }
 
+update_nix_config
 build_flake "$@"

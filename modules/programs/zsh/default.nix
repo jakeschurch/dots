@@ -18,6 +18,42 @@
       ".cache/zsh/completions/_command-not-found" = {
         source = "${pkgs.nix-index}/etc/profile.d/command-not-found.sh";
       };
+
+      ".zsh_lazy" = {
+        text = ''
+
+          # Keybindings
+          autoload -U up-line-or-beginning-search
+          autoload -U down-line-or-beginning-search
+          zle -N up-line-or-beginning-search
+          zle -N down-line-or-beginning-search
+
+          bindkey "^[[A" up-line-or-search     # Up arrow
+          bindkey '^I' expand-or-complete      # Tab completion
+
+          # Vicmd edit line with 'v'
+          autoload -z edit-command-line
+          zle -N edit-command-line
+          bindkey -M vicmd v edit-command-line
+
+          # Autopair from zplug
+          autopair-init
+
+          # Lazy-load Oh-My-Zsh plugins (if not already loaded)
+          if [[ -z "$OMZ_LOADED" ]]; then
+            source $ZSH/oh-my-zsh.sh
+            export OMZ_LOADED=1
+          fi
+
+          # Lazy-load zplug plugins
+          if [[ -z "$ZPLUG_LOADED" ]]; then
+            source ~/.zplug/init.zsh
+            zplug load
+            export ZPLUG_LOADED=1
+          fi
+
+        '';
+      };
     };
 in {
   home.file = homeFileReferences;
@@ -28,15 +64,15 @@ in {
     enableCompletion = lib.mkForce true;
     syntaxHighlighting = {
       enable = true;
-      highlighters = ["brackets"];
+      highlighters = ["main" "brackets"];
     };
     autosuggestion.enable = true;
     initExtraBeforeCompInit = ''
       export ZSH_COMPDUMP=~/.zcompdump
-      fpath+=("${config.home.profileDirectory}/share/zsh/site-functions" \
-              "~/.cache/zsh/completions" \
-              "${config.home.profileDirectory}/share/zsh/$ZSH_VERSION/functions" \
-              "${config.home.profileDirectory}/share/zsh/vendor-completions")
+      fpath+=(
+        ~/.cache/zsh/completions
+        "${config.home.profileDirectory}/share/zsh/site-functions"
+      )
     '';
     autocd = true;
     history = {
@@ -51,8 +87,13 @@ in {
     '';
     initExtra = ''
       autoload -Uz compinit
-      compinit -C
+      if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+        compinit -i -C
+      else
+        compinit -i
+      fi
 
+      # Custom cd function
       function cd() {
         # Check if the argument is a file (not a directory)
         if [[ -f "$1" ]]; then
@@ -64,38 +105,27 @@ in {
         fi
       }
 
-      # Keybindings
-      autoload -U up-line-or-beginning-search
-      autoload -U down-line-or-beginning-search
-      zle -N up-line-or-beginning-search
-      zle -N down-line-or-beginning-search
+       # MOTD (Message of the Day)
+      if [[ ! -f ~/.motd_cache || $(\find ~/.motd_cache -mtime +1) ]]; then
+        motd > ~/.motd_cache
+      fi
+      \cat ~/.motd_cache
 
-      bindkey "^[[A" up-line-or-search     # Up arrow
-      bindkey '^I' expand-or-complete     # Tab completion
-
-      # Vicmd edit line with 'v'
-      autoload -z edit-command-line
-      zle -N edit-command-line
-      bindkey -M vicmd v edit-command-line
-
-      # Autopair from zplug
-      autopair-init
-
-      motd
+      # Lazy-load functions and plugins
+      zsh-defer source ~/.zshrc_lazy
     '';
     zplug = {
       enable = true;
       plugins = [
         {name = "hlissner/zsh-autopair";}
         {name = "ptavares/zsh-direnv";}
+        {name = "romkatv/zsh-defer";}
       ];
     };
     oh-my-zsh = {
       enable = true;
       plugins = [
-        "fzf"
         "git"
-        "history-substring-search"
         "vi-mode"
       ];
     };

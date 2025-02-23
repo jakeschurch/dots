@@ -25,9 +25,10 @@ in {
         # latex
         # texlive.combined.scheme-medium
         _1password-cli
-        gh
 
-        catimg
+        sshuttle
+
+        chafa
         act
 
         gnused
@@ -145,10 +146,89 @@ in {
   programs = {
     zathura.enable = true;
 
+    gh.enable = true;
+    gh-dash = {
+      enable = true;
+      settings = {
+        prSections = [
+          {
+            title = "FG PRs";
+            filters = "is:open author:@me org:fieldguide draft:false";
+          }
+        ];
+      };
+    };
+
     command-not-found.enable = false;
     nix-index.enable = true;
     info.enable = true;
-    man.enable = true;
+    man = {
+      enable = true;
+      generateCaches = true;
+    };
+
+    nix-your-shell = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    readline = {
+      enable = true;
+
+      extraConfig = ''
+          set editing-mode vi
+          set convert-meta on
+          set show-all-if-ambiguous on
+          set horizontal-scroll-mode Off
+          set bell-style none
+          set keymap vi-command
+
+          # Color files by types
+          # Note that this may cause completion text blink in some terminals (e.g. xterm).
+          set colored-stats On
+
+          # Append char to indicate type
+          set visible-stats On
+
+          # Mark symlinked directories
+          set mark-symlinked-directories On
+
+          # Color the common prefix
+          set colored-completion-prefix On
+
+          # Color the common prefix in menu-complete
+          set menu-complete-display-prefix On
+
+        # Enable case-insensitive completion
+        set completion-ignore-case On
+
+        # Enable incremental searching (like in vim)
+        set show-mode-in-prompt On
+
+        # Bind 'Ctrl-r' to search history incrementally (like in vim)
+        "\C-r": reverse-search-history
+
+        # Bind 'Ctrl-f' to open the current line in an editor (like in vim)
+        "\C-f": edit-and-execute-command
+
+
+        "k": history-search-backward
+        "j": history-search-forward
+
+        # Bind 'h' and 'l' to move left and right in command mode
+        "h": backward-char
+        "l": forward-char
+
+        # Bind '/' to incremental search forward
+        "/": history-search-forward
+
+        # Bind '?' to incremental search backward
+        "?": history-search-backward
+
+        # Bind 'Ctrl-l' to clear the screen (like in vim)
+        "\C-l": clear-screen
+      '';
+    };
 
     bash = {
       enable = true;

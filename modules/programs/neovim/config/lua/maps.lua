@@ -28,6 +28,11 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Map <Esc> to itself with feedkeys for immediate recognition
+vim.keymap.set("i", "<Esc>", function()
+  return vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+end, { expr = true })
+
 function ToggleQuickFix()
   local qf_exists = false
   -- Check if the quickfix window is open

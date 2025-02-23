@@ -118,6 +118,36 @@ vim.keymap.set({ "n", "v" }, "<space>h", function()
   )
 end)
 
--- vim.cmd(
---   'autocmd TermEnter term://*toggleterm#* tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>'
--- )
+-- Save the original value of ttimeoutlen
+local original_ttimeoutlen = vim.o.ttimeoutlen
+
+-- Set ttimeoutlen to 500 when entering a terminal buffer
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.o.ttimeoutlen = 500
+  end,
+})
+
+-- Reset ttimeoutlen to its original value when leaving a terminal buffer
+vim.api.nvim_create_autocmd("TermClose", {
+  pattern = "*",
+  callback = function()
+    vim.o.ttimeoutlen = original_ttimeoutlen
+  end,
+})
+
+-- Optional: Handle toggleterm.nvim
+vim.api.nvim_create_autocmd("TermEnter", {
+  pattern = "*",
+  callback = function()
+    vim.o.ttimeoutlen = 500
+  end,
+})
+
+vim.api.nvim_create_autocmd("TermLeave", {
+  pattern = "*",
+  callback = function()
+    vim.o.ttimeoutlen = original_ttimeoutlen
+  end,
+})

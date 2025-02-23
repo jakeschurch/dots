@@ -1,8 +1,7 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    wezterm
-  ];
-  home.file.".wezterm.lua" = {
-    source = ./wezterm.lua;
+{ ...}: {
+  programs.wezterm = {
+    enable = true;
+    enableZshIntegration = true;
+    extraConfig = builtins.readFile ./wezterm.lua;
   };
 }

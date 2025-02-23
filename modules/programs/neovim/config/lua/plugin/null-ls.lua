@@ -8,9 +8,9 @@ null_ls.setup({
     require("none-ls.formatting.trim_newlines"),
     require("none-ls.formatting.trim_whitespace"),
 
-    --	-- Python
-    null_ls.builtins.formatting.black,
+    -- Python
     null_ls.builtins.formatting.isort,
+    null_ls.builtins.formatting.black,
     null_ls.builtins.diagnostics.pylint.with({
       extra_args = {
         "--rcfile",
@@ -33,12 +33,9 @@ null_ls.setup({
     null_ls.builtins.diagnostics.mypy,
 
     -- Shell
-    null_ls.builtins.formatting.shfmt.with({
-      extra_args = { "-i", "2", "-ci" },
+    null_ls.builtins.formatting.shellharden.with({
+      filetypes = { "sh", "bash" },
     }),
-    null_ls.builtins.formatting.shellharden,
-    require("none-ls-shellcheck.diagnostics"),
-    require("none-ls-shellcheck.code_actions"),
 
     -- JavaScript/TypeScript
     null_ls.builtins.formatting.prettier.with({
