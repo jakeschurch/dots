@@ -25,5 +25,6 @@ end)
 
 hs.hotkey.bind({ leaderKey }, "r", function()
   hs.reload()
-  hs.alert.show("hs config reloaded")
 end)
+
+hs.alert.show("hs config reloaded")

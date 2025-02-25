@@ -7,8 +7,6 @@
   shellAliases = import ./../config/aliases.nix {inherit pkgs;};
   concatSessionList = builtins.concatStringsSep ":";
 in {
-  # home.file."/Documents/wiki".source = "${homeDir}/Documents/nas/wiki";
-
   home.file.bin = {
     source = ../bin;
     recursive = true;
@@ -47,6 +45,7 @@ in {
       ];
 
     sessionVariables = {
+      NIX_CONFIG = "/etc/nix/nix.conf";
       TERM = "wezterm";
       NIX_PROFILES = config.home.profileDirectory;
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
@@ -62,6 +61,7 @@ in {
         "history"
         "cd *"
         "z *"
+        "rm *"
       ];
 
       LANG = "en_US.UTF-8";

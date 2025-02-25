@@ -23,6 +23,7 @@ lualine.setup({
       "terminal",
       "toggleterm",
       "Avante",
+      "fugitive",
     },
   },
   sections = {

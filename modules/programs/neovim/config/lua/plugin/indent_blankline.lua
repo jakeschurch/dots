@@ -24,6 +24,7 @@ require("ibl").setup({
       "startify",
       "txt",
       "undotree",
+      "Avante",
     },
     buftypes = { "terminal", "nofile", "prompt", "virtual_text" },
   },

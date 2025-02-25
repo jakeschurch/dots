@@ -161,8 +161,9 @@ hs.window.focus = {
   end,
 }
 
-hs.window.action = {
+local originalWindowFrames = {}
 
+hs.window.action = {
   move = function(screenNum)
     return hs.screen.withFocusedWindow(function(win)
       win:moveToScreen(hs.screen.find(screenNum))
@@ -171,7 +172,24 @@ hs.window.action = {
 
   toggleFullscreen = function()
     return hs.screen.withFocusedWindow(function(win)
-      win:toggleFullscreen()
+      if not win then
+        return
+      end
+
+      local winID = win:id()
+
+      -- If this window has been saved (i.e., it was toggled before)
+      if originalWindowFrames[winID] then
+        -- If it was fullscreen, restore the original frame
+        local originalFrame = originalWindowFrames[winID]
+        win:setFrame(originalFrame)
+        originalWindowFrames[winID] = nil
+      else
+        -- Save the original frame and set the window to fullscreen
+        originalWindowFrames[winID] = win:frame()
+        local screenFrame = win:screen():frame()
+        win:setFrame(screenFrame)
+      end
     end)
   end,
 
