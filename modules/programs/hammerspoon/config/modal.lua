@@ -6,12 +6,60 @@ function Modal.new(hs, menuKey, bindings, modifier)
 
   self.hs = hs
   self.menuKey = menuKey
-  self.bindings = bindings
+  self.bindings = bindings or {}
   self.modifier = modifier or "cmd" -- Default modifier is "cmd"
   self.active = false
   self.modalHotkeys = {} -- Store modal hotkeys for cleanup
+  self.inactivityTimer = nil -- Timer to track inactivity
 
   return self
+end
+
+-- Deep merge multiple key binding tables
+function Modal.aggregateBindings(...)
+  local result = {}
+
+  local function deepMerge(t1, t2)
+    for k, v in pairs(t2) do
+      if type(v) == "table" and type(t1[k]) == "table" then
+        -- Both values are tables, merge recursively
+        t1[k] = deepMerge(t1[k], v)
+      elseif type(v) == "table" then
+        -- If only t2 has a table, copy it
+        t1[k] = deepMerge({}, v)
+      else
+        -- Overwrite scalar values (description, action, etc.)
+        t1[k] = v
+      end
+    end
+    return t1
+  end
+
+  for _, bindings in ipairs({ ... }) do
+    result = deepMerge(result, bindings)
+  end
+
+  return result
+end
+
+-- Recursive function to build the keybinding display
+local function buildBindingDisplay(bindings, prefix)
+  local displayText = {}
+
+  for key, binding in pairs(bindings) do
+    local fullKey = prefix .. key
+    table.insert(displayText, fullKey .. ": " .. (binding.description or ""))
+
+    -- If the binding has sub-keys (a submenu), recursively add them
+    if binding.keys then
+      local subDisplayText = buildBindingDisplay(binding.keys, fullKey .. " + ")
+      for _, subText in ipairs(subDisplayText) do
+        table.insert(displayText, subText)
+      end
+    end
+  end
+
+  return displayText
 end
 
 -- Enable the modal
@@ -23,31 +71,42 @@ function Modal:enable()
   self.active = true
 
   -- Add the modal keybindings
-  for _, binding in ipairs(self.bindings) do
-    if type(binding.key) == "string" or type(binding.key) == "number" then
-      local hotkey = self.hs.hotkey.bind({}, binding.key, function()
-        self.hs.alert.closeAll()
-        binding.action()
-        self:disable() -- Clean up after action
-      end)
-      table.insert(self.modalHotkeys, hotkey) -- Store for cleanup
+  for key, binding in pairs(self.bindings) do
+    if type(key) == "string" or type(key) == "number" then
+      -- Handle nested submenus
+      if binding.keys then
+        local subModal = Modal.new(self.hs, key, binding.keys, self.modifier)
+        subModal:bind()
+
+        -- Bind the first key to activate the submodal
+        local hotkey = self.hs.hotkey.bind({}, key, function()
+          self.hs.alert.closeAll()
+          subModal:enable() -- Activate submenu
+        end)
+        table.insert(self.modalHotkeys, hotkey)
+      elseif binding.action then
+        -- Handle regular action bindings
+        local hotkey = self.hs.hotkey.bind({}, key, function()
+          self.hs.alert.closeAll()
+          binding.action()
+          self:disable() -- Exit after action
+        end)
+        table.insert(self.modalHotkeys, hotkey)
+      end
     else
-      self.hs.alert.show("Invalid key in binding: " .. tostring(binding.key))
+      self.hs.alert.show("Invalid key in binding: " .. tostring(key))
     end
   end
 
-  -- Add an escape key to exit the modal
+  -- Escape key to exit modal
   local escapeHotkey = self.hs.hotkey.bind({}, "escape", function()
     self.hs.alert.closeAll()
-    self:disable() -- Clean up after escape
-  end, nil, nil, "modalEscape")
-  table.insert(self.modalHotkeys, escapeHotkey) -- Store for cleanup
+    self:disable()
+  end)
+  table.insert(self.modalHotkeys, escapeHotkey)
 
-  -- Show a visual indicator of the modal menu with descriptions
-  local menuText = {}
-  for _, binding in ipairs(self.bindings) do
-    table.insert(menuText, binding.key .. ": " .. binding.description)
-  end
+  -- Display modal menu
+  local menuText = buildBindingDisplay(self.bindings, self.modifier .. "+")
   self.hs.alert.show(table.concat(menuText, "\n"))
 end
 
@@ -63,6 +122,19 @@ function Modal:disable()
     hotkey:disable() -- Disable the hotkey
   end
   self.modalHotkeys = {} -- Clear the modal hotkeys table
+end
+
+-- Reset the inactivity timer
+function Modal:resetInactivityTimer()
+  -- If the timer exists, stop it
+  if self.inactivityTimer then
+    self.inactivityTimer:stop()
+  end
+
+  -- Create a new timer that will disable the modal after 3 seconds of inactivity
+  self.inactivityTimer = hs.timer.doAfter(3, function()
+    self:disable() -- Disable the modal after 3 seconds
+  end)
 end
 
 -- Bind the modal to a hotkey

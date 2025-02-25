@@ -1,14 +1,13 @@
 require("windows")
-require("spaces")
-require("modalBindings")
+require("keymaps")
 
-local MOD = "cmd"
+local leaderKey = "cmd"
 
 hs.window.animationDuration = 0
 hs.grid.setGrid("6x6")
 hs.grid.setMargins("0x0")
 
-hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
+-- hs.hotkey.bind({ "cmd" }, "g", hs.grid.show)
 
 -- Function to list all open window names
 local function listOpenWindows()
@@ -20,11 +19,11 @@ local function listOpenWindows()
   end
 end
 
-hs.hotkey.bind({ "cmd" }, "w", function()
+hs.hotkey.bind({ leaderKey }, "w", function()
   listOpenWindows()
 end)
 
-hs.hotkey.bind({ "cmd" }, "r", function()
-  hs.alert.show("hs config reloaded")
+hs.hotkey.bind({ leaderKey }, "r", function()
   hs.reload()
+  hs.alert.show("hs config reloaded")
 end)
