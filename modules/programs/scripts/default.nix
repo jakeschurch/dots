@@ -1,23 +1,28 @@
-{pkgs, ...}:
-with pkgs; let
+{ pkgs, ... }:
+with pkgs;
+let
   parse-aws-config = lib.mkScript {
     pname = "parse_aws_config";
     src = ./parse_aws_config.py;
-    propagatedBuildInputs = with python3Packages; [configparser];
+    propagatedBuildInputs = with python3Packages; [ configparser ];
     description = "Parse AWS config script";
   };
 
   aws-login = lib.mkScript {
     pname = "aws-login";
     src = ./aws_profile_login.sh;
-    propagatedBuildInputs = [jq coreutils parse-aws-config];
+    propagatedBuildInputs = [
+      jq
+      coreutils
+      parse-aws-config
+    ];
     description = "AWS login script";
   };
 
   fg-commit-wrapper = lib.mkScript {
     pname = "fg-commit";
     src = ./fg-commit-wrapper.sh;
-    propagatedBuildInputs = [coreutils];
+    propagatedBuildInputs = [ coreutils ];
     description = "Prepare commit message for fg features";
   };
 
@@ -31,16 +36,17 @@ with pkgs; let
     pname = "ssh-wrapper";
     src = ./ssh-wrapper.sh;
     description = "ssh wrapper";
-    propagatedBuildInputs = [mosh];
+    propagatedBuildInputs = [ mosh ];
   };
 
   nvim-wrapper = lib.mkScript {
     pname = "nvim-wrapper";
     src = ./nvim-wrapper.sh;
     description = "neovim wrapper";
-    propagatedBuildInputs = [coreutils-prefixed];
+    propagatedBuildInputs = [ coreutils-prefixed ];
   };
-in {
+in
+{
   home.packages = [
     parse-aws-config
     aws-login

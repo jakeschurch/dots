@@ -2,8 +2,9 @@
   pkgs,
   lib,
   ...
-}: let
-  kubectl-jq = pkgs.callPackage ./kubectl-jq.nix {};
+}:
+let
+  kubectl-jq = pkgs.callPackage ./kubectl-jq.nix { };
 
   download-nixpkgs-cache-index = pkgs.writeShellScriptBin "download-nixpkgs-cache-index" ''
     download_nixpkgs_cache_index() {
@@ -16,9 +17,11 @@
 
     download_nixpkgs_cache_index
   '';
-in {
+in
+{
   home = {
-    packages = with pkgs;
+    packages =
+      with pkgs;
       [
         download-nixpkgs-cache-index
         nix-update
@@ -75,12 +78,11 @@ in {
         sd
         tokei
         (aspellWithDicts (
-          ds:
-            with ds; [
-              en
-              en-computers
-              en-science
-            ]
+          ds: with ds; [
+            en
+            en-computers
+            en-science
+          ]
         ))
         coreutils
         expect

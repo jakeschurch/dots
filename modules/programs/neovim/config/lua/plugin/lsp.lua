@@ -38,13 +38,14 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
   { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
 )
 
-lsp_config_defaults.capabilities.textDocument.completion.completionItem.snippetSupport = true
+lsp_config_defaults.capabilities.textDocument.completion.completionItem.snippetSupport =
+  true
 
 vim.diagnostic.config({
-  virtual_text = true,      -- Enable virtual text for diagnostics
-  underline = true,         -- Underline the text with diagnostics
+  virtual_text = true, -- Enable virtual text for diagnostics
+  underline = true, -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
-  severity_sort = true,     -- Sort diagnostics by severity
+  severity_sort = true, -- Sort diagnostics by severity
   float = {
     focusable = true,
     style = "minimal",
@@ -112,7 +113,7 @@ function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   if
-      client.supports_method and client:supports_method("textDocument/codeLens")
+    client.supports_method and client:supports_method("textDocument/codeLens")
   then
     virtualtypes.on_attach(client, bufnr)
   end
@@ -144,10 +145,10 @@ for server, config in pairs(require("plugin.lsp_servers")) do
   )
 
   config["root_dir"] = config["root_dir"]
-      or function(fname)
-        local util = require("lspconfig.util")
-        return util.root_pattern(".git")(fname) or nil
-      end
+    or function(fname)
+      local util = require("lspconfig.util")
+      return util.root_pattern(".git")(fname) or nil
+    end
 
   lsp_config[server].setup(config)
 end

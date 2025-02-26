@@ -11,17 +11,17 @@ require("lspsaga").setup({
       -- float window normal background color
       normal_bg = "#3c3836", -- Gruvbox Dark Soft background
       -- title background color
-      title_bg = "#fabd2f",  -- Gruvbox Soft Yellow
-      red = "#fb4934",       -- Gruvbox red
-      magenta = "#d3869b",   -- Gruvbox purple (soft)
-      orange = "#fe8019",    -- Gruvbox orange
-      yellow = "#d79921",    -- Gruvbox yellow
-      green = "#b8bb26",     -- Gruvbox green
-      cyan = "#8ec07c",      -- Gruvbox cyan
-      blue = "#83a598",      -- Gruvbox blue
-      purple = "#d3869b",    -- Gruvbox purple (soft)
-      white = "#ebdbb2",     -- Gruvbox light grey
-      black = "#1d2021",     -- Gruvbox black
+      title_bg = "#fabd2f", -- Gruvbox Soft Yellow
+      red = "#fb4934", -- Gruvbox red
+      magenta = "#d3869b", -- Gruvbox purple (soft)
+      orange = "#fe8019", -- Gruvbox orange
+      yellow = "#d79921", -- Gruvbox yellow
+      green = "#b8bb26", -- Gruvbox green
+      cyan = "#8ec07c", -- Gruvbox cyan
+      blue = "#83a598", -- Gruvbox blue
+      purple = "#d3869b", -- Gruvbox purple (soft)
+      white = "#ebdbb2", -- Gruvbox light grey
+      black = "#1d2021", -- Gruvbox black
     },
   },
   symbol_in_winbar = {

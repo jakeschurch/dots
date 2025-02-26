@@ -3,10 +3,12 @@
   pkgs,
   config,
   ...
-}: let
-  shellAliases = import ./../config/aliases.nix {inherit pkgs;};
+}:
+let
+  shellAliases = import ./../config/aliases.nix { inherit pkgs; };
   concatSessionList = builtins.concatStringsSep ":";
-in {
+in
+{
   home.file.bin = {
     source = ../bin;
     recursive = true;

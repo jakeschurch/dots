@@ -1,12 +1,18 @@
-stdenv: {
+stdenv:
+{
   pname,
   src,
   version ? "0.0",
-  nativeBuildInputs ? [],
+  nativeBuildInputs ? [ ],
   description ? null,
 }:
 stdenv.mkDerivation rec {
-  inherit pname version src nativeBuildInputs;
+  inherit
+    pname
+    version
+    src
+    nativeBuildInputs
+    ;
 
   installPhase = ''
     mkdir -p $out/bin

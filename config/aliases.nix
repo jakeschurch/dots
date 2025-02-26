@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   ".." = "cd ../";
   aws_us_prod = "export AWS_PROFILE=fg-production && export AWS_REGION=us-west-2";
   aws_ca_prod = "export AWS_PROFILE=fg-production-ca-central-1 && export AWS_REGION=ca-central-1";

@@ -7,11 +7,11 @@ lib.mkIf (pkgs.system == "x86_64-linux") {
   services.dunst = {
     enable = true;
     /*
-    REVIEW: iconTheme = {
-      name = "gnome";
-      size = "32x32";
+      REVIEW: iconTheme = {
+        name = "gnome";
+        size = "32x32";
 
-    };
+      };
     */
     settings = {
       global = {
@@ -101,19 +101,19 @@ lib.mkIf (pkgs.system == "x86_64-linux") {
         ### Misc/Advanced ###
 
         /*
-        # dmenu path.
+          # dmenu path.
 
-        # Browser for opening urls in context menu.
-        browser = /usr/bin/google-chrome-stable -new-tab
+          # Browser for opening urls in context menu.
+          browser = /usr/bin/google-chrome-stable -new-tab
 
-        # Always run rule-defined scripts, even if the notification is suppressed
-        always_run_script = true
+          # Always run rule-defined scripts, even if the notification is suppressed
+          always_run_script = true
 
-        # Define the title of the windows spawned by dunst
-        title = Dunst
+          # Define the title of the windows spawned by dunst
+          title = Dunst
 
-        # Define the class of the windows spawned by dunst
-        class = Dunst
+          # Define the class of the windows spawned by dunst
+          class = Dunst
         */
       };
 

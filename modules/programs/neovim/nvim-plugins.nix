@@ -1,4 +1,5 @@
-pkgs: let
+pkgs:
+let
   # avante-nvim' = pkgs.vimPlugins.avante-nvim.overrideAttrs (_: rec {
   #   version = "0.0.14";
   #   src = pkgs.fetchFromGitHub {
@@ -8,28 +9,36 @@ pkgs: let
   #     sha256 = "sha256-REFF+4U0AjNwiK1ecbDPwF7C1jKRzITV29aolx+HI24=";
   #   };
   # });
-  custom-sourced-nvim-plugins = let
-    pluginGit = {
-      rev,
-      owner,
-      repo,
-      sha256,
-      ...
-    }:
-      pkgs.vimUtils.buildVimPlugin {
-        pname = "${pkgs.lib.strings.sanitizeDerivationName repo}";
-        version = rev;
-        src = pkgs.fetchFromGitHub {
-          inherit owner repo rev sha256;
+  custom-sourced-nvim-plugins =
+    let
+      pluginGit =
+        {
+          rev,
+          owner,
+          repo,
+          sha256,
+          ...
+        }:
+        pkgs.vimUtils.buildVimPlugin {
+          pname = "${pkgs.lib.strings.sanitizeDerivationName repo}";
+          version = rev;
+          src = pkgs.fetchFromGitHub {
+            inherit
+              owner
+              repo
+              rev
+              sha256
+              ;
+          };
         };
-      };
 
-    readJsonFile = with builtins; file: fromJSON (readFile file);
-    vimPluginsToFetch = readJsonFile ./versions.json;
-  in
+      readJsonFile = with builtins; file: fromJSON (readFile file);
+      vimPluginsToFetch = readJsonFile ./versions.json;
+    in
     map pluginGit vimPluginsToFetch;
 
-  nix-nvim-plugins = with pkgs.vimPlugins;
+  nix-nvim-plugins =
+    with pkgs.vimPlugins;
     [
       nvim-dap-python
       nvim-lspconfig
@@ -156,66 +165,63 @@ pkgs: let
     ]);
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (
-    ts-plugins:
-      with ts-plugins; [
-        awk
-        bash
-        comment
-        css
-        desktop
-        dhall
-        diff
-        dockerfile
-        elixir
-        embedded_template
-        func
-        git_config
-        git_rebase
-        gitattributes
-        gitcommit
-        gitignore
-        go
-        gomod
-        graphql
-        haskell
-        hcl
-        heex
-        html
-        javascript
-        jq
-        json
-        latex
-        lua
-        luadoc
-        make
-        tree-sitter-hcl
-        markdown
-        markdown_inline
-        mermaid
-        ninja
-        nix
-        passwd
-        promql
-        python
-        regex
-        rust
-        sql
-        ssh_config
-        sxhkdrc
-        templ
-        terraform
-        toml
-        tsx
-        typescript
-        vim
-        vimdoc
-        yaml
-        yuck
-        gotmpl
-        helm
-      ]
+    ts-plugins: with ts-plugins; [
+      awk
+      bash
+      comment
+      css
+      desktop
+      dhall
+      diff
+      dockerfile
+      elixir
+      embedded_template
+      func
+      git_config
+      git_rebase
+      gitattributes
+      gitcommit
+      gitignore
+      go
+      gomod
+      graphql
+      haskell
+      hcl
+      heex
+      html
+      javascript
+      jq
+      json
+      latex
+      lua
+      luadoc
+      make
+      tree-sitter-hcl
+      markdown
+      markdown_inline
+      mermaid
+      ninja
+      nix
+      passwd
+      promql
+      python
+      regex
+      rust
+      sql
+      ssh_config
+      sxhkdrc
+      templ
+      terraform
+      toml
+      tsx
+      typescript
+      vim
+      vimdoc
+      yaml
+      yuck
+      gotmpl
+      helm
+    ]
   );
 in
-  nix-nvim-plugins
-  ++ custom-sourced-nvim-plugins
-  ++ pkgs.lib.singleton treesitter-plugins
+nix-nvim-plugins ++ custom-sourced-nvim-plugins ++ pkgs.lib.singleton treesitter-plugins

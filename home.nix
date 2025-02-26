@@ -3,22 +3,22 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   home = {
     stateVersion = "24.05";
 
     activation = {
-      diff = lib.hm.dag.entryAnywhere ''
-      '';
+      diff = lib.hm.dag.entryAnywhere '''';
       darwinFileLimits = lib.mkIf pkgs.stdenv.isDarwin (
-        lib.hm.dag.entryAfter ["writeBoundary"] ''
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           #launchctl limit maxfiles 5000000 5000000
           #ulimit -n 10240
         ''
       );
 
       aliasApplications = lib.mkIf pkgs.stdenv.isDarwin (
-        lib.hm.dag.entryAfter ["writeBarrier"] ''
+        lib.hm.dag.entryAfter [ "writeBarrier" ] ''
           new_nix_apps="${config.home.homeDirectory}/Applications/Nix"
           rm -rf "$new_nix_apps"
           mkdir -p "$new_nix_apps"
@@ -36,7 +36,7 @@
 
   programs.home-manager.enable = true;
 
-  imports = [./modules];
+  imports = [ ./modules ];
 
   xdg = {
     # Let Home Manager install and manage itself.

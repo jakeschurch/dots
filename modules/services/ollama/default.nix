@@ -4,7 +4,8 @@
   config,
   ...
 }:
-with lib; let
+with lib;
+let
   ollamaModels = [
     "codellama:7b"
     "qwen2.5-coder:7b"
@@ -18,7 +19,8 @@ with lib; let
       config.services.ollama.package
     ];
   };
-in {
+in
+{
   services.ollama = {
     enable = false;
     port = 11434;
@@ -29,14 +31,13 @@ in {
     # ollama-model-loader
   ];
 
-  launchd.agents.ollama-model-loader = mkIf (ollamaModels != [] && pkgs.stdenv.isDarwin) {
+  launchd.agents.ollama-model-loader = mkIf (ollamaModels != [ ] && pkgs.stdenv.isDarwin) {
     enable = false;
     config = {
       Program = getExe ollama-model-loader;
       EnvironmentVariables = {
         OLLAMA_MODELS_STRINGIFIED = concatStringsSep "," ollamaModels;
-        OLLAMA_PORT =
-          toString config.services.ollama.port;
+        OLLAMA_PORT = toString config.services.ollama.port;
         OLLAMA_HOST = "localhost:${toString config.services.ollama.port}";
       };
       KeepAlive = {

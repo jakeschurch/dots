@@ -3,17 +3,21 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   zsh-completions = pkgs.callPackage ./zsh-completions.nix {
-    packages = with pkgs; [colima];
+    packages = with pkgs; [ colima ];
   };
 
   homeFileReferences =
-    builtins.listToAttrs (map (completion: {
+    builtins.listToAttrs (
+      map (completion: {
         name = ".cache/zsh/completions/_${completion.pname}";
-        value = {source = "${completion}/_${completion.pname}";};
-      })
-      zsh-completions)
+        value = {
+          source = "${completion}/_${completion.pname}";
+        };
+      }) zsh-completions
+    )
     // {
       ".cache/zsh/completions/_command-not-found" = {
         source = "${pkgs.nix-index}/etc/profile.d/command-not-found.sh";
@@ -55,7 +59,8 @@
         '';
       };
     };
-in {
+in
+{
   home.file = homeFileReferences;
 
   programs.zsh = {
@@ -64,7 +69,10 @@ in {
     enableCompletion = lib.mkForce true;
     syntaxHighlighting = {
       enable = true;
-      highlighters = ["main" "brackets"];
+      highlighters = [
+        "main"
+        "brackets"
+      ];
     };
     autosuggestion.enable = true;
     initExtraBeforeCompInit = ''
@@ -117,9 +125,9 @@ in {
     zplug = {
       enable = true;
       plugins = [
-        {name = "hlissner/zsh-autopair";}
-        {name = "ptavares/zsh-direnv";}
-        {name = "romkatv/zsh-defer";}
+        { name = "hlissner/zsh-autopair"; }
+        { name = "ptavares/zsh-direnv"; }
+        { name = "romkatv/zsh-defer"; }
       ];
     };
     oh-my-zsh = {

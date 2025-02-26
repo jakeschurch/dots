@@ -89,88 +89,97 @@
     ];
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    ...
-  } @ inputs: let
-    supportedSystems = [
-      "x86_64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-      "aarch64-linux"
-    ];
-  in
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      ...
+    }@inputs:
+    let
+      supportedSystems = [
+        "x86_64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+        "aarch64-linux"
+      ];
+    in
     flake-utils.lib.eachSystem supportedSystems (
       system:
-        with nixpkgs.lib; let
-          basePkgs = system:
-            import nixpkgs {
-              inherit system;
+      with nixpkgs.lib;
+      let
+        basePkgs =
+          system:
+          import nixpkgs {
+            inherit system;
 
-              config = {
-                allowUnfree = true;
-                cudaSupport = false;
-                allowBroken = true;
-              };
+            config = {
+              allowUnfree = true;
+              cudaSupport = false;
+              allowBroken = true;
+            };
 
-              allowUnfreePredicate = pkg:
-                builtins.elem (lib.getName pkg) [
-                  "terraform-1.9.6"
-                ];
-
-              permittedInsecurePackages = [
-                "electron-19.1.9"
+            allowUnfreePredicate =
+              pkg:
+              builtins.elem (lib.getName pkg) [
+                "terraform-1.9.6"
               ];
 
-              packageOverrides = _pkgs: {
-                inherit (inputs) lexical-lsp;
-                inherit (nixpkgs) narHash;
-                terragrunt = pkgs.terragrunt.overrideAttrs (_oldAttrs: {
-                  version = "0.69.1";
-                });
-              };
+            permittedInsecurePackages = [
+              "electron-19.1.9"
+            ];
 
-              overlays = import ./overlays.nix {
-                pkgs = nixpkgs;
-                inherit inputs system;
-              };
+            packageOverrides = _pkgs: {
+              inherit (inputs) lexical-lsp;
+              inherit (nixpkgs) narHash;
+              terragrunt = pkgs.terragrunt.overrideAttrs (_oldAttrs: {
+                version = "0.69.1";
+              });
             };
 
-          treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-          pre-commit-check = pkgs:
-            import ./pre-commit-hooks.nix {
-              inherit pkgs system;
-              inherit (inputs) nix-pre-commit-hooks;
+            overlays = import ./overlays.nix {
+              pkgs = nixpkgs;
+              inherit inputs system;
             };
-
-          pkgs = basePkgs system;
-        in rec {
-          inherit (pkgs.lib) mkHome;
-
-          darwinConfigurations.curiosity = mkHome "jake";
-          homeConfigurations.apollo = mkHome "jake";
-
-          packages.default =
-            if pkgs.stdenv.isLinux
-            then homeConfigurations.apollo.activationPackage
-            else darwinConfigurations.curiosity.config.system.build.toplevel;
-
-          devShells.default = let
-            pre-commitEval = self.checks.${system}.pre-commit-check pkgs;
-          in
-            pkgs.mkShell {
-              inherit (pre-commitEval) shellHook;
-            };
-
-          formatter = (treefmtEval pkgs).config.build.wrapper;
-
-          checks = {
-            inherit pre-commit-check;
           };
 
-          apps = {};
-        }
+        treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        pre-commit-check =
+          pkgs:
+          import ./pre-commit-hooks.nix {
+            inherit pkgs system;
+            inherit (inputs) nix-pre-commit-hooks;
+          };
+
+        pkgs = basePkgs system;
+      in
+      rec {
+        inherit (pkgs.lib) mkHome;
+
+        darwinConfigurations.curiosity = mkHome "jake";
+        homeConfigurations.apollo = mkHome "jake";
+
+        packages.default =
+          if pkgs.stdenv.isLinux then
+            homeConfigurations.apollo.activationPackage
+          else
+            darwinConfigurations.curiosity.config.system.build.toplevel;
+
+        devShells.default =
+          let
+            pre-commitEval = self.checks.${system}.pre-commit-check pkgs;
+          in
+          pkgs.mkShell {
+            inherit (pre-commitEval) shellHook;
+          };
+
+        formatter = (treefmtEval pkgs).config.build.wrapper;
+
+        checks = {
+          inherit pre-commit-check;
+        };
+
+        apps = { };
+      }
     );
 }

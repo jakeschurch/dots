@@ -3,14 +3,16 @@
   lib,
   packages,
   ...
-}: let
-  mkZshCompletion = package:
+}:
+let
+  mkZshCompletion =
+    package:
     stdenv.mkDerivation rec {
       name = package.pname;
       pname = "${package.pname}-zsh-completions";
       inherit (package) version;
 
-      nativeBuildInputs = [package];
+      nativeBuildInputs = [ package ];
       src = package;
 
       buildPhase = ''
@@ -26,4 +28,4 @@
       };
     };
 in
-  map mkZshCompletion packages
+map mkZshCompletion packages

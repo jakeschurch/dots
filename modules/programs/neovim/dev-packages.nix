@@ -4,21 +4,20 @@ pkgs: {
     pyright
     pylint
     (python312.withPackages (
-      ps:
-        with ps; [
-          debugpy
-          setuptools # Required by pylama for some reason
-          proselint
-          poetry-core
-          toolz
-          pylama
-          black
-          isort
-          pip
-          flake8
-          neovim
-          mypy
-        ]
+      ps: with ps; [
+        debugpy
+        setuptools # Required by pylama for some reason
+        proselint
+        poetry-core
+        toolz
+        pylama
+        black
+        isort
+        pip
+        flake8
+        neovim
+        mypy
+      ]
     ))
   ];
 

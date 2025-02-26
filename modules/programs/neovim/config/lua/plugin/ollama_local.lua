@@ -27,8 +27,8 @@ M.parse_response = function(data_stream, _, opts)
       for i = #json.choices, 1, -1 do
         local choice = json.choices[i]
         if
-            choice.finish_reason == "stop"
-            or choice.finish_reason == "eos_token"
+          choice.finish_reason == "stop"
+          or choice.finish_reason == "eos_token"
         then
           opts.on_complete(nil)
         elseif choice.delta.content then
@@ -46,7 +46,7 @@ M.parse_stream_data = function(data, handler_opts)
   local json_data = vim.fn.json_decode(data)
   -- Check for stream completion marker first
   if json_data and json_data.done then
-    handler_opts.on_complete(nil)   -- Properly terminate the stream
+    handler_opts.on_complete(nil) -- Properly terminate the stream
   end
   -- Process normal message content
   if json_data and json_data.message and json_data.message.content then
@@ -61,8 +61,8 @@ M.parse_curl_args = function(self, prompt_opts)
   local options = {
     num_ctx = (self.options and self.options.num_ctx) or 4096,
     temperature = prompt_opts.temperature
-        or (self.options and self.options.temperature)
-        or 0,
+      or (self.options and self.options.temperature)
+      or 0,
   }
 
   return {

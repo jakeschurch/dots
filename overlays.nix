@@ -3,14 +3,16 @@
   inputs,
   system,
   ...
-}: let
+}:
+let
   ccachedPkgs = [
     # "neovim-nightly"
   ];
 
-  ccacheStdenvPkgs = self: super:
+  ccacheStdenvPkgs =
+    self: super:
     pkgs.lib.genAttrs ccachedPkgs (
-      pn: super.${pn}.override {stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv;}
+      pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }
     );
 
   ccacheOverlay = _self: super: {
@@ -38,22 +40,21 @@
       '';
     };
   };
-in [
+in
+[
   ccacheOverlay
   ccacheStdenvPkgs
-  (
-    _final: prev: {
-      lib =
-        prev.lib
-        // import ./lib {
-          inherit inputs;
-          inherit (prev) pkgs;
-        };
+  (_final: prev: {
+    lib =
+      prev.lib
+      // import ./lib {
+        inherit inputs;
+        inherit (prev) pkgs;
+      };
 
-      unstable = import inputs.unstable {inherit system;};
-      neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
-    }
-  )
+    unstable = import inputs.unstable { inherit system; };
+    neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
+  })
 
   inputs.neovim-nightly-overlay.overlays.default
   inputs.nixGL.overlay

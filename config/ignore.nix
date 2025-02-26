@@ -1,4 +1,5 @@
-{lib}: let
+{ lib }:
+let
   addDirEntries = x: [
     x
     "${x}/"
@@ -29,4 +30,4 @@
       ".DS_Store"
     ];
 in
-  lib.strings.concatLines (lib.flatten dirEntries)
+lib.strings.concatLines (lib.flatten dirEntries)

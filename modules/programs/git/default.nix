@@ -2,13 +2,15 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   gitBin = lib.getExe pkgs.git;
   fzfBin = lib.getExe pkgs.fzf;
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
-in {
+in
+{
   # git dependencies
   home.packages = with pkgs; [
     git-extras

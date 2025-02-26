@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   psql = pkgs.stdenv.mkDerivation {
     name = "psql";
     src = pkgs.postgresql;
@@ -13,7 +14,8 @@
       cp ${pkgs.postgresql}/bin/psql $out/bin
     '';
   };
-in {
+in
+{
   home.packages = [
     psql
   ];
