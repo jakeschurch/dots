@@ -23,6 +23,8 @@ lualine.setup({
       "terminal",
       "toggleterm",
       "Avante",
+      "fugitive",
+      "TelescopeInput",
     },
   },
   sections = {

@@ -7,22 +7,21 @@ require("lspsaga").setup({
   ui = {
     debounce = 250,
     code_action = "☝️",
-    -- TODO: make colors gruvbox
     colors = {
-      --float window normal background color
-      normal_bg = "#1d1536",
-      --title background color
-      title_bg = "#afd700",
-      red = "#e95678",
-      magenta = "#b33076",
-      orange = "#FF8700",
-      yellow = "#f7bb3b",
-      green = "#afd700",
-      cyan = "#36d0e0",
-      blue = "#61afef",
-      purple = "#CBA6F7",
-      white = "#d1d4cf",
-      black = "#1c1c19",
+      -- float window normal background color
+      normal_bg = "#3c3836", -- Gruvbox Dark Soft background
+      -- title background color
+      title_bg = "#fabd2f",  -- Gruvbox Soft Yellow
+      red = "#fb4934",       -- Gruvbox red
+      magenta = "#d3869b",   -- Gruvbox purple (soft)
+      orange = "#fe8019",    -- Gruvbox orange
+      yellow = "#d79921",    -- Gruvbox yellow
+      green = "#b8bb26",     -- Gruvbox green
+      cyan = "#8ec07c",      -- Gruvbox cyan
+      blue = "#83a598",      -- Gruvbox blue
+      purple = "#d3869b",    -- Gruvbox purple (soft)
+      white = "#ebdbb2",     -- Gruvbox light grey
+      black = "#1d2021",     -- Gruvbox black
     },
   },
   symbol_in_winbar = {
@@ -60,7 +59,7 @@ require("lspsaga").setup({
     sign = true,
     sign_priority = 40,
     virtual_text = false,
-    debounce = 100,
+    debounce = 1000,
   },
   diagnostic = {
     show_code_action = true,

@@ -150,7 +150,6 @@ pkgs: let
       nvim-treesitter-textobjects
       cmp-treesitter
       nvim-treesitter-textsubjects
-      nvim-treesitter
       plenary-nvim
       dressing-nvim
       nui-nvim

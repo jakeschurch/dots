@@ -1,4 +1,5 @@
 {pkgs, ...}: {
+
   nix = {
     enable = false;
     settings = {
@@ -10,7 +11,7 @@
       ];
 
       allowed-users = ["*"];
-      extra-experimental-features = ["nix-command flakes pipe-operators"];
+      extra-experimental-features = ["nix-command flakes"];
       fallback = true;
 
       cores = 0;
@@ -52,15 +53,12 @@
            builders-use-substitutes = true
            extra-nix-path = nixpkgs=flake:nixpkgs
 
-           # diff-hook = /etc/nix/my-diff-hook
            run-diff-hook = false
-           # post-build-hook = /etc/nix/upload-to-cache.sh
 
            http-connections = 0
            require-sigs = false
 
-      extra-nix-path = nixpkgs=flake:nixpkgs
-      # upgrade-nix-store-path-url = https://install.determinate.systems/nix-upgrade/stable/universal
+	   extra-nix-path = nixpkgs=flake:nixpkgs
 
            ${pkgs.lib.optionalString (pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-linux") ''
         extra-platforms = x86_64-darwin aarch64-darwin

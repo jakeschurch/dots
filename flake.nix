@@ -3,11 +3,6 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/nixos-24.11";
 
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     unstable.url = "nixpkgs/nixpkgs-unstable";
 
     tfenv.url = "github:cjlarose/tfenv-nix";

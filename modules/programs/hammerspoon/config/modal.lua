@@ -62,13 +62,15 @@ local function buildBindingDisplay(bindings, prefix)
   return displayText
 end
 
--- Enable the modal
 function Modal:enable()
+  -- If the modal is already active, don't re-enable it
   if self.active then
-    self:disable()
     return
   end
+
   self.active = true
+
+  self:resetInactivityTimer()
 
   -- Add the modal keybindings
   for key, binding in pairs(self.bindings) do

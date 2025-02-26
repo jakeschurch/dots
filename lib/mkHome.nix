@@ -26,8 +26,8 @@
         inputs.nix-index-database.darwinModules.nix-index
         (import ../darwin-configuration.nix {inherit pkgs user;})
         ../modules/homebrew.nix
-        ../nix.nix
         inputs.home-manager.darwinModules.home-manager
+        ../nix.nix
         {
           home-manager = {
             useGlobalPkgs = true;

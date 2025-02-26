@@ -20,6 +20,12 @@ local virtualtypes = require("virtualtypes")
 
 vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 
+vim.lsp.handlers["window/showMessage"] = function(_, result)
+  if result.type == 1 then -- Error message
+    vim.notify(result.message, vim.log.levels.ERROR)
+  end
+end
+
 local lspconfig_defaults = lsp_config.util.default_config
 lspconfig_defaults.capabilities = vim.tbl_deep_extend(
   "keep",
@@ -32,13 +38,16 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
   { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
 )
 
+lsp_config_defaults.capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 vim.diagnostic.config({
-  virtual_text = true, -- Enable virtual text for diagnostics
-  underline = true, -- Underline the text with diagnostics
+  virtual_text = true,      -- Enable virtual text for diagnostics
+  underline = true,         -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
-  severity_sort = true, -- Sort diagnostics by severity
+  severity_sort = true,     -- Sort diagnostics by severity
   float = {
-    show_header = true, -- Show a header in the floating window
+    focusable = true,
+    style = "minimal",
     border = "rounded", -- Rounded border for floating windows
   },
   signs = {
@@ -55,6 +64,14 @@ vim.diagnostic.config({
 vim.api.nvim_create_user_command("Format", function()
   vim.lsp.buf.format({ async = true })
 end, {})
+
+local wk = require("which-key")
+wk.register({
+  ["gd"] = "Go to definition",
+  ["gi"] = "Go to implementation",
+  ["K"] = "Hover doc",
+  -- other keymaps
+}, { prefix = "<leader>" })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   desc = "LSP actions",
@@ -95,7 +112,7 @@ function lsp.common_on_attach(client, bufnr)
   vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
 
   if
-    client.supports_method and client:supports_method("textDocument/codeLens")
+      client.supports_method and client:supports_method("textDocument/codeLens")
   then
     virtualtypes.on_attach(client, bufnr)
   end
@@ -127,10 +144,10 @@ for server, config in pairs(require("plugin.lsp_servers")) do
   )
 
   config["root_dir"] = config["root_dir"]
-    or function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(".git")(fname) or nil
-    end
+      or function(fname)
+        local util = require("lspconfig.util")
+        return util.root_pattern(".git")(fname) or nil
+      end
 
   lsp_config[server].setup(config)
 end

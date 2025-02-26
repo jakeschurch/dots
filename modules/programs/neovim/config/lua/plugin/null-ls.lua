@@ -78,7 +78,6 @@ null_ls.setup({
     -- Nix
     null_ls.builtins.diagnostics.statix,
     null_ls.builtins.code_actions.statix,
-    null_ls.builtins.formatting.alejandra,
     null_ls.builtins.diagnostics.deadnix,
 
     -- Git

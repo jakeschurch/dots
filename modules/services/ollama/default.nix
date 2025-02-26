@@ -20,17 +20,17 @@ with lib; let
   };
 in {
   services.ollama = {
-    enable = true;
+    enable = false;
     port = 11434;
     acceleration = null;
   };
 
   home.packages = [
-    ollama-model-loader
+    # ollama-model-loader
   ];
 
   launchd.agents.ollama-model-loader = mkIf (ollamaModels != [] && pkgs.stdenv.isDarwin) {
-    enable = true;
+    enable = false;
     config = {
       Program = getExe ollama-model-loader;
       EnvironmentVariables = {

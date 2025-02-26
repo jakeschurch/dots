@@ -1,5 +1,8 @@
 local wezterm = require("wezterm")
+local act = wezterm.action
+
 wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
+
 
 local fonts = {
   "JetBrains Mono",
@@ -7,197 +10,261 @@ local fonts = {
   "Noto Color Emoji",
 }
 
-local config = {
-  keys = {
-    {
-      key = "r",
-      mods = "ALT|SHIFT",
-      action = wezterm.action({ RotatePanes = "CounterClockwise" }),
-    },
-    {
-      key = "r",
-      mods = "ALT",
-      action = wezterm.action({ RotatePanes = "Clockwise" }),
-    },
-    {
-      key = "y",
-      mods = "ALT",
-      action = wezterm.action({ CopyTo = "ClipboardAndPrimarySelection" }),
-    },
-    {
-      key = "p",
-      mods = "ALT",
-      action = wezterm.action({ PasteFrom = "Clipboard" }),
-    },
-    {
-      key = "Enter",
-      mods = "ALT|SHIFT",
-      action = wezterm.action({
-        SplitHorizontal = { domain = "CurrentPaneDomain" },
-      }),
-    },
-    {
-      key = "Enter",
-      mods = "ALT",
-      action = wezterm.action({
-        SplitVertical = { domain = "CurrentPaneDomain" },
-      }),
-    },
-    { key = "+", mods = "ALT", action = wezterm.action.IncreaseFontSize },
-    { key = "-", mods = "ALT", action = wezterm.action.DecreaseFontSize },
-    {
-      key = "t",
-      mods = "ALT",
-      action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }),
-    },
-    -- { key = "Space", mods = "ALT|SHIFT", action = "QuickSelect" },
-    {
-      key = "q",
-      mods = "ALT",
-      action = wezterm.action({ CloseCurrentPane = { confirm = true } }),
-    },
-    {
-      key = "n",
-      mods = "ALT",
-      action = wezterm.action({ ActivateTabRelative = 1 }),
-    },
-    {
-      key = "n",
-      mods = "ALT | SHIFT",
-      action = wezterm.action({ ActivateTabRelative = -1 }),
-    },
+local config = wezterm.config_builder()
 
-    {
-      key = "h",
-      mods = "ALT",
-      action = wezterm.action({ ActivatePaneDirection = "Left" }),
-    },
-    {
-      key = "j",
-      mods = "ALT",
-      action = wezterm.action({ ActivatePaneDirection = "Down" }),
-    },
-    {
-      key = "k",
-      mods = "ALT",
-      action = wezterm.action({ ActivatePaneDirection = "Up" }),
-    },
-    {
-      key = "l",
-      mods = "ALT",
-      action = wezterm.action({ ActivatePaneDirection = "Right" }),
-    },
-
-    { key = "1", mods = "ALT", action = wezterm.action({ ActivateTab = 0 }) },
-    { key = "2", mods = "ALT", action = wezterm.action({ ActivateTab = 1 }) },
-    { key = "3", mods = "ALT", action = wezterm.action({ ActivateTab = 2 }) },
-    { key = "4", mods = "ALT", action = wezterm.action({ ActivateTab = 3 }) },
-    { key = "5", mods = "ALT", action = wezterm.action({ ActivateTab = 4 }) },
-    { key = "6", mods = "ALT", action = wezterm.action({ ActivateTab = 5 }) },
-    { key = "7", mods = "ALT", action = wezterm.action({ ActivateTab = 6 }) },
-    { key = "8", mods = "ALT", action = wezterm.action({ ActivateTab = 7 }) },
-    { key = "9", mods = "ALT", action = wezterm.action({ ActivateTab = 8 }) },
+config.disable_default_key_bindings = true
+config.keys = {
+  {
+    key = 'u',
+    mods = 'ALT',
+    action = wezterm.action_callback(function(win, pane)
+      if pane:is_alt_screen_active() then
+        -- Send the key press to Neovim
+        win:perform_action(act.SendKey { key = 'u', mods = 'ALT' }, pane)
+      else
+        -- Perform the scroll action in WezTerm
+        win:perform_action(act.ScrollByPage(-1), pane)
+      end
+    end),
   },
-  color_scheme = "Gruvbox dark, soft (base16)",
-  freetype_load_target = "Light",
-  font_shaper = "Harfbuzz",
-  font = wezterm.font_with_fallback(fonts),
-  font_size = 14.0,
-  dpi = 96,
-  audible_bell = "Disabled",
-  check_for_updates = false,
-  force_reverse_video_cursor = true,
-  front_end = "OpenGL",
-  tab_bar_at_bottom = true,
-  hide_tab_bar_if_only_one_tab = true,
-  use_fancy_tab_bar = true,
-  harfbuzz_features = { "calt=0" },
-  window_padding = {
-    left = 8,
-    right = 8,
-    top = 6,
-    bottom = 4,
+
+  -- Scroll down by one page when Neovim is not active
+  {
+    key = 'd',
+    mods = 'ALT',
+    action = wezterm.action_callback(function(win, pane)
+      if pane:is_alt_screen_active() then
+        -- Send the key press to Neovim
+        win:perform_action(act.SendKey { key = 'd', mods = 'ALT' }, pane)
+      else
+        -- Perform the scroll action in WezTerm
+        win:perform_action(act.ScrollByPage(1), pane)
+      end
+    end),
   },
-  use_resize_increments = true,
-  animation_fps = 60,
-  cursor_blink_ease_in = "Constant",
-  cursor_blink_ease_out = "Constant",
-  default_cursor_style = "SteadyBlock",
-  quick_select_patterns = {
-    -- match things that look like sha1 hashes
-    -- (this is actually one of the default patterns)
-    "[0-9a-f]{6,40}",
-    -- emails
-    "\\b\\w+://[\\w.-]+\\.[a-z]{2,15}\\S*\\b",
+
+  {
+    key = '/',
+    mods = 'ALT',
+    action = act.Search({ CaseInSensitiveString = '' }),
   },
-  mouse_bindings = {
-    {
-      event = {
-        Down = {
-          streak = 1,
-          button = "Left",
-        },
-      },
-      mods = "NONE",
-      action = wezterm.action({ SelectTextAtMouseCursor = "Cell" }),
-    },
+  { key = 'n', mods = 'ALT',       action = act.CopyMode 'NextMatch' },
+  { key = 'n', mods = 'ALT|SHIFT', action = act.CopyMode 'PriorMatch' },
 
-    {
-      event = {
-        Down = {
-          streak = 2,
-          button = "Left",
-        },
-      },
-      mods = "NONE",
-      action = wezterm.action({ SelectTextAtMouseCursor = "Word" }),
-    },
+  {
+    key = "r",
+    mods = "ALT",
+    action = act({ RotatePanes = "Clockwise" }),
+  },
+  {
+    key = "y",
+    mods = "ALT",
+    action = act({ CopyTo = "ClipboardAndPrimarySelection" }),
+  },
+  {
+    key = "p",
+    mods = "ALT",
+    action = act({ PasteFrom = "Clipboard" }),
+  },
+  {
+    key = "Enter",
+    mods = "ALT|SHIFT",
+    action = act({
+      SplitHorizontal = { domain = "CurrentPaneDomain" },
+    }),
+  },
+  {
+    key = "Enter",
+    mods = "ALT",
+    action = act({
+      SplitVertical = { domain = "CurrentPaneDomain" },
+    }),
+  },
+  { key = "+", mods = "ALT", action = act.IncreaseFontSize },
+  { key = "-", mods = "ALT", action = act.DecreaseFontSize },
+  {
+    key = "t",
+    mods = "ALT",
+    action = act({ SpawnTab = "CurrentPaneDomain" }),
+  },
+  {
+    key = "q",
+    mods = "ALT",
+    action = act({ CloseCurrentPane = { confirm = true } }),
+  },
+  {
+    key = "n",
+    mods = "ALT",
+    action = act({ ActivateTabRelative = 1 }),
+  },
+  {
+    key = "n",
+    mods = "ALT | SHIFT",
+    action = act({ ActivateTabRelative = -1 }),
+  },
 
-    {
-      event = {
-        Down = {
-          streak = 3,
-          button = "Left",
-        },
-      },
-      mods = "NONE",
-      action = wezterm.action({ SelectTextAtMouseCursor = "Line" }),
-    },
+  {
+    key = "h",
+    mods = "ALT",
+    action = act({ ActivatePaneDirection = "Left" }),
+  },
+  {
+    key = "j",
+    mods = "ALT",
+    action = act({ ActivatePaneDirection = "Down" }),
+  },
+  {
+    key = "k",
+    mods = "ALT",
+    action = act({ ActivatePaneDirection = "Up" }),
+  },
+  {
+    key = "l",
+    mods = "ALT",
+    action = act({ ActivatePaneDirection = "Right" }),
+  },
 
-    {
-      event = {
-        Up = {
-          streak = 1,
-          button = "Left",
-        },
-      },
-      mods = "NONE",
-      action = wezterm.action({
-        CompleteSelectionOrOpenLinkAtMouseCursor = "PrimarySelection",
-      }),
-    },
+  { key = "1", mods = "ALT", action = act({ ActivateTab = 0 }) },
+  { key = "2", mods = "ALT", action = act({ ActivateTab = 1 }) },
+  { key = "3", mods = "ALT", action = act({ ActivateTab = 2 }) },
+  { key = "4", mods = "ALT", action = act({ ActivateTab = 3 }) },
+  { key = "5", mods = "ALT", action = act({ ActivateTab = 4 }) },
+  { key = "6", mods = "ALT", action = act({ ActivateTab = 5 }) },
+  { key = "7", mods = "ALT", action = act({ ActivateTab = 6 }) },
+  { key = "8", mods = "ALT", action = act({ ActivateTab = 7 }) },
+  { key = "9", mods = "ALT", action = act({ ActivateTab = 8 }) },
 
-    {
-      event = {
-        Down = {
-          streak = 1,
-          button = "Middle",
-        },
-      },
-      mods = "NONE",
-      action = wezterm.action.PasteFrom("Clipboard"),
-    },
+  -- Resize pane to the left
+  {
+    key = 'h',
+    mods = 'ALT|SHIFT',
+    action = act.AdjustPaneSize { 'Left', 5 },
+  },
+  -- Resize pane to the right
+  {
+    key = 'l',
+    mods = 'ALT|SHIFT',
+    action = act.AdjustPaneSize { 'Right', 5 },
+  },
+  -- Resize pane upwards
+  {
+    key = 'k',
+    mods = 'ALT|SHIFT',
+    action = act.AdjustPaneSize { 'Up', 5 },
+  },
+  -- Resize pane downwards
+  {
+    key = 'j',
+    mods = 'ALT|SHIFT',
+    action = act.AdjustPaneSize { 'Down', 5 },
+  },
+}
 
-    {
-      event = {
-        Down = {
-          streak = 1,
-          button = "Right",
-        },
+config.default_cwd = os.getenv('HOME') .. '/Projects/work'
+config.use_fancy_tab_bar = false
+config.show_new_tab_button_in_tab_bar = false
+config.show_close_tab_button_in_tabs = false
+config.color_scheme = "Gruvbox dark, soft (base16)"
+config.freetype_load_target = "Light"
+config.font_shaper = "Harfbuzz"
+config.font = wezterm.font_with_fallback(fonts)
+config.font_size = 14.0
+config.max_fps = 165
+
+config.dpi = 96
+config.audible_bell = "Disabled"
+config.check_for_updates = false
+config.force_reverse_video_cursor = true
+config.front_end = "OpenGL"
+config.tab_bar_at_bottom = true
+config.hide_tab_bar_if_only_one_tab = true
+config.use_fancy_tab_bar = true
+config.harfbuzz_features = { "calt=0" }
+config.window_padding = {
+  left = 8,
+  right = 8,
+  top = 6,
+  bottom = 4,
+}
+config.use_resize_increments = true
+config.animation_fps = 60
+config.cursor_blink_ease_in = "Constant"
+config.cursor_blink_ease_out = "Constant"
+config.default_cursor_style = "SteadyBlock"
+config.quick_select_patterns = {
+  -- match things that look like sha1 hashes
+  -- (this is actually one of the default patterns)
+  "[0-9a-f]{6,40}",
+  -- emails
+  "\\b\\w+://[\\w.-]+\\.[a-z]{2,15}\\S*\\b",
+}
+config.mouse_bindings = {
+  {
+    event = {
+      Down = {
+        streak = 1,
+        button = "Left",
       },
-      mods = "NONE",
-      action = wezterm.action.PasteFrom("Clipboard"),
     },
+    mods = "NONE",
+    action = act({ SelectTextAtMouseCursor = "Cell" }),
+  },
+
+  {
+    event = {
+      Down = {
+        streak = 2,
+        button = "Left",
+      },
+    },
+    mods = "NONE",
+    action = act({ SelectTextAtMouseCursor = "Word" }),
+  },
+
+  {
+    event = {
+      Down = {
+        streak = 3,
+        button = "Left",
+      },
+    },
+    mods = "NONE",
+    action = act({ SelectTextAtMouseCursor = "Line" }),
+  },
+
+  {
+    event = {
+      Up = {
+        streak = 1,
+        button = "Left",
+      },
+    },
+    mods = "NONE",
+    action = act({
+      CompleteSelectionOrOpenLinkAtMouseCursor = "PrimarySelection",
+    }),
+  },
+
+  {
+    event = {
+      Down = {
+        streak = 1,
+        button = "Middle",
+      },
+    },
+    mods = "NONE",
+    action = act.PasteFrom("Clipboard"),
+  },
+
+  {
+    event = {
+      Down = {
+        streak = 1,
+        button = "Right",
+      },
+    },
+    mods = "NONE",
+    action = act.PasteFrom("Clipboard"),
   },
 }
 

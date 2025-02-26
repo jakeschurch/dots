@@ -9,9 +9,6 @@
 
     activation = {
       diff = lib.hm.dag.entryAnywhere ''
-        if [ -f "$oldGenPath" ] && [ -f "$newGenPath" ]; then
-          ${pkgs.nvd}/bin/nvd diff $oldGenPath $newGenPath
-        fi
       '';
       darwinFileLimits = lib.mkIf pkgs.stdenv.isDarwin (
         lib.hm.dag.entryAfter ["writeBoundary"] ''

@@ -21,7 +21,7 @@ _: {
     shellcheck.enable = true;
 
     # nix
-    alejandra.enable = true;
+    nixfmt.enable = true;
     deadnix.enable = true;
   };
 }

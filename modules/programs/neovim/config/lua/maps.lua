@@ -57,9 +57,9 @@ end, { noremap = true, silent = true })
 
 vim.cmd([[
 cnoremap %s/ %s/\v
-cnoremap s/ s/\v
 
-cnoreabbrev a G add %
+cnoreabbrev <expr> c (getcmdtype() == ':' && getcmdline() == 'c') ? 'G c' : 'c'
+cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'c') ? 'G add %' : 'a'
 ]])
 
 function Cycle(direction)

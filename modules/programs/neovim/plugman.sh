@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-set -eo pipefail
+set -Eeou pipefail
 
 usage() {
   cat <<EOF
-Usage: update.sh add <owner/repo>...
-       update.sh remove <owner/repo>...
-       update.sh update-file <file>
+Usage $(basename "$0") add <owner/repo>...
+      $(basename "$0") remove <owner/repo>...
+      $(basename "$0") update-file <file>
 
 Manage and update GitHub repository information in a JSON file.
 
@@ -16,24 +16,35 @@ Commands:
   update-file <file>       Update the specified file with the latest revisions, references, and sha256 hashes.
 
 Examples:
-  ./update.sh add soywod/himalaya nvim-treesitter/nvim-treesitter
-  ./update.sh remove soywod/himalaya
-  ./update.sh update-file versions.json
+  $(basename "$0") add soywod/himalaya nvim-treesitter/nvim-treesitter
+  $(basename "$0") remove soywod/himalaya
+  $(basename "$0") update-file versions.json
 EOF
   exit 1
 }
+
+trap_exit() {
+  rm -rf "$TMP"
+}
+
+trap_error() {
+  trap_exit
+  local exit_code=$?
+  local line_no=${BASH_LINENO[0]}
+  local func_name=${FUNCNAME[1]:-main}
+  local script_name=$(basename "${BASH_SOURCE[1]:-}")
+
+  log error "Script '$script_name', function '$func_name', line $line_no, exit code $exit_code"
+  exit "$exit_code"
+}
+
+trap 'trap_error' ERR
 
 # Configuration
 TMP="$(mktemp -d)"
 CACHE_DIR="${TMP}/cache"
 MAX_JOBS=4
 LOG_LEVEL="info" # Can be "debug", "info", "warn", or "error"
-
-# Cleanup temporary directory
-_cleanup_tmp() {
-  rm -rf "$TMP"
-}
-trap '_cleanup_tmp' EXIT
 
 # Logging function
 log() {
@@ -47,11 +58,11 @@ log() {
   fi
 
   case "$level" in
-    debug) echo -e "[${timestamp}] \033[34mDEBUG\033[0m: $message" ;;
-    info) echo -e "[${timestamp}] \033[32mINFO\033[0m: $message" ;;
-    warn) echo -e "[${timestamp}] \033[33mWARN\033[0m: $message" >&2 ;;
-    error) echo -e "[${timestamp}] \033[31mERROR\033[0m: $message" >&2 ;;
-    *) echo -e "[${timestamp}] $message" ;;
+  debug) echo -e "[${timestamp}] \033[34mDEBUG\033[0m: $message" ;;
+  info) echo -e "[${timestamp}] \033[32mINFO\033[0m: $message" ;;
+  warn) echo -e "[${timestamp}] \033[33mWARN\033[0m: $message" >&2 ;;
+  error) echo -e "[${timestamp}] \033[31mERROR\033[0m: $message" >&2 ;;
+  *) echo -e "[${timestamp}] $message" ;;
   esac
 }
 
@@ -223,13 +234,25 @@ download() {
 generate_file() {
   local file="$1"
 
+  if [[ ! -s "$file" ]]; then # Check if the file is empty
+    log error "The file $file is empty, no data to process."
+    exit 1
+  fi
+
   declare -a args
-  IFS=$'\n' read -r -d '' -a args < <(ls "$TMP" && printf '\0')
+  IFS=$'\n' read -r -d '' -a args < <(find "$TMP" -type f -name "*.json" && printf '\0')
 
   local json_files=()
   for arg in "${args[@]}"; do
-    json_files+=("$TMP/$arg")
+    if [[ -f "$arg" && "$arg" == *.json ]]; then
+      json_files+=("$arg")
+    fi
   done
+
+  if [[ ${#json_files[@]} -eq 0 ]]; then
+    log error "No valid JSON files found in $TMP"
+    exit 1
+  fi
 
   jq -s '.' "${json_files[@]}" >"$file"
   log info "Updated $file"
@@ -241,19 +264,19 @@ if [[ $# -eq 0 ]]; then
 fi
 
 case "$1" in
-  add)
-    shift
-    add "versions.json" "$@"
-    ;;
-  remove)
-    shift
-    remove "versions.json" "$@"
-    ;;
-  update-file)
-    shift
-    update-file "$@"
-    ;;
-  *)
-    usage
-    ;;
+add)
+  shift
+  add "versions.json" "$@"
+  ;;
+remove)
+  shift
+  remove "versions.json" "$@"
+  ;;
+update-file)
+  shift
+  update_file "$@"
+  ;;
+*)
+  usage
+  ;;
 esac

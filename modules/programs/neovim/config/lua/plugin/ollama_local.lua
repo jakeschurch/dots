@@ -4,7 +4,8 @@ local M = {}
 -- Ollama for Avante
 -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
 
-M.api_key_name = ""
+M["local"] = true
+M.api_key_name = nil
 M.endpoint = "http://127.0.0.1:11434/api"
 M.options = {
   num_ctx = 32768,

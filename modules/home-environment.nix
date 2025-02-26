@@ -7,8 +7,6 @@
   shellAliases = import ./../config/aliases.nix {inherit pkgs;};
   concatSessionList = builtins.concatStringsSep ":";
 in {
-  # home.file."/Documents/wiki".source = "${homeDir}/Documents/nas/wiki";
-
   home.file.bin = {
     source = ../bin;
     recursive = true;
@@ -62,6 +60,7 @@ in {
         "history"
         "cd *"
         "z *"
+        "rm *"
       ];
 
       LANG = "en_US.UTF-8";

@@ -1,16 +1,23 @@
 {
-  lib,
   pkgs,
   config,
   ...
 }: let
+  inherit (pkgs) lib;
+
   extraPkgs = let
     getPkgs = pkgs': lib.flatten (lib.attrValues pkgs');
     pkgs' = import ./dev-packages.nix pkgs;
   in
     getPkgs pkgs';
+
+  plugman = lib.mkScript {
+    pname = "nvim-plugman";
+    src = ./plugman.sh;
+    propagatedBuildInputs = with pkgs; [jq gh];
+  };
 in {
-  home.packages = extraPkgs;
+  home.packages = extraPkgs ++ lib.singleton plugman;
 
   programs.neovim = {
     enable = true;

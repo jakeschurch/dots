@@ -24,7 +24,6 @@ _: {
 
         # Color the common prefix in menu-complete
         set menu-complete-display-prefix On
-
       '';
 
       ".pylintrc".text = ''

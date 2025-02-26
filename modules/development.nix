@@ -24,7 +24,7 @@ in {
         nix-update
         # latex
         # texlive.combined.scheme-medium
-        _1password-cli
+        # _1password-cli
 
         sshuttle
 

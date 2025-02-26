@@ -1,6 +1,10 @@
-{pkgs, ...}: let
-  gitBin = "${pkgs.git}/bin/git";
-  fzfBin = "${pkgs.fzf}/bin/fzf";
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  gitBin = lib.getExe pkgs.git;
+  fzfBin = lib.getExe pkgs.fzf;
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
@@ -153,7 +157,7 @@ in {
         editor = "nvim";
         preloadIndex = true;
         untrackedCache = true;
-        fsmonitor = false;
+        fsmonitor = true;
         commitgraph = true;
       };
 

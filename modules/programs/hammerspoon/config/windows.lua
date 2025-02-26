@@ -161,8 +161,9 @@ hs.window.focus = {
   end,
 }
 
-hs.window.action = {
+local originalWindowFrames = {}
 
+hs.window.action = {
   move = function(screenNum)
     return hs.screen.withFocusedWindow(function(win)
       win:moveToScreen(hs.screen.find(screenNum))
@@ -171,20 +172,25 @@ hs.window.action = {
 
   toggleFullscreen = function()
     return hs.screen.withFocusedWindow(function(win)
-      win:toggleFullscreen()
+      if not win then
+        return
+      end
+
+      local winID = win:id()
+
+      -- If this window has been saved (i.e., it was toggled before)
+      if originalWindowFrames[winID] then
+        -- If it was fullscreen, restore the original frame
+        local originalFrame = originalWindowFrames[winID]
+        win:setFrame(originalFrame)
+        originalWindowFrames[winID] = nil
+      else
+        -- Save the original frame and set the window to fullscreen
+        originalWindowFrames[winID] = win:frame()
+        local screenFrame = win:screen():frame()
+        win:setFrame(screenFrame)
+      end
     end)
-
-    -- REVIEW
-    -- local f = win:frame()
-    -- local screen = win:screen()
-    -- local max = screen:frame()
-
-    -- f.x = max.x
-    -- f.y = max.y
-    -- f.w = max.w
-    -- f.h = max.h
-    -- win:setFrame(f)
-    -- redrawBorder()
   end,
 
   close = function()
@@ -203,47 +209,6 @@ hs.window.action = {
   },
 }
 
--- +------------------+
--- |                  |
--- |    +--------+    +--> minY
--- |    |  HERE  |    |
--- |    +--------+    |
--- |                  |
--- +------------------+
--- Where the window's size is equal to
--- the smaller available screen size
-function hs.window.fullscreenCenter(win)
-  local minFrame = hs.screen.minFrame(win:screen(), false)
-  win:setFrame(minFrame)
-end
-
--- +------------------+
--- |                  |
--- |  +------------+  +--> minY
--- |  |    HERE    |  |
--- |  +------------+  |
--- |                  |
--- +------------------+
-function hs.window.fullscreenAlmostCenter(win)
-  local offsetW = hs.screen.minX(win:screen())
-    - hs.screen.almostMinX(win:screen())
-  local screen = win:screen()
-  win:setFrame({
-    x = hs.screen.almostMinX(screen),
-    y = hs.screen.minY(screen),
-    w = hs.screen.minWidth(isFullscreen) + (2 * offsetW),
-    h = hs.screen.minHeight(screen, isFullscreen),
-  })
-end
-
--- It like fullscreen but with minY and minHeight values
--- +------------------+
--- |                  |
--- +------------------+--> minY
--- |       HERE       |
--- +------------------+--> minHeight
--- |                  |
--- +------------------+
 function hs.window.fullscreenWidth(win)
   local minFrame = hs.screen.minFrame(win:screen(), false)
   win:setFrame({
