@@ -32,7 +32,7 @@ end
 
 -- NOTE: most templates are inspired from ChatGPT.nvim -> chatgpt-actions.json
 local avante_grammar_correction =
-  "Correct the text to standard English, but keep any code blocks inside intact."
+"Correct the text to standard English, but keep any code blocks inside intact."
 local avante_keywords = "Extract the main keywords from the following text"
 local avante_code_readability_analysis = [[
   You must identify any readability issues in the code snippet.
@@ -53,10 +53,10 @@ local avante_code_readability_analysis = [[
 local avante_optimize_code = "Optimize the following code"
 local avante_summarize = "Summarize the following text"
 local avante_translate =
-  "Translate this into Chinese, but keep any code blocks inside intact"
+"Translate this into Chinese, but keep any code blocks inside intact"
 local avante_explain_code = "Explain the following code"
 local avante_complete_code = "Complete the following codes written in "
-  .. vim.bo.filetype
+    .. vim.bo.filetype
 local avante_add_docstring = "Add docstring to the following codes"
 local avante_fix_bugs = "Fix the bugs inside the following codes if any"
 local avante_add_tests = "Implement tests for the following code"
@@ -206,12 +206,14 @@ require("which-key").add({
 local ollama = require("plugin.ollama_local")
 
 avante.setup({
-  provider = "ollama_local",
-  hints = { enabled = true },
+  provider = "copilot",
+  auto_suggestions_provider = "copilot",
+  -- provider = "ollama_local",
+  hints = { enabled = false },
   debug = false,
-  auto_suggestions_provider = "ollama_local",
+  -- auto_suggestions_provider = "ollama_local",
   behaviour = {
-    auto_suggestions = true,
+    auto_suggestions = false,
     auto_set_highlight_group = true,
     auto_apply_diff_after_generation = false,
     minimize_diff = false,

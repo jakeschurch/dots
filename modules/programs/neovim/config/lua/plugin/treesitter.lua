@@ -1,4 +1,5 @@
 local configs = require("nvim-treesitter.configs")
+local ignored_filetypes = require("utils").ignored_filetypes
 
 vim.filetype.add({
   extension = {
@@ -22,13 +23,9 @@ configs.setup({
   autopairs = { enable = true },
   highlight = {
     enable = true,
-    disable = { "terminal", "toggleterm", "graphql", "Avante" },
-    additional_vim_regex_highlighting = true,
+    additional_vim_regex_highlighting = false,
   },
-  indent = {
-    enable = false,
-    disable = { "json", "toggleterm", "terminal" },
-  },
+  indent = { enable = false, },
   textobjects = {
     select = {
       enable = true,
@@ -68,7 +65,7 @@ configs.setup({
   playground = {
     enable = false,
     disable = {},
-    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    updatetime = 25,        -- Debounced time for highlighting nodes in the playground from source code
     persist_queries = true, -- Whether the query persists across vim sessions
     keybindings = {
       toggle_query_editor = "o",

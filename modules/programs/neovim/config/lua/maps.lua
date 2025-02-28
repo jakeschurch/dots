@@ -59,7 +59,7 @@ vim.cmd([[
 cnoremap %s/ %s/\v
 
 cnoreabbrev <expr> c (getcmdtype() == ':' && getcmdline() == 'c') ? 'G c' : 'c'
-cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'c') ? 'G add %' : 'a'
+cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'a') ? 'G add %' : 'a'
 ]])
 
 function Cycle(direction)

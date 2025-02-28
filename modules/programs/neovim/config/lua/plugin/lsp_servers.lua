@@ -74,10 +74,7 @@ return {
   -- REVIEW tailwindcss = {},
   hls = {},
   dockerls = {},
-  bashls = {
-    cmd = { "/etc/profiles/per-user/jake/bin/bash-language-server", "start" },
-    filetypes = { "sh", "bash" },
-  },
+  bashls = {},
   terraformls = {},
   gopls = {
     settings = {
@@ -107,6 +104,7 @@ return {
         },
         workspace = {
           library = {
+            vim.env.VIMRUNTIME,
             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
             [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
             ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = true,

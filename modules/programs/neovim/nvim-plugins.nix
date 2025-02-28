@@ -1,14 +1,5 @@
 pkgs:
 let
-  # avante-nvim' = pkgs.vimPlugins.avante-nvim.overrideAttrs (_: rec {
-  #   version = "0.0.14";
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "yetone";
-  #     repo = "avante.nvim";
-  #     rev = "v${version}";
-  #     sha256 = "sha256-REFF+4U0AjNwiK1ecbDPwF7C1jKRzITV29aolx+HI24=";
-  #   };
-  # });
   custom-sourced-nvim-plugins =
     let
       pluginGit =
@@ -20,7 +11,7 @@ let
           ...
         }:
         pkgs.vimUtils.buildVimPlugin {
-          pname = "${pkgs.lib.strings.sanitizeDerivationName repo}";
+          pname = pkgs.lib.strings.sanitizeDerivationName repo;
           version = rev;
           src = pkgs.fetchFromGitHub {
             inherit
@@ -148,23 +139,26 @@ let
 
       toggleterm-nvim
 
-      render-markdown-nvim
       luasnip
       nvim-ts-context-commentstring
-      avante-nvim
 
       trouble-nvim
-    ]
-    ++ (with pkgs.unstable.vimPlugins; [
+
+      img-clip-nvim
       nvim-treesitter-textobjects
       cmp-treesitter
       nvim-treesitter-textsubjects
+      avante-nvim
+    ]
+    ++ (with pkgs.unstable.vimPlugins; [
       plenary-nvim
       dressing-nvim
       nui-nvim
+
+      render-markdown-nvim
     ]);
 
-  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (
+  treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withPlugins (
     ts-plugins: with ts-plugins; [
       awk
       bash

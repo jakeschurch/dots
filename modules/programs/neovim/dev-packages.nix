@@ -60,13 +60,14 @@ pkgs: {
     shfmt
     shellcheck
     shellharden
-    nodePackages.bash-language-server
+    bash-language-server
   ];
 
   lua = with pkgs; [
     luajitPackages.jsregexp
     luajitPackages.plenary-nvim
     luarocks
+    luaPackages.luafilesystem
     sumneko-lua-language-server
     stylua
   ];

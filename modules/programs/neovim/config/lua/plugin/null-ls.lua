@@ -47,16 +47,16 @@ null_ls.setup({
     require("none-ls.diagnostics.eslint"),
 
     -- Lua
-    null_ls.builtins.formatting.stylua.with({
-      extra_args = {
-        "--indent-type",
-        "Spaces",
-        "--indent-width",
-        "2",
-        "--column-width",
-        "80",
-      },
-    }),
+    -- null_ls.builtins.formatting.stylua.with({
+    --   extra_args = {
+    --     "--indent-type",
+    --     "Spaces",
+    --     "--indent-width",
+    --     "2",
+    --     "--column-width",
+    --     "80",
+    --   },
+    -- }),
 
     -- Go
     null_ls.builtins.formatting.gofumpt,

@@ -1,30 +1,36 @@
 local M = {}
 
+M.ignored_filetypes = {
+  "oil",
+  "Avante",
+  "AvanteInput",
+  "TelescopeInput",
+  "alpha",
+  "dashboard",
+  "fugitive",
+  "graphql",
+  "startify",
+  "terminal",
+  "toggleterm",
+  "TelescopePrompt",
+}
+
+M.merge_tables = function(t1, t2)
+  for k, v in pairs(t2) do
+    if type(v) == "table" and type(t1[k]) == "table" then
+      M.merge_tables(t1[k], v)
+    else
+      t1[k] = v
+    end
+  end
+end
+
 M.keymap = function(mode, lhs, rhs, opts)
   local options = { noremap = true }
   if opts then
     options = vim.tbl_extend("force", options, opts)
   end
   vim.keymap.set(mode, lhs, rhs, options)
-end
-
-M.try_require = function(plugin_name)
-  local status_ok, plugin = pcall(require, plugin_name)
-  if not status_ok then
-    print("could not load plugin: " .. plugin_name)
-    return
-  end
-  return plugin
-end
-
-M.filter = function(func, list)
-  local res = {}
-  for _, v in ipairs(list) do
-    if func(v) then
-      res[#res + 1] = v
-    end
-  end
-  return res
 end
 
 M.map = function(func, list)

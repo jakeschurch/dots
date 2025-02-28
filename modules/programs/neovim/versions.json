@@ -1,5 +1,12 @@
 [
   {
+    "owner": "junegunn",
+    "repo": "fzf",
+    "rev": "3ba82b6d87348b119f9a7fd168ad8a597a18b4b2",
+    "ref": "master",
+    "sha256": "0pl044dgccb84iha30b0pk5lcc2rymhg9zmjnwpd1zkihixz28kw"
+  },
+  {
     "owner": "aymericbeaumet",
     "repo": "vim-symlink",
     "rev": "fec2d1a72c6875557109ce6113f26d3140b64374",
@@ -14,6 +21,13 @@
     "sha256": "1794wqskhv5ldkdksj5kfn2lrvy26h3sgxcmj7wpzgalmq1ggb13"
   },
   {
+    "owner": "nvimtools",
+    "repo": "none-ls-extras.nvim",
+    "rev": "6557f20e631d2e9b2a9fd27a5c045d701a3a292c",
+    "ref": "main",
+    "sha256": "1afs3ydpa36iq3dm86ffy27jgk8ddg1gp177pwxmnvfbnwjcgpki"
+  },
+  {
     "owner": "gbprod",
     "repo": "none-ls-shellcheck.nvim",
     "rev": "0f84461241e76e376a95fb7391deac82dc3efdbf",
@@ -26,26 +40,5 @@
     "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
     "ref": "master",
     "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
-  },
-  {
-    "owner": "junegunn",
-    "repo": "fzf",
-    "rev": "ac32fbb3b2d58a7ba61a9a8b1c09420dc4870199",
-    "ref": "master",
-    "sha256": "0i0qi6dssj2csbr37sm0app45p9qmp66cp66vqsp5ya8bbdlr4by"
-  },
-  {
-    "owner": "m-demare",
-    "repo": "hlargs.nvim",
-    "rev": "a5a7fdacc0ac2f7ca9d241e0e059cb85f0e733bc",
-    "ref": "main",
-    "sha256": "0abqv3kl6pak3vhym45bc9lcrcvgmhxi3ywi6ql29zlgag12p10w"
-  },
-  {
-    "owner": "nvimtools",
-    "repo": "none-ls-extras.nvim",
-    "rev": "6557f20e631d2e9b2a9fd27a5c045d701a3a292c",
-    "ref": "main",
-    "sha256": "1afs3ydpa36iq3dm86ffy27jgk8ddg1gp177pwxmnvfbnwjcgpki"
   }
 ]

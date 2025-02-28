@@ -159,7 +159,7 @@ in
         editor = "nvim";
         preloadIndex = true;
         untrackedCache = true;
-        fsmonitor = true;
+        fsmonitor = false;
         commitgraph = true;
       };
 

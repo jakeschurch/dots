@@ -25,6 +25,8 @@ in
       [
         download-nixpkgs-cache-index
         nix-update
+        ssm-session-manager-plugin
+        kind
         # latex
         # texlive.combined.scheme-medium
         # _1password-cli

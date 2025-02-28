@@ -13,6 +13,7 @@ local config = wezterm.config_builder()
 
 config.disable_default_key_bindings = true
 config.keys = {
+  { key = 'p', mods = 'ALT',       action = act.PasteFrom 'Clipboard' },
   {
     key = "u",
     mods = "ALT",
@@ -47,7 +48,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
@@ -157,6 +158,9 @@ config.keys = {
     mods = "ALT|SHIFT",
     action = act.AdjustPaneSize({ "Down", 5 }),
   },
+
+  { key = '-', mods = 'CTRL', action = wezterm.action.DecreaseFontSize },
+  { key = '=', mods = 'CTRL', action = wezterm.action.IncreaseFontSize },
 }
 
 config.default_cwd = os.getenv("HOME") .. "/Projects/work"
@@ -164,7 +168,7 @@ config.use_fancy_tab_bar = false
 config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
 config.color_scheme = "Gruvbox dark, soft (base16)"
-config.freetype_load_target = "Light"
+config.freetype_load_target = "HorizontalLcd"
 config.font_shaper = "Harfbuzz"
 config.font = wezterm.font_with_fallback(fonts)
 config.font_size = 14.0
@@ -173,7 +177,7 @@ config.max_fps = 165
 config.dpi = 96
 config.audible_bell = "Disabled"
 config.check_for_updates = false
-config.force_reverse_video_cursor = true
+config.force_reverse_video_cursor = false
 config.front_end = "OpenGL"
 config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = true
@@ -208,7 +212,6 @@ config.mouse_bindings = {
     mods = "NONE",
     action = act({ SelectTextAtMouseCursor = "Cell" }),
   },
-
   {
     event = {
       Down = {
@@ -267,9 +270,8 @@ config.mouse_bindings = {
   },
 }
 
--- config.set_environment_variables = {
---   TERMINFO_DIRS = '/Users/jake/.nix-profile/share/terminfo',
--- }
-config.term = "wezterm"
+config.set_environment_variables = {
+  TERMINFO_DIRS = '/Users/jake/.nix-profile/share/terminfo',
+}
 
 return config

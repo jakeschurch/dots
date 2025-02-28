@@ -1,4 +1,5 @@
 local lualine = require("lualine")
+local ignored_filetypes = require("utils").ignored_filetypes
 
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -13,19 +14,10 @@ end
 
 lualine.setup({
   options = {
-    theme = "gruvbox",
+    theme = "auto",
     icons_enabled = true,
     globalstatus = true,
-    disabled_filetypes = {
-      "startify",
-      "dashboard",
-      "alpha",
-      "terminal",
-      "toggleterm",
-      "Avante",
-      "fugitive",
-      "TelescopeInput",
-    },
+    disabled_filetypes = { statusline = ignored_filetypes },
   },
   sections = {
     lualine_a = { "mode" },

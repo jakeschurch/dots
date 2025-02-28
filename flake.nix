@@ -3,6 +3,11 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/nixos-24.11";
 
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     unstable.url = "nixpkgs/nixpkgs-unstable";
 
     tfenv.url = "github:cjlarose/tfenv-nix";
@@ -65,8 +70,14 @@
     preallocate-contents = true;
 
     substituters = [
-      "https://nix-community.cachix.org?priority=1"
-      "https://cache.lix.systems?priority=2"
+      "https://cache.lix.systems?priority=1"
+      "https://nix-community.cachix.org?priority=2"
+      "https://cache.nixos.org?priority=3"
+    ];
+
+    trusted-substituters = [
+      "https://cache.lix.systems?priority=1"
+      "https://nix-community.cachix.org?priority=2"
       "https://cache.nixos.org?priority=3"
     ];
 

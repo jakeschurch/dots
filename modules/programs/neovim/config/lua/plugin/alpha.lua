@@ -1,3 +1,5 @@
+local merge_tables = require("utils").merge_tables
+
 local status_ok, alpha = pcall(require, "alpha")
 if not status_ok then
   return
@@ -17,31 +19,45 @@ local function get_file_icon(filepath)
   end
 end
 
-local function edit_and_cd(filepath)
-  -- Open the file
-  vim.cmd("edit " .. filepath)
-  -- Change the working directory to the file's directory
-  local dir = vim.fn.fnamemodify(filepath, ":p:h")
-  vim.cmd("cd " .. dir)
-end
-
-local function add_button(filepath, shortcut_key, text, opts)
+local function add_button(filepath, shortcut_key, text)
   local text_to_show = text or filepath
-  opts = opts or {}
 
-  return startify.button(shortcut_key, text_to_show, function()
-    edit_and_cd(filepath)
-  end, opts)
+  return startify.button(
+    shortcut_key, text_to_show, ":e " .. filepath .. "<CR>"
+  )
 end
 
-local function add_icon_button(filepath, shortcut_key, text, opts)
-  opts = opts or {}
-
+local function add_icon_button(filepath, shortcut_key, text)
   local icon_text = (get_file_icon(filepath) or "")
-    .. "\t"
-    .. (text or filepath)
+      .. "\t"
+      .. (text or filepath)
 
-  return add_button(filepath, shortcut_key, icon_text, opts)
+  return add_button(filepath, shortcut_key, icon_text)
+end
+
+function get_mru_dirfiles(dir, n_files)
+  dir = dir:gsub("^~", os.getenv("HOME"))
+
+  -- Use 'fd' to find files, then use 'stat' to get modification times, sort by time, and limit the results
+  local command = string.format(
+    'fd --type f --hidden --exclude .git %s | xargs -I{} stat --format="%%Y %%n" {} | sort -n -r | head -n %d',
+    dir, n_files
+  )
+
+  local handle = io.popen(command)
+  local recent_files = {}
+
+  if handle then
+    for line in handle:lines() do
+      local last_modified, path = line:match("^(%d+) (.+)")
+      if last_modified and path then
+        table.insert(recent_files, path)
+      end
+    end
+    handle:close()
+  end
+
+  return recent_files
 end
 
 local function get_git_repos(directory)
@@ -51,8 +67,8 @@ local function get_git_repos(directory)
 
   local handle = io.popen(
     "fd .git$ "
-      .. directory
-      .. ' -d 2 -u -H  -t d -x stat -c "%Y %n" | sort -n -r | head -n 5'
+    .. directory
+    .. ' -d 2 -u -H  -t d -x stat -c "%Y %n" | sort -n -r | head -n 5'
   )
   if handle then
     for line in handle:lines() do
@@ -76,6 +92,7 @@ local function get_git_repos(directory)
 end
 
 startify.section.header.opts.position = "center"
+startify.section.header.opts.shrink_margin = true
 startify.section.header.val = {
   [[:::::::::    ::::::::      ::::     ::::   ########   :::::::::   ::::::::::]],
   [[:+:    :+:  :+:    :+:     +:+:+: :+:+:+  :+:    :+:  :+:    :+:  :+:]],
@@ -97,18 +114,18 @@ startify.section.mru_git = {
     {
       type = "group",
       val = function()
-        local repos = get_git_repos("~/Projects/work")
+        local expanded_dir = vim.fn.expand("~/Projects/work/")
+        local repos = get_git_repos(expanded_dir)
 
         local buttons = {}
-
-        local expanded_dir = vim.fn.expand("~/Projects/work/")
         for i, repo in ipairs(repos) do
+          local index = tostring(i + 4)
           repo = repo:gsub("%.git$", "")
           local trimmed_path = repo:gsub(expanded_dir, "")
 
           table.insert(
             buttons,
-            add_icon_button(repo, tostring(i + 4), trimmed_path)
+            add_icon_button(repo, index, trimmed_path)
           )
         end
 
@@ -139,7 +156,7 @@ startify.section.mru = {
   type = "group",
   val = {
     { type = "padding", val = 1 },
-    { type = "text", val = "MRU", opts = { hl = "SpecialComment" } },
+    { type = "text",    val = "MRU", opts = { hl = "SpecialComment" } },
     {
       type = "group",
       val = function()
@@ -186,7 +203,7 @@ startify.section.bottom_buttons = {
 -- disable MRU cwd
 startify.section.mru_cwd.val = { { type = "padding", val = 0 } }
 
-startify.opts.noautocmd = true
+startify.opts.autocmd = true
 
 startify.section.footer = {
   type = "text",

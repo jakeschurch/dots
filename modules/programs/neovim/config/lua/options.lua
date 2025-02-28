@@ -47,7 +47,7 @@ local options = {
   foldenable = false,
 
   timeout = true,
-  timeoutlen = 400,
+  timeoutlen = 500,
   ttimeoutlen = 0,
   redrawtime = 2000,
 
@@ -61,6 +61,7 @@ local options = {
   swapfile = false,
   synmaxcol = 500,
   tabstop = 2, -- default shifts / tabs,
+  background = "dark",
   termguicolors = true,
   undodir = os.getenv("HOME") .. "/.config/nvim/.undo",
   undofile = true,

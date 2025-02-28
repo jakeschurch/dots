@@ -92,37 +92,3 @@ require("lspsaga").setup({
   },
 })
 
-local keymap = vim.keymap.set
-
-keymap("n", "[d", function()
-  require("lspsaga.diagnostic"):goto_prev({
-    severity = vim.diagnostic.severity.ERROR,
-  })
-end)
-
-keymap("n", "]d", function()
-  require("lspsaga.diagnostic"):goto_next({
-    severity = vim.diagnostic.severity.ERROR,
-  })
-end)
-
-keymap("n", "[g", "<cmd>Lspsaga diagnostic_jump_prev<CR>", {})
-keymap("n", "]g", "<cmd>Lspsaga diagnostic_jump_next<CR>")
---
--- Call hierarchy
-keymap("n", "<Leader>hc", "<cmd>Lspsaga incoming_calls<CR>")
-keymap("n", "<Leader>ho", "<cmd>Lspsaga outgoing_calls<CR>")
-
-vim.keymap.set(
-  "n",
-  "<leader>qf",
-  "<cmd>Lspsaga code_action<cr>",
-  { noremap = true, silent = true }
-)
-
-vim.keymap.set(
-  "v",
-  "<leader>qf",
-  "<cmd>Lspsaga code_action<cr>",
-  { noremap = true, silent = true }
-)

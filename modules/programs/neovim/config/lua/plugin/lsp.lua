@@ -14,9 +14,9 @@ local lsp_signature_config = {
 local lsp = {}
 local lsp_config = require("lspconfig")
 local virtualtypes = require("virtualtypes")
--- local lsp_status = require("lsp-status")
 
--- lsp_status.register_progress()
+local lsp_status = require("lsp-status")
+lsp_status.register_progress()
 
 vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
 
@@ -26,26 +26,11 @@ vim.lsp.handlers["window/showMessage"] = function(_, result)
   end
 end
 
-local lspconfig_defaults = lsp_config.util.default_config
-lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-  "keep",
-  lspconfig_defaults,
-  vim.lsp.protocol.make_client_capabilities(),
-  require("cmp_nvim_lsp").default_capabilities(),
-  lspconfig_defaults.capabilities,
-  -- File watching is disabled by default for neovim.
-  -- See: https://github.com/neovim/neovim/pull/22405
-  { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
-)
-
-lsp_config_defaults.capabilities.textDocument.completion.completionItem.snippetSupport =
-  true
-
 vim.diagnostic.config({
-  virtual_text = true, -- Enable virtual text for diagnostics
-  underline = true, -- Underline the text with diagnostics
+  virtual_text = true,      -- Enable virtual text for diagnostics
+  underline = true,         -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
-  severity_sort = true, -- Sort diagnostics by severity
+  severity_sort = true,     -- Sort diagnostics by severity
   float = {
     focusable = true,
     style = "minimal",
@@ -62,9 +47,7 @@ vim.diagnostic.config({
 })
 
 -- make a new command for formatting the buffer
-vim.api.nvim_create_user_command("Format", function()
-  vim.lsp.buf.format({ async = true })
-end, {})
+vim.api.nvim_create_user_command("Format", vim.lsp.buf.format, {})
 
 local wk = require("which-key")
 wk.register({
@@ -74,83 +57,89 @@ wk.register({
   -- other keymaps
 }, { prefix = "<leader>" })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  desc = "LSP actions",
-  callback = function(event)
-    local opts = { buffer = event.buf, noremap = true, silent = true }
+local custom_on_attach = function(client, bufnr)
+  local opts = { buffer = bufnr, noremap = true, silent = true }
 
-    vim.keymap.set(
-      { "i" },
-      "<C-k>",
-      vim.lsp.buf.hover,
-      { silent = true, noremap = true, desc = "toggle signature" }
-    )
-    vim.keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts)
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, opts)
-    vim.keymap.set("n", "gy", "<cmd>Lspsaga goto_type_definition<CR>", opts)
+  local function buf_set_option(option, value) vim.bo[bufnr][option] = value end
 
-    vim.keymap.set("n", "<leader>o", "<Cmd>Lspsaga outline<cr>", opts)
-    vim.keymap.set("n", "gr", "<Cmd>Lspsaga finder<cr>", opts)
+  -- Not having this caused me so much pain lol
+  client.server_capabilities.semanticTokensProvider = nil
 
-    vim.keymap.set("n", "gh", "<cmd>Lspsaga finder<CR>", opts)
-
-    vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<cr>", opts)
-    vim.keymap.set("i", "<C-L>", function()
-      vim.lsp.buf.signature_help()
-    end, opts)
-
-    vim.keymap.set("n", "gp", "<cmd>Lspsaga peek_definition<cr>", opts)
-    vim.keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", opts)
-
-    vim.keymap.set("n", "<leader>f", function()
-      vim.lsp.buf.format({ async = true })
-    end, opts)
-  end,
-})
-
-function lsp.common_on_attach(client, bufnr)
-  vim.opt.omnifunc = "v:lua.vim.lsp.omnifunc"
-
-  if
-    client.supports_method and client:supports_method("textDocument/codeLens")
-  then
-    virtualtypes.on_attach(client, bufnr)
+  -- Ensure LSP supports codeLens before attaching virtualtypes
+  if client.server_capabilities.codeLensProvider then
+    pcall(virtualtypes.on_attach, client, bufnr)
   end
 
+  -- Ensure signature help is attached safely
   if client.server_capabilities.signatureHelpProvider then
-    lsp_signature.on_attach(lsp_signature_config, bufnr)
+    pcall(lsp_signature.on_attach, lsp_signature_config, bufnr)
   end
 
-  -- lsp_status.on_attach(client, bufnr)
+  buf_set_option('omnifunc', "v:lua.vim.lsp.omnifunc")
+
+  vim.keymap.set("i", "<C-k>", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+  vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, opts)
+  vim.keymap.set("i", "<C-L>", vim.lsp.buf.signature_help, opts)
+  vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
+
+  local function safe_lspsaga(cmd)
+    return function()
+      local clients = vim.lsp.get_clients({ bufnr = bufnr })
+      if clients and #clients > 0 then
+        vim.cmd(cmd)
+      else
+        vim.notify("No LSP client attached", vim.log.levels.WARN)
+      end
+    end
+  end
+
+  vim.keymap.set("n", "gd", safe_lspsaga("Lspsaga goto_definition"), opts)
+  vim.keymap.set("n", "gy", safe_lspsaga("Lspsaga goto_type_definition"), opts)
+  vim.keymap.set("n", "gr", safe_lspsaga("Lspsaga finder"), opts)
+  vim.keymap.set("n", "K", safe_lspsaga("Lspsaga hover_doc"), opts)
+  vim.keymap.set("n", "gp", safe_lspsaga("Lspsaga peek_definition"), opts)
+  vim.keymap.set("n", "<leader>rn", safe_lspsaga("Lspsaga rename"), opts)
+
+  -- Diagnostic navigation
+  vim.keymap.set("n", "[d", function()
+    require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
+  end, opts)
+
+  vim.keymap.set("n", "]d", function()
+    require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
+  end, opts)
+
+  vim.keymap.set("n", "[g", safe_lspsaga("Lspsaga diagnostic_jump_prev"), opts)
+  vim.keymap.set("n", "]g", safe_lspsaga("Lspsaga diagnostic_jump_next"), opts)
+
+  -- Call hierarchy
+  vim.keymap.set("n", "<Leader>hc", safe_lspsaga("Lspsaga incoming_calls"), opts)
+  vim.keymap.set("n", "<Leader>ho", safe_lspsaga("Lspsaga outgoing_calls"), opts)
+
+  -- Code actions
+  vim.keymap.set("n", "<leader>qf", safe_lspsaga("Lspsaga code_action"), opts)
+  vim.keymap.set("v", "<leader>qf", safe_lspsaga("Lspsaga code_action"), opts)
 end
 
 for server, config in pairs(require("plugin.lsp_servers")) do
-  local custom_on_attach = config.on_attach
-
-  config.on_attach = function(client, bufnr)
-    if custom_on_attach then
-      custom_on_attach(client, bufnr)
-    end
-
-    lsp.common_on_attach(client, bufnr)
-  end
-
   config.capabilities = vim.tbl_deep_extend(
-    "keep",
-    lsp_config.util.default_config.capabilities or {},
-    {
-      offsetEncoding = config.offsetEncoding or { "utf-8" },
-    }
+    "force",
+    vim.lsp.protocol.make_client_capabilities(),
+    require("cmp_nvim_lsp").default_capabilities(),
+    config.capabilities or {}
   )
 
   config["root_dir"] = config["root_dir"]
-    or function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(".git")(fname) or nil
-    end
+      or function(fname)
+        local util = require("lspconfig.util")
+        return util.root_pattern(".git")(fname) or nil
+      end
+
+  config.on_attach = custom_on_attach
 
   lsp_config[server].setup(config)
 end
+
 
 return lsp
