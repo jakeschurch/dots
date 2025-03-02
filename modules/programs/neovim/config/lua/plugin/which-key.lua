@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 local setup = {
-  preset = "modern",
+  preset = "helix",
   plugins = {
     marks = false,      -- shows a list of your marks off ' and `
     registers = false,  -- shows your registers on " in NORMAL or <C-r> in INSERT mode

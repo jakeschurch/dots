@@ -40,5 +40,12 @@
     "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
     "ref": "master",
     "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
+  },
+  {
+    "owner": "m-demare",
+    "repo": "hlargs.nvim",
+    "rev": "a5a7fdacc0ac2f7ca9d241e0e059cb85f0e733bc",
+    "ref": "main",
+    "sha256": "0abqv3kl6pak3vhym45bc9lcrcvgmhxi3ywi6ql29zlgag12p10w"
   }
 ]

@@ -64,8 +64,6 @@ let
 
       lspkind-nvim
 
-      none-ls-nvim
-
       lspsaga-nvim
 
       playground
@@ -142,19 +140,20 @@ let
       luasnip
       nvim-ts-context-commentstring
 
-      trouble-nvim
-
       img-clip-nvim
       nvim-treesitter-textobjects
       cmp-treesitter
       nvim-treesitter-textsubjects
-      avante-nvim
     ]
     ++ (with pkgs.unstable.vimPlugins; [
       plenary-nvim
       dressing-nvim
       nui-nvim
+      trouble-nvim
 
+      avante-nvim
+
+      none-ls-nvim
       render-markdown-nvim
     ]);
 

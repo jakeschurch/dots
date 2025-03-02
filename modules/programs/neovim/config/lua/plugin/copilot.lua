@@ -1,8 +1,8 @@
 require("copilot").setup({
-  enabled = false,
+  enabled = true,
   suggestion = {
-    enabled = false,
-    auto_trigger = true,
+    enabled = true,
+    auto_trigger = false,
   },
   keymap = {
     accept = false,

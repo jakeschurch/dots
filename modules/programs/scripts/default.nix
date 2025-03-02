@@ -1,6 +1,23 @@
 { pkgs, ... }:
 with pkgs;
 let
+  record-gif = lib.mkScript {
+    pname = "record-gif";
+    src = ./record-gif.sh;
+    propagatedBuildInputs = [
+      asciinema
+      asciinema-agg
+    ];
+    description = "Record a gif";
+  };
+
+  gif2mp4 = lib.mkScript {
+    pname = "gif2vid";
+    src = ./gif2vid.sh;
+    propagatedBuildInputs = [ ffmpeg ];
+    description = "Make mp4 from gif";
+  };
+
   parse-aws-config = lib.mkScript {
     pname = "parse_aws_config";
     src = ./parse_aws_config.py;
@@ -54,6 +71,8 @@ in
     motd
     ssh-wrapper
     nvim-wrapper
+    gif2mp4
+    record-gif
   ];
 
   home.file.".config/motd/quotes.json".source = ./motd/quotes.json;

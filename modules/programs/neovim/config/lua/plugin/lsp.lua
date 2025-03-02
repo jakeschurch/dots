@@ -48,6 +48,7 @@ vim.diagnostic.config({
 
 -- make a new command for formatting the buffer
 vim.api.nvim_create_user_command("Format", vim.lsp.buf.format, {})
+vim.o.omnifunc = "v:lua.vim.lsp.omnifunc"
 
 local wk = require("which-key")
 wk.register({
@@ -59,8 +60,6 @@ wk.register({
 
 local custom_on_attach = function(client, bufnr)
   local opts = { buffer = bufnr, noremap = true, silent = true }
-
-  local function buf_set_option(option, value) vim.bo[bufnr][option] = value end
 
   -- Not having this caused me so much pain lol
   client.server_capabilities.semanticTokensProvider = nil
@@ -74,8 +73,6 @@ local custom_on_attach = function(client, bufnr)
   if client.server_capabilities.signatureHelpProvider then
     pcall(lsp_signature.on_attach, lsp_signature_config, bufnr)
   end
-
-  buf_set_option('omnifunc', "v:lua.vim.lsp.omnifunc")
 
   vim.keymap.set("i", "<C-k>", vim.lsp.buf.hover, opts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)

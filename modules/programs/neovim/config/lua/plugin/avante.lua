@@ -2,15 +2,6 @@ require("avante_lib").load()
 
 local avante = require("avante")
 
--- local llm_tools = require("avante.llm_tools")
--- for _, tool in pairs(llm_tools.tools) do
---   if tool.name == "search" then
---     tool.name = "local_search"
---   end
--- end
--- ---@diagnostic disable-next-line: inject-field
--- llm_tools.tools.local_search = llm_tools.search
-
 local prefill_edit_window = function(request)
   require("avante.api").edit()
   local code_bufnr = vim.api.nvim_get_current_buf()
@@ -207,16 +198,18 @@ local ollama = require("plugin.ollama_local")
 
 avante.setup({
   provider = "copilot",
+  cursor_applying_provider = "copilot",
   auto_suggestions_provider = "copilot",
   -- provider = "ollama_local",
-  hints = { enabled = false },
+  hints = { enabled = true },
   debug = false,
   -- auto_suggestions_provider = "ollama_local",
   behaviour = {
     auto_suggestions = false,
     auto_set_highlight_group = true,
     auto_apply_diff_after_generation = false,
-    minimize_diff = false,
+    minimize_diff = true,
+    enable_cursor_planning_mode = true,
   },
   vendors = {
     ollama_local = ollama,

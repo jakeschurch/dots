@@ -44,7 +44,7 @@ in
 [
   ccacheOverlay
   ccacheStdenvPkgs
-  (_final: prev: {
+  (_: prev: {
     lib =
       prev.lib
       // import ./lib {
@@ -52,11 +52,10 @@ in
         inherit (prev) pkgs;
       };
 
-    unstable = import inputs.unstable { inherit system; };
-    neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.default;
+    neovim-nightly = inputs.neovim-nightly-overlay.packages.${prev.system}.default;
+    unstable = import inputs.unstable { inherit (prev) system; };
   })
 
-  inputs.neovim-nightly-overlay.overlays.default
   inputs.nixGL.overlay
   inputs.tfenv.overlays.default
 ]

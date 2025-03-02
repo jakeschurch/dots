@@ -13,7 +13,9 @@ local config = wezterm.config_builder()
 
 config.disable_default_key_bindings = true
 config.keys = {
-  { key = 'p', mods = 'ALT',       action = act.PasteFrom 'Clipboard' },
+  { key = 'v', mods = 'CMD', action = act.PasteFrom 'Clipboard' },
+  { key = 'p', mods = 'ALT', action = act.PasteFrom 'Clipboard' },
+
   {
     key = "u",
     mods = "ALT",
@@ -55,6 +57,11 @@ config.keys = {
     key = "r",
     mods = "ALT",
     action = act({ RotatePanes = "Clockwise" }),
+  },
+  {
+    key = "C",
+    mods = "CMD",
+    action = act({ CopyTo = "ClipboardAndPrimarySelection" }),
   },
   {
     key = "y",
