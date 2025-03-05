@@ -3,11 +3,6 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/nixos-24.11";
 
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     unstable.url = "nixpkgs/nixpkgs-unstable";
 
     tfenv.url = "github:cjlarose/tfenv-nix";
@@ -42,53 +37,10 @@
     nixd.inputs.nixpkgs.follows = "nixpkgs";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
+    # neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
   };
 
   nixConfig = {
-    download-attempts = 3;
-    http-connections = 0;
-
-    max-substitution-jobs = 0;
-
-    experimental-features = [
-      "nix-command"
-      "flakes"
-      "ca-derivations"
-      "auto-allocate-uids"
-    ];
-
-    cores = 0;
-    max-jobs = "auto";
-    pure-eval = true;
-    builders-use-substitutes = true;
-    substitute = true;
-    sandbox = false;
-    fsync-metadata = false;
-
-    auto-allocate-uids = true;
-    preallocate-contents = true;
-
-    substituters = [
-      "https://cache.lix.systems?priority=1"
-      "https://nix-community.cachix.org?priority=2"
-      "https://cache.nixos.org?priority=3"
-    ];
-
-    trusted-substituters = [
-      "https://cache.lix.systems?priority=1"
-      "https://nix-community.cachix.org?priority=2"
-      "https://cache.nixos.org?priority=3"
-    ];
-
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-
-    warn-dirty = false;
-
     allowed-impure-host-deps = [
       "/usr/bin/ditto" # for darwin builds
       "/bin/sh"
@@ -143,13 +95,13 @@
             packageOverrides = _pkgs: {
               inherit (inputs) lexical-lsp;
               inherit (nixpkgs) narHash;
-              terragrunt = pkgs.terragrunt.overrideAttrs (_oldAttrs: {
+
+              terragrunt = _pkgs.terragrunt.overrideAttrs (_oldAttrs: {
                 version = "0.69.1";
               });
             };
 
             overlays = import ./overlays.nix {
-              pkgs = nixpkgs;
               inherit inputs system;
             };
           };

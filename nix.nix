@@ -2,7 +2,7 @@
 {
 
   nix = {
-    enable = false;
+    enable = true;
     settings = {
       trusted-users = [
         "root"
@@ -12,7 +12,9 @@
       ];
 
       allowed-users = [ "*" ];
-      extra-experimental-features = [ "nix-command flakes" ];
+      extra-experimental-features = [
+        "nix-command flakes pipe-operators ca-derivations"
+      ];
       fallback = true;
 
       cores = 0;
@@ -22,8 +24,6 @@
       trusted-substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org"
-        "s3://nix-cache?trusted=1"
-        "s3://nix-cache?profile=default&scheme=https&endpoint=s3.jakeschurch.com&trusted=1"
       ];
 
       trusted-public-keys = [
@@ -47,26 +47,23 @@
     };
 
     extraOptions = ''
-                 accept-flake-config = true
-                 min-free = ${toString (100 * 1024 * 1024)}
-                 max-free = ${toString (1024 * 1024 * 1024)}
+      accept-flake-config = true
+      min-free = ${toString (100 * 1024 * 1024)}
+      max-free = ${toString (1024 * 1024 * 1024)}
 
-                 builders-use-substitutes = true
-                 extra-nix-path = nixpkgs=flake:nixpkgs
+      builders-use-substitutes = true
+      extra-nix-path = nixpkgs=flake:nixpkgs
 
-                 run-diff-hook = false
+      run-diff-hook = false
 
-                 http-connections = 0
-                 require-sigs = false
+      http-connections = 0
+      require-sigs = false
 
-      	   extra-nix-path = nixpkgs=flake:nixpkgs
+       extra-nix-path = nixpkgs=flake:nixpkgs
 
-                 ${pkgs.lib.optionalString
-                   (pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-linux")
-                   ''
-                     extra-platforms = x86_64-darwin aarch64-darwin
-                   ''
-                 }
+      ${pkgs.lib.optionalString (pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-linux") ''
+        extra-platforms = x86_64-darwin aarch64-darwin
+      ''}
     '';
   };
 }

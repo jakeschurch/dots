@@ -23,7 +23,7 @@ configs.setup({
   autopairs = { enable = true },
   highlight = {
     enable = true,
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = true,
   },
   indent = { enable = false, },
   textobjects = {

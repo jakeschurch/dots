@@ -5,7 +5,6 @@
 }:
 let
   inherit (pkgs) lib;
-
   extraPkgs =
     let
       getPkgs = pkgs': lib.flatten (lib.attrValues pkgs');
@@ -26,8 +25,8 @@ in
   home.packages = extraPkgs ++ lib.singleton plugman;
 
   programs.neovim = {
-    enable = true;
     package = pkgs.neovim-nightly;
+    enable = true;
     defaultEditor = true;
     extraConfig = builtins.readFile ./init.vim;
     extraPackages = extraPkgs;
@@ -39,7 +38,7 @@ in
     withPython3 = true;
     vimdiffAlias = true;
     coc.enable = false;
-    plugins = import ./nvim-plugins.nix pkgs;
+    plugins = pkgs.callPackage ./nvim-plugins.nix { };
   };
 
   home.sessionVariables = {

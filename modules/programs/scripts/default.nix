@@ -1,6 +1,19 @@
 { pkgs, ... }:
 with pkgs;
 let
+  spell-check-env-vars = lib.mkScript {
+    pname = "spell-check-env-vars";
+    src = ./spell_check_env_vars.py;
+    propagatedBuildInputs = lib.singleton (
+      python3.withPackages (
+        ps: with ps; [
+          pyspellchecker
+        ]
+      )
+    );
+    description = "Spell check env vars";
+  };
+
   record-gif = lib.mkScript {
     pname = "record-gif";
     src = ./record-gif.sh;
@@ -21,7 +34,14 @@ let
   parse-aws-config = lib.mkScript {
     pname = "parse_aws_config";
     src = ./parse_aws_config.py;
-    propagatedBuildInputs = with python3Packages; [ configparser ];
+    propagatedBuildInputs = lib.singleton (
+      python3.withPackages (
+        ps: with ps; [
+          configparser
+        ]
+      )
+    );
+
     description = "Parse AWS config script";
   };
 
@@ -73,6 +93,7 @@ in
     nvim-wrapper
     gif2mp4
     record-gif
+    spell-check-env-vars
   ];
 
   home.file.".config/motd/quotes.json".source = ./motd/quotes.json;

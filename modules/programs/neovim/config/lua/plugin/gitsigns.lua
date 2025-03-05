@@ -83,4 +83,19 @@ require("gitsigns").setup({
   end,
 })
 
+-- Gitsigns plugin mappings
+local gitsigns_mappings = {
+  ["["] = {
+    c = { "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", "Prev Hunk" },
+    name = "Backward Movements",
+  },
+  ["]"] = {
+    c = { "<cmd>lua require 'gitsigns'.next_hunk()<CR>", "Next Hunk" },
+    name = "Forward Movements",
+  },
+}
+
+local which_key = require("which-key")
+which_key.add(gitsigns_mappings)
+
 require("gruvbox").load()

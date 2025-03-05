@@ -1,4 +1,4 @@
-pkgs:
+{ pkgs, ... }:
 let
   custom-sourced-nvim-plugins =
     let
@@ -67,8 +67,6 @@ let
       lspsaga-nvim
 
       playground
-
-      lsp_signature-nvim
 
       telescope-nvim
       telescope-fzf-native-nvim
@@ -141,26 +139,28 @@ let
       nvim-ts-context-commentstring
 
       img-clip-nvim
-      nvim-treesitter-textobjects
       cmp-treesitter
+      nvim-treesitter-textobjects
       nvim-treesitter-textsubjects
+      lsp_signature-nvim
+      none-ls-nvim
+
+      dressing-nvim
+      nui-nvim
     ]
     ++ (with pkgs.unstable.vimPlugins; [
       plenary-nvim
-      dressing-nvim
-      nui-nvim
       trouble-nvim
-
       avante-nvim
 
-      none-ls-nvim
       render-markdown-nvim
     ]);
 
-  treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withPlugins (
+  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (
     ts-plugins: with ts-plugins; [
       awk
       bash
+      c
       comment
       css
       desktop
@@ -177,10 +177,12 @@ let
       gitignore
       go
       gomod
+      gotmpl
       graphql
       haskell
       hcl
       heex
+      helm
       html
       javascript
       jq
@@ -189,7 +191,6 @@ let
       lua
       luadoc
       make
-      tree-sitter-hcl
       markdown
       markdown_inline
       mermaid
@@ -206,14 +207,13 @@ let
       templ
       terraform
       toml
+      tree-sitter-hcl
       tsx
       typescript
       vim
       vimdoc
       yaml
       yuck
-      gotmpl
-      helm
     ]
   );
 in

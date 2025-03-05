@@ -156,7 +156,11 @@ in
       settings = {
         prSections = [
           {
-            title = "FG PRs";
+            title = "PR Reviews Needed";
+            filters = "org:fieldguide is:open -is:draft review-requested:@me review-requested:Platform";
+          }
+          {
+            title = "My PRs";
             filters = "is:open author:@me org:fieldguide draft:false";
           }
         ];

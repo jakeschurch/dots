@@ -227,7 +227,7 @@ cmp.setup({
     { name = "path" },
   }),
   performance = {
-    debounce = 10, -- default is 60ms
+    debounce = 60, -- default is 60ms
     throttle = 10, -- default is 30ms
     max_entries = 3,
   },

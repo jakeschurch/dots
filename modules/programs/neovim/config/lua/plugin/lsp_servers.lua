@@ -30,10 +30,6 @@ return {
     cmd = { "emmet-ls", "--stdio" },
   },
   nil_ls = {
-    cmd = {
-      "nil",
-      "--stdio",
-    },
     settings = {
       ["nil"] = {
         formatting = {
@@ -96,7 +92,6 @@ return {
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   graphql = {},
   lua_ls = {
-    cmd = { "lua-language-server" },
     settings = {
       Lua = {
         diagnostics = {
@@ -110,7 +105,8 @@ return {
             ["/Applications/Hammerspoon.app/Contents/Resources/extensions/hs"] = true,
             [vim.fn.expand("~/.hammerspoon/Spoons")] = true,
           },
-          maxPreload = 10000,
+          maxPreload = 20000,
+          requestTimeout = 5000,
         },
       },
     },

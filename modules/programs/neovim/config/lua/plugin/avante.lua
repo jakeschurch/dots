@@ -194,11 +194,12 @@ require("which-key").add({
   },
 })
 
+
 local ollama = require("plugin.ollama_local")
 
 avante.setup({
   provider = "copilot",
-  cursor_applying_provider = "copilot",
+  -- cursor_applying_provider = "copilot",
   auto_suggestions_provider = "copilot",
   -- provider = "ollama_local",
   hints = { enabled = true },
@@ -209,7 +210,7 @@ avante.setup({
     auto_set_highlight_group = true,
     auto_apply_diff_after_generation = false,
     minimize_diff = true,
-    enable_cursor_planning_mode = true,
+    enable_cursor_planning_mode = false,
   },
   vendors = {
     ollama_local = ollama,

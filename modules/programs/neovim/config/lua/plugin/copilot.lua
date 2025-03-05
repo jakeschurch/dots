@@ -1,7 +1,7 @@
 require("copilot").setup({
   enabled = true,
   suggestion = {
-    enabled = true,
+    enabled = false,
     auto_trigger = false,
   },
   keymap = {

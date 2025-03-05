@@ -16,6 +16,48 @@ create_ccache_dir() {
     fi
   fi
 }
+
+update_nix_config() {
+  local tmp="$(mktemp)"
+
+  cat <<EOF >"$tmp"
+accept-flake-config = true
+debugger-on-trace = true
+allow-dirty = true
+allowed-users = root jake @wheel
+auto-optimise-store = true
+builders-use-substitutes = true
+cores = 0
+download-attempts = 3
+download-buffer-size = 500000000
+experimental-features = nix-command flakes auto-allocate-uids pipe-operators ca-derivations
+fsync-metadata = false
+http-connections = 0
+keep-derivations = true
+keep-outputs = true
+max-jobs = auto
+max-substitution-jobs = 200
+preallocate-contents = true
+pure-eval = true
+substitute = true
+trusted-substituters = https://nix-community.cachix.org https://cache.nixos.org
+trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+trusted-users = root @wheel jake
+warn-dirty = false
+EOF
+
+  if ! sudo diff $NIX_CONFIG "$tmp" &>/dev/null; then
+    sudo install -m 0644 "$tmp" $NIX_CONFIG
+
+
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+      sudo launchctl kickstart -k system/org.nixos.nix-daemon
+    fi
+  fi
+
+  rm "$tmp"
+}
+
 flake_args=('--accept-flake-config' "--extra-experimental-features" "nix-command flakes ca-derivations auto-allocate-uids")
 
 if [[ "$#" -gt 0 ]]; then
@@ -23,12 +65,12 @@ if [[ "$#" -gt 0 ]]; then
 fi
 
 build_flake() {
-  NIX_BIN=$(command -v nom || command -v nix)
+ NIX_BIN=$(command -v nom || command -v nix)
 
   $NIX_BIN build "$FLAKE_DIR" "${flake_args[@]}" &&
     "$FLAKE_DIR"/result/activate-user &&
     sudo "$FLAKE_DIR"/result/activate
 }
 
-# update_nix_config
+update_nix_config
 build_flake "$@"

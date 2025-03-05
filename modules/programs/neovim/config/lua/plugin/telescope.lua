@@ -74,6 +74,7 @@ local ui_select_theme = {
 
 telescope.setup({
   defaults = {
+    theme = "ivy",
     vimgrep_arguments = {
       "rg",
       "--hidden",
@@ -98,7 +99,7 @@ telescope.setup({
       preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
     },
     set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-    file_previewer = previewers.vim_buffer_cat.new,
+    file_previewer = previewers.cat.new,
     grep_previewer = previewers.vim_buffer_vimgrep.new,
     qflist_previewer = previewers.vim_buffer_qflist.new,
     mappings = {
@@ -151,6 +152,7 @@ telescope.setup({
     layout_strategy = "vertical",
     layout_config = {
       vertical = { width = 0.8 },
+      preview_cutoff = 1,
     },
     preview = {
       mime_hook = function(filepath, bufnr, opts)
@@ -193,7 +195,7 @@ telescope.setup({
         n = {
           ["cd"] = function(prompt_bufnr)
             local selection =
-              require("telescope.actions.state").get_selected_entry()
+                require("telescope.actions.state").get_selected_entry()
             local dir = vim.fn.fnamemodify(selection.path, ":p:h")
             require("telescope.actions").close(prompt_bufnr)
             -- Depending on what you want put `cd`, `lcd`, `tcd`
@@ -237,45 +239,64 @@ telescope.setup({
       themes = {},
       terms = {},
     },
-    preview = {},
   },
+})
+
+local which_key = require("which-key")
+local builtin = require("telescope.builtin")
+local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
+
+
+local leader_opts = {
+  mode = "n",     -- NORMAL mode
+  prefix = "<leader>",
+  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
+  silent = true,  -- use `silent` when creating keymaps
+  noremap = true, -- use `noremap` when creating keymaps
+  nowait = true,  -- use `nowait` when creating keymaps
+}
+
+-- Telescope plugin mappings
+local telescope_mappings = {
+  j = {
+    k = { builtin.git_files, "Git Files" },
+    j = { function() builtin.live_grep({ cwd = get_cwd() }) end, "Live Grep" },
+    h = { live_grep_args_shortcuts.grep_word_under_cursor, "Grep Word Under Cursor" },
+    i = { function() telescope.extensions.live_grep_args.live_grep_args({ cwd = get_cwd() }) end, "Live Grep Args" },
+  },
+  b = {
+    b = { builtin.buffers, "Show Buffers" },
+  },
+  f = {
+    m = { builtin.man_pages, "Man Pages" },
+    h = { builtin.help_tags, "Help Tags" },
+    k = { builtin.keymaps, "Keymaps" },
+    c = { builtin.command_history, "Command History" },
+    g = { builtin.git_branches, "Git Branches" },
+  },
+  g = {
+    b = { builtin.git_branches, "Checkout Branch" },
+    c = { builtin.git_commits, "Checkout Commit" },
+    o = { builtin.git_status, "Open Changed File" },
+  },
+}
+
+-- Add mappings to WhichKey
+which_key.register(telescope_mappings, leader_opts)
+
+-- Additional non-leader mappings
+vim.keymap.set("n", "<C-p>", function()
+  builtin.find_files({ cwd = get_cwd() })
+end, { silent = true, noremap = true })
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  callback = function(_)
+    vim.wo.wrap = true
+  end,
 })
 
 telescope.load_extension("live_grep_args")
 telescope.load_extension("ui-select")
 telescope.load_extension("fzf")
 telescope.load_extension("fzy_native")
-
-local builtin = require("telescope.builtin")
-local keymap_opts = { silent = true, noremap = true }
-
-vim.keymap.set("n", "<leader>jk", builtin.git_files, keymap_opts)
-
-vim.keymap.set("n", "<C-p>", function()
-  builtin.find_files({ cwd = get_cwd() })
-end, keymap_opts)
-
-vim.keymap.set("n", "<leader>jj", function()
-  builtin.live_grep({ cwd = get_cwd() })
-end, keymap_opts)
-
-local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
-vim.keymap.set(
-  "n",
-  "<leader>jh",
-  live_grep_args_shortcuts.grep_word_under_cursor,
-  keymap_opts
-)
-vim.keymap.set("n", "<leader>ji", function()
-  telescope.extensions.live_grep_args.live_grep_args({ cwd = get_cwd() })
-end, keymap_opts)
-
-vim.keymap.set("n", "<leader>jh", function()
-  builtin.live_grep({ cwd = os.getenv("HOME") })
-end, keymap_opts)
-vim.keymap.set("n", "<leader>bb", builtin.buffers, keymap_opts)
-vim.keymap.set("n", "<leader>fm", builtin.man_pages, keymap_opts)
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, keymap_opts)
-vim.keymap.set("n", "<leader>fk", builtin.keymaps, keymap_opts)
-vim.keymap.set("n", "<leader>fc", builtin.command_history, keymap_opts)
-vim.keymap.set("n", "<leader>fg", builtin.git_branches, keymap_opts)
