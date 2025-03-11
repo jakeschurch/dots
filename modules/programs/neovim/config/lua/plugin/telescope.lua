@@ -195,7 +195,7 @@ telescope.setup({
         n = {
           ["cd"] = function(prompt_bufnr)
             local selection =
-                require("telescope.actions.state").get_selected_entry()
+              require("telescope.actions.state").get_selected_entry()
             local dir = vim.fn.fnamemodify(selection.path, ":p:h")
             require("telescope.actions").close(prompt_bufnr)
             -- Depending on what you want put `cd`, `lcd`, `tcd`
@@ -246,43 +246,105 @@ local which_key = require("which-key")
 local builtin = require("telescope.builtin")
 local live_grep_args_shortcuts = require("telescope-live-grep-args.shortcuts")
 
-
-local leader_opts = {
-  mode = "n",     -- NORMAL mode
-  prefix = "<leader>",
-  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true,  -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true,  -- use `nowait` when creating keymaps
-}
-
--- Telescope plugin mappings
 local telescope_mappings = {
-  j = {
-    k = { builtin.git_files, "Git Files" },
-    j = { function() builtin.live_grep({ cwd = get_cwd() }) end, "Live Grep" },
-    h = { live_grep_args_shortcuts.grep_word_under_cursor, "Grep Word Under Cursor" },
-    i = { function() telescope.extensions.live_grep_args.live_grep_args({ cwd = get_cwd() }) end, "Live Grep Args" },
+  {
+    "<leader>bb",
+    builtin.buffers,
+    desc = "Show Buffers",
+    nowait = true,
+    remap = false,
   },
-  b = {
-    b = { builtin.buffers, "Show Buffers" },
+  {
+    "<leader>fc",
+    builtin.command_history,
+    desc = "Command History",
+    nowait = true,
+    remap = false,
   },
-  f = {
-    m = { builtin.man_pages, "Man Pages" },
-    h = { builtin.help_tags, "Help Tags" },
-    k = { builtin.keymaps, "Keymaps" },
-    c = { builtin.command_history, "Command History" },
-    g = { builtin.git_branches, "Git Branches" },
+  {
+    "<leader>fg",
+    builtin.git_branches,
+    desc = "Git Branches",
+    nowait = true,
+    remap = false,
   },
-  g = {
-    b = { builtin.git_branches, "Checkout Branch" },
-    c = { builtin.git_commits, "Checkout Commit" },
-    o = { builtin.git_status, "Open Changed File" },
+  {
+    "<leader>fh",
+    builtin.help_tags,
+    desc = "Help Tags",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>fk",
+    builtin.keymaps,
+    desc = "Keymaps",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>fm",
+    builtin.man_pages,
+    desc = "Man Pages",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>gb",
+    builtin.git_branches,
+    desc = "Checkout Branch",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>gc",
+    builtin.git_commits,
+    desc = "Checkout Commit",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>go",
+    builtin.git_status,
+    desc = "Open Changed File",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>jh",
+    live_grep_args_shortcuts.grep_word_under_cursor,
+    desc = "Grep Word Under Cursor",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>ji",
+    function()
+      telescope.extensions.live_grep_args.live_grep_args({ cwd = get_cwd() })
+    end,
+    desc = "Live Grep Args",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>jj",
+    function()
+      builtin.live_grep({ cwd = get_cwd() })
+    end,
+    desc = "Live Grep",
+    nowait = true,
+    remap = false,
+  },
+  {
+    "<leader>jk",
+    builtin.git_files,
+    desc = "Git Files",
+    nowait = true,
+    remap = false,
   },
 }
 
--- Add mappings to WhichKey
-which_key.register(telescope_mappings, leader_opts)
+which_key.add(telescope_mappings)
 
 -- Additional non-leader mappings
 vim.keymap.set("n", "<C-p>", function()

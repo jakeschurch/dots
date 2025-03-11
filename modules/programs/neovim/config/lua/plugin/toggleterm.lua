@@ -18,7 +18,7 @@ local ft_shell_map = {
 toggleterm.setup({
   close_on_exit = false,
   direction = "float",
-  open_mapping = [[<c-\>]],
+  open_mapping = nil,
   persist_size = true,
   shade_filetypes = {},
   shade_terminals = false,
@@ -149,5 +149,31 @@ vim.api.nvim_create_autocmd("TermLeave", {
   pattern = "*",
   callback = function()
     vim.o.ttimeoutlen = original_ttimeoutlen
+  end,
+})
+
+-- Create a hidden terminal instance
+local Terminal = require("toggleterm.terminal").Terminal
+local hidden_term = Terminal:new({
+  direction = "float", -- Match the direction in the setup
+  hidden = true, -- Keep the terminal hidden initially
+  on_open = function(term)
+    vim.cmd("startinsert!") -- Start in insert mode when opened
+  end,
+})
+
+-- Override the default toggleterm mapping to toggle the hidden terminal
+vim.keymap.set({ "n", "t" }, [[<c-\>]], function()
+  hidden_term:toggle()
+end, { noremap = true, silent = true })
+
+local hidden_term_group =
+  vim.api.nvim_create_augroup("HiddenTermGroup", { clear = true })
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = hidden_term_group,
+  pattern = "*",
+  callback = function()
+    hidden_term:spawn()
   end,
 })

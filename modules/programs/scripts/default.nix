@@ -1,6 +1,20 @@
 { pkgs, ... }:
 with pkgs;
 let
+
+  # spell-check-env-vars = lib.mkScript {
+  #   pname = "spell-check-env-vars";
+  #   src = ./spell_check_env_vars.py;
+  #   propagatedBuildInputs = lib.singleton (
+  #     python3.withPackages (
+  #       ps: with ps; [
+  #         pyspellchecker
+  #       ]
+  #     )
+  #   );
+  #   description = "Spell check env vars";
+  # };
+
   spell-check-env-vars = lib.mkScript {
     pname = "spell-check-env-vars";
     src = ./spell_check_env_vars.py;

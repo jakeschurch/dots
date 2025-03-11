@@ -1,7 +1,5 @@
-local status_ok, which_key = pcall(require, "which-key")
-if not status_ok then
-  return
-end
+local which_key = require("which-key")
+local ignored_filetypes = require("utils").ignored_filetypes
 
 local setup = {
   preset = "helix",
@@ -37,49 +35,41 @@ local setup = {
     scroll_up = "<c-k>",
   },
   win = {
+    no_overlap = true,
     border = "single",
-    position = "bottom",
-    margin = { 1, 0, 1, 0 },
     padding = { 2, 2, 2, 2 },
-    winblend = 0,
+    height = { min = 4, max = 25 },
   },
   layout = {
-    height = { min = 4, max = 25 },
     width = { min = 20, max = 50 },
     spacing = 3,
-    align = "left",
   },
   show_help = false,
+  debug = false,
   triggers = { "<leader>" },
+  disable = {
+    ft = ignored_filetypes,
+  },
 }
-
-local leader_opts = {
-  mode = "n",     -- NORMAL mode
-  prefix = "<leader>",
-  buffer = nil,   -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true,  -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true,  -- use `nowait` when creating keymaps
-}
-
 
 -- Utils plugin mappings
 local utils_mappings = {
-  d = {
-    f = { "<cmd>lua require('utils.diff')()<CR>", "Diff With" },
+  {
+    "<leader>?",
+    function()
+      require("which-key").show({ global = false })
+    end,
+    desc = "Buffer Local Keymaps (which-key)",
   },
+  { "<leader>df", "<cmd>lua require('utils.diff')()<CR>", desc = "Diff With" },
 }
 
 -- Git plugin mappings
 local git_mappings = {
-  g = {
-    L = { "", "Git Blame Information" },
-    f = { "<cmd>0Gclog<CR>", "File history" },
-    l = { "<cmd>Gclog<CR>", "Git Log Information" },
-    name = "Git",
-  },
+  { "<leader>gf", "<cmd>0Gclog<CR>", desc = "File history" },
+  { "<leader>gl", "<cmd>Gclog<CR>", desc = "Git Log Information" },
 }
 
 which_key.setup(setup)
-which_key.add(utils_mappings, leader_opts)
-which_key.add(git_mappings, leader_opts)
+which_key.add(utils_mappings)
+which_key.add(git_mappings)

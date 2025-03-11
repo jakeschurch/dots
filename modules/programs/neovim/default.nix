@@ -25,11 +25,10 @@ in
   home.packages = extraPkgs ++ lib.singleton plugman;
 
   programs.neovim = {
-    package = pkgs.neovim-nightly;
+    package = pkgs.unstable.neovim-nightly;
     enable = true;
     defaultEditor = true;
     extraConfig = builtins.readFile ./init.vim;
-    extraPackages = extraPkgs;
 
     viAlias = true;
     vimAlias = true;
@@ -42,10 +41,10 @@ in
   };
 
   home.sessionVariables = {
-    EDITOR = "nvim";
-    MANPAGER = "nvim +Man!";
-    PSQL_EDITOR = "nvim";
-    VIMRUNTIME = "${pkgs.neovim-nightly}/share/nvim/runtime";
+    EDITOR = lib.mkForce (lib.getExe pkgs.unstable.neovim-nightly);
+    MANPAGER = "${lib.getExe pkgs.unstable.neovim-nightly} +Man!";
+    PSQL_EDITOR = lib.getExe pkgs.unstable.neovim-nightly;
+    VIMRUNTIME = "${pkgs.unstable.neovim-nightly}/share/nvim/runtime";
   };
 
   xdg.configFile =

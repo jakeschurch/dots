@@ -27,7 +27,7 @@ in
 
   programs.git = {
     enable = true;
-    package = pkgs.unstable.git;
+    package = pkgs.git;
     userName = "Jake Schurch";
     userEmail = "jakeschurch@gmail.com";
     signing = {

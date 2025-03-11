@@ -46,9 +46,6 @@ local options = {
   showcmd = false,
   foldenable = false,
 
-  timeout = true,
-  timeoutlen = 800,
-  ttimeoutlen = 800,
   redrawtime = 1000,
 
   scrolloff = 999,

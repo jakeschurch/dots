@@ -48,6 +48,7 @@ require("lspsaga").setup({
   code_action = {
     num_shortcut = true,
     extend_gitsigns = true,
+    show_server_name = false,
     keys = {
       quit = quit_keys,
       exec = open_keys,
@@ -91,4 +92,3 @@ require("lspsaga").setup({
     },
   },
 })
-

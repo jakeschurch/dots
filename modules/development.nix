@@ -30,6 +30,8 @@ in
         # latex
         # texlive.combined.scheme-medium
         # _1password-cli
+        ffmpeg
+        mtr
 
         sshuttle
 
@@ -154,14 +156,69 @@ in
     gh-dash = {
       enable = true;
       settings = {
-        prSections = [
+        keybindings.prs = [
           {
-            title = "PR Reviews Needed";
-            filters = "org:fieldguide is:open -is:draft review-requested:@me review-requested:Platform";
+            key = "esc";
+            builtin = null;
           }
+        ];
+        theme = {
+          colors = {
+            background = {
+              selected = "#3c3836";
+            };
+            border = {
+              faint = "#282828";
+              primary = "#504945";
+              secondary = "#665c54";
+            };
+            text = {
+              faint = "#7c6f64";
+              inverted = "#282828";
+              primary = "#ebdbb2";
+              secondary = "#d5c4a1";
+              success = "#98971a";
+              warning = "#cc241d";
+            };
+          };
+          ui = {
+            sectionsShowCount = true;
+            table = {
+              compact = true;
+              showSeparators = true;
+            };
+          };
+        };
+        defaults = {
+          preview = {
+            open = true;
+            width = 80;
+            grow = true;
+          };
+          view = "prs";
+          layout.prs = {
+            updatedAt.hidden = true;
+            base.hidden = true;
+            assignees.hidden = true;
+            author.hidden = true;
+            repo.width = 8;
+            lines.width = 9;
+          };
+        };
+        prSections = [
           {
             title = "My PRs";
             filters = "is:open author:@me org:fieldguide draft:false";
+          }
+          {
+            title = "My Draft PRs";
+            filters = "is:open author:@me org:fieldguide draft:true";
+          }
+          {
+            title = "PR Reviews Needed";
+            filters = "org:fieldguide is:open -is:draft
+            review-requested:@me review-requested:Platform
+            -author:@dependabot";
           }
         ];
       };

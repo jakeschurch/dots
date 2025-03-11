@@ -1,4 +1,3 @@
----@diagnostic disable-next-line: unused-local
 local copilot_cmp = require("copilot_cmp").setup()
 local cmp = require("cmp")
 local compare = require("cmp.config.compare")
@@ -89,7 +88,7 @@ end
 cmp.setup({
   snippet = {
     expand = function(args)
-      vim.snippet.expand(args.body)
+      require("luasnip").lsp_expand(args.body)
     end,
   },
 
@@ -190,6 +189,8 @@ cmp.setup({
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
         luasnip.jump(-1)
+      else
+        fallback()
       end
     end, { "i", "s" }),
 
@@ -200,6 +201,8 @@ cmp.setup({
         luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()
+      else
+        fallback()
       end
     end, { "i", "s" }),
   }),
@@ -215,28 +218,25 @@ cmp.setup({
 
   sources = cmp.config.sources({
     { name = "copilot", group_index = 2 },
-
-    { name = "nvim_lsp", group_index = 2 },
-    { name = "nvim_lsp_signature_help" },
-    { name = "luasnip", group_index = 2 },
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+    { name = "treesitter" },
   }, {
-
-    { name = "treesitter", group_index = 2 },
     { name = "rg", keyword_length = 4 },
     { name = "buffer", keyword_length = 3 },
     { name = "path" },
   }),
   performance = {
-    debounce = 60, -- default is 60ms
-    throttle = 10, -- default is 30ms
+    debounce = 10, -- default is 60ms
+    throttle = 5, -- default is 30ms
     max_entries = 3,
   },
 })
 
 cmp.setup.filetype("markdown", {
   sources = cmp.config.sources({
-    { name = "copilot" },
-    { name = "luasnip" }, -- For luasnip users.
+    { name = "copilot", group_index = 2 },
+    { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
     { name = "emoji" },
@@ -247,10 +247,8 @@ cmp.setup.filetype("markdown", {
 cmp.setup.filetype("gitcommit", {
   sources = cmp.config.sources({
     { name = "copilot", group_index = 2 },
-    { name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
     { name = "path" },
     { name = "emoji" },
-  }, {
     { name = "buffer" },
   }),
 })

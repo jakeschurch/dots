@@ -28,193 +28,121 @@ let
     in
     map pluginGit vimPluginsToFetch;
 
-  nix-nvim-plugins =
-    with pkgs.vimPlugins;
-    [
-      nvim-dap-python
-      nvim-lspconfig
-      copilot-cmp
-      copilot-lua
-      nvim-autopairs
-      vimwiki
-      vim-git
-      vim-fugitive
-      vim-dispatch
-      oil-nvim
-      cmp_luasnip
-      nvim-dap-ui
+  nix-nvim-plugins = with pkgs.unstable.vimPlugins; [
+    nvim-dap-python
+    nvim-lspconfig
+    copilot-cmp
+    copilot-lua
+    nvim-autopairs
+    vimwiki
+    vim-git
+    vim-fugitive
+    vim-dispatch
+    oil-nvim
+    cmp_luasnip
+    nvim-dap-ui
 
-      nvim-code-action-menu
+    vim-unimpaired
 
-      vim-unimpaired
+    vim-repeat
 
-      vim-repeat
+    nvim-dap-virtual-text
 
-      nvim-dap-virtual-text
+    gitlinker-nvim
 
-      gitlinker-nvim
+    nvim-dap-ui
 
-      nvim-dap-ui
+    friendly-snippets
 
-      friendly-snippets
+    octo-nvim
 
-      octo-nvim
+    hop-nvim
 
-      hop-nvim
+    lspkind-nvim
 
-      lspkind-nvim
+    lspsaga-nvim
 
-      lspsaga-nvim
+    playground
 
-      playground
+    telescope-nvim
+    telescope-fzf-native-nvim
+    telescope-fzy-native-nvim
+    telescope-live-grep-args-nvim
 
-      telescope-nvim
-      telescope-fzf-native-nvim
-      telescope-fzy-native-nvim
-      telescope-live-grep-args-nvim
+    telescope-ui-select-nvim
 
-      telescope-ui-select-nvim
+    telescope-dap-nvim
 
-      telescope-dap-nvim
+    nvim-nio
 
-      nvim-nio
+    lualine-nvim
 
-      lualine-nvim
+    popup-nvim
 
-      popup-nvim
+    plenary-nvim
 
-      plenary-nvim
+    lsp-status-nvim
 
-      lsp-status-nvim
+    nvim-lspconfig
 
-      completion-nvim
+    nvim-dap
 
-      nvim-lspconfig
+    indent-blankline-nvim
 
-      nvim-dap
+    impatient-nvim
 
-      indent-blankline-nvim
+    gitsigns-nvim
 
-      cmp-rg
+    nvim-surround
 
-      impatient-nvim
+    nvim-web-devicons
 
-      gitsigns-nvim
+    vim-emoji
 
-      nvim-surround
+    fzf-vim
 
-      nvim-web-devicons
+    virtual-types-nvim
 
-      vim-emoji
+    nvim-cmp
+    cmp-rg
+    cmp-path
+    cmp-nvim-lsp
+    cmp-emoji
+    cmp-cmdline
+    cmp-buffer
+    cmp-treesitter
 
-      fzf-vim
+    alpha-nvim
 
-      virtual-types-nvim
+    which-key-nvim
 
-      nvim-cmp
+    gruvbox-nvim
 
-      cmp-path
+    yuck-vim
 
-      cmp-nvim-lsp
+    kommentary
 
-      cmp-emoji
+    toggleterm-nvim
 
-      cmp-cmdline
+    luasnip
+    nvim-ts-context-commentstring
 
-      cmp-buffer
+    img-clip-nvim
+    nvim-treesitter-textobjects
+    nvim-treesitter-textsubjects
+    lsp_signature-nvim
+    none-ls-nvim
 
-      alpha-nvim
+    dressing-nvim
+    nui-nvim
 
-      which-key-nvim
+    plenary-nvim
+    trouble-nvim
+    avante-nvim
 
-      gruvbox-nvim
+    render-markdown-nvim
+  ];
 
-      yuck-vim
-
-      kommentary
-
-      toggleterm-nvim
-
-      luasnip
-      nvim-ts-context-commentstring
-
-      img-clip-nvim
-      cmp-treesitter
-      nvim-treesitter-textobjects
-      nvim-treesitter-textsubjects
-      lsp_signature-nvim
-      none-ls-nvim
-
-      dressing-nvim
-      nui-nvim
-    ]
-    ++ (with pkgs.unstable.vimPlugins; [
-      plenary-nvim
-      trouble-nvim
-      avante-nvim
-
-      render-markdown-nvim
-    ]);
-
-  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withPlugins (
-    ts-plugins: with ts-plugins; [
-      awk
-      bash
-      c
-      comment
-      css
-      desktop
-      dhall
-      diff
-      dockerfile
-      elixir
-      embedded_template
-      func
-      git_config
-      git_rebase
-      gitattributes
-      gitcommit
-      gitignore
-      go
-      gomod
-      gotmpl
-      graphql
-      haskell
-      hcl
-      heex
-      helm
-      html
-      javascript
-      jq
-      json
-      latex
-      lua
-      luadoc
-      make
-      markdown
-      markdown_inline
-      mermaid
-      ninja
-      nix
-      passwd
-      promql
-      python
-      regex
-      rust
-      sql
-      ssh_config
-      sxhkdrc
-      templ
-      terraform
-      toml
-      tree-sitter-hcl
-      tsx
-      typescript
-      vim
-      vimdoc
-      yaml
-      yuck
-    ]
-  );
+  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;
 in
 nix-nvim-plugins ++ custom-sourced-nvim-plugins ++ pkgs.lib.singleton treesitter-plugins

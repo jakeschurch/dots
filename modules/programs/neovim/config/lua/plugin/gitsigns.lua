@@ -1,8 +1,8 @@
 require("gitsigns").setup({
   signs_staged_enable = true,
   signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-  numhl = false,     -- Toggle with `:Gitsigns toggle_numhl`
-  linehl = false,    -- Toggle with `:Gitsigns toggle_linehl`
+  numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
   word_diff = false,
   watch_gitdir = {
     interval = 100,
@@ -19,7 +19,7 @@ require("gitsigns").setup({
   current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
   sign_priority = 6,
   update_debounce = 100,
-  status_formatter = nil,  -- Use default
+  status_formatter = nil, -- Use default
   max_file_length = 40000, -- Disable if file is longer than this (in lines)
   preview_config = {
     -- Options passed to nvim_open_win
@@ -83,19 +83,12 @@ require("gitsigns").setup({
   end,
 })
 
--- Gitsigns plugin mappings
-local gitsigns_mappings = {
-  ["["] = {
-    c = { "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", "Prev Hunk" },
-    name = "Backward Movements",
-  },
-  ["]"] = {
-    c = { "<cmd>lua require 'gitsigns'.next_hunk()<CR>", "Next Hunk" },
-    name = "Forward Movements",
-  },
+local mappings = {
+  { "[c", "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", desc = "Prev Hunk" },
+  { "]c", "<cmd>lua require 'gitsigns'.next_hunk()<CR>", desc = "Next Hunk" },
 }
 
 local which_key = require("which-key")
-which_key.add(gitsigns_mappings)
+which_key.add(mappings)
 
 require("gruvbox").load()

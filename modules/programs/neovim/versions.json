@@ -42,10 +42,10 @@
     "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
   },
   {
-    "owner": "hinell",
-    "repo": "lsp-timeout.nvim",
-    "rev": "6325906730330105a9adc41d0ceb8499b3072e2b",
+    "owner": "LostInTheLogs",
+    "repo": "null-ls-embedded",
+    "rev": "d843f65b757f4fa739db1252b51732c0bc0e2e53",
     "ref": "main",
-    "sha256": "1cq41bbwdjdbhiv81ry0igfndqzgnpjjcbsrhdl8l0prsymby6qv"
+    "sha256": "0pqi9pdrnbr0k2l3rmm2r1d3xnj9bhrrnrpr2b65p4djixjxqp8a"
   }
 ]

@@ -4,8 +4,6 @@
   ...
 }:
 pkgs.lib.mkIf pkgs.stdenv.isDarwin {
-  services.nix-daemon.enable = false;
-
   ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
 
@@ -83,5 +81,6 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
 
   # Add ability to used TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
+  security.sudo.extraConfig = "jake    ALL = (ALL) NOPASSWD: ALL";
   system.stateVersion = 5;
 }

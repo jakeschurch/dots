@@ -36,10 +36,6 @@ pkgs: {
     nil
   ];
 
-  graphql = with pkgs.nodePackages; [
-    graphql-language-service-cli
-  ];
-
   typescript = with pkgs; [
     typescript
     prettier-d-slim

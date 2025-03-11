@@ -57,11 +57,7 @@ in
         "ignoredups"
         "ignorespace"
       ];
-
       NIX_PATH = "nixpkgs=flake:nixpkgs";
-
-      NIX_CONFIG = "/etc/nix/nix.conf";
-
       HISTIGNORE = concatSessionList [
         "ls *"
         "history"

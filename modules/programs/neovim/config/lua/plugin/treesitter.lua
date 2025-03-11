@@ -25,7 +25,7 @@ configs.setup({
     enable = true,
     additional_vim_regex_highlighting = true,
   },
-  indent = { enable = false, },
+  indent = { enable = true },
   textobjects = {
     select = {
       enable = true,
@@ -65,7 +65,7 @@ configs.setup({
   playground = {
     enable = false,
     disable = {},
-    updatetime = 25,        -- Debounced time for highlighting nodes in the playground from source code
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
     persist_queries = true, -- Whether the query persists across vim sessions
     keybindings = {
       toggle_query_editor = "o",

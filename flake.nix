@@ -3,7 +3,15 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/nixos-24.11";
 
-    unstable.url = "nixpkgs/nixpkgs-unstable";
+    unstable.url = "nixpkgs/nixos-unstable";
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
+
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     tfenv.url = "github:cjlarose/tfenv-nix";
 
@@ -30,17 +38,57 @@
     nix-pre-commit-hooks.url = "github:cachix/git-hooks.nix";
     nix-pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
 
-    darwin.url = "github:LnL7/nix-darwin/f81c16138a6d047dcd257952688114898f5f7878";
+    darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixd.url = "github:nix-community/nixd";
     nixd.inputs.nixpkgs.follows = "nixpkgs";
-
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    # neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
   };
 
   nixConfig = {
+    download-attempts = 3;
+    http-connections = 0;
+
+    max-substitution-jobs = 0;
+
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "ca-derivations"
+      "auto-allocate-uids"
+    ];
+
+    cores = 0;
+    max-jobs = "auto";
+    pure-eval = true;
+    builders-use-substitutes = true;
+    substitute = true;
+    sandbox = false;
+    fsync-metadata = false;
+
+    auto-allocate-uids = true;
+    preallocate-contents = true;
+
+    substituters = [
+      "https://cache.lix.systems?priority=1"
+      "https://nix-community.cachix.org?priority=2"
+      "https://cache.nixos.org?priority=3"
+    ];
+
+    trusted-substituters = [
+      "https://cache.lix.systems?priority=1"
+      "https://nix-community.cachix.org?priority=2"
+      "https://cache.nixos.org?priority=3"
+    ];
+
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+
+    warn-dirty = false;
+
     allowed-impure-host-deps = [
       "/usr/bin/ditto" # for darwin builds
       "/bin/sh"
