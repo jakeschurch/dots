@@ -192,6 +192,13 @@ require("which-key").add({
 
 local ollama = require("plugin.ollama_local")
 
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.avante",
+  callback = function()
+    vim.cmd('stopinsert')
+  end,
+})
+
 avante.setup({
   provider = "copilot",
   -- cursor_applying_provider = "copilot",

@@ -72,7 +72,7 @@ null_ls.setup({
     }),
     null_ls.builtins.hover.dictionary,
     null_ls.builtins.diagnostics.vale.with({
-      args = {},
+      args = { "--config", os.getenv("XDG_CONFIG_HOME") .. "/vale/vale.ini" },
     }),
 
     -- Nix
@@ -133,7 +133,6 @@ null_ls.setup({
         "sh",
       },
     }),
-    null_ls.builtins.diagnostics.todo_comments,
     null_ls.builtins.diagnostics.trail_space,
 
     -- docker

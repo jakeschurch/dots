@@ -8,11 +8,6 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
 
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.92.0.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     tfenv.url = "github:cjlarose/tfenv-nix";
 
     flake-utils.url = "github:numtide/flake-utils";
@@ -70,15 +65,13 @@
     preallocate-contents = true;
 
     substituters = [
-      "https://cache.lix.systems?priority=1"
-      "https://nix-community.cachix.org?priority=2"
-      "https://cache.nixos.org?priority=3"
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
     ];
 
     trusted-substituters = [
-      "https://cache.lix.systems?priority=1"
-      "https://nix-community.cachix.org?priority=2"
-      "https://cache.nixos.org?priority=3"
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
     ];
 
     trusted-public-keys = [

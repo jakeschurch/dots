@@ -141,6 +141,7 @@ let
     avante-nvim
 
     render-markdown-nvim
+    codecompanion-nvim
   ];
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;

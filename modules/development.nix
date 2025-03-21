@@ -149,80 +149,29 @@ in
     '';
   };
 
+  xdg.configFile = {
+    "vale/vale.ini".text = ''
+      [core]
+      MinAlertLevel = suggestion
+      Vocab = en
+
+      [checks]
+      Vale.Avoid = true
+      Vale.Spelling = true
+      proselint = true
+      write-good = true
+
+      [*.{md,txt}]
+      Vale.Avoid = true
+      Vale.Spelling = true
+
+      [*.{tex}]
+      Vale.TeX = true
+    '';
+  };
+
   programs = {
     zathura.enable = true;
-
-    gh.enable = true;
-    gh-dash = {
-      enable = true;
-      settings = {
-        keybindings.prs = [
-          {
-            key = "esc";
-            builtin = null;
-          }
-        ];
-        theme = {
-          colors = {
-            background = {
-              selected = "#3c3836";
-            };
-            border = {
-              faint = "#282828";
-              primary = "#504945";
-              secondary = "#665c54";
-            };
-            text = {
-              faint = "#7c6f64";
-              inverted = "#282828";
-              primary = "#ebdbb2";
-              secondary = "#d5c4a1";
-              success = "#98971a";
-              warning = "#cc241d";
-            };
-          };
-          ui = {
-            sectionsShowCount = true;
-            table = {
-              compact = true;
-              showSeparators = true;
-            };
-          };
-        };
-        defaults = {
-          preview = {
-            open = true;
-            width = 80;
-            grow = true;
-          };
-          view = "prs";
-          layout.prs = {
-            updatedAt.hidden = true;
-            base.hidden = true;
-            assignees.hidden = true;
-            author.hidden = true;
-            repo.width = 8;
-            lines.width = 9;
-          };
-        };
-        prSections = [
-          {
-            title = "My PRs";
-            filters = "is:open author:@me org:fieldguide draft:false";
-          }
-          {
-            title = "My Draft PRs";
-            filters = "is:open author:@me org:fieldguide draft:true";
-          }
-          {
-            title = "PR Reviews Needed";
-            filters = "org:fieldguide is:open -is:draft
-            review-requested:@me review-requested:Platform
-            -author:@dependabot";
-          }
-        ];
-      };
-    };
 
     command-not-found.enable = false;
     nix-index.enable = true;
@@ -241,28 +190,28 @@ in
       enable = true;
 
       extraConfig = ''
-          set editing-mode vi
-          set convert-meta on
-          set show-all-if-ambiguous on
-          set horizontal-scroll-mode Off
-          set bell-style none
-          set keymap vi-command
+        set editing-mode vi
+        set convert-meta on
+        set show-all-if-ambiguous on
+        set horizontal-scroll-mode Off
+        set bell-style none
+        set keymap vi-command
 
-          # Color files by types
-          # Note that this may cause completion text blink in some terminals (e.g. xterm).
-          set colored-stats On
+        # Color files by types
+        # Note that this may cause completion text blink in some terminals (e.g. xterm).
+        set colored-stats On
 
-          # Append char to indicate type
-          set visible-stats On
+        # Append char to indicate type
+        set visible-stats On
 
-          # Mark symlinked directories
-          set mark-symlinked-directories On
+        # Mark symlinked directories
+        set mark-symlinked-directories On
 
-          # Color the common prefix
-          set colored-completion-prefix On
+        # Color the common prefix
+        set colored-completion-prefix On
 
-          # Color the common prefix in menu-complete
-          set menu-complete-display-prefix On
+        # Color the common prefix in menu-complete
+        set menu-complete-display-prefix On
 
         # Enable case-insensitive completion
         set completion-ignore-case On
