@@ -138,8 +138,6 @@ let
 
     plenary-nvim
     trouble-nvim
-    avante-nvim
-
     render-markdown-nvim
     codecompanion-nvim
   ];
