@@ -64,6 +64,7 @@ pkgs: {
     luajitPackages.plenary-nvim
     luarocks
     luaPackages.luafilesystem
+    lua53Packages.digestif
     sumneko-lua-language-server
     stylua
   ];
