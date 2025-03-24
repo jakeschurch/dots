@@ -76,7 +76,7 @@ in
         who = "shortlog -s -e -";
         revs = "! f() { ~/bin/git/abbrevs.sh git-revs $@ ;}; f";
         top = "rev-parse --show-toplevel";
-        mainbranch = "! f() { ~/bin/git/abbrevs.sh git-mainbranch $@ ;}; f";
+        mainbranch = "! git branch | grep -Eo 'main|master'";
       };
       includes = [
         {
