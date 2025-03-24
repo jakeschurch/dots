@@ -1,10 +1,11 @@
-for _, file in
-  ipairs(
-    vim.fn.readdir(
-      vim.fn.stdpath("config") .. "/lua/plugin",
-      [[v:val =~ '\.lua$']]
-    )
-  )
+for _, filepath in
+  ipairs(vim.fn.globpath(
+    vim.fn.stdpath("config") .. "/lua/plugin",
+    "**/*.lua", -- Ensure it searches all subdirectories
+    true, -- Scan recursively
+    true -- Return as a list
+  ))
 do
-  require("plugin." .. file:gsub("%.lua$", ""))
+  local module_path = filepath:match("lua/(.*)%.lua$"):gsub("/", ".") -- Convert path to module format
+  require(module_path)
 end
