@@ -28,7 +28,17 @@ let
     in
     map pluginGit vimPluginsToFetch;
 
+  # codecompanion-nvim-next = pkgs.unstable.vimPlugins.codecompanion-nvim.overrideAttrs (_: {
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "olimorris";
+  #     repo = "codecompanion.nvim";
+  #     rev = "v14.2.2";
+  #     sha256 = "sha256-LKC0y6/+6PWlIIWpfBdfaTFVnndFvk7id2kBMwrIlKQ=";
+  #   };
+  # });
+
   nix-nvim-plugins = with pkgs.unstable.vimPlugins; [
+    codecompanion-nvim
     nvim-dap-python
     nvim-lspconfig
     copilot-cmp
@@ -139,7 +149,6 @@ let
     plenary-nvim
     trouble-nvim
     render-markdown-nvim
-    codecompanion-nvim
   ];
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;
