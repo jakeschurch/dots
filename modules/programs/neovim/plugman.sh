@@ -201,9 +201,9 @@ update_file() {
   fi
 
   declare -a args
-  args=$(jq -r '.[] | [.owner, .repo] | join(":")' "$file")
+  args=("$(jq -r '.[] | [.owner, .repo] | join(":")' "$file")")
 
-  download "$args"
+  download "${args[@]}"
   generate_file "$file"
 }
 
