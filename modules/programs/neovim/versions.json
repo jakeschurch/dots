@@ -2,9 +2,9 @@
   {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "3ba82b6d87348b119f9a7fd168ad8a597a18b4b2",
+    "rev": "82fd88339b115f1159d66588191990d95fb41e88",
     "ref": "master",
-    "sha256": "0pl044dgccb84iha30b0pk5lcc2rymhg9zmjnwpd1zkihixz28kw"
+    "sha256": "07rxrpi8njvr75imlr1yi4idyipni11miha8livkmi0rl2rc2m0x"
   },
   {
     "owner": "aymericbeaumet",
@@ -16,16 +16,16 @@
   {
     "owner": "daliusd",
     "repo": "ghlite.nvim",
-    "rev": "799e10fd773210ab6d40eeb21491b3e269d0d426",
+    "rev": "42adbbc03ec50d1306f4bfc38eef0f635bb9bea6",
     "ref": "main",
-    "sha256": "1794wqskhv5ldkdksj5kfn2lrvy26h3sgxcmj7wpzgalmq1ggb13"
+    "sha256": "1driwgl9z9xh5pnjq07gh0lwxwxax7jxzwr7g7cmdzxg4p8gdm4v"
   },
   {
     "owner": "nvimtools",
     "repo": "none-ls-extras.nvim",
-    "rev": "6557f20e631d2e9b2a9fd27a5c045d701a3a292c",
+    "rev": "1214d729e3408470a7b7a428415a395e5389c13c",
     "ref": "main",
-    "sha256": "1afs3ydpa36iq3dm86ffy27jgk8ddg1gp177pwxmnvfbnwjcgpki"
+    "sha256": "04kj9y6qy6l6rfhyzxnkzwdcsr3wm87kxhfzh0g176x5bmshf177"
   },
   {
     "owner": "gbprod",
@@ -35,17 +35,17 @@
     "sha256": "0xjlsq6p4x77g24ixhi1ss8vvq5ydkx8g6d6nl4nl40mpjxqskmp"
   },
   {
-    "owner": "jmckiern",
-    "repo": "vim-venter",
-    "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
-    "ref": "master",
-    "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
-  },
-  {
     "owner": "LostInTheLogs",
     "repo": "null-ls-embedded",
     "rev": "d843f65b757f4fa739db1252b51732c0bc0e2e53",
     "ref": "main",
     "sha256": "0pqi9pdrnbr0k2l3rmm2r1d3xnj9bhrrnrpr2b65p4djixjxqp8a"
+  },
+  {
+    "owner": "jmckiern",
+    "repo": "vim-venter",
+    "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
+    "ref": "master",
+    "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
   }
 ]
