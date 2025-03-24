@@ -1,19 +1,30 @@
 _: {
   projectRootFile = "flake.nix";
+  settings = {
+    formatter = {
 
-  settings.formatter.deadnix.includes = [
-    "*.nix"
-    "!./Templates/flake.nix"
-  ];
+      deadnix.includes = [
+        "*.nix"
+        "!./Templates/flake.nix"
+      ];
 
-  settings.formatter.stylua.options = [
-    "--indent-type"
-    "Spaces"
-    "--indent-width"
-    "2"
-    "--column-width"
-    "80"
-  ];
+      shellcheck.options = [
+        "-e"
+        "SC2155" # Declare and assign separately to avoid masking return values.
+        "-e"
+        "SC2001" # See if you can use ${variable//search/replace} instead.
+      ];
+
+      stylua.options = [
+        "--indent-type"
+        "Spaces"
+        "--indent-width"
+        "2"
+        "--column-width"
+        "80"
+      ];
+    };
+  };
 
   programs = {
     # lua
