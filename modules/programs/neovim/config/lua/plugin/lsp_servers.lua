@@ -1,4 +1,5 @@
 return {
+  digestif = {}, -- latex
   yamlls = {},
   helm_ls = {
     settings = {
@@ -92,7 +93,6 @@ return {
   eslint = {},
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   lua_ls = {
-    cmd = { "/etc/static/profiles/per-user/jake/bin/lua-language-server" },
     on_init = function(client)
       if client.workspace_folders then
         local path = client.workspace_folders[1].name
