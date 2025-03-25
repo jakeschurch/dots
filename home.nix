@@ -6,6 +6,7 @@
 }:
 {
   home = {
+    enableNixpkgsReleaseCheck = false;
     stateVersion = "24.05";
 
     activation = {
@@ -48,7 +49,6 @@
 
   manual.manpages.enable = true;
 
-  home.enableNixpkgsReleaseCheck = false;
   home.packages = with pkgs; [
     noto-fonts-emoji
     jetbrains-mono
