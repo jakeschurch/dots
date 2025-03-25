@@ -21,7 +21,6 @@ let
     };
 
   isPythonScript = scriptType.python;
-  isShellScript = scriptType.shell;
 
   propagatedBuildInputsPaths = pkgs.lib.concatStringsSep ":" (
     map pkgs.lib.getBin propagatedBuildInputs
