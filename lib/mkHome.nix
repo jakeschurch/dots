@@ -46,7 +46,6 @@ let
         ../home.nix
         inputs.nix-index-database.hmModules.nix-index
         (_: {
-          environment.pathsToLink = [ "/share/zsh" ];
 
           home = {
             homeDirectory = "/home/${user}";
