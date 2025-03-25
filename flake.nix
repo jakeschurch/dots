@@ -133,7 +133,6 @@
         f: nixpkgs.lib.genAttrs supportedSystems (system: f { pkgs = pkgsFor system; });
     in
     {
-
       packages = forEachSupportedSystem (
         { pkgs }:
 
