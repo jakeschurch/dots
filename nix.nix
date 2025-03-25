@@ -1,22 +1,9 @@
 { pkgs, ... }:
 {
   nix = {
-    enable = false;
-
-    # linux-builder = {
-    #   enable = pkgs.stdenv.isDarwin;
-    #   ephemeral = true;
-    #   maxJobs = 10;
-    #   config = {
-    #     virtualisation = {
-    #       darwin-builder = {
-    #         diskSize = 120 * 1024;
-    #         memorySize = 4 * 1024;
-    #       };
-    #       cores = 3;
-    #     };
-    #   };
-    # };
+    enable = true;
+    package = pkgs.nixVersions.latest;
+    distributedBuilds = true;
 
     settings = {
       trusted-users = [
@@ -29,12 +16,13 @@
       allowed-users = [ "*" ];
       # builders = "@/etc/nix/machines";
       extra-experimental-features = [
-        "nix-command flakes pipe-operators auto-allocate-uids ca-derivations"
+        "nix-command flakes pipe-operators auto-allocate-uids ca-derivations git-hashing dynamic-derivations"
       ];
       fallback = true;
 
       cores = 0;
       max-jobs = "auto";
+      max-substitution-jobs = 40;
       sandbox = false;
 
       trusted-substituters = [
@@ -48,11 +36,21 @@
       ];
 
       always-allow-substitutes = true;
+      auto-allocate-uids = true;
+      fsync-metadata = false;
+      preallocate-contents = true;
+
       warn-dirty = false;
+      sync-before-registering = true;
+      tarball-ttl = 3600 * 5;
+
+      use-xdg-base-directories = true;
     };
 
-    optimise.automatic = false;
-    gc.automatic = false;
+    channel.enable = false;
+
+    optimise.automatic = true;
+    gc.automatic = true;
 
     extraOptions = ''
       accept-flake-config = true
@@ -62,6 +60,7 @@
       builders-use-substitutes = true
       extra-nix-path = nixpkgs=flake:nixpkgs
 
+      download-attempts = 3
       http-connections = 0
       require-sigs = false
 
