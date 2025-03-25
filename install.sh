@@ -10,11 +10,11 @@ check_if_installed() {
 }
 
 install() {
-  curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+  bash <(curl -L https://nixos.org/nix/install) --daemon
 }
 
 main() {
-  check_if_installed
+  # check_if_installed
   install
   echo "Nix installation completed."
 }
