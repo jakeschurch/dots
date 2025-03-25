@@ -7,6 +7,8 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
 
+  nix.distributedBuilds = true;
+
   environment = {
     extraOutputsToInstall = [
       "share"

@@ -25,7 +25,6 @@ let
         (import ../darwin-configuration.nix { inherit pkgs user; })
         ../modules/homebrew.nix
         inputs.home-manager.darwinModules.home-manager
-        ../nix.nix
         {
           home-manager = {
             useGlobalPkgs = true;
@@ -42,7 +41,6 @@ let
       inherit pkgs;
 
       modules = [
-        ../nix.nix
         ../home.nix
         inputs.nix-index-database.hmModules.nix-index
         (_: {

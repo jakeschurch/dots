@@ -120,7 +120,6 @@ in
         nixgl.nixGLIntel
         steam
         rofi
-        etcher
         spotify
         docker
         wmctrl

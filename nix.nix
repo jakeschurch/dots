@@ -3,8 +3,6 @@
   nix = {
     enable = false;
 
-    distributedBuilds = true;
-
     # linux-builder = {
     #   enable = pkgs.stdenv.isDarwin;
     #   ephemeral = true;
