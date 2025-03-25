@@ -10,8 +10,6 @@
 
     tfenv.url = "github:cjlarose/tfenv-nix";
 
-    flake-utils.url = "github:numtide/flake-utils";
-
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -51,11 +49,12 @@
       "flakes"
       "ca-derivations"
       "auto-allocate-uids"
+      "pipe-operators"
+      "dynamic-derivations"
     ];
 
     cores = 0;
     max-jobs = "auto";
-    pure-eval = true;
     builders-use-substitutes = true;
     substitute = true;
     sandbox = false;
@@ -76,7 +75,6 @@
 
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
 
@@ -97,7 +95,6 @@
     {
       self,
       nixpkgs,
-      flake-utils,
       ...
     }@inputs:
     let
@@ -107,83 +104,78 @@
         "aarch64-darwin"
         "aarch64-linux"
       ];
-    in
-    flake-utils.lib.eachSystem supportedSystems (
-      system:
-      with nixpkgs.lib;
-      let
-        basePkgs =
-          system:
-          import nixpkgs {
-            inherit system;
 
-            config = {
-              allowUnfree = true;
-              cudaSupport = false;
-              allowBroken = true;
-            };
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
 
-            allowUnfreePredicate =
-              pkg:
-              builtins.elem (lib.getName pkg) [
-                "terraform-1.9.6"
-              ];
+          config = {
+            allowUnfree = true;
+            cudaSupport = false;
+            allowBroken = true;
+          };
 
-            permittedInsecurePackages = [
-              "electron-19.1.9"
+          allowUnfreePredicate =
+            pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "terraform-1.9.6"
             ];
 
-            packageOverrides = _pkgs: {
-              inherit (inputs) lexical-lsp;
-              inherit (nixpkgs) narHash;
+          permittedInsecurePackages = [
+            "electron-19.1.9"
+          ];
 
-              terragrunt = _pkgs.terragrunt.overrideAttrs (_oldAttrs: {
-                version = "0.69.1";
-              });
-            };
-
-            overlays = import ./overlays.nix {
-              inherit inputs system;
-            };
-          };
-
-        treefmtEval = pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-        pre-commit-check =
-          pkgs:
-          import ./pre-commit-hooks.nix {
-            inherit pkgs system;
-            inherit (inputs) nix-pre-commit-hooks;
-          };
-
-        pkgs = basePkgs system;
-      in
-      rec {
-        inherit (pkgs.lib) mkHome;
-
-        darwinConfigurations.curiosity = mkHome "jake";
-        homeConfigurations.apollo = mkHome "jake";
-
-        packages.default =
-          if pkgs.stdenv.isLinux then
-            homeConfigurations.apollo.activationPackage
-          else
-            darwinConfigurations.curiosity.config.system.build.toplevel;
-
-        devShells.default =
-          let
-            pre-commitEval = self.checks.${system}.pre-commit-check pkgs;
-          in
-          pkgs.mkShell {
-            inherit (pre-commitEval) shellHook;
-          };
-
-        formatter = (treefmtEval pkgs).config.build.wrapper;
-
-        checks = {
-          inherit pre-commit-check;
+          overlays = import ./overlays.nix { inherit inputs; };
         };
 
-        apps = { };
-      }
-    );
+      forEachSupportedSystem =
+        f: nixpkgs.lib.genAttrs supportedSystems (system: f { pkgs = pkgsFor system; });
+    in
+    {
+
+      packages = forEachSupportedSystem (
+        { pkgs }:
+
+        let
+          getDrvActivationPackage =
+            drv: if pkgs.stdenv.isLinux then drv.activationPackage else drv.config.system.build.toplevel;
+
+          drvs = rec {
+            jake = pkgs.lib.mkHome "jake";
+            droid = pkgs.lib.mkHome "droid"; # for pixel phone
+
+            default = jake;
+          };
+        in
+        pkgs.lib.mapAttrs (_: getDrvActivationPackage) drvs
+      );
+
+      devShells = forEachSupportedSystem (
+        { pkgs }:
+        {
+          default = pkgs.mkShell {
+            inherit (self.checks.${pkgs.system}.pre-commit-check pkgs) shellHook;
+          };
+        }
+      );
+
+      formatter = forEachSupportedSystem (
+        { pkgs }:
+        let
+          treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        in
+        treefmtEval.config.build.wrapper
+      );
+
+      checks = forEachSupportedSystem (
+        { pkgs }:
+        {
+          pre-commit-check = import ./pre-commit-hooks.nix {
+            inherit pkgs;
+            inherit (inputs) nix-pre-commit-hooks;
+          };
+        }
+      );
+    };
 }
