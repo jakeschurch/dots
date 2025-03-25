@@ -1,10 +1,9 @@
 {
   pkgs,
   nix-pre-commit-hooks,
-  system,
   ...
 }:
-nix-pre-commit-hooks.lib.${system}.run {
+nix-pre-commit-hooks.lib.${pkgs.system}.run {
   src = ./.;
   hooks = {
     # nix

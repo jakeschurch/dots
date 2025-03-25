@@ -155,7 +155,7 @@
         { pkgs }:
         {
           default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.system}.pre-commit-check pkgs) shellHook;
+            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
           };
         }
       );
