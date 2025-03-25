@@ -3,61 +3,73 @@
   inputs,
   ...
 }:
+with pkgs;
+with inputs;
 let
-  specialArgs = {
-    inherit inputs;
-    inherit pkgs;
-    inherit (pkgs) system;
-  } // inputs;
-
-  mkDarwinHome =
+  getSpecialArgs =
     user:
-    inputs.darwin.lib.darwinSystem {
-      inherit (pkgs) system;
+    {
+      inherit
+        inputs
+        pkgs
+        system
+        lib
+        user
+        ;
+    }
+    // inputs;
 
-      specialArgs = specialArgs // {
-        inherit inputs;
-        inherit (pkgs) lib;
-      };
-      modules = [
-        { _module.args = specialArgs; }
-        inputs.nix-index-database.darwinModules.nix-index
-        (import ../darwin-configuration.nix { inherit pkgs user; })
-        ../modules/homebrew.nix
-        inputs.home-manager.darwinModules.home-manager
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            users."${user}" = import ../home.nix;
-          };
-        }
-      ];
-    };
-
-  mkHmHome =
+  applyModules =
     user:
-    inputs.home-manager.lib.homeManagerConfiguration {
+    lib.singleton (
+      {
+        home-manager = lib.mkIf stdenv.isDarwin {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          users."${user}" = import ../home.nix;
+        };
+
+        imports =
+          [ ../nix.nix ]
+          ++ lib.optionals stdenv.isDarwin [
+            nix-index-database.darwinModules.nix-index
+            home-manager.darwinModules.home-manager
+            ../modules/homebrew.nix
+            ../darwin-configuration.nix
+          ]
+          ++ lib.optionals stdenv.isLinux [
+            ../home.nix
+            nix-index-database.hmModules.nix-index
+          ];
+      }
+      // lib.optionalAttrs stdenv.isLinux {
+        home = {
+          homeDirectory = "/home/${user}";
+          username = user;
+          enableNixpkgsReleaseCheck = false;
+        };
+      }
+    );
+
+  applyConfig =
+    user:
+    {
+      modules = applyModules user;
+    }
+    // lib.optionalAttrs stdenv.isLinux {
       inherit pkgs;
-
-      modules = [
-        ../home.nix
-        inputs.nix-index-database.hmModules.nix-index
-        (_: {
-
-          home = {
-            homeDirectory = "/home/${user}";
-            username = user;
-            enableNixpkgsReleaseCheck = false;
-          };
-        })
-      ];
-
-      extraSpecialArgs = specialArgs // {
-        inherit user;
-      };
+      extraSpecialArgs = getSpecialArgs user;
+    }
+    // lib.optionalAttrs stdenv.isDarwin {
+      inherit system;
+      specialArgs = getSpecialArgs user;
     };
 
-  mkHome = user: if pkgs.stdenv.isLinux then mkHmHome user else mkDarwinHome user;
+  mkHome =
+    user:
+    if stdenv.isLinux then
+      home-manager.lib.homeManagerConfiguration
+    else
+      darwin.lib.darwinSystem (applyConfig user);
 in
 mkHome
