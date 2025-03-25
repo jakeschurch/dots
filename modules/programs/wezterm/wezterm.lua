@@ -13,8 +13,8 @@ local config = wezterm.config_builder()
 
 config.disable_default_key_bindings = true
 config.keys = {
-  { key = 'v', mods = 'CMD', action = act.PasteFrom 'Clipboard' },
-  { key = 'p', mods = 'ALT', action = act.PasteFrom 'Clipboard' },
+  { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") },
+  { key = "p", mods = "ALT", action = act.PasteFrom("Clipboard") },
 
   {
     key = "u",
@@ -50,7 +50,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
@@ -166,8 +166,8 @@ config.keys = {
     action = act.AdjustPaneSize({ "Down", 5 }),
   },
 
-  { key = '-', mods = 'CTRL', action = wezterm.action.DecreaseFontSize },
-  { key = '=', mods = 'CTRL', action = wezterm.action.IncreaseFontSize },
+  { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
+  { key = "=", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
 }
 
 config.default_cwd = os.getenv("HOME") .. "/Projects/work"
@@ -278,7 +278,7 @@ config.mouse_bindings = {
 }
 
 config.set_environment_variables = {
-  TERMINFO_DIRS = '/Users/jake/.nix-profile/share/terminfo',
+  TERMINFO_DIRS = "/Users/jake/.nix-profile/share/terminfo",
 }
 
 return config
