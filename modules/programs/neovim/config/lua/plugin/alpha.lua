@@ -23,14 +23,16 @@ local function add_button(filepath, shortcut_key, text)
   local text_to_show = text or filepath
 
   return startify.button(
-    shortcut_key, text_to_show, ":e " .. filepath .. "<CR>"
+    shortcut_key,
+    text_to_show,
+    ":e " .. filepath .. "<CR>"
   )
 end
 
 local function add_icon_button(filepath, shortcut_key, text)
   local icon_text = (get_file_icon(filepath) or "")
-      .. "\t"
-      .. (text or filepath)
+    .. "\t"
+    .. (text or filepath)
 
   return add_button(filepath, shortcut_key, icon_text)
 end
@@ -41,7 +43,8 @@ function get_mru_dirfiles(dir, n_files)
   -- Use 'fd' to find files, then use 'stat' to get modification times, sort by time, and limit the results
   local command = string.format(
     'fd --type f --hidden --exclude .git %s | xargs -I{} stat --format="%%Y %%n" {} | sort -n -r | head -n %d',
-    dir, n_files
+    dir,
+    n_files
   )
 
   local handle = io.popen(command)
@@ -67,8 +70,8 @@ local function get_git_repos(directory)
 
   local handle = io.popen(
     "fd .git$ "
-    .. directory
-    .. ' -d 2 -u -H  -t d -x stat -c "%Y %n" | sort -n -r | head -n 5'
+      .. directory
+      .. ' -d 2 -u -H  -t d -x stat -c "%Y %n" | sort -n -r | head -n 5'
   )
   if handle then
     for line in handle:lines() do
@@ -123,10 +126,7 @@ startify.section.mru_git = {
           repo = repo:gsub("%.git$", "")
           local trimmed_path = repo:gsub(expanded_dir, "")
 
-          table.insert(
-            buttons,
-            add_icon_button(repo, index, trimmed_path)
-          )
+          table.insert(buttons, add_icon_button(repo, index, trimmed_path))
         end
 
         return buttons
@@ -156,7 +156,7 @@ startify.section.mru = {
   type = "group",
   val = {
     { type = "padding", val = 1 },
-    { type = "text",    val = "MRU", opts = { hl = "SpecialComment" } },
+    { type = "text", val = "MRU", opts = { hl = "SpecialComment" } },
     {
       type = "group",
       val = function()
