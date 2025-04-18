@@ -1,4 +1,5 @@
 return {
+  ["git_files"] = require("plugin.llm.codecompanion.slash_commands.git_files"),
   ["agent_mode"] = require(
     "plugin.llm.codecompanion.slash_commands.agent_mode"
   ),

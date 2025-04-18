@@ -10,7 +10,6 @@
     ./hammerspoon
     ./i3
     ./k9s
-    ./lf.nix
     ./neovim
     ./ripgrep.nix
     ./rofi

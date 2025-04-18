@@ -60,6 +60,7 @@ pkgs: {
   ];
 
   lua = with pkgs; [
+    luajitPackages.fzf-lua
     luajitPackages.jsregexp
     luajitPackages.plenary-nvim
     luarocks
@@ -136,6 +137,9 @@ pkgs: {
   ];
 
   misc = with pkgs; [
+    mcp-hub
+
+    ast-grep
     tree-sitter
     codespell
     nodePackages.yaml-language-server

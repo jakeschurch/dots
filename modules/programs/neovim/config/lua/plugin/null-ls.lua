@@ -1,6 +1,4 @@
-local _status_ok, null_ls = pcall(require, "null-ls")
-
-local _lsp_status_ok, lsp = pcall(require, "lsp")
+local null_ls = require("null-ls")
 
 null_ls.setup({
   sources = {
@@ -98,9 +96,6 @@ null_ls.setup({
 
     null_ls.builtins.formatting.tidy,
 
-    -- REVIEW
-    null_ls.builtins.diagnostics.alex,
-
     -- sql
     null_ls.builtins.diagnostics.sqlfluff.with({
       extra_args = { "--dialect", "postgres" },
@@ -140,22 +135,6 @@ null_ls.setup({
 
     -- vim
     null_ls.builtins.diagnostics.vint,
-    require("null-ls-embedded").nls_source.with({
-      filetypes = {
-        "markdown",
-        "html",
-        "heex",
-        "leex",
-        "yaml",
-        "lua",
-        "vim",
-        "python",
-        "javascript",
-        "bash",
-        "sh",
-      },
-    }),
   },
   debug = false,
-  on_attach = lsp.common_on_attach,
 })

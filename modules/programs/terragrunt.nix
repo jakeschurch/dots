@@ -1,13 +1,25 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home = {
     packages = with pkgs; [
-      terragrunt
+      unstable.terragrunt
     ];
 
     shellAliases = {
-      tg = "terragrunt --terragrunt-forward-tf-stdout --terragrunt-use-partial-parse-config-cache --terragrunt-fail-on-state-bucket-creation --terragrunt-source-map \"git::git@github.com:fieldguide/infrastructure.git=$(git rev-parse --show-toplevel)\"";
-      tgr = "tg run-all";
+      tg_pretty_print = "sed -f ~/Projects/work/infrastructure/.github/workflows/auxiliary/terraform_pretty_patterns.sed";
+      tg =
+        let
+          args = lib.strings.concatStringsSep " " [
+            "--experiment cli-redesign"
+            "--tf-forward-stdout"
+            "--use-partial-parse-config-cache"
+            "--backend-require-bootstrap"
+            "--source-map \"git::git@github.com:fieldguide/infrastructure.git=$(git rev-parse --show-toplevel)\""
+          ];
+        in
+        "terragrunt run ${args}";
+
+      tgr = "tg --all";
       tg_plan = "tg plan";
       tg_refresh = "tgr refresh";
       tg_init = "tgr init";

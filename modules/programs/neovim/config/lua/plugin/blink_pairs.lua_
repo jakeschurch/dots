@@ -1,0 +1,5 @@
+require("blink.pairs").setup({
+  mappings = {
+    enabled = true,
+  },
+})

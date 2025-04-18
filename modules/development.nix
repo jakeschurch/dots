@@ -5,25 +5,12 @@
 }:
 let
   kubectl-jq = pkgs.callPackage ./kubectl-jq.nix { };
-
-  download-nixpkgs-cache-index = pkgs.writeShellScriptBin "download-nixpkgs-cache-index" ''
-    download_nixpkgs_cache_index() {
-    	filename="index-$(uname -m | sed 's/^arm64$/aarch64/')-$(uname | tr A-Z a-z)"
-    	mkdir -p ~/.cache/nix-index && cd ~/.cache/nix-index
-    	# -N will only download a new version if there is an update.
-    	wget -q -N https://github.com/Mic92/nix-index-database/releases/latest/download/"$filename"
-    	ln -f "$filename" files
-    }
-
-    download_nixpkgs_cache_index
-  '';
 in
 {
   home = {
     packages =
       with pkgs;
       [
-        download-nixpkgs-cache-index
         nix-update
         ssm-session-manager-plugin
         kind
@@ -38,10 +25,10 @@ in
         chafa
         act
 
+        procs
         gnused
         gnugrep
 
-        yabai
         moreutils
         cloudflared
         tmux
@@ -51,6 +38,7 @@ in
         bat-extras.batdiff
         bat-extras.batgrep
         bat-extras.batwatch
+        bat-extras.batman
         bat-extras.prettybat
         wget
         lsd
@@ -117,6 +105,7 @@ in
         ccache
       ]
       ++ (lib.optionals pkgs.stdenv.isLinux [
+        obs-studio
         nixgl.nixGLIntel
         steam
         rofi
@@ -151,7 +140,6 @@ in
   xdg.configFile = {
     "vale/vale.ini".text = ''
       [core]
-      MinAlertLevel = suggestion
       Vocab = en
 
       [checks]
@@ -172,8 +160,9 @@ in
   programs = {
     zathura.enable = true;
 
-    command-not-found.enable = false;
     nix-index.enable = true;
+    command-not-found.enable = false;
+
     info.enable = true;
     man = {
       enable = true;
@@ -222,8 +211,7 @@ in
         "\C-r": reverse-search-history
 
         # Bind 'Ctrl-f' to open the current line in an editor (like in vim)
-        "\C-f": edit-and-execute-command
-
+        "vv": edit-and-execute-command
 
         "k": history-search-backward
         "j": history-search-forward
@@ -245,6 +233,7 @@ in
 
     bash = {
       enable = true;
+      enableCompletion = true;
       bashrcExtra = ''
         set -o vi
 

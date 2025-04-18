@@ -30,7 +30,9 @@ let
         };
 
         imports =
-          [ ../nix.nix ]
+          [
+            ../nix.nix
+          ]
           ++ lib.optionals stdenv.isDarwin [
             nix-index-database.darwinModules.nix-index
             home-manager.darwinModules.home-manager

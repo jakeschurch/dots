@@ -12,10 +12,15 @@ vim.keymap.set("n", "!", ":!")
 vim.keymap.set("n", "Y", "^y$")
 
 -- quick save
-vim.keymap.set("n", "W", ":wa!<cr>")
+vim.keymap.set("n", "W", ":wa!<cr>", { noremap = true, silent = true })
 
 -- change pwd to file dir
-vim.keymap.set("n", "<leader>hf", ":lcd %:p:h<cr>")
+vim.keymap.set(
+  "n",
+  "<leader>hf",
+  ":lcd %:p:h<cr>",
+  { noremap = true, silent = true }
+)
 
 vim.keymap.set("n", "J", "mzJ`z")
 

@@ -20,9 +20,25 @@ let
       gh
     ];
   };
+
 in
 {
   home.packages = extraPkgs ++ lib.singleton plugman;
+
+  home.file.".config/mcphub/servers.json".text = builtins.toJSON {
+    mcpServers = { };
+    nativeMCPServers = {
+      neovim = {
+        disabled = false;
+        disabled_tools = [ ];
+        disabled_resources = [ ];
+        custom_instructions = {
+          disabled = false;
+          text = "";
+        };
+      };
+    };
+  };
 
   programs.neovim = {
     package = pkgs.unstable.neovim-nightly;
@@ -41,8 +57,7 @@ in
   };
 
   home.sessionVariables = {
-    EDITOR = lib.mkForce (lib.getExe pkgs.unstable.neovim-nightly);
-    MANPAGER = "${lib.getExe pkgs.unstable.neovim-nightly} +Man!";
+    EDITOR = lib.mkForce "nvim";
     PSQL_EDITOR = lib.getExe pkgs.unstable.neovim-nightly;
     VIMRUNTIME = "${pkgs.unstable.neovim-nightly}/share/nvim/runtime";
   };
@@ -62,7 +77,6 @@ in
       bindings = {
         "nvim/after" = ./config/after;
         "nvim/lua" = ./config/lua;
-        "nvim/plugin" = ./config/plugin;
         "nvim/snippets" = ./config/snippets;
       };
 

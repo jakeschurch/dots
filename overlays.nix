@@ -15,14 +15,17 @@
         inherit (prev) pkgs;
       });
 
-    terragrunt = prev.terragrunt.overrideAttrs (_: {
-      version = "0.69.1";
-    });
-
     inherit (inputs) lexical-lsp;
     inherit (inputs.nixpkgs) narHash;
 
+    prev.VimPlugins.blink-pairs = inputs.blink-pairs;
+
+    mcp-hub = inputs.mcp-hub.packages.${prev.pkgs.system}.default;
+
     unstable = (import inputs.unstable { inherit (prev) system; }) // {
+
+      VimPlugins.blink-pairs = inputs.blink-pairs;
+
       neovim-nightly = inputs.neovim-nightly-overlay.packages.${prev.system}.default;
     };
   }

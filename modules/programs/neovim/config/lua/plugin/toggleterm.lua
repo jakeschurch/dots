@@ -101,9 +101,30 @@ function _G.set_terminal_keymaps()
   )
   vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts)
   vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
-  vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
-  vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
-  vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+
+  vim.keymap.set("t", "C-h>", function()
+    if vim.bo.filetype == "toggleterm" then
+      vim.cmd("wincmd h")
+    else
+      return vim.api.nvim_replace_termcodes("<C-h>", true, true, true)
+    end
+  end, { expr = true, noremap = true, silent = true })
+
+  vim.keymap.set("t", "<C-j>", function()
+    if vim.bo.filetype == "toggleterm" then
+      vim.cmd("wincmd j")
+    else
+      return vim.api.nvim_replace_termcodes("<C-j>", true, true, true)
+    end
+  end, { expr = true, noremap = true, silent = true })
+
+  vim.keymap.set("t", "<C-k>", function()
+    if vim.bo.filetype == "toggleterm" then
+      vim.cmd("wincmd k")
+    else
+      return vim.api.nvim_replace_termcodes("<C-k>", true, true, true)
+    end
+  end, { expr = true, noremap = true, silent = true })
 end
 
 -- if you only want these mappings for toggle term use term://*toggleterm#* instead

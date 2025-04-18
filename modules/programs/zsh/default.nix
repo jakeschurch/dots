@@ -25,7 +25,6 @@ let
 
       ".zsh_lazy" = {
         text = ''
-
           # Keybindings
           autoload -U up-line-or-beginning-search
           autoload -U down-line-or-beginning-search
@@ -40,8 +39,19 @@ let
           zle -N edit-command-line
           bindkey -M vicmd v edit-command-line
 
+          bindkey -M vicmd 'k' history-substring-search-up
+          bindkey -M vicmd 'j' history-substring-search-down
+
           # Autopair from zplug
           autopair-init
+
+          function nix-shell () {
+              nix-your-shell zsh nix-shell -- "$@"
+          }
+
+          function nix () {
+              nix-your-shell zsh nix -- "$@"
+          }
 
           # Lazy-load Oh-My-Zsh plugins (if not already loaded)
           if [[ -z "$OMZ_LOADED" ]]; then
@@ -55,7 +65,6 @@ let
             zplug load
             export ZPLUG_LOADED=1
           fi
-
         '';
       };
     };
@@ -114,10 +123,10 @@ in
       }
 
        # MOTD (Message of the Day)
-      if [[ ! -f ~/.motd_cache || $(\find ~/.motd_cache -mtime +1) ]]; then
+      if [[ ! -f ~/.motd_cache || $(fd --type f --changed-before 1d ~/.motd_cache) ]]; then
         motd > ~/.motd_cache
       fi
-      \cat ~/.motd_cache
+      cat ~/.motd_cache
 
       # Lazy-load functions and plugins
       zsh-defer source ~/.zshrc_lazy
@@ -126,6 +135,7 @@ in
       enable = true;
       plugins = [
         { name = "hlissner/zsh-autopair"; }
+        { name = "qoomon/zsh-lazyload"; }
         { name = "ptavares/zsh-direnv"; }
         { name = "romkatv/zsh-defer"; }
       ];
@@ -133,7 +143,21 @@ in
     oh-my-zsh = {
       enable = true;
       plugins = [
+        "aws"
+        "fzf"
+        "gh"
         "git"
+        "golang"
+        "kubectl"
+        "pip"
+        "postgres"
+        "pre-commit"
+        "procs"
+        "safe-paste"
+        "gnu-utils"
+        "terraform"
+        "history-substring-search"
+        "web-search"
         "vi-mode"
       ];
     };

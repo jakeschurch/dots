@@ -1,5 +1,6 @@
 local quit_keys = { "<ESC>", "q" }
 local open_keys = { "<CR>", "o", "e" }
+local edit_keys = { "a", "i" }
 
 vim.wo.signcolumn = "yes"
 
@@ -33,17 +34,19 @@ require("lspsaga").setup({
   },
   finder = {
     open = open_keys,
+    edit = edit_keys,
     vsplit = "s",
     split = "i",
     tabe = "t",
     quit = quit_keys,
   },
   definition = {
-    edit = "e",
+    open = open_keys,
+    edit = edit_keys,
     vsplit = "v",
     split = "s",
     tabe = "t",
-    quit = "<esc>",
+    quit = quit_keys,
   },
   code_action = {
     num_shortcut = true,

@@ -38,10 +38,18 @@ let
   # });
 
   nix-nvim-plugins = with pkgs.unstable.vimPlugins; [
+    fzf-lua
+
+    blink-cmp
+    snacks-nvim
+    blink-pairs
+
+    noice-nvim
+    nvim-notify
+
     codecompanion-nvim
     nvim-dap-python
     nvim-lspconfig
-    copilot-cmp
     copilot-lua
     nvim-autopairs
     vimwiki
@@ -49,7 +57,6 @@ let
     vim-fugitive
     vim-dispatch
     oil-nvim
-    cmp_luasnip
     nvim-dap-ui
 
     vim-unimpaired
@@ -75,13 +82,8 @@ let
     playground
 
     telescope-nvim
-    telescope-fzf-native-nvim
-    telescope-fzy-native-nvim
-    telescope-live-grep-args-nvim
-
-    telescope-ui-select-nvim
-
     telescope-dap-nvim
+    grug-far-nvim
 
     nvim-nio
 
@@ -109,18 +111,7 @@ let
 
     vim-emoji
 
-    fzf-vim
-
     virtual-types-nvim
-
-    nvim-cmp
-    cmp-rg
-    cmp-path
-    cmp-nvim-lsp
-    cmp-emoji
-    cmp-cmdline
-    cmp-buffer
-    cmp-treesitter
 
     alpha-nvim
 
@@ -140,7 +131,6 @@ let
     img-clip-nvim
     nvim-treesitter-textobjects
     nvim-treesitter-textsubjects
-    lsp_signature-nvim
     none-ls-nvim
 
     dressing-nvim
@@ -149,6 +139,8 @@ let
     plenary-nvim
     trouble-nvim
     render-markdown-nvim
+
+    otter-nvim
   ];
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;

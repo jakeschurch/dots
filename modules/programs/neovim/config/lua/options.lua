@@ -18,6 +18,7 @@ g.loaded_rrhelper = 1
 
 local options = {
   autoindent = false,
+  copyindent = true,
   autoread = true,
   backup = false,
   breakindent = true,

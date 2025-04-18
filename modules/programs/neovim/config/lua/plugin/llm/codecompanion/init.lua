@@ -1,7 +1,10 @@
 require("plugin.llm.codecompanion.lualine_integration"):init()
 
+local code_editor_tool = require("plugin.llm.code_editor_tool")
+
 local prompts = {
-  -- ["rfc"] = require("plugin.llm.codecompanion.prompts.rfc"),
+  ["refactor"] = require("plugin.llm.codecompanion.prompts.refactoring"),
+  ["rfc"] = require("plugin.llm.codecompanion.prompts.rfc"),
   ["git_commit"] = require("plugin.llm.codecompanion.prompts.git_commit"),
   ["default"] = {
     strategy = "chat",
@@ -151,7 +154,18 @@ require("codecompanion").setup({
     inline = {
       adapter = "copilot",
       slash_commands = slash_commands,
-      tools = tools,
+      tools = {
+        ["code_editor"] = code_editor_tool,
+        ["mcp"] = {
+          callback = function()
+            return require("mcphub.extensions.codecompanion")
+          end,
+          description = "Call tools and resources from the MCP Servers",
+          opts = {
+            user_approval = false,
+          },
+        },
+      },
       keymaps = {
         accept_change = {
           modes = { n = "ca" },

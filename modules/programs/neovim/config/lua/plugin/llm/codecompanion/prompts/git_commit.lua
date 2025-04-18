@@ -42,6 +42,28 @@ return {
       {
         role = constants.USER_ROLE,
         content = base_prompt,
+        opts = {},
+      },
+    },
+    {
+      {
+        role = constants.USER_ROLE,
+        content = function()
+          vim.g.codecompanion_auto_tool_mode = true
+          return "@cmd_runner Stash git changes (including untracked and keep index). Run `git reset -N` to unstage changes."
+        end,
+        opts = {
+          auto_submit = true,
+        },
+      },
+    },
+    {
+      {
+        role = constants.USER_ROLE,
+        content = function()
+          vim.g.codecompanion_auto_tool_mode = true
+          return "@cmd_runner Stash git changes (including untracked and keep index). Run `git reset -N` to unstage changes."
+        end,
         opts = {
           auto_submit = true,
         },
@@ -53,7 +75,7 @@ return {
         content = function()
           vim.g.codecompanion_auto_tool_mode = true
           return string.format(
-            "Use diff to add changes and create git commits \n```diff\n%s\n```",
+            "Generate and execute git commit for conventional commits from diff - execute git commit with --no-verify\ndiff:\n```diff\n%s\n```",
             vim.fn.system("git diff --no-ext-diff")
           )
         end,
