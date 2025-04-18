@@ -120,7 +120,7 @@ pkgs: {
     goimports-reviser
   ];
 
-  markdown = with pkgs.python3Packages; [
+  markdown = with pkgs.python312Packages; [
     mdformat
     mdformat-gfm
     mdformat-gfm-alerts
@@ -137,8 +137,6 @@ pkgs: {
   ];
 
   misc = with pkgs; [
-    mcp-hub
-
     ast-grep
     tree-sitter
     codespell

@@ -25,20 +25,9 @@ in
 {
   home.packages = extraPkgs ++ lib.singleton plugman;
 
-  home.file.".config/mcphub/servers.json".text = builtins.toJSON {
-    mcpServers = { };
-    nativeMCPServers = {
-      neovim = {
-        disabled = false;
-        disabled_tools = [ ];
-        disabled_resources = [ ];
-        custom_instructions = {
-          disabled = false;
-          text = "";
-        };
-      };
-    };
-  };
+  imports = [
+    ./mcphub
+  ];
 
   programs.neovim = {
     package = pkgs.unstable.neovim-nightly;

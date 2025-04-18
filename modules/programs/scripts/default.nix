@@ -19,7 +19,7 @@ let
     pname = "spell-check-env-vars";
     src = ./spell_check_env_vars.py;
     propagatedBuildInputs = lib.singleton (
-      python3.withPackages (
+      python312.withPackages (
         ps: with ps; [
           pyspellchecker
         ]
@@ -49,7 +49,7 @@ let
     pname = "parse_aws_config";
     src = ./parse_aws_config.py;
     propagatedBuildInputs = lib.singleton (
-      python3.withPackages (
+      python312.withPackages (
         ps: with ps; [
           configparser
         ]

@@ -1,6 +1,23 @@
+vim.g.codecompanion_auto_tool_mode = true
+
 require("plugin.llm.codecompanion.lualine_integration"):init()
 
 local code_editor_tool = require("plugin.llm.code_editor_tool")
+
+local groups = {
+  ["dev"] = {
+    description = "Agentic Dev Workflow",
+    system_prompt = "You are a developer with access to various tools.",
+    tools = {
+      "cmd_runner",
+      "editor",
+      "full_stack_dev",
+      "files",
+      "code_editor",
+      "mcp",
+    },
+  },
+}
 
 local prompts = {
   ["refactor"] = require("plugin.llm.codecompanion.prompts.refactoring"),
@@ -136,6 +153,7 @@ require("codecompanion").setup({
   prompt_library = prompts,
   strategies = {
     chat = {
+      groups = groups,
       adapter = "copilot",
       slash_commands = slash_commands,
       variables = {},
@@ -144,6 +162,18 @@ require("codecompanion").setup({
         llm = function(llm)
           return llm.formatted_name .. "(" .. llm.schema.model.default .. ")"
         end,
+      },
+      tools = {
+        ["code_editor"] = code_editor_tool,
+        ["mcp"] = {
+          callback = function()
+            return require("mcphub.extensions.codecompanion")
+          end,
+          description = "Call tools and resources from the MCP Servers",
+          opts = {
+            user_approval = false,
+          },
+        },
       },
       keymaps = {
         close = {
@@ -154,6 +184,7 @@ require("codecompanion").setup({
     inline = {
       adapter = "copilot",
       slash_commands = slash_commands,
+      groups = groups,
       tools = {
         ["code_editor"] = code_editor_tool,
         ["mcp"] = {

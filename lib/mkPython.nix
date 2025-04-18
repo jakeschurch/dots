@@ -8,7 +8,7 @@ pkgs:
   ...
 }:
 let
-  pythonEnv = pkgs.python3.withPackages (_: pythonPackages);
+  pythonEnv = pkgs.python312.withPackages (_: pythonPackages);
 in
 pkgs.stdenv.mkDerivation {
   inherit pname version src;

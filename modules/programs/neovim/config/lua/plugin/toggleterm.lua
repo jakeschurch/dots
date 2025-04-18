@@ -90,45 +90,45 @@ vim.api.nvim_create_user_command("ToggleTermClear", function()
   end
 end, {})
 
----@diagnostic disable-next-line: unused-function
-function _G.set_terminal_keymaps()
-  local opts = { buffer = 0 }
-  vim.keymap.set(
-    "t",
-    "<C-x>",
-    "<cmd>ToggleTermClear<CR>",
-    { noremap = true, silent = true }
-  )
-  vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts)
-  vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+local opts = { buffer = 0 }
+vim.keymap.set("t", "<C-x>", function()
+  if vim.bo.filetype == "toggleterm" then
+    vim.cmd("ToggleTermClear")
+  else
+    return vim.api.nvim_replace_termcodes("<C-x>", true, true, true)
+  end
+end, { noremap = true, silent = true })
+vim.keymap.set("t", "<esc><esc>", function()
+  if vim.bo.filetype == "toggleterm" then
+    vim.api.nvim_feedkeys([[<C-\><C-n>]], "t", true)
+  else
+    return vim.api.nvim_replace_termcodes("<esc><esc>", true, true, true)
+  end
+end, opts)
 
-  vim.keymap.set("t", "C-h>", function()
-    if vim.bo.filetype == "toggleterm" then
-      vim.cmd("wincmd h")
-    else
-      return vim.api.nvim_replace_termcodes("<C-h>", true, true, true)
-    end
-  end, { expr = true, noremap = true, silent = true })
+vim.keymap.set("t", "C-h>", function()
+  if vim.bo.filetype == "toggleterm" then
+    vim.cmd("wincmd h")
+  else
+    return vim.api.nvim_replace_termcodes("<C-h>", true, true, true)
+  end
+end, { expr = true, noremap = true, silent = true })
 
-  vim.keymap.set("t", "<C-j>", function()
-    if vim.bo.filetype == "toggleterm" then
-      vim.cmd("wincmd j")
-    else
-      return vim.api.nvim_replace_termcodes("<C-j>", true, true, true)
-    end
-  end, { expr = true, noremap = true, silent = true })
+vim.keymap.set("t", "<C-j>", function()
+  if vim.bo.filetype == "toggleterm" then
+    vim.cmd("wincmd j")
+  else
+    return vim.api.nvim_replace_termcodes("<C-j>", true, true, true)
+  end
+end, { expr = true, noremap = true, silent = true })
 
-  vim.keymap.set("t", "<C-k>", function()
-    if vim.bo.filetype == "toggleterm" then
-      vim.cmd("wincmd k")
-    else
-      return vim.api.nvim_replace_termcodes("<C-k>", true, true, true)
-    end
-  end, { expr = true, noremap = true, silent = true })
-end
-
--- if you only want these mappings for toggle term use term://*toggleterm#* instead
-vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+vim.keymap.set("t", "<C-k>", function()
+  if vim.bo.filetype == "toggleterm" then
+    vim.cmd("wincmd k")
+  else
+    return vim.api.nvim_replace_termcodes("<C-k>", true, true, true)
+  end
+end, { expr = true, noremap = true, silent = true })
 
 local trim_spaces = true
 vim.keymap.set({ "n", "v" }, "<space>h", function()
