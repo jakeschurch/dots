@@ -2,16 +2,15 @@ vim.g.codecompanion_auto_tool_mode = true
 
 require("plugin.llm.codecompanion.lualine_integration"):init()
 
-local code_editor_tool = require("plugin.llm.code_editor_tool")
+local code_developer_tool = require("plugin.llm.code_developer_tool")
 
 local groups = {
-  ["dev"] = {
+  ["agent"] = {
     description = "Agentic Dev Workflow",
     system_prompt = "You are a developer with access to various tools.",
     tools = {
       "cmd_runner",
       "editor",
-      "full_stack_dev",
       "files",
       "code_editor",
       "mcp",
@@ -164,7 +163,14 @@ require("codecompanion").setup({
         end,
       },
       tools = {
-        ["code_editor"] = code_editor_tool,
+        ["file"] = {
+          opts = {
+            provider = "fzf_lua", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+            contains_code = true,
+          },
+        },
+
+        ["code_developer"] = code_developer_tool,
         ["mcp"] = {
           callback = function()
             return require("mcphub.extensions.codecompanion")
@@ -186,7 +192,7 @@ require("codecompanion").setup({
       slash_commands = slash_commands,
       groups = groups,
       tools = {
-        ["code_editor"] = code_editor_tool,
+        ["code_developer"] = code_developer_tool,
         ["mcp"] = {
           callback = function()
             return require("mcphub.extensions.codecompanion")
@@ -215,6 +221,9 @@ require("codecompanion").setup({
     },
     chat = {
       icons = {
+        separator = "─",
+        show_header_separator = false,
+        auto_scroll = true,
         pinned_buffer = "📌 ",
         watched_buffer = "👀 ",
       },
@@ -236,5 +245,9 @@ require("codecompanion").setup({
         show_default_prompt_library = true,
       },
     },
+  },
+  opts = {
+    log_level = "ERROR",
+    send_code = true,
   },
 })

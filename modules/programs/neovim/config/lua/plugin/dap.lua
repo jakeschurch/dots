@@ -1,9 +1,10 @@
 vim.cmd([[
 cnoreabbrev bp lua require'dap'.toggle_breakpoint()<cr>
 cnoreabbrev bc lua require'dap'.continue()<cr>
-cnoreabbrev so lua require'dap'.step_over() <cr>
+cnoreabbrev sover lua require'dap'.step_over() <cr>
+cnoreabbrev sout lua require'dap'.step_out() <cr>
+cnoreabbrev sup lua require'dap'.step_up() <cr>
 cnoreabbrev si lua require'dap'.step_into()<cr>
-cnoreabbrev br lua require'dap'.repl.open()<cr>
 cnoreabbrev bq lua require'dap'.ui.close()<cr>
 ]])
 
@@ -14,23 +15,37 @@ vim.fn.sign_define(
   { text = "🛑", texthl = "", linehl = "", numhl = "" }
 )
 
-dap.configurations.javascript = {
+dap.configurations.typescript = {
   {
     type = "pwa-node",
     request = "launch",
-    name = "Launch file",
-    program = "${file}",
+    name = "Debug Jest Tests",
+    runtimeExecutable = "npm",
+    runtimeArgs = {
+      "run",
+      "test",
+      "--",
+      "--runInBand",
+      "--no-cache",
+      "--testTimeout=999999",
+    },
+    rootPath = "${workspaceFolder}",
     cwd = "${workspaceFolder}",
+    console = "integratedTerminal",
+    internalConsoleOptions = "neverOpen",
   },
 }
+
+dap.configurations.javascript = dap.configurations.typescript
+
 dap.adapters["pwa-node"] = {
   type = "server",
   host = "localhost",
   port = "${port}",
   executable = {
-    command = "node",
+    command = "js-debug",
     -- 💀 Make sure to update this path to point to your installation
-    args = { "js-debug", "${port}" },
+    args = { "${port}" },
   },
 }
 

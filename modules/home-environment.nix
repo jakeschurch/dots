@@ -7,6 +7,8 @@
 let
   shellAliases = import ./../config/aliases.nix { inherit pkgs; };
   concatSessionList = builtins.concatStringsSep ":";
+
+  GOPATH = "${config.home.homeDirectory}/go";
 in
 {
   home.file.bin = {
@@ -28,6 +30,7 @@ in
 
     sessionPath =
       [
+        "${GOPATH}/bin"
         "${config.home.homeDirectory}/dots/config/nixpkgs"
         "/etc/static/profiles/per-user/${config.home.username}/bin"
         "/sbin"
@@ -47,12 +50,14 @@ in
       ];
 
     sessionVariables = {
+      inherit GOPATH;
+
       TERM = "wezterm";
       NIX_PROFILES = config.home.profileDirectory;
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
       PAGER = "bat";
-      MANGER = "batman";
+      MANPAGER = "batman";
       HISTSIZE = "50000";
       HISTCONTROL = concatSessionList [
         "ignoredups"

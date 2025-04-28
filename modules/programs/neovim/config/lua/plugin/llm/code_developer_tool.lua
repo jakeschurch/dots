@@ -346,7 +346,6 @@ function CodeExtractor:move_cursor_to_symbol(symbol)
   return -1
 end
 
--- Helpers initioalization
 local code_extractor = CodeExtractor:new()
 local code_editor = CodeEditor:new()
 
@@ -450,50 +449,50 @@ return {
       return string.format(
         [[## Code Developer Tool (`code_developer`) Guidelines
 
-        ## MANDATORY USAGE
-        Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering. Don't overuse these actions. Think what is needed to solve the task, don't fall into rabbit hole.
-        Use `edit` action only when asked by user.
+## MANDATORY USAGE
+Use `get_definition`, `get_references` or `get_implementation` AT THE START of EVERY coding task to gather context before answering. Don't overuse these actions. Think what is needed to solve the task, don't fall into rabbit hole.
+Use `edit` action only when asked by user.
 
-        ## Purpose
-        Traverses the codebase to find definitions, references, or implementations of code symbols to provide error proof solution
-        OR
-        Replace old code with new implementation
+## Purpose
+Traverses the codebase to find definitions, references, or implementations of code symbols to provide error proof solution
+OR
+Replace old code with new implementation
 
-        ## Execution Format
-        Return XML in this format:
+## Execution Format
+Return XML in this format:
 
-        a) **Get Definition Action:** Find where symbol is defined
-        ```xml
-        %s
-        ```
+a) **Get Definition Action:** Find where symbol is defined
+```xml
+%s
+```
 
-        b) **Get References Action:** Find all usages of symbol
-        ```xml
-        %s
-        ```
+b) **Get References Action:** Find all usages of symbol
+```xml
+%s
+```
 
-        c) **Get Implementation Action:** Find implementations of interfaces/abstract classes
-        ```xml
-        %s
-        ```
+c) **Get Implementation Action:** Find implementations of interfaces/abstract classes
+```xml
+%s
+```
 
-        d) **Multiple Actions**: Combine actions in one response if needed
+d) **Multiple Actions**: Combine actions in one response if needed
 
-        ```xml
-        %s
-        ```
+```xml
+%s
+```
 
-        d) **Edit Action**: Replace fragment of code. Use only on user request.
+d) **Edit Action**: Replace fragment of code. Use only on user request.
 
-        ```xml
-        %s
-        ```
+```xml
+%s
+```
 
-        ## Important
-        - Always wrap symbols in CDATA sections
-        - Wait for tool results before providing solutions
-        - Minimize explanations about the tool itself
-        - When looking for symbol, pass only the name of symbol without the object. So use: `saveUsers` as symbol instead of `userRepository.saveUsers`
+## Important
+- Always wrap symbols in CDATA sections
+- Wait for tool results before providing solutions
+- Minimize explanations about the tool itself
+- When looking for symbol, pass only the name of symbol without the object. So use: `saveUsers` as symbol instead of `userRepository.saveUsers`
 ]],
         require("codecompanion.utils.xml.xml2lua").toXml({
           tools = { schema[1] },
@@ -532,16 +531,16 @@ return {
           buf_message_content = buf_message_content
             .. string.format(
               [[
-            ---
-            The %s of symbol: `%s`
-            Filename: %s
-            Start line: %s
-            End line: %s
-            Content:
-            ```%s
-            %s
-            ```
-            ---
+---
+The %s of symbol: `%s`
+Filename: %s
+Start line: %s
+End line: %s
+Content:
+```%s
+%s
+```
+---
 ]],
               string.upper(type),
               symbol,
@@ -564,9 +563,9 @@ return {
           content = string.format(
             [[There was an error running the %s action:
 
-            ```txt
-            %s
-            ```]],
+```txt
+%s
+```]],
             string.upper(action._attr.type),
             err
           ),

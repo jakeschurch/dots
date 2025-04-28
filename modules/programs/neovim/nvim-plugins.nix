@@ -141,6 +141,8 @@ let
     render-markdown-nvim
 
     otter-nvim
+
+    diffview-nvim
   ];
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;

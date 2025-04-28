@@ -38,6 +38,23 @@
         autoApprove = [ ];
       };
 
+      "github.com/modelcontextprotocol/servers/tree/main/src/filesystem" = {
+        command = "docker";
+        args = [
+          "run"
+          "-i"
+          "--rm"
+          "--mount"
+          "type=bind,src=/Users/jake/Projects/work/,dst=/Users/jake/Projects/work/"
+          "mcp/filesystem"
+          "/Users/jake/Projects/work/"
+        ];
+        disabled = false;
+        env = {
+          FASTMCP_LOG_LEVEL = "ERROR";
+        };
+      };
+
       sequentialthinking = {
         command = "docker";
         args = [
@@ -46,18 +63,20 @@
           "-i"
           "mcp/sequentialthinking"
         ];
+        env = {
+          FASTMCP_LOG_LEVEL = "INFO";
+        };
       };
 
-      memory = {
-        command = "docker";
+      "github.com/modelcontextprotocol/servers/tree/main/src/memory" = {
+        command = "npx";
         args = [
-          "run"
-          "-i"
-          "-v"
-          "claude-memory:/app/dist"
-          "--rm"
-          "mcp/memory"
+          "-y"
+          "@modelcontextprotocol/server-memory"
         ];
+        env = {
+          MEMORY_FILE_PATH = "~/.mcphub/memory.json";
+        };
       };
     };
 

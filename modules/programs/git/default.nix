@@ -122,6 +122,10 @@ in
           difftastic = {
             cmd = "difftastic-inline \"$LOCAL\" \"$REMOTE\"";
           };
+          nvimdiff = {
+            cmd = "nvim -d \"$LOCAL\" \"$REMOTE\"";
+            prompt = false;
+          };
         };
 
         pager = {
@@ -129,7 +133,7 @@ in
         };
 
         diff = {
-          tool = "neovim";
+          tool = "difftastic";
           colorMoved = "default";
           algorithm = "minimal";
           external = "difftastic-inline";
@@ -139,13 +143,14 @@ in
         };
 
         merge = {
+          tool = "nvimmerge";
           conflictstyle = "diff3";
         };
 
         mergetool = {
           keepBackup = false;
           fugitive = {
-            cmd = ''nvim -f -c "Gvdiffsplit!" "$MERGED"'';
+            cmd = ''nvim -f -c "DiffViewOpen" "$MERGED"'';
           };
         };
 

@@ -7,7 +7,12 @@
   inputs.tfenv.overlays.default
 ]
 ++ inputs.nixpkgs.lib.singleton (
-  _: prev: {
+  _: prev:
+
+  let
+    unstable = import inputs.unstable { inherit (prev) system; };
+  in
+  {
     lib =
       prev.lib
       // (import ./lib {
@@ -22,7 +27,9 @@
 
     mcp-hub = inputs.mcp-hub.packages.${prev.pkgs.system}.default;
 
-    unstable = (import inputs.unstable { inherit (prev) system; }) // {
+    inherit (unstable.pkgs) formats;
+
+    unstable = unstable // {
 
       VimPlugins.blink-pairs = inputs.blink-pairs;
 

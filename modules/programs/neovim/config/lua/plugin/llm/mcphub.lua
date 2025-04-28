@@ -1,3 +1,5 @@
+-- local mcp_lsp_server = require("plugin.llm.mcp_servers.code_developer")
+
 require("mcphub").setup({
   extensions = {
     codecompanion = {

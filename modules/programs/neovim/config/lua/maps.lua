@@ -63,7 +63,7 @@ end, { noremap = true, silent = true })
 vim.cmd([[
 cnoremap %s/ %s/\v
 
-cnoreabbrev <expr> c (getcmdtype() == ':' && getcmdline() == 'c') ? 'G c' : 'c'
+cnoreabbrev <expr> c (getcmdtype() == ':' && getcmdline() == 'c') ? 'G commit -m' : 'c'
 cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'a') ? 'G add %' : 'a'
 ]])
 
