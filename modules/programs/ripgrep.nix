@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, callPackage, ... }:
 {
-  home.packages = with pkgs; [
-    (ripgrep.override { withPCRE2 = true; })
+  home.packages = [
+    (pkgs.ripgrep.override { withPCRE2 = true; })
   ];
 
-  home.file.".rgignore".text = pkgs.callPackage ../../config/ignore.nix { };
+  home.file.".rgignore".text = callPackage ../../config/ignore.nix { };
 }

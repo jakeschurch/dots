@@ -1,11 +1,16 @@
 {
   pkgs,
+  lib,
   user,
   ...
 }:
-pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+lib.mkIf pkgs.stdenv.isDarwin {
   ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
+
+  # REVIEW: temporary fix for darwin
+  users.knownUsers = lib.mkForce [ ];
+  users.knownGroups = lib.mkForce [ ];
 
   environment = {
     extraOutputsToInstall = [
@@ -38,16 +43,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
     info.enable = true;
   };
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {
-      fonts = [
-        "FiraCode"
-        "DroidSansMono"
-        "Hack"
-        "JetBrainsMono"
-      ];
-    })
-  ];
+  fonts.packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 
   system = {
     keyboard = {
@@ -80,7 +76,7 @@ pkgs.lib.mkIf pkgs.stdenv.isDarwin {
   };
 
   # Add ability to used TouchID for sudo authentication
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
   security.sudo.extraConfig = "jake    ALL = (ALL) NOPASSWD: ALL";
   system.stateVersion = 5;
 }

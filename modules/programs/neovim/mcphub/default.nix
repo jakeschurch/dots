@@ -3,7 +3,7 @@
 
   home.packages = with pkgs; [
     mcp-hub
-    python312Packages.uv
+    python3Packages.uv
   ];
 
   home.file.".config/mcphub/servers.json".text = builtins.toJSON {

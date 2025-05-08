@@ -1,12 +1,15 @@
 {
   pkgs,
+  callPackage,
   lib,
   config,
   ...
 }:
 let
-  zsh-completions = pkgs.callPackage ./zsh-completions.nix {
-    packages = with pkgs; [ colima ];
+  zsh-completions = callPackage ./zsh-completions.nix {
+    packages = with pkgs; [
+      colima
+    ];
   };
 
   homeFileReferences =

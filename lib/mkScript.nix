@@ -1,4 +1,10 @@
-pkgs:
+{
+  lib,
+  makeWrapper,
+  stdenv,
+  python3,
+  ...
+}:
 {
   pname,
   src,
@@ -22,11 +28,9 @@ let
 
   isPythonScript = scriptType.python;
 
-  propagatedBuildInputsPaths = pkgs.lib.concatStringsSep ":" (
-    map pkgs.lib.getBin propagatedBuildInputs
-  );
+  propagatedBuildInputsPaths = lib.concatStringsSep ":" (map lib.getBin propagatedBuildInputs);
 in
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   inherit
     pname
     version
@@ -35,8 +39,7 @@ pkgs.stdenv.mkDerivation {
     propagatedBuildInputs
     ;
 
-  buildInputs =
-    buildInputs ++ [ pkgs.makeWrapper ] ++ (if isPythonScript then with pkgs; [ python3 ] else [ ]);
+  buildInputs = buildInputs ++ [ makeWrapper ] ++ (if isPythonScript then [ python3 ] else [ ]);
 
   installPhase = ''
       mkdir -p $out/bin
@@ -46,10 +49,7 @@ pkgs.stdenv.mkDerivation {
     wrapProgram $out/bin/${pname} \
       --prefix PATH : "$PATH:${propagatedBuildInputsPaths}" \
       ${
-        if isPythonScript then
-          "--set PYTHONPATH $out/lib/python${pkgs.python3.version}/site-packages"
-        else
-          ""
+        if isPythonScript then "--set PYTHONPATH $out/lib/python${python3.version}/site-packages" else ""
       }
   '';
 

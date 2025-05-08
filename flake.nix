@@ -1,11 +1,11 @@
 {
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "nixpkgs/nixos-24.11";
-    unstable.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixpkgs-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    dream2nix.url = "github:nix-community/dream2nix";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly-overlay.inputs.nixpkgs.follows = "unstable";
+    neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
     tfenv.url = "github:cjlarose/tfenv-nix";
 
@@ -30,103 +30,76 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-pre-commit-hooks.url = "github:cachix/git-hooks.nix";
-    nix-pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
+    git-hooks-nix.url = "github:cachix/git-hooks.nix";
 
-    darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+    darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixd.url = "github:nix-community/nixd";
     nixd.inputs.nixpkgs.follows = "nixpkgs";
 
     mcp-hub.url = "github:ravitemer/mcp-hub";
+    mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      ...
-    }@inputs:
-    let
-      supportedSystems = [
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
         "x86_64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
         "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
       ];
 
-      pkgsFor =
-        system:
-        import nixpkgs {
-          inherit system;
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.home-manager.flakeModules.home-manager
+        inputs.git-hooks-nix.flakeModule
+      ];
 
-          config = {
-            allowUnfree = true;
-            cudaSupport = false;
-            allowBroken = true;
+      perSystem =
+        {
+          pkgs,
+          lib,
+          system,
+          ...
+        }:
+        let
+          mkHome = import ./lib/mkHome.nix {
+            inherit
+              inputs
+              system
+              lib
+              pkgs
+              ;
+            inherit (pkgs) stdenv;
+            inherit (inputs) nix-index-database home-manager darwin;
+          };
+        in
+        {
+          treefmt = import ./treefmt.nix { };
+          pre-commit = import ./pre-commit-hooks.nix { };
+
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = import ./overlays.nix { inherit inputs; };
+
+            config.allowUnfree = true;
           };
 
-          allowUnfreePredicate =
-            pkg:
-            builtins.elem (nixpkgs.lib.getName pkg) [
-              "terraform-1.9.6"
-            ];
-
-          permittedInsecurePackages = [
-            "electron-19.1.9"
-          ];
-
-          overlays = import ./overlays.nix { inherit inputs; };
-        };
-
-      forEachSupportedSystem =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f { pkgs = pkgsFor system; });
-    in
-    {
-      packages = forEachSupportedSystem (
-        { pkgs }:
-
-        let
-          getDrvActivationPackage =
-            drv: if pkgs.stdenv.isLinux then drv.activationPackage else drv.config.system.build.toplevel;
-
-          drvs = rec {
-            jake = pkgs.lib.mkHome "jake";
-            droid = pkgs.lib.mkHome "droid"; # for pixel phone
+          packages = rec {
+            jake = mkHome "jake";
+            droid = mkHome "droid"; # for pixel phone
 
             default = jake;
           };
-        in
-        pkgs.lib.mapAttrs (_: getDrvActivationPackage) drvs
-      );
 
-      devShells = forEachSupportedSystem (
-        { pkgs }:
-        {
-          default = pkgs.mkShell {
-            inherit (self.checks.${pkgs.system}.pre-commit-check) shellHook;
-          };
-        }
-      );
+          # devShells.default = {
+          #   inherit (inputs.self.checks.${pkgs.system}.pre-commit-check) shellHook;
+          # };
 
-      formatter = forEachSupportedSystem (
-        { pkgs }:
-        let
-          treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-        in
-        treefmtEval.config.build.wrapper
-      );
-
-      checks = forEachSupportedSystem (
-        { pkgs }:
-        {
-          pre-commit-check = import ./pre-commit-hooks.nix {
-            inherit pkgs;
-            inherit (inputs) nix-pre-commit-hooks;
-          };
-        }
-      );
+        };
     };
 
   nixConfig = {

@@ -1,5 +1,17 @@
-{ pkgs, ... }:
-with pkgs;
+{
+  mkScript,
+
+  python3,
+  asciinema,
+  asciinema-agg,
+  lib,
+  ffmpeg,
+  jq,
+  coreutils,
+  mosh,
+  coreutils-prefixed,
+  ...
+}:
 let
 
   # spell-check-env-vars = lib.mkScript {
@@ -15,20 +27,7 @@ let
   #   description = "Spell check env vars";
   # };
 
-  spell-check-env-vars = lib.mkScript {
-    pname = "spell-check-env-vars";
-    src = ./spell_check_env_vars.py;
-    propagatedBuildInputs = lib.singleton (
-      python312.withPackages (
-        ps: with ps; [
-          pyspellchecker
-        ]
-      )
-    );
-    description = "Spell check env vars";
-  };
-
-  record-gif = lib.mkScript {
+  record-gif = mkScript {
     pname = "record-gif";
     src = ./record-gif.sh;
     propagatedBuildInputs = [
@@ -38,18 +37,18 @@ let
     description = "Record a gif";
   };
 
-  gif2mp4 = lib.mkScript {
+  gif2mp4 = mkScript {
     pname = "gif2vid";
     src = ./gif2vid.sh;
     propagatedBuildInputs = [ ffmpeg ];
     description = "Make mp4 from gif";
   };
 
-  parse-aws-config = lib.mkScript {
+  parse-aws-config = mkScript {
     pname = "parse_aws_config";
     src = ./parse_aws_config.py;
     propagatedBuildInputs = lib.singleton (
-      python312.withPackages (
+      python3.withPackages (
         ps: with ps; [
           configparser
         ]
@@ -59,7 +58,7 @@ let
     description = "Parse AWS config script";
   };
 
-  aws-login = lib.mkScript {
+  aws-login = mkScript {
     pname = "aws-login";
     src = ./aws_profile_login.sh;
     propagatedBuildInputs = [
@@ -70,27 +69,27 @@ let
     description = "AWS login script";
   };
 
-  fg-commit-wrapper = lib.mkScript {
+  fg-commit-wrapper = mkScript {
     pname = "fg-commit";
     src = ./fg-commit-wrapper.sh;
     propagatedBuildInputs = [ coreutils ];
     description = "Prepare commit message for fg features";
   };
 
-  motd = lib.mkScript {
+  motd = mkScript {
     pname = "motd";
     src = ./motd/motd.sh;
     description = "Message of the day";
   };
 
-  ssh-wrapper = lib.mkScript {
+  ssh-wrapper = mkScript {
     pname = "ssh-wrapper";
     src = ./ssh-wrapper.sh;
     description = "ssh wrapper";
     propagatedBuildInputs = [ mosh ];
   };
 
-  nvim-wrapper = lib.mkScript {
+  nvim-wrapper = mkScript {
     pname = "nvim-wrapper";
     src = ./nvim-wrapper.sh;
     description = "neovim wrapper";
@@ -107,7 +106,7 @@ in
     nvim-wrapper
     gif2mp4
     record-gif
-    spell-check-env-vars
+    # spell-check-env-vars
   ];
 
   home.file.".config/motd/quotes.json".source = ./motd/quotes.json;

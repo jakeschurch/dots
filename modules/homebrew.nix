@@ -25,7 +25,6 @@ lib.mkIf pkgs.stdenv.isDarwin {
 
     casks = [
       "arc"
-      "around"
       "balenaetcher"
       "caffeine"
       "hammerspoon"

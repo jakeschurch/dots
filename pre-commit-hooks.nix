@@ -1,26 +1,16 @@
-{
-  pkgs,
-  nix-pre-commit-hooks,
-  ...
-}:
-nix-pre-commit-hooks.lib.${pkgs.system}.run {
-  src = ./.;
-  hooks = {
-    # nix
-    statix-fix = {
-      enable = true;
-      name = "Statix fix";
-      files = "\\.nix$";
-      pass_filenames = false;
-      entry = "${pkgs.statix}/bin/statix fix --ignore ./Templates/*.nix";
-    };
-
-    nix-fmt = {
-      enable = true;
-      fail_fast = true;
-      name = "nix-fmt";
-      entry = "nix fmt";
-      pass_filenames = true;
-    };
+_: {
+  settings.hooks = {
+    check-merge-conflicts.enable = true;
+    check-shebang-scripts-are-executable.enable = true;
+    check-symlinks.enable = true;
+    deadnix.enable = true;
+    detect-private-keys.enable = true;
+    end-of-file-fixer.enable = true;
+    nixfmt-rfc-style.enable = true;
+    pretty-format-json.enable = true;
+    shellcheck.enable = true;
+    sort-simple-yaml.enable = true;
+    statix.enable = true;
+    treefmt.enable = true;
   };
 }

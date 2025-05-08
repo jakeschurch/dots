@@ -1,17 +1,22 @@
-{ pkgs, ... }:
+{
+  stdenv,
+  pkgs,
+  ...
+}:
+with pkgs;
 let
-  psql = pkgs.stdenv.mkDerivation {
+  psql = stdenv.mkDerivation {
     name = "psql";
-    src = pkgs.postgresql;
+    src = postgresql;
 
-    buildInputs = with pkgs; [
+    buildInputs = [
       pkg-config
       openssl
       readline
     ];
     installPhase = ''
       mkdir -p $out/bin
-      cp ${pkgs.postgresql}/bin/psql $out/bin
+      cp ${postgresql}/bin/psql $out/bin
     '';
   };
 in

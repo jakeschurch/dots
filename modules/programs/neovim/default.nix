@@ -1,10 +1,11 @@
 {
   pkgs,
+  mkScript,
   config,
   ...
 }:
+with pkgs;
 let
-  inherit (pkgs) lib;
   extraPkgs =
     let
       getPkgs = pkgs': lib.flatten (lib.attrValues pkgs');
@@ -12,10 +13,13 @@ let
     in
     getPkgs pkgs';
 
-  plugman = lib.mkScript {
+  nvimPlugins = callPackage ./nvim-plugins.nix { };
+  nvimPkgSrc = lib.concatLines (map (x: "vim.opt.runtimepath:append(\"${x.src}\")") nvimPlugins);
+
+  plugman = mkScript {
     pname = "nvim-plugman";
     src = ./plugman.sh;
-    propagatedBuildInputs = with pkgs; [
+    propagatedBuildInputs = [
       jq
       gh
     ];
@@ -30,10 +34,15 @@ in
   ];
 
   programs.neovim = {
-    package = pkgs.unstable.neovim-nightly;
+    package = pkgs.neovim-nightly;
     enable = true;
     defaultEditor = true;
-    extraConfig = builtins.readFile ./init.vim;
+    extraConfig = ''
+      lua <<EOF
+      ${nvimPkgSrc}
+      EOF
+      ${builtins.readFile ./init.vim}
+    '';
 
     viAlias = true;
     vimAlias = true;
@@ -42,13 +51,13 @@ in
     withPython3 = true;
     vimdiffAlias = true;
     coc.enable = false;
-    plugins = pkgs.callPackage ./nvim-plugins.nix { };
+    plugins = nvimPlugins;
   };
 
   home.sessionVariables = {
     EDITOR = lib.mkForce "nvim";
-    PSQL_EDITOR = lib.getExe pkgs.unstable.neovim-nightly;
-    VIMRUNTIME = "${pkgs.unstable.neovim-nightly}/share/nvim/runtime";
+    PSQL_EDITOR = "nvim";
+    VIMRUNTIME = "${neovim-nightly}/share/nvim/runtime";
   };
 
   xdg.configFile =

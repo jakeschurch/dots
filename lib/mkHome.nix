@@ -1,32 +1,60 @@
 {
-  pkgs,
   inputs,
+  pkgs,
+  system,
+  lib,
+  stdenv,
+
+  nix-index-database,
+  home-manager,
+  darwin,
   ...
 }:
-with pkgs;
-with inputs;
 let
+
   getSpecialArgs =
     user:
     {
       inherit
-        inputs
-        pkgs
         system
-        lib
+        pkgs
         user
+        inputs
         ;
     }
-    // inputs;
+    // {
+      inherit (pkgs) mkDerivation callPackage stdenv;
+    }
+    // (import ./default.nix {
+      inherit inputs pkgs;
+    });
 
   applyModules =
     user:
-    lib.singleton (
+    lib.singleton {
+      nixpkgs.config = {
+        allowUnfree = true;
+        cudaSupport = false;
+        allowBroken = true;
+
+        allowUnfreePredicate =
+          pkg:
+          builtins.elem (inputs.nixpkgs.lib.getName pkg) [
+            "terraform-1.9.6"
+          ];
+
+        permittedInsecurePackages = [
+          "electron-19.1.9"
+        ];
+      };
+    }
+    ++ lib.singleton (
       {
         home-manager = lib.mkIf stdenv.isDarwin {
           useGlobalPkgs = true;
           useUserPackages = true;
           users."${user}" = import ../home.nix;
+          extraSpecialArgs = getSpecialArgs user;
         };
 
         imports =
@@ -59,7 +87,6 @@ let
       modules = applyModules user;
     }
     // lib.optionalAttrs stdenv.isLinux {
-      inherit pkgs;
       extraSpecialArgs = getSpecialArgs user;
     }
     // lib.optionalAttrs stdenv.isDarwin {
@@ -70,8 +97,8 @@ let
   mkHome =
     user:
     if stdenv.isLinux then
-      home-manager.lib.homeManagerConfiguration
+      home-manager.lib.homeManagerConfiguration.activationPackage
     else
-      darwin.lib.darwinSystem (applyConfig user);
+      (darwin.lib.darwinSystem (applyConfig user)).config.system.build.toplevel;
 in
 mkHome

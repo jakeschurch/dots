@@ -1,17 +1,41 @@
-{ ... }:
 {
+  pkgs,
+  mkScript,
+  ...
+}:
+let
+  scripts = import ./scripts {
+    inherit mkScript;
+    inherit (pkgs)
+      python3
+      asciinema
+      asciinema-agg
+      lib
+      ffmpeg
+      coreutils
+      mosh
+      coreutils-prefixed
+      jq
+      ;
+  };
+
+in
+{
+
   imports = [
-    ./scripts
     ./zsh
+    scripts
+
+    ./neovim
+    ./ripgrep.nix
+
     ./psql.nix
-    ./eww
     ./fd.nix
+    ./eww
     ./git
     ./hammerspoon
     ./i3
     ./k9s
-    ./neovim
-    ./ripgrep.nix
     ./rofi
     ./slack.nix
     ./ssh.nix

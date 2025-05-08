@@ -1,16 +1,17 @@
 {
   pkgs,
   lib,
+  # dream2nix,
   ...
 }:
-let
-  kubectl-jq = pkgs.callPackage ./kubectl-jq.nix { };
-in
 {
   home = {
     packages =
       with pkgs;
       [
+        # (pkgs.callPackage ./vectorcode.nix { inherit dream2nix; })
+        (pkgs.callPackage ./kubectl-jq.nix { })
+        pipx
         nix-update
         ssm-session-manager-plugin
         kind
@@ -49,7 +50,6 @@ in
 
         k9s
         kubectl
-        kubectl-jq
         kubectx
         kubernetes-helm
         kubernetes-helmPlugins.helm-diff

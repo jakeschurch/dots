@@ -2,7 +2,7 @@
 {
   home = {
     packages = with pkgs; [
-      unstable.terragrunt
+      terragrunt
     ];
 
     shellAliases = {

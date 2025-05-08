@@ -1,23 +1,13 @@
 {
   inputs,
-  ...
 }:
 [
-  inputs.nixGL.overlay
-  inputs.tfenv.overlays.default
-]
-++ inputs.nixpkgs.lib.singleton (
-  _: prev:
-
-  let
-    unstable = import inputs.unstable { inherit (prev) system; };
-  in
-  {
+  (_final: prev: {
     lib =
       prev.lib
       // (import ./lib {
         inherit inputs;
-        inherit (prev) pkgs;
+        pkgs = prev;
       });
 
     inherit (inputs) lexical-lsp;
@@ -26,7 +16,7 @@
     nodejs = prev.pkgs.nodejs_22;
     nodejs_20 = prev.pkgs.nodejs_22;
 
-    prev.VimPlugins.blink-pairs = inputs.blink-pairs;
+    VimPlugins.blink-pairs = inputs.blink-pairs;
 
     VimPlugins.none-ls-nvim = prev.vimUtils.buildVimPlugin {
       pname = "none-ls-nvim";
@@ -39,15 +29,12 @@
       };
     };
 
-    mcp-hub = inputs.mcp-hub.packages.${prev.pkgs.system}.default;
+    mcp-hub = inputs.mcp-hub.packages.${prev.system}.default;
 
-    inherit (unstable.pkgs) formats;
-
-    unstable = unstable // {
-
-      VimPlugins.blink-pairs = inputs.blink-pairs;
-
-      neovim-nightly = inputs.neovim-nightly-overlay.packages.${prev.system}.default;
-    };
-  }
-)
+    neovim-nightly = inputs.neovim-nightly-overlay.packages.${prev.system}.default;
+  })
+]
+++ [
+  inputs.nixGL.overlay
+  inputs.tfenv.overlays.default
+]

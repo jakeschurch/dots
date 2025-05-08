@@ -68,5 +68,12 @@
     "rev": "cea2848f5141890df915cb5ab8f4d82c90653107",
     "ref": "main",
     "sha256": "0k2p9gky2mb85y7lc1g90w7jsj4bns6yj35mjrvp768cjlbpnl3a"
+  },
+  {
+    "owner": "Davidyz",
+    "repo": "VectorCode",
+    "rev": "bcc906de0cccdfe0f2f33164a5bbdd19ff11df86",
+    "ref": "main",
+    "sha256": "1a5115yhm0hk9byv17wd3d29k6d23idczxa2jxi0mlk4g1jwgyi9"
   }
 ]

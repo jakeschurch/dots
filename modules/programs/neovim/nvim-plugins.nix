@@ -37,11 +37,17 @@ let
 
       readJsonFile = with builtins; file: fromJSON (readFile file);
       vimPluginsToFetch = readJsonFile ./versions.json;
+      plugins = map pluginGit vimPluginsToFetch;
     in
-    map pluginGit vimPluginsToFetch;
+    map (
+      x:
+      x.overrideAttrs {
+        doCheck = false;
+      }
+    ) plugins;
 
   nix-nvim-plugins =
-    with pkgs.unstable.vimPlugins;
+    with pkgs.vimPlugins;
     [
       fzf-lua
       rainbow-delimiters-nvim
@@ -149,6 +155,9 @@ let
     ]
     ++ pkgs.lib.singleton none-ls-nvim-patched;
 
-  treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;
+  treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
+
+  allPlugins =
+    nix-nvim-plugins ++ custom-sourced-nvim-plugins ++ pkgs.lib.singleton treesitter-plugins;
 in
-nix-nvim-plugins ++ custom-sourced-nvim-plugins ++ pkgs.lib.singleton treesitter-plugins
+allPlugins

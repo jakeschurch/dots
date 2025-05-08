@@ -1,6 +1,4 @@
-{
-  pkgs,
-}:
+pkgs:
 
 let
   python = pkgs.python311;

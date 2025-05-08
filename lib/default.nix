@@ -1,11 +1,14 @@
 {
   pkgs,
-  inputs,
   ...
 }:
+let
+  mkScript = pkgs.callPackage ./mkScript.nix { };
+  toTOML = pkgs.callPackage ./toTOML.nix { };
+in
 {
-  mkScript = import ./mkScript.nix pkgs;
-  mkPythonApp = import ./mkPython.nix pkgs;
-  mkHome = import ./mkHome.nix { inherit pkgs inputs; };
-  toTOML = import ./toTOML.nix pkgs.lib;
+  inherit
+    mkScript
+    toTOML
+    ;
 }

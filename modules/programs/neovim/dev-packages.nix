@@ -3,7 +3,7 @@ pkgs: {
     pipenv
     pyright
     pylint
-    (python312.withPackages (
+    (python3.withPackages (
       ps: with ps; [
         debugpy
         setuptools # Required by pylama for some reason
@@ -36,7 +36,7 @@ pkgs: {
     nil
   ];
 
-  typescript = with pkgs.unstable; [
+  typescript = with pkgs; [
     typescript
     prettier-d-slim
     nodePackages.prettier
@@ -116,15 +116,15 @@ pkgs: {
   ];
 
   markdown = with pkgs.python312Packages; [
-    mdformat
-    mdformat-gfm
-    mdformat-gfm-alerts
-    mdformat-admon
-    mdformat-frontmatter
-    mdformat-footnote
-    mdformat-simple-breaks
-    mdformat-tables
-    mdformat-beautysh
+    # mdformat
+    # mdformat-gfm
+    # mdformat-gfm-alerts
+    # mdformat-admon
+    # mdformat-frontmatter
+    # mdformat-footnote
+    # mdformat-simple-breaks
+    # mdformat-tables
+    # mdformat-beautysh
   ];
 
   html = with pkgs; [
@@ -135,7 +135,7 @@ pkgs: {
     ast-grep
     tree-sitter
     codespell
-    unstable.nodePackages.yaml-language-server
+    nodePackages.yaml-language-server
     actionlint
     yamllint
     nodePackages.vscode-json-languageserver

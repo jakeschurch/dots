@@ -1,4 +1,4 @@
-lib:
+{ lib }:
 let
   # Escape a TOML key; if it is a string that's a valid identifier, we don't
   # need to add quotes
