@@ -1,5 +1,17 @@
 { pkgs, ... }:
 let
+
+  none-ls-nvim-patched = pkgs.vimUtils.buildVimPlugin {
+    pname = "none-ls-nvim";
+    version = "git-HEAD";
+    src = pkgs.fetchFromGitHub {
+      owner = "ulisses-cruz";
+      repo = "none-ls.nvim";
+      rev = "main"; # Or a specific commit SHA
+      sha256 = "sha256-nZvUWJpd/uTOwMQpy2ZGMHZ32z9M+IVB1ME4dvDFz8g=";
+    };
+  };
+
   custom-sourced-nvim-plugins =
     let
       pluginGit =
@@ -28,122 +40,114 @@ let
     in
     map pluginGit vimPluginsToFetch;
 
-  # codecompanion-nvim-next = pkgs.unstable.vimPlugins.codecompanion-nvim.overrideAttrs (_: {
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "olimorris";
-  #     repo = "codecompanion.nvim";
-  #     rev = "v14.2.2";
-  #     sha256 = "sha256-LKC0y6/+6PWlIIWpfBdfaTFVnndFvk7id2kBMwrIlKQ=";
-  #   };
-  # });
+  nix-nvim-plugins =
+    with pkgs.unstable.vimPlugins;
+    [
+      fzf-lua
+      rainbow-delimiters-nvim
 
-  nix-nvim-plugins = with pkgs.unstable.vimPlugins; [
-    fzf-lua
+      blink-cmp
+      snacks-nvim
+      blink-pairs
 
-    blink-cmp
-    snacks-nvim
-    blink-pairs
+      noice-nvim
 
-    noice-nvim
-    nvim-notify
+      codecompanion-nvim
+      nvim-dap-python
+      nvim-lspconfig
+      copilot-lua
+      nvim-autopairs
+      vimwiki
+      vim-git
+      vim-fugitive
+      vim-dispatch
+      oil-nvim
+      nvim-dap-ui
 
-    codecompanion-nvim
-    nvim-dap-python
-    nvim-lspconfig
-    copilot-lua
-    nvim-autopairs
-    vimwiki
-    vim-git
-    vim-fugitive
-    vim-dispatch
-    oil-nvim
-    nvim-dap-ui
+      vim-unimpaired
 
-    vim-unimpaired
+      vim-repeat
 
-    vim-repeat
+      nvim-dap-virtual-text
 
-    nvim-dap-virtual-text
+      gitlinker-nvim
 
-    gitlinker-nvim
+      nvim-dap-ui
 
-    nvim-dap-ui
+      friendly-snippets
 
-    friendly-snippets
+      octo-nvim
 
-    octo-nvim
+      hop-nvim
 
-    hop-nvim
+      lspkind-nvim
 
-    lspkind-nvim
+      lspsaga-nvim
 
-    lspsaga-nvim
+      playground
 
-    playground
+      telescope-nvim
+      telescope-dap-nvim
+      grug-far-nvim
 
-    telescope-nvim
-    telescope-dap-nvim
-    grug-far-nvim
+      nvim-nio
 
-    nvim-nio
+      lualine-nvim
 
-    lualine-nvim
+      popup-nvim
 
-    popup-nvim
+      plenary-nvim
 
-    plenary-nvim
+      lsp-status-nvim
 
-    lsp-status-nvim
+      nvim-lspconfig
 
-    nvim-lspconfig
+      nvim-dap
 
-    nvim-dap
+      indent-blankline-nvim
 
-    indent-blankline-nvim
+      impatient-nvim
 
-    impatient-nvim
+      gitsigns-nvim
 
-    gitsigns-nvim
+      nvim-surround
 
-    nvim-surround
+      nvim-web-devicons
 
-    nvim-web-devicons
+      vim-emoji
 
-    vim-emoji
+      virtual-types-nvim
 
-    virtual-types-nvim
+      alpha-nvim
 
-    alpha-nvim
+      which-key-nvim
 
-    which-key-nvim
+      gruvbox-nvim
 
-    gruvbox-nvim
+      yuck-vim
 
-    yuck-vim
+      kommentary
 
-    kommentary
+      toggleterm-nvim
 
-    toggleterm-nvim
+      luasnip
+      nvim-ts-context-commentstring
 
-    luasnip
-    nvim-ts-context-commentstring
+      img-clip-nvim
+      nvim-treesitter-textobjects
+      nvim-treesitter-textsubjects
+      dressing-nvim
+      nui-nvim
 
-    img-clip-nvim
-    nvim-treesitter-textobjects
-    nvim-treesitter-textsubjects
-    none-ls-nvim
+      plenary-nvim
+      trouble-nvim
+      render-markdown-nvim
 
-    dressing-nvim
-    nui-nvim
+      otter-nvim
 
-    plenary-nvim
-    trouble-nvim
-    render-markdown-nvim
-
-    otter-nvim
-
-    diffview-nvim
-  ];
+      diffview-nvim
+    ]
+    ++ pkgs.lib.singleton none-ls-nvim-patched;
 
   treesitter-plugins = pkgs.unstable.vimPlugins.nvim-treesitter.withAllGrammars;
 in

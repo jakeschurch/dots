@@ -2,7 +2,6 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "nixpkgs/nixos-24.11";
-
     unstable.url = "nixpkgs/nixos-unstable";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -134,8 +133,6 @@
     download-attempts = 3;
     http-connections = 0;
 
-    max-substitution-jobs = 0;
-
     experimental-features = [
       "nix-command"
       "flakes"
@@ -149,11 +146,16 @@
     max-jobs = "auto";
     builders-use-substitutes = true;
     substitute = true;
-    sandbox = false;
     fsync-metadata = false;
 
     auto-allocate-uids = true;
     preallocate-contents = true;
+    max-substitution-jobs = 400;
+    extra-nix-path = "nixpkgs=flake:nixpkgs";
+    extra-platforms = [
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
 
     substituters = [
       "https://nix-community.cachix.org"

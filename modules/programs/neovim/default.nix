@@ -37,7 +37,7 @@ in
 
     viAlias = true;
     vimAlias = true;
-    withNodeJs = true;
+    withNodeJs = false;
     withRuby = true;
     withPython3 = true;
     vimdiffAlias = true;

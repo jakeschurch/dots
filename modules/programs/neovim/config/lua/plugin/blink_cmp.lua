@@ -1,6 +1,17 @@
 require("colorful-menu").setup()
 local lspkind = require("lspkind")
 
+local blink_copilot = require("blink-copilot")
+blink_copilot.setup({
+  max_completions = 3,
+  max_attempts = 4,
+  debounce = 50,
+  auto_refresh = {
+    backward = true,
+    forward = true,
+  },
+})
+
 require("blink.cmp").setup({
   cmdline = {
     keymap = {
@@ -8,24 +19,36 @@ require("blink.cmp").setup({
     },
     completion = { menu = { auto_show = true } },
   },
+
   sources = {
     default = {
-      -- "buffer",
+      "buffer",
       "lsp",
       "copilot",
       "path",
       "snippets",
       "emoji",
+      "omni",
     },
 
     min_keyword_length = 1,
     providers = {
-
       copilot = {
+        min_keyword_length = 0,
         name = "copilot",
         module = "blink-copilot",
         score_offset = 100,
         async = true,
+        transform_items = function(_, items)
+          local CompletionItemKind =
+            require("blink.cmp.types").CompletionItemKind
+          local kind_idx = #CompletionItemKind + 1
+          CompletionItemKind[kind_idx] = "Copilot"
+          for _, item in ipairs(items) do
+            item.kind = kind_idx
+          end
+          return items
+        end,
       },
 
       emoji = {
@@ -60,6 +83,7 @@ require("blink.cmp").setup({
           end,
         },
       },
+
       buffer = {
         opts = {
           get_bufnrs = function()
@@ -71,8 +95,16 @@ require("blink.cmp").setup({
       },
     },
   },
+
+  fuzzy = {
+    implementation = "rust",
+    max_typos = 0,
+
+    use_proximity = true,
+  },
+
   completion = {
-    keyword = { range = "prefix" },
+    keyword = { range = "full" },
     list = {
       selection = { preselect = false, auto_insert = true },
     },
@@ -117,8 +149,8 @@ require("blink.cmp").setup({
       auto_show = true,
       auto_show_delay_ms = 250,
       window = {
-        max_width = 40,
-        border = "single",
+        max_width = 50,
+        border = nil,
         scrollbar = false,
         direction_priority = {
           menu_north = { "n", "s", "e", "w" },
@@ -127,9 +159,10 @@ require("blink.cmp").setup({
       },
     },
   },
+
   signature = {
     enabled = true,
-    window = { border = "single", max_width = 60 },
+    window = { border = nil, max_width = 60 },
   },
   keymap = {
     ["enter"] = nil,

@@ -24,7 +24,8 @@ local options = {
   breakindent = true,
   breakindentopt = "min:4,shift:4",
   clipboard = "unnamedplus",
-  cmdheight = 1,
+  cmdheight = 0,
+  lazyredraw = false,
   cursorline = true,
   expandtab = true,
   hidden = true,
@@ -79,8 +80,6 @@ local options = {
 }
 
 vim.opt.mouse:append("a")
-vim.opt.shortmess:append("c")
--- shortmess = "filnxtToOFIc",
 
 if vim.fn.executable("rg") == 1 then
   vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"

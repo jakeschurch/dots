@@ -24,12 +24,16 @@ dapui.setup({
     {
       elements = {
         {
-          id = "breakpoints",
-          size = 0.1,
+          id = "scopes",
+          size = 0.5,
         },
         {
           id = "watches",
-          size = 0.9,
+          size = 0.4,
+        },
+        {
+          id = "breakpoints",
+          size = 0.1,
         },
       },
       position = "top",

@@ -1,9 +1,11 @@
 local snacks = require("snacks")
 
 snacks.setup({
-  bigfile = {},
-  bufdelete = {},
-  quickfile = {},
+  bigfile = { enabled = true },
+  bufdelete = { enabled = true },
+  quickfile = { enabled = true },
+  input = { enabled = true },
+  scroll = { enabled = true },
 })
 
 require("which-key").add({

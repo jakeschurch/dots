@@ -4,13 +4,7 @@ local which_key = require("which-key")
 local config = {
   "ivy",
   "fzf-native",
-  grep_project = {
-    rg_glob = true,
-    glob_flag = "--iglob", -- for case sensitive globs use '--glob'
-    glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
-    hidden = true,
-  },
-  grep = {
+  live_grep = {
     rg_glob = true,
     glob_flag = "--iglob", -- for case sensitive globs use '--glob'
     glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
@@ -18,6 +12,10 @@ local config = {
   },
   fzf_colors = true,
   keymap = {
+    builtin = {
+      ["<c-d>"] = "preview-down",
+      ["<c-u>"] = "preview-up",
+    },
     fzf = {
       true,
       ["ctrl-q"] = "select-all+accept", -- Send all items to qf list
@@ -47,21 +45,6 @@ local config = {
 }
 
 fzf_lua.setup(config)
-
--- Helper function to get the Git base directory or fallback to cwd
-local function get_git_or_cwd()
-  local git_dir = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-  if vim.v.shell_error == 0 then
-    return git_dir
-  else
-    return vim.fn.getcwd()
-  end
-end
-
--- Custom grep function
-local function grep_with_git_or_cwd()
-  fzf_lua.grep({ cwd = get_git_or_cwd() })
-end
 
 which_key.add({
   {
@@ -115,9 +98,7 @@ which_key.add({
   },
   {
     "<leader>jj",
-    function()
-      grep_with_git_or_cwd()
-    end,
+    fzf_lua.live_grep_native,
     desc = "Grep",
     nowait = true,
     remap = false,

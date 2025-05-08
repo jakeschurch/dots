@@ -25,6 +25,11 @@
       max-substitution-jobs = 40;
       sandbox = false;
 
+      substituters = [
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org"
+      ];
+
       trusted-substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org"

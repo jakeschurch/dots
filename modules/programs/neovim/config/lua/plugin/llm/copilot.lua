@@ -14,4 +14,9 @@ require("copilot").setup({
   panel = {
     enabled = false,
   },
+  copilot_model = "gpt-4o-copilot",
+  logger = {
+    file_log_level = vim.log.levels.OFF,
+    print_log_level = vim.log.levels.OFF,
+  },
 })

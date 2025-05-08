@@ -36,7 +36,7 @@ pkgs: {
     nil
   ];
 
-  typescript = with pkgs; [
+  typescript = with pkgs.unstable; [
     typescript
     prettier-d-slim
     nodePackages.prettier
@@ -44,12 +44,7 @@ pkgs: {
     nodePackages.typescript
     vtsls
     vscode-langservers-extracted
-    nodePackages.webpack
-    nodePackages.webpack-cli
-
     vscode-js-debug
-
-    # nodePackages.neovim
   ];
 
   shell = with pkgs; [
@@ -140,7 +135,7 @@ pkgs: {
     ast-grep
     tree-sitter
     codespell
-    nodePackages.yaml-language-server
+    unstable.nodePackages.yaml-language-server
     actionlint
     yamllint
     nodePackages.vscode-json-languageserver

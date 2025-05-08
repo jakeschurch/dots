@@ -10,12 +10,6 @@ M.keys = {
           hs.application.launchOrFocus("Slack")
         end,
       },
-      a = {
-        description = "Around",
-        action = function()
-          hs.application.launchOrFocus("around")
-        end,
-      },
       n = {
         description = "Notion",
         action = function()
@@ -32,13 +26,7 @@ M.keys = {
       ["return"] = {
         description = "Terminal",
         action = function()
-          local app = hs.application.get("wezterm")
-          if app then
-            app:activate()
-          else
-            local weztermPath = hs.execute("which wezterm-gui"):gsub("%s+", "")
-            hs.execute(weztermPath)
-          end
+          hs.application.launchOrFocus("WezTerm")
         end,
       },
       [","] = {
