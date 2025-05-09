@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  # dream2nix,
   ...
 }:
 {
@@ -9,7 +8,8 @@
     packages =
       with pkgs;
       [
-        # (pkgs.callPackage ./vectorcode.nix { inherit dream2nix; })
+        (pkgs.callPackage ./vectorcode.nix { })
+        python3Packages.chromadb
         (pkgs.callPackage ./kubectl-jq.nix { })
         pipx
         nix-update

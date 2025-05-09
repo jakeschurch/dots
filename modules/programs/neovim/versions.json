@@ -1,10 +1,17 @@
 [
   {
+    "owner": "moyiz",
+    "repo": "blink-emoji.nvim",
+    "rev": "a77aebc092ebece1eed108f301452ae774d6b67a",
+    "ref": "master",
+    "sha256": "0n4qv2mk7zx910gnwf9ri2w5qxwx8szx99nqqzik4yyvl4axm41d"
+  },
+  {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "e15cba0c8c7c9dd3388d260cf5b5de7fc044dfbc",
+    "rev": "d226d841a1f2b849b7e3efab2a44ecbb3e61a5a5",
     "ref": "master",
-    "sha256": "029jby37wjawz9qpl4wm7vqbqsrksl3d1za3qj68cgpwdcfxz8d6"
+    "sha256": "1kwia7dmsaq08048h3s6avrczvca2mpd8sa3m4r1y28wjqjxmkbk"
   },
   {
     "owner": "aymericbeaumet",
@@ -23,30 +30,16 @@
   {
     "owner": "nvimtools",
     "repo": "none-ls-extras.nvim",
-    "rev": "1214d729e3408470a7b7a428415a395e5389c13c",
+    "rev": "924fe88a9983c7d90dbb31fc4e3129a583ea0a90",
     "ref": "main",
-    "sha256": "04kj9y6qy6l6rfhyzxnkzwdcsr3wm87kxhfzh0g176x5bmshf177"
-  },
-  {
-    "owner": "gbprod",
-    "repo": "none-ls-shellcheck.nvim",
-    "rev": "0f84461241e76e376a95fb7391deac82dc3efdbf",
-    "ref": "main",
-    "sha256": "0xjlsq6p4x77g24ixhi1ss8vvq5ydkx8g6d6nl4nl40mpjxqskmp"
-  },
-  {
-    "owner": "jmckiern",
-    "repo": "vim-venter",
-    "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
-    "ref": "master",
-    "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
+    "sha256": "0g25js6dbhxq1pf1g7x6lz1p9szdky792z5jxi5gkkkpx3dy149q"
   },
   {
     "owner": "fang2hou",
     "repo": "blink-copilot",
-    "rev": "71102fe2fa1616353f8cb315bb8b85db0812a218",
+    "rev": "bdc45bbbed2ec252b3a29f4adecf031e157b5573",
     "ref": "main",
-    "sha256": "17gmq6xsk5wxj9n644wx346vckd9c1a58n28nqpk06a7c2v3gscz"
+    "sha256": "0czzypx273zi4cmn8bxy9czh709i8a3zyyfdmlkz9j9b1r905zpc"
   },
   {
     "owner": "xzbdmw",
@@ -56,24 +49,31 @@
     "sha256": "1rj6yy7gchdyynhd13l35vhmn8npldmgn4vam9gv244mywpz3flw"
   },
   {
-    "owner": "moyiz",
-    "repo": "blink-emoji.nvim",
-    "rev": "a77aebc092ebece1eed108f301452ae774d6b67a",
-    "ref": "master",
-    "sha256": "0n4qv2mk7zx910gnwf9ri2w5qxwx8szx99nqqzik4yyvl4axm41d"
+    "owner": "gbprod",
+    "repo": "none-ls-shellcheck.nvim",
+    "rev": "0f84461241e76e376a95fb7391deac82dc3efdbf",
+    "ref": "main",
+    "sha256": "0xjlsq6p4x77g24ixhi1ss8vvq5ydkx8g6d6nl4nl40mpjxqskmp"
   },
   {
     "owner": "ravitemer",
     "repo": "mcphub.nvim",
-    "rev": "cea2848f5141890df915cb5ab8f4d82c90653107",
+    "rev": "56a72dd2d9660fd0f2c6d8999f99be1c3169d00d",
     "ref": "main",
-    "sha256": "0k2p9gky2mb85y7lc1g90w7jsj4bns6yj35mjrvp768cjlbpnl3a"
+    "sha256": "0lspvwb52zfwnn994zkrw1cnc2afmshmyxj4lpwg7cviaq2q74yj"
+  },
+  {
+    "owner": "jmckiern",
+    "repo": "vim-venter",
+    "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
+    "ref": "master",
+    "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
   },
   {
     "owner": "Davidyz",
     "repo": "VectorCode",
-    "rev": "bcc906de0cccdfe0f2f33164a5bbdd19ff11df86",
+    "rev": "9511fa2b57e252d9c76518e1f2dcd57ddabbaf60",
     "ref": "main",
-    "sha256": "1a5115yhm0hk9byv17wd3d29k6d23idczxa2jxi0mlk4g1jwgyi9"
+    "sha256": "1qvlvv3wiq8ascsbzglv387ni8108vmbzg2nr2sjrhc42857r9y9"
   }
 ]
