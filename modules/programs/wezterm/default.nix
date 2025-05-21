@@ -1,7 +1,7 @@
 _: {
   programs.wezterm = {
     enable = true;
-    enableZshIntegration = true;
+    enableZshIntegration = false;
     extraConfig = builtins.readFile ./wezterm.lua;
   };
 }

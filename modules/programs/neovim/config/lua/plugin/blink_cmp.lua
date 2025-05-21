@@ -97,8 +97,8 @@ require("blink.cmp").setup({
 
 	fuzzy = {
 		implementation = "rust",
-		max_typos = function()
-			return 0
+		max_typos = function(keyword)
+			return math.floor(#keyword / 4)
 		end,
 
 		use_proximity = true,

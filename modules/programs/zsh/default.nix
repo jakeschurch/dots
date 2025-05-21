@@ -34,38 +34,44 @@ let
           zle -N up-line-or-beginning-search
           zle -N down-line-or-beginning-search
 
-          bindkey "^[[A" up-line-or-search     # Up arrow
-          bindkey '^I' expand-or-complete      # Tab completion
+          zsh-defer source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+          set -o vi
+          zvm_bindkey vicmd "^[[A" up-line-or-search     # Up arrow
+          zvm_bindkey '^I' expand-or-complete      # Tab completion
+          zvm_bindkey vicmd v edit-command-line
+          zvm_bindkey vicmd 'k' history-substring-search-up
+          zvm_bindkey vicmd 'j' history-substring-search-down
+
+          ZVM_CURSOR_STYLE_ENABLED=false
+          ZVM_VI_ESCAPE_BINDKEY=ESC
 
           # Vicmd edit line with 'v'
           autoload -z edit-command-line
           zle -N edit-command-line
-          bindkey -M vicmd v edit-command-line
-
-          bindkey -M vicmd 'k' history-substring-search-up
-          bindkey -M vicmd 'j' history-substring-search-down
 
           # Autopair from zplug
-          autopair-init
+          zsh-defer autopair-init
 
+          # Lazy-load nix-shell and nix functions
           function nix-shell () {
-              nix-your-shell zsh nix-shell -- "$@"
+            nix-your-shell zsh nix-shell -- "$@"
           }
 
           function nix () {
-              nix-your-shell zsh nix -- "$@"
+            nix-your-shell zsh nix -- "$@"
           }
 
           # Lazy-load Oh-My-Zsh plugins (if not already loaded)
           if [[ -z "$OMZ_LOADED" ]]; then
-            source $ZSH/oh-my-zsh.sh
+            zsh-defer source $ZSH/oh-my-zsh.sh
             export OMZ_LOADED=1
           fi
 
           # Lazy-load zplug plugins
           if [[ -z "$ZPLUG_LOADED" ]]; then
-            source ~/.zplug/init.zsh
-            zplug load
+            zsh-defer source ~/.zplug/init.zsh
+            zsh-defer zplug load
             export ZPLUG_LOADED=1
           fi
         '';
@@ -76,8 +82,8 @@ in
   home.file = homeFileReferences;
 
   programs.zsh = {
+    zprof.enable = false;
     enable = true;
-    defaultKeymap = "vicmd";
     enableCompletion = lib.mkForce true;
     syntaxHighlighting = {
       enable = true;
@@ -101,46 +107,43 @@ in
       extended = true;
     };
     envExtra = ''
-      export AWS_PROFILE="fg-staging"
+      export AWS_PROFILE="fg-sso-staging-administrator-access"
       export AWS_REGION="us-west-2"
       export PG_VERSION="15"
     '';
-    initExtra = ''
+    completionInit = ''
       autoload -Uz compinit
-      if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+      if [[ -f ~/.zcompdump && -z ~/.zcompdump(#qN.mh+24) ]]; then
         compinit -i -C
       else
         compinit -i
       fi
-
+    '';
+    initExtra = ''
       # Custom cd function
       function cd() {
-        # Check if the argument is a file (not a directory)
-        if [[ -f "$1" ]]; then
-          # If it's a file, change to its directory
-          builtin cd "$(dirname "$1")" || return
-        else
-          # Otherwise, call the original cd command
+        if [[ -d "$1" ]]; then
           builtin cd "$@" || return
+        else
+          builtin cd "$(dirname "$1")" || return
         fi
       }
 
-       # MOTD (Message of the Day)
-      if [[ ! -f ~/.motd_cache || $(fd --type f --changed-before 1d ~/.motd_cache) ]]; then
-        motd > ~/.motd_cache
+      if [[ -n "$ZSH_DEBUGRC" ]]; then
+        zmodload zsh/zprof
+        zprof
       fi
-      cat ~/.motd_cache
 
       # Lazy-load functions and plugins
-      zsh-defer source ~/.zshrc_lazy
+      source ~/.zsh_lazy
+      motd
     '';
     zplug = {
       enable = true;
       plugins = [
         { name = "hlissner/zsh-autopair"; }
-        { name = "qoomon/zsh-lazyload"; }
-        { name = "ptavares/zsh-direnv"; }
         { name = "romkatv/zsh-defer"; }
+        { name = "jeffreytse/zsh-vi-mode"; }
       ];
     };
     oh-my-zsh = {
@@ -148,20 +151,8 @@ in
       plugins = [
         "aws"
         "fzf"
-        "gh"
         "git"
-        "golang"
-        "kubectl"
-        "pip"
-        "postgres"
-        "pre-commit"
-        "procs"
-        "safe-paste"
-        "gnu-utils"
-        "terraform"
         "history-substring-search"
-        "web-search"
-        "vi-mode"
       ];
     };
   };

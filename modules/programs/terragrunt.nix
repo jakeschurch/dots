@@ -10,7 +10,9 @@
       tg =
         let
           args = lib.strings.concatStringsSep " " [
-            "--experiment cli-redesign"
+            "--download-dir $(git rev-parse --show-toplevel)/.terragrunt-cache"
+            "--provider-cache"
+            "--provider-cache-dir $(git rev-parse --show-toplevel)/.provider-cache"
             "--tf-forward-stdout"
             "--use-partial-parse-config-cache"
             "--backend-require-bootstrap"
