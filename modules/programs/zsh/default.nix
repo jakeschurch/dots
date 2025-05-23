@@ -34,22 +34,6 @@ let
           zle -N up-line-or-beginning-search
           zle -N down-line-or-beginning-search
 
-          zsh-defer source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-
-          set -o vi
-          zvm_bindkey vicmd "^[[A" up-line-or-search     # Up arrow
-          zvm_bindkey '^I' expand-or-complete      # Tab completion
-          zvm_bindkey vicmd v edit-command-line
-          zvm_bindkey vicmd 'k' history-substring-search-up
-          zvm_bindkey vicmd 'j' history-substring-search-down
-
-          ZVM_CURSOR_STYLE_ENABLED=false
-          ZVM_VI_ESCAPE_BINDKEY=ESC
-
-          # Vicmd edit line with 'v'
-          autoload -z edit-command-line
-          zle -N edit-command-line
-
           # Autopair from zplug
           zsh-defer autopair-init
 
@@ -134,8 +118,23 @@ in
         zprof
       fi
 
+      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+      zvm_bindkey vicmd "^[[A" up-line-or-search     # Up arrow
+      zvm_bindkey '^I' expand-or-complete      # Tab completion
+      zvm_bindkey vicmd v edit-command-line
+      zvm_bindkey vicmd 'k' history-substring-search-up
+      zvm_bindkey vicmd 'j' history-substring-search-down
+
+      ZVM_CURSOR_STYLE_ENABLED=false
+      ZVM_VI_ESCAPE_BINDKEY=ESC
+
+      # Vicmd edit line with 'v'
+      autoload -z edit-command-line
+      zle -N edit-command-line
+
       # Lazy-load functions and plugins
-      source ~/.zsh_lazy
+      zsh-defer source ~/.zsh_lazy
       motd
     '';
     zplug = {

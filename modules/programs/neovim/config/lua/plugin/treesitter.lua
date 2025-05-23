@@ -12,9 +12,15 @@ vim.filetype.add({
 	},
 })
 
-vim.opt.foldmethod = "manual"
+vim.opt.foldlevel = 99
+vim.opt.foldenable = true
+vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+vim.opt.foldtext = ""
+vim.opt.fillchars = {
+	foldclose = "",
+	foldopen = "",
+}
 
 configs.setup({
 	ensure_installed = {},

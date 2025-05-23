@@ -220,9 +220,7 @@ require("codecompanion").setup({
 		},
 	},
 	display = {
-		opts = {
-			system_prompt = require("plugin.llm.codecompanion.system_prompt"),
-		},
+		opts = {},
 		chat = {
 			icons = {
 				separator = "─",
@@ -253,5 +251,6 @@ require("codecompanion").setup({
 	opts = {
 		log_level = "ERROR",
 		send_code = true,
+		system_prompt = require("plugin.llm.codecompanion.system_prompt"),
 	},
 })

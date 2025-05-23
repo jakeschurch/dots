@@ -7,10 +7,10 @@ snacks.setup({
 	quickfile = { enabled = true },
 	input = { enabled = true },
 	scroll = {
-		enabled = true,
+		enabled = false,
 		animate_repeat = {
 			delay = 100, -- delay in ms before using the repeat animation
-			duration = { step = 5, total = 50 },
+			duration = { step = 4, total = 100 },
 			easing = "linear",
 		},
 		filter = function(buf)
@@ -26,3 +26,5 @@ require("which-key").add({
 	{ "<leader>ba", snacks.bufdelete.all, desc = "Delete all buffers" },
 	{ "<leader>bo", snacks.bufdelete.other, desc = "Delete other buffers" },
 })
+
+local autocmd = vim.api.nvim_create_autocmd
