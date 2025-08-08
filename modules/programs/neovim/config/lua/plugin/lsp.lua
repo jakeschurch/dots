@@ -135,13 +135,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 for server, config in pairs(require("plugin.lsp_servers")) do
 	config.capabilities = vim.tbl_deep_extend(
 		"force",
-		{},
-		vim.lsp.protocol.make_client_capabilities(),
 		config.capabilities or {},
 		-- File watching is disabled by default for neovim.
 		-- See: https://github.com/neovim/neovim/pull/22405
 		{ workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } },
-		require("blink.cmp").get_lsp_capabilities()
+		require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 	)
 
 	config["root_dir"] = config["root_dir"]

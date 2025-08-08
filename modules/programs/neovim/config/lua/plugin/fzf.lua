@@ -1,6 +1,24 @@
 local fzf_lua = require("fzf-lua")
 local which_key = require("which-key")
 
+local function get_git_root_or_cwd()
+	local buf_path = vim.api.nvim_buf_get_name(0)
+	if buf_path == "" then
+		-- No file loaded, fallback to current working directory
+		return vim.fn.getcwd()
+	end
+
+	local dir = vim.fn.fnamemodify(buf_path, ":p:h")
+	-- Try to get git root from the buffer's directory
+	local git_root = vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })[1]
+
+	if git_root and git_root ~= "" and not git_root:match("^fatal") then
+		return git_root
+	else
+		return dir
+	end
+end
+
 local config = {
 	"ivy",
 	"fzf-native",
@@ -31,6 +49,8 @@ local config = {
 	},
 	files = {
 		prompt = nil,
+		cwd_prompt_shorten_val = 3,
+		cwd_prompt = true,
 	},
 	globals = {
 		winopts = {
@@ -122,7 +142,9 @@ which_key.add({
 	},
 	{
 		"<leader>jj",
-		fzf_lua.live_grep_native,
+		function(_)
+			fzf_lua.live_grep({ search_paths = get_git_root_or_cwd() })
+		end,
 		desc = "Grep",
 		nowait = true,
 		remap = false,

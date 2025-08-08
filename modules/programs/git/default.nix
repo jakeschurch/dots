@@ -88,6 +88,8 @@ in
       extraConfig = {
         gc.auto = 200;
 
+        advice.addIgnoredFile = false;
+
         commit = {
           gpgSign = false;
           verbose = true;

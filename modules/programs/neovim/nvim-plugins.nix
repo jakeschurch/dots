@@ -1,6 +1,5 @@
 { pkgs, ... }:
 let
-
   none-ls-nvim-patched = pkgs.vimUtils.buildVimPlugin {
     pname = "none-ls-nvim";
     version = "git-HEAD";
@@ -52,13 +51,15 @@ let
       fzf-lua
       rainbow-delimiters-nvim
 
+      guess-indent-nvim
+
       blink-cmp
+      codecompanion-history-nvim
       snacks-nvim
       blink-pairs
 
       noice-nvim
 
-      codecompanion-nvim
       nvim-dap-python
       nvim-lspconfig
       copilot-lua
@@ -67,7 +68,10 @@ let
       vim-git
       vim-fugitive
       vim-dispatch
+
+      oil-git-status-nvim
       oil-nvim
+
       nvim-dap-ui
 
       vim-unimpaired
@@ -149,9 +153,11 @@ let
       trouble-nvim
       render-markdown-nvim
 
-      otter-nvim
-
       diffview-nvim
+
+      vim-dadbod
+      vim-dadbod-ui
+      vim-dadbod-completion
     ]
     ++ pkgs.lib.singleton none-ls-nvim-patched;
 

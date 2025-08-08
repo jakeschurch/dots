@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   nix = {
     enable = true;
@@ -14,11 +14,11 @@
       ];
 
       allowed-users = [ "*" ];
-      # builders = "@/etc/nix/machines";
+      builders = "@/etc/nix/machines";
       extra-experimental-features = [
         "nix-command flakes pipe-operators auto-allocate-uids ca-derivations git-hashing dynamic-derivations"
       ];
-      fallback = true;
+      fallback = false;
 
       cores = 0;
       max-jobs = "auto";

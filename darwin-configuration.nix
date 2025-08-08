@@ -8,6 +8,20 @@ lib.mkIf pkgs.stdenv.isDarwin {
   ids.gids.nixbld = 350;
   ids.uids.nixbld = 350;
 
+  nix.linux-builder = {
+    enable = false;
+    ephemeral = false;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 40 * 1024;
+          memorySize = 2 * 1024;
+        };
+        cores = 1;
+      };
+    };
+  };
+
   system = {
     primaryUser = user;
 
@@ -42,9 +56,13 @@ lib.mkIf pkgs.stdenv.isDarwin {
     stateVersion = 5;
   };
 
-  # REVIEW: temporary fix for darwin
-  users.knownUsers = lib.mkForce [ ];
-  users.knownGroups = lib.mkForce [ ];
+  users = {
+    # REVIEW: temporary fix for darwin
+    knownUsers = lib.mkForce [ ];
+    knownGroups = lib.mkForce [ ];
+
+    users."${user}".home = "/Users/${user}";
+  };
 
   environment = {
     extraOutputsToInstall = [
@@ -67,8 +85,6 @@ lib.mkIf pkgs.stdenv.isDarwin {
   };
 
   home-manager.backupFileExtension = "bak";
-
-  users.users."${user}".home = "/Users/${user}";
 
   documentation = {
     enable = true;

@@ -28,26 +28,25 @@ in
       "include"
     ];
 
-    sessionPath =
-      [
-        "${GOPATH}/bin"
-        "${config.home.homeDirectory}/dots/config/nixpkgs"
-        "/etc/static/profiles/per-user/${config.home.username}/bin"
-        "/sbin"
-        "/bin"
-        "${config.home.homeDirectory}/bin"
-        "${config.home.homeDirectory}/.local/bin"
-        "${config.home.homeDirectory}/.cargo/bin"
-        "${config.home.homeDirectory}/.nix-profile/bin"
-        "${pkgs.statix}/bin"
-        "${pkgs.alejandra}/bin"
-        "/usr/local/bin"
-      ]
-      ++ lib.optionals pkgs.stdenv.isDarwin [
-        "/run/current-system/sw/bin/"
-        "/opt/local/homebrew/bin"
-        "/System/Volumes/Data/usr/local/bin"
-      ];
+    sessionPath = [
+      "${GOPATH}/bin"
+      "${config.home.homeDirectory}/dots/config/nixpkgs"
+      "/etc/static/profiles/per-user/${config.home.username}/bin"
+      "/sbin"
+      "/bin"
+      "${config.home.homeDirectory}/bin"
+      "${config.home.homeDirectory}/.local/bin"
+      "${config.home.homeDirectory}/.cargo/bin"
+      "${config.home.homeDirectory}/.nix-profile/bin"
+      "${pkgs.statix}/bin"
+      "${pkgs.alejandra}/bin"
+      "/usr/local/bin"
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      "/run/current-system/sw/bin/"
+      "/opt/local/homebrew/bin"
+      "/System/Volumes/Data/usr/local/bin"
+    ];
 
     sessionVariables = {
       inherit GOPATH;

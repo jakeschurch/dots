@@ -39,7 +39,6 @@ pkgs: {
   typescript = with pkgs; [
     typescript
     prettier-d-slim
-    nodePackages.prettier
     nodePackages.eslint
     nodePackages.typescript
     vtsls
@@ -58,6 +57,7 @@ pkgs: {
     luajitPackages.fzf-lua
     luajitPackages.jsregexp
     luajitPackages.plenary-nvim
+    luajitPackages.tiktoken_core
     luarocks
     luaPackages.luafilesystem
     lua53Packages.digestif
@@ -113,18 +113,11 @@ pkgs: {
     delve
     gofumpt
     goimports-reviser
+    golangci-lint
   ];
 
-  markdown = with pkgs.python312Packages; [
-    # mdformat
-    # mdformat-gfm
-    # mdformat-gfm-alerts
-    # mdformat-admon
-    # mdformat-frontmatter
-    # mdformat-footnote
-    # mdformat-simple-breaks
-    # mdformat-tables
-    # mdformat-beautysh
+  markdown = with pkgs; [
+    vale-ls
   ];
 
   html = with pkgs; [
@@ -138,10 +131,11 @@ pkgs: {
     nodePackages.yaml-language-server
     actionlint
     yamllint
-    nodePackages.vscode-json-languageserver
     semgrep
     hadolint
     helm-ls
+    regols
+    regal
   ];
 
   sql = with pkgs; [

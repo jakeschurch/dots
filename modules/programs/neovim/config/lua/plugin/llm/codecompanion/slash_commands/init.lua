@@ -1,5 +1,6 @@
 return {
-	["codebase"] = require("vectorcode.integrations").codecompanion.chat.make_slash_command(),
+	["review_rca"] = require("plugin.llm.codecompanion.slash_commands.review_rca"),
+	["review_rfc"] = require("plugin.llm.codecompanion.slash_commands.review_rfc"),
 	["git_files"] = require("plugin.llm.codecompanion.slash_commands.git_files"),
 	["agent_mode"] = require("plugin.llm.codecompanion.slash_commands.agent_mode"),
 	["delete_session"] = require("plugin.llm.codecompanion.slash_commands.delete_session"),

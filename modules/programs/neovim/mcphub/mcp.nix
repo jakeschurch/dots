@@ -7,7 +7,7 @@ in
 
 pythonPackages.buildPythonPackage rec {
   pname = "mcp";
-  version = "1.2.0"; # Replace with the actual version
+  version = "4.0.0"; # Replace with the actual version
 
   src = pkgs.fetchFromGitHub {
     owner = "modelcontextprotocol";

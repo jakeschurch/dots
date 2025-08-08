@@ -34,3 +34,5 @@ k9s:
       critical: 90
       warn: 70
   screenDumpDir: /tmp/k9s-screens-jake
+  featureGates:
+    nodeShell: true

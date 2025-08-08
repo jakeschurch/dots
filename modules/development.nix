@@ -8,18 +8,26 @@
     packages =
       with pkgs;
       [
-        (pkgs.callPackage ./vectorcode.nix { })
-        python3Packages.chromadb
+        # (pkgs.callPackage ./vectorcode.nix { })
+        # python312Packages.chromadb
+        # vectorcode
         (pkgs.callPackage ./kubectl-jq.nix { })
         pipx
         nix-update
         ssm-session-manager-plugin
         kind
         # latex
-        # texlive.combined.scheme-medium
+        texlive.combined.scheme-small
+        lynx
         # _1password-cli
         ffmpeg
         mtr
+        pngpaste
+        conftest
+        vectorcode
+        libressl
+
+        mermaid-cli
 
         sshuttle
 
@@ -59,13 +67,13 @@
         docker-credential-helpers
         pass
         colima
+        dive
         docker-compose
 
         jq
         tealdeer
-        direnv
-        nix-direnv
         nix-tree
+        libiconv
 
         sd
         tokei
@@ -138,22 +146,26 @@
   };
 
   xdg.configFile = {
-    "vale/vale.ini".text = ''
-      [core]
-      Vocab = en
+    "vale/.vale.ini".text = ''
+      StylesPath = styles
+      MinAlertLevel = suggestion
+      Packages = Google, write-good, proselint, MDX
 
-      [checks]
-      Vale.Avoid = true
-      Vale.Spelling = true
-      proselint = true
-      write-good = true
+      [formats]
+      # Python + Markdown
+      py = md
 
-      [*.{md,txt}]
-      Vale.Avoid = true
-      Vale.Spelling = true
+      # Go + Markdown
+      go = md
 
-      [*.{tex}]
-      Vale.TeX = true
+      # ts + Markdown
+      ts = md
+
+      [*.{rs,md,py,go,ts,sh}]
+      BasedOnStyles = Vale
+
+      [*.md]
+      BasedOnStyles = Vale, Google, write-good, proselint
     '';
   };
 

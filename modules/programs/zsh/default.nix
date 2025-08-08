@@ -34,6 +34,17 @@ let
           zle -N up-line-or-beginning-search
           zle -N down-line-or-beginning-search
 
+          bindkey "^[[A" up-line-or-search     # Up arrow
+          bindkey '^I' expand-or-complete      # Tab completion
+
+          # Vicmd edit line with 'v'
+          autoload -z edit-command-line
+          zle -N edit-command-line
+          bindkey -M vicmd v edit-command-line
+
+          bindkey -M vicmd 'k' history-substring-search-up
+          bindkey -M vicmd 'j' history-substring-search-down
+
           # Autopair from zplug
           zsh-defer autopair-init
 
@@ -48,7 +59,7 @@ let
 
           # Lazy-load Oh-My-Zsh plugins (if not already loaded)
           if [[ -z "$OMZ_LOADED" ]]; then
-            zsh-defer source $ZSH/oh-my-zsh.sh
+            source $ZSH/oh-my-zsh.sh
             export OMZ_LOADED=1
           fi
 
@@ -64,6 +75,12 @@ let
 in
 {
   home.file = homeFileReferences;
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
 
   programs.zsh = {
     zprof.enable = false;
@@ -92,7 +109,6 @@ in
     };
     envExtra = ''
       export AWS_PROFILE="fg-sso-staging-administrator-access"
-      export AWS_REGION="us-west-2"
       export PG_VERSION="15"
     '';
     completionInit = ''
@@ -118,23 +134,8 @@ in
         zprof
       fi
 
-      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-
-      zvm_bindkey vicmd "^[[A" up-line-or-search     # Up arrow
-      zvm_bindkey '^I' expand-or-complete      # Tab completion
-      zvm_bindkey vicmd v edit-command-line
-      zvm_bindkey vicmd 'k' history-substring-search-up
-      zvm_bindkey vicmd 'j' history-substring-search-down
-
-      ZVM_CURSOR_STYLE_ENABLED=false
-      ZVM_VI_ESCAPE_BINDKEY=ESC
-
-      # Vicmd edit line with 'v'
-      autoload -z edit-command-line
-      zle -N edit-command-line
-
-      # Lazy-load functions and plugins
-      zsh-defer source ~/.zsh_lazy
+      set -o vi
+      source ~/.zsh_lazy
       motd
     '';
     zplug = {
@@ -142,7 +143,6 @@ in
       plugins = [
         { name = "hlissner/zsh-autopair"; }
         { name = "romkatv/zsh-defer"; }
-        { name = "jeffreytse/zsh-vi-mode"; }
       ];
     };
     oh-my-zsh = {
@@ -150,8 +150,19 @@ in
       plugins = [
         "aws"
         "fzf"
+        "gh"
         "git"
+        "gnu-utils"
+        "golang"
         "history-substring-search"
+        "kubectl"
+        "pip"
+        "postgres"
+        "pre-commit"
+        "procs"
+        "safe-paste"
+        "terraform"
+        "vi-mode"
       ];
     };
   };

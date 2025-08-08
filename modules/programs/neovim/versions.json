@@ -1,17 +1,38 @@
 [
   {
+    "owner": "jmbuhr",
+    "repo": "otter.nvim",
+    "rev": "71fec0dc58c3a66078e691b9a77b2516fe3e319b",
+    "ref": "main",
+    "sha256": "0sib4n0v18xzzkmqiimih3hnx8v4nf5ybw8y1c8ppb3bma5mz4vd"
+  },
+  {
+    "owner": "JezerM",
+    "repo": "oil-lsp-diagnostics.nvim",
+    "rev": "e04e3c387262b958fee75382f8ff66eae9d037f4",
+    "ref": "master",
+    "sha256": "1l87cs6ffd1rlsw7sb9cimnqa2zlm1q5rf5ihbfp1wf8gn8fxj0k"
+  },
+  {
     "owner": "moyiz",
     "repo": "blink-emoji.nvim",
-    "rev": "a77aebc092ebece1eed108f301452ae774d6b67a",
+    "rev": "f22ce8cac02a6ece05368220f1e38bd34fe376f9",
     "ref": "master",
-    "sha256": "0n4qv2mk7zx910gnwf9ri2w5qxwx8szx99nqqzik4yyvl4axm41d"
+    "sha256": "1vnx779arsm4n1sjjwhraczp07am0i2n4m13jqv7ij01vd4c9wd4"
+  },
+  {
+    "owner": "olimorris",
+    "repo": "codecompanion.nvim",
+    "rev": "638b643a17a656a34d15c884e1fd059d0992d660",
+    "ref": "main",
+    "sha256": "0kwh4fh1r93nl3ga5182sxlyqd8fg3z6ji6zv28qsl24xcmnaarp"
   },
   {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "d226d841a1f2b849b7e3efab2a44ecbb3e61a5a5",
+    "rev": "e5cd7f0a3a73ef598267c1e9f29b0fe9a80925ab",
     "ref": "master",
-    "sha256": "1kwia7dmsaq08048h3s6avrczvca2mpd8sa3m4r1y28wjqjxmkbk"
+    "sha256": "1rf141fsx7jlipf1vgyrx76yl7b1f6ny4j2ab5jg3gca63nl113i"
   },
   {
     "owner": "aymericbeaumet",
@@ -23,9 +44,9 @@
   {
     "owner": "daliusd",
     "repo": "ghlite.nvim",
-    "rev": "42adbbc03ec50d1306f4bfc38eef0f635bb9bea6",
+    "rev": "416a38ba76069adad87d2b51387dff285c554356",
     "ref": "main",
-    "sha256": "1driwgl9z9xh5pnjq07gh0lwxwxax7jxzwr7g7cmdzxg4p8gdm4v"
+    "sha256": "0zib8fls3hknk8gq7gcv9f9nwbfmzs0k891jfs7kq37qzxkg4ka6"
   },
   {
     "owner": "nvimtools",
@@ -37,16 +58,16 @@
   {
     "owner": "fang2hou",
     "repo": "blink-copilot",
-    "rev": "bdc45bbbed2ec252b3a29f4adecf031e157b5573",
+    "rev": "41e91a659bd9b8cba9ba2ea68a69b52ba5a9ebd8",
     "ref": "main",
-    "sha256": "0czzypx273zi4cmn8bxy9czh709i8a3zyyfdmlkz9j9b1r905zpc"
+    "sha256": "0sms1k0w4dim5inb696as03vc0w0f1xz318vywl0ry4405m53bv1"
   },
   {
     "owner": "xzbdmw",
     "repo": "colorful-menu.nvim",
-    "rev": "f80feb8a6706f965321aff24d0ed3849f02a7f77",
+    "rev": "bc3e82609f2fcf7dad7ca87c20e65e51d5d9d87c",
     "ref": "master",
-    "sha256": "1rj6yy7gchdyynhd13l35vhmn8npldmgn4vam9gv244mywpz3flw"
+    "sha256": "0r6q17ldg0npx7d05szimp9ip2jpkx0cbr7rw1kp9vrinw8ppk2x"
   },
   {
     "owner": "gbprod",
@@ -58,9 +79,9 @@
   {
     "owner": "ravitemer",
     "repo": "mcphub.nvim",
-    "rev": "56a72dd2d9660fd0f2c6d8999f99be1c3169d00d",
+    "rev": "424e8c988e2e958da6f2182e40d52ee54bb18b8c",
     "ref": "main",
-    "sha256": "0lspvwb52zfwnn994zkrw1cnc2afmshmyxj4lpwg7cviaq2q74yj"
+    "sha256": "17n00ssm8z5xafc0p7vvy1kiv9gwzshgmy8yb5jdbqfgvw8zy17f"
   },
   {
     "owner": "jmckiern",
@@ -68,12 +89,5 @@
     "rev": "8cbb93f912a85e320a3eaeee0b9ee5934043930a",
     "ref": "master",
     "sha256": "12jld0ynvs2n08cfjm59310rr2p5p8x03s1rvn131g9jp0d9l0wv"
-  },
-  {
-    "owner": "Davidyz",
-    "repo": "VectorCode",
-    "rev": "9511fa2b57e252d9c76518e1f2dcd57ddabbaf60",
-    "ref": "main",
-    "sha256": "1qvlvv3wiq8ascsbzglv387ni8108vmbzg2nr2sjrhc42857r9y9"
   }
 ]

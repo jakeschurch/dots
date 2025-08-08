@@ -51,7 +51,7 @@ let
 in
 python3Packages.buildPythonApplication rec {
   pname = "vectorcode";
-  version = "0.6.5";
+  version = "0.6.12";
   pyproject = true;
 
   src = fetchFromGitHub {
@@ -75,7 +75,8 @@ python3Packages.buildPythonApplication rec {
   nativeCheckInputs = [
     versionCheckHook
     python3Packages.pytestCheckHook
-  ] ++ allDeps;
+  ]
+  ++ allDeps;
 
   versionCheckProgramArg = "version";
 

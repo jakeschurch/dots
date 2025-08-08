@@ -12,7 +12,7 @@ blink_copilot.setup({
 	},
 })
 
-require("blink.cmp").setup({
+local config = {
 	cmdline = {
 		keymap = {
 			["<Tab>"] = { "accept" },
@@ -31,9 +31,25 @@ require("blink.cmp").setup({
 			"omni",
 		},
 
+		per_filetype = {
+			markdown = { inherit_defaults = true },
+		},
+
+		-- sources.default = function(ctx)
+		--   local success, node = pcall(vim.treesitter.get_node)
+		--   if success and node and vim.tbl_contains({ 'comment', 'line_comment', 'block_comment' }, node:type()) then
+		--     return { 'buffer' }
+		--   elseif vim.bo.filetype == 'lua' then
+		--     return { 'lsp', 'path' }
+		--   else
+		--     return { 'lsp', 'path', 'snippets', 'buffer' }
+		--   end
+		-- end
+
 		min_keyword_length = 1,
 		providers = {
 			copilot = {
+				enabled = true,
 				min_keyword_length = 0,
 				name = "copilot",
 				module = "blink-copilot",
@@ -55,7 +71,7 @@ require("blink.cmp").setup({
 				name = "Emoji",
 				score_offset = 15, -- Tune by preference
 				opts = { insert = true }, -- Insert emoji (default) or complete its name
-				should_show_items = function()
+				enabled = function(_)
 					return vim.tbl_contains(
 						-- Enable emoji completion only for git commits and markdown.
 						-- By default, enabled for all file-types.
@@ -84,6 +100,7 @@ require("blink.cmp").setup({
 			},
 
 			buffer = {
+				enabled = true,
 				opts = {
 					get_bufnrs = function()
 						return vim.tbl_filter(function(bufnr)
@@ -100,17 +117,25 @@ require("blink.cmp").setup({
 		max_typos = function(keyword)
 			return math.floor(#keyword / 4)
 		end,
+		sorts = {
+			"exact",
+			-- defaults
+			"score",
+			"sort_text",
+		},
 
 		use_proximity = true,
 	},
 
 	completion = {
 		keyword = { range = "full" },
+		accept = { auto_brackets = { enabled = true } },
 		list = {
 			selection = { preselect = false, auto_insert = true },
 		},
 		trigger = {
 			show_on_trigger_character = true,
+			show_on_keyword = true,
 		},
 		menu = {
 			auto_show = true,
@@ -179,4 +204,45 @@ require("blink.cmp").setup({
 		["<C-p>"] = { "show", "select_prev", "fallback" },
 		["<C-n>"] = { "show", "select_next", "fallback" },
 	},
-})
+}
+
+local function markdown_transform_items(a, items)
+	-- keep case of first char
+	local keyword = a.get_keyword()
+	local correct, case
+	if keyword:match("^%l") then
+		correct = "^%u%l+$"
+		case = string.lower
+	elseif keyword:match("^%u") then
+		correct = "^%l+$"
+		case = string.upper
+	else
+		return items
+	end
+
+	-- avoid duplicates from the corrections
+	local seen = {}
+	local out = {}
+	for _, item in ipairs(items) do
+		local raw = item.insertText
+		if raw:match(correct) then
+			local text = case(raw:sub(1, 1)) .. raw:sub(2)
+			item.insertText = text
+			item.label = text
+		end
+		if not seen[item.insertText] then
+			seen[item.insertText] = true
+			table.insert(out, item)
+		end
+	end
+	return out
+end
+
+config.sources.providers.buffer.transform_items = function(a, items)
+	if vim.bo.filetype == "markdown" then
+		return markdown_transform_items(a, items)
+	end
+	return items
+end
+
+require("blink.cmp").setup(config)

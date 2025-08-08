@@ -29,6 +29,7 @@ configs.setup({
 	highlight = {
 		enable = true,
 		additional_vim_regex_highlighting = true,
+		disable = ignored_filetypes,
 	},
 	indent = { enable = true },
 	textobjects = {

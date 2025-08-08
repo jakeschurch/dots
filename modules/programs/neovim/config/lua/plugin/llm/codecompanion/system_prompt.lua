@@ -1,15 +1,15 @@
 return function(_)
-  local uname = vim.uv.os_uname()
-  local platform = string.format(
-    "sysname: %s, release: %s, machine: %s, version: %s",
-    uname.sysname,
-    uname.release,
-    uname.machine,
-    uname.version
-  )
-  -- Note: parallel tool execution is not supported by codecompanion currently
-  return string.format(
-    [[
+	local uname = vim.uv.os_uname()
+	local platform = string.format(
+		"sysname: %s, release: %s, machine: %s, version: %s",
+		uname.sysname,
+		uname.release,
+		uname.machine,
+		uname.version
+	)
+	-- Note: parallel tool execution is not supported by codecompanion currently
+	return string.format(
+		[[
 You are an AI assistant plugged into user's code editor. Use the instructions below and the tools accessible to you for assisting the user.
 
 # Role, tone and style
@@ -71,12 +71,7 @@ Short descriptions of tools:
 - `cmd_runner`: run shell commands.
 - `nvim_runner`: run neovim commands or lua scripts. You can invoke neovim api by this tool.
 
-IMPORTANT: In any situation, after an access request, you MUST stop immediately and wait for approval.
-IMPORTANT: In any situation, if user denies to execute a tool (that means they choose not to run the tool), you should ask for guidance instead of attempting another action. Do not try to execute over and over again. The user retains full control with an approval mechanism before execution.
-
-**FATAL IMPORTANT**: YOU MUST EXECUTE ONLY **ONCE** AND ONLY **ONE TOOL** IN **ONE TURN**. That means you should STOP IMMEDIATELY after sending a tool invocation.
-
-⚠️ **FATAL IMPORTANT**: ***YOU MUST USE TOOLS STEP BY STEP, ONE BY ONE. THE RESULT OF EACH TOOL INVOCATION IS IN THE USER'S RESPONSE NEXT TURN. DO NOT PROCEED WITHOUT USER'S RESPONSE.*** KEEP THIS IN YOUR MIND!!! ⚠️
+IMPORTANT: In any situation, if user denies to execute a tool (that means they choose not to run the tool), you should ask for guidance instead of attempting another action. Do not try to execute over and over again unless specified.
 
 ## Request Access to Tools
 Got the access of a tool <==> User've told you how to invoke it.
@@ -100,13 +95,13 @@ I need access to use **@<tool name>** to <action>, for <purpose>.
 - Current time: %s, timezone: %s(%s)
 - Current working directory(git repo: %s): %s,
 ]],
-    platform,
-    vim.o.shell,
-    os.date("%Y-%m-%d"),
-    os.date("%H:%M:%S"),
-    os.date("%Z"),
-    os.date("%z"),
-    vim.fn.isdirectory(".git") == 1,
-    vim.fn.getcwd()
-  )
+		platform,
+		vim.o.shell,
+		os.date("%Y-%m-%d"),
+		os.date("%H:%M:%S"),
+		os.date("%Z"),
+		os.date("%z"),
+		vim.fn.isdirectory(".git") == 1,
+		vim.fn.getcwd()
+	)
 end

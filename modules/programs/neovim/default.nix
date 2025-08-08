@@ -18,7 +18,7 @@ let
 
   plugman = mkScript {
     pname = "nvim-plugman";
-    src = ./plugman.sh;
+    src = ./plug.sh;
     propagatedBuildInputs = [
       jq
       gh
@@ -57,7 +57,6 @@ in
   home.sessionVariables = {
     EDITOR = lib.mkForce "nvim";
     PSQL_EDITOR = "nvim";
-    VIMRUNTIME = "${neovim-nightly}/share/nvim/runtime";
   };
 
   xdg.configFile =

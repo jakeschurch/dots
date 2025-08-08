@@ -6,6 +6,10 @@ snacks.setup({
 	bufdelete = { enabled = true },
 	quickfile = { enabled = true },
 	input = { enabled = true },
+	indent = {
+		enabled = true,
+		scope = { enabled = false },
+	},
 	scroll = {
 		enabled = false,
 		animate_repeat = {

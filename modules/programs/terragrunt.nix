@@ -15,7 +15,6 @@
             "--provider-cache-dir $(git rev-parse --show-toplevel)/.provider-cache"
             "--tf-forward-stdout"
             "--use-partial-parse-config-cache"
-            "--backend-require-bootstrap"
             "--source-map \"git::git@github.com:fieldguide/infrastructure.git=$(git rev-parse --show-toplevel)\""
           ];
         in

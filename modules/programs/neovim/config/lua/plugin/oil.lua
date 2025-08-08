@@ -4,80 +4,99 @@ local oil = require("oil")
 
 -- Function to toggle the oil preview window
 function ToggleOilPreview()
-  local is_preview_open = false
+	local is_preview_open = false
 
-  -- Check if there are any windows with the 'oil' preview
-  local buffer_count = #vim.fn.getwininfo()
-  if buffer_count > 1 then
-    is_preview_open = true
-  end
+	-- Check if there are any windows with the 'oil' preview
+	local buffer_count = #vim.fn.getwininfo()
+	if buffer_count > 1 then
+		is_preview_open = true
+	end
 
-  -- Open or close the oil preview based on its current state
-  if is_preview_open then
-    -- Close the oil preview window
+	-- Open or close the oil preview based on its current state
+	if is_preview_open then
+		-- Close the oil preview window
 
-    -- Check if there are any windows with the 'oil' preview
-    for _, win in ipairs(vim.fn.getwininfo()) do
-      local bufname = vim.fn.bufname(win.bufnr)
-      if bufname and not bufname:match("oil") then
-        is_preview_open = true
-        vim.cmd("bd! " .. win.bufnr)
-        break
-      end
-    end
-  else
-    -- Open the oil preview window below the current window
-    require("oil").open_preview({ split = "belowright" })
-    vim.cmd("wincmd h")
-  end
+		-- Check if there are any windows with the 'oil' preview
+		for _, win in ipairs(vim.fn.getwininfo()) do
+			local bufname = vim.fn.bufname(win.bufnr)
+			if bufname and not bufname:match("oil") then
+				is_preview_open = true
+				vim.cmd("bd! " .. win.bufnr)
+				break
+			end
+		end
+	else
+		-- Open the oil preview window below the current window
+		require("oil").open_preview({ split = "belowright" })
+		vim.cmd("wincmd h")
+	end
 end
 
+function _G.get_oil_winbar()
+	local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+	local dir = require("oil").get_current_dir(bufnr)
+	if dir then
+		return vim.fn.fnamemodify(dir, ":~")
+	else
+		return vim.api.nvim_buf_get_name(0)
+	end
+end
+
+-- require("oil").set_sort({ { "mtime", "desc" }, { "type", "asc" } })
+
 oil.setup({
-  watch_for_changes = false,
-  columns = {
-    "icon",
-    "mtime",
-  },
-  keymaps = {
-    ["<leader>hf"] = {
-      "actions.cd",
-      opts = { scope = "tab" },
-      desc = ":tcd to the current oil directory",
-    },
-    ["<C-p>"] = function()
-      ToggleOilPreview()
-    end,
-    ["<C-l>"] = false,
-    ["<C-w>"] = false,
-    ["<C-h>"] = false,
-    ["h"] = "actions.parent",
-    ["l"] = "actions.select",
-  },
-  preview = {
-    layout = "right",
-    width = 50,
-  },
-  skip_confirm_for_simple_edits = true,
-  view_options = {
-    show_hidden = true,
-    case_insensitive = true,
-    sort = {
-      { "name", "asc" },
-    },
-  },
-  float = {
-    preview_split = "right",
-  },
-  git = {
-    -- Return true to automatically git add/mv/rm files
-    add = function(path)
-      return true
-    end,
-    mv = function(src_path, dest_path)
-      return true
-    end,
-    rm = function(path)
-      return true
-    end,
-  },
+	watch_for_changes = true,
+	win_options = {
+		winbar = "%!v:lua.get_oil_winbar()",
+		signcolumn = "yes:2",
+	},
+	columns = {
+		"icon",
+		"mtime",
+	},
+	keymaps = {
+		["<leader>hf"] = {
+			"actions.cd",
+			opts = { scope = "tab" },
+			desc = ":tcd to the current oil directory",
+		},
+		["<C-p>"] = function()
+			ToggleOilPreview()
+		end,
+		["<C-l>"] = false,
+		["<C-w>"] = false,
+		["<C-h>"] = false,
+		["h"] = "actions.parent",
+		["l"] = "actions.select",
+	},
+	preview = {
+		layout = "right",
+		width = 50,
+	},
+	skip_confirm_for_simple_edits = true,
+	view_options = {
+		show_hidden = true,
+		case_insensitive = true,
+		sort = {
+			{ "name", "asc" },
+		},
+	},
+	float = {
+		preview_split = "right",
+	},
+	git = {
+		-- Return true to automatically git add/mv/rm files
+		add = function(path)
+			return true
+		end,
+		mv = function(src_path, dest_path)
+			return true
+		end,
+		rm = function(path)
+			return true
+		end,
+	},
 })
+
+require("oil-lsp-diagnostics").setup()
+require("oil-git-status").setup()

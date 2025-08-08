@@ -2,7 +2,16 @@ vim.g.codecompanion_auto_tool_mode = true
 
 require("plugin.llm.codecompanion.lualine_integration"):init()
 
-local code_developer_tool = require("plugin.llm.code_developer_tool")
+local tools = {
+	-- ["lsp_files"] = require("plugin.llm.codecompanion.tools.lsp_files"),
+	["checklist"] = require("plugin.llm.codecompanion.tools.checklist_dag"),
+	["file"] = {
+		opts = {
+			provider = "fzf_lua", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+			contains_code = true,
+		},
+	},
+}
 
 local groups = {
 	["agent"] = {
@@ -67,7 +76,7 @@ local prompts = {
 				},
 				content = function(context)
 					local rules = require("plugin.llm.codecompanion.rules")
-					local rule_files = rules.get_project_rules(context.filename, {
+					local rule_files = rules.init(context.filename, {
 						root_markers = { ".git" },
 						rules_dir = ".cursor/rules",
 						gist_ids = {},
@@ -107,6 +116,19 @@ local keys = {
 	{
 		"<leader>aa",
 		function()
+			local mode = vim.api.nvim_get_mode().mode
+			if mode == "v" or mode == "V" or mode == "\22" then -- visual, visual-line, visual-block
+				vim.cmd("CodeCompanionChat Add")
+			else
+				vim.cmd("CodeCompanionChat")
+			end
+		end,
+		desc = "[a]i ch[a]t",
+		mode = { "n", "v" },
+	},
+	{
+		"<leader>ac",
+		function()
 			require("codecompanion").prompt("def")
 		end,
 		desc = "[a]i ch[a]t",
@@ -144,47 +166,34 @@ local keys = {
 		desc = "[a]i [t]oggle chat",
 		mode = { "n", "v" },
 	},
+	{
+		"<leader>ah",
+		function()
+			vim.cmd("CodeCompanionHistory")
+		end,
+		desc = "[a]i [h]istory",
+		mode = { "n" },
+	},
 }
 
 require("which-key").add(keys)
 
+--- treesitter for chat buffers
+--- NOTE remove when this PR is merged #1547
+vim.api.nvim_create_autocmd("User", {
+	pattern = "CodeCompanionChatCreated",
+	group = vim.api.nvim_create_augroup("my-codecompanion-chat", { clear = true }),
+	callback = function(event)
+		vim.treesitter.start(event.data.bufnr, "markdown")
+	end,
+})
+
 require("codecompanion").setup({
-	prompt_library = prompts,
 	strategies = {
 		chat = {
-			groups = groups,
-			adapter = "copilot",
 			slash_commands = slash_commands,
 			variables = {},
-			roles = {
-				---@type string|fun(adapter: CodeCompanion.Adapter): string
-				llm = function(llm)
-					return llm.formatted_name .. "(" .. llm.schema.model.default .. ")"
-				end,
-			},
-			tools = {
-				["file"] = {
-					opts = {
-						provider = "fzf_lua", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
-						contains_code = true,
-					},
-				},
-				vectorcode = {
-					description = "Run VectorCode to retrieve the project context.",
-					callback = require("vectorcode.integrations").codecompanion.chat.make_tool({}),
-				},
-
-				["code_developer"] = code_developer_tool,
-				["mcp"] = {
-					callback = function()
-						return require("mcphub.extensions.codecompanion")
-					end,
-					description = "Call tools and resources from the MCP Servers",
-					opts = {
-						user_approval = false,
-					},
-				},
-			},
+			tools = tools,
 			keymaps = {
 				close = {
 					modes = { n = { "q", "<C-c>" }, i = "<C-c>" },
@@ -192,21 +201,8 @@ require("codecompanion").setup({
 			},
 		},
 		inline = {
-			adapter = "copilot",
 			slash_commands = slash_commands,
-			groups = groups,
-			tools = {
-				["code_developer"] = code_developer_tool,
-				["mcp"] = {
-					callback = function()
-						return require("mcphub.extensions.codecompanion")
-					end,
-					description = "Call tools and resources from the MCP Servers",
-					opts = {
-						user_approval = false,
-					},
-				},
-			},
+			tools = {},
 			keymaps = {
 				accept_change = {
 					modes = { n = "ca" },
@@ -224,7 +220,6 @@ require("codecompanion").setup({
 		chat = {
 			icons = {
 				separator = "─",
-				show_header_separator = false,
 				auto_scroll = true,
 				pinned_buffer = "📌 ",
 				watched_buffer = "👀 ",
@@ -249,8 +244,43 @@ require("codecompanion").setup({
 		},
 	},
 	opts = {
-		log_level = "ERROR",
+		log_level = "DEBUG",
 		send_code = true,
 		system_prompt = require("plugin.llm.codecompanion.system_prompt"),
+	},
+	extensions = {
+		mcphub = {
+			enabled = true,
+			auto_approve = true,
+			callback = "mcphub.extensions.codecompanion",
+			opts = {
+				show_result_in_chat = true, -- Show mcp tool results in chat
+				make_vars = true, -- Convert resources to #variables
+				make_slash_commands = true, -- Add prompts as /slash commands
+			},
+		},
+		history = {
+			enabled = true,
+			opts = {
+				keymap = "ah",
+				auto_save = true,
+				picker = "fzf-lua",
+				auto_generate_title = true,
+				title_generation_opts = {
+					adapter = nil, -- "copilot"
+					---Model for generating titles (defaults to current chat model)
+					model = nil, -- "gpt-4o"
+					refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
+					max_refreshes = 3,
+				},
+				continue_last_chat = false,
+				---When chat is cleared with `gx` delete the chat from history
+				delete_on_clearing_chat = false,
+				---Directory path to save the chats
+				dir_to_save = vim.fn.stdpath("data") .. "/codecompanion-history",
+				---Enable detailed logging for history extension
+				enable_logging = false,
+			},
+		},
 	},
 })

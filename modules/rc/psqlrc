@@ -49,3 +49,30 @@
 \set uptime 'SELECT now() - pg_postmaster_start_time() AS uptime;'
 
 \set longqueries 'SELECT pid, application_name, backend_type, now() - query_start AS query_age, now() - xact_start AS xact_age, state, substr(regexp_replace(query, E''\\s*'', E'' ''), 1, 30) AS query FROM pg_stat_activity WHERE state != ''idle'' AND pid != pg_backend_pid() ORDER BY xact_start DESC;'
+
+-- Top 10 slowest queries by average execution time (requires pg_stat_statements)
+\set topqueries 'SELECT query, calls, total_time, mean_time, rows FROM pg_stat_statements ORDER BY mean_time DESC LIMIT 10;'
+
+-- Top 10 queries by total time spent (requires pg_stat_statements)
+\set topbytotal 'SELECT query, calls, total_time, mean_time, rows FROM pg_stat_statements ORDER BY total_time DESC LIMIT 10;'
+
+-- Index usage statistics: percentage of index scans vs sequential scans
+\set indexusage 'SELECT relname AS table, 100 * idx_scan / (seq_scan + idx_scan) AS idx_scan_pct, idx_scan, seq_scan FROM pg_stat_user_tables ORDER BY idx_scan_pct ASC NULLS FIRST LIMIT 20;'
+
+-- Unused indexes: indexes that have never been scanned
+\set unusedidx 'SELECT schemaname, relname, indexrelname, idx_scan FROM pg_stat_user_indexes WHERE idx_scan = 0 ORDER BY relname;'
+
+-- Table bloat estimate: percentage of space not used by live tuples
+\set bloat 'SELECT schemaname, tablename, round(100 * (pg_table_size(relid) - pg_relation_size(relid)) / pg_table_size(relid), 2) AS bloat_pct FROM pg_catalog.pg_statio_user_tables ORDER BY bloat_pct DESC LIMIT 10;'
+
+-- Connections by state: how many connections are in each state
+\set connstate 'SELECT state, count(*) FROM pg_stat_activity GROUP BY state;'
+
+-- Locks: count of locks by type and mode
+\set locks 'SELECT locktype, mode, granted, count(*) FROM pg_locks GROUP BY locktype, mode, granted ORDER BY count DESC;'
+
+-- Autovacuum activity: tables with the most dead tuples
+\set autovac 'SELECT relname, last_autovacuum, n_dead_tup FROM pg_stat_user_tables WHERE n_dead_tup > 0 ORDER BY n_dead_tup DESC LIMIT 10;'
+
+-- List all installed extensions
+\set extensions 'SELECT * FROM pg_extension;'
