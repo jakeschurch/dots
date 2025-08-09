@@ -72,6 +72,7 @@ let
         ];
       }
       // lib.optionalAttrs stdenv.isLinux {
+        home-manager.users."${user}" = import ../home.nix;
         home = {
           homeDirectory = "/home/${user}";
           username = user;
