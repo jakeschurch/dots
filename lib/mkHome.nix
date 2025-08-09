@@ -72,11 +72,11 @@ let
         ];
       }
       // lib.optionalAttrs stdenv.isLinux {
-        home-manager.users."${user}" = import ../home.nix;
-        home = {
-          homeDirectory = "/home/${user}";
-          username = user;
-          enableNixpkgsReleaseCheck = false;
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          users."${user}" = import ../home.nix;
+          extraSpecialArgs = getSpecialArgs user;
         };
       }
     );
