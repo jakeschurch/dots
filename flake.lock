@@ -557,6 +557,21 @@
         "type": "github"
       }
     },
+    "nixos-unified": {
+      "locked": {
+        "lastModified": 1753730363,
+        "narHash": "sha256-IB+0W+n6cMnYwYjFGsJi7TIJA26pSaFhgzwmnmB9Pdc=",
+        "owner": "srid",
+        "repo": "nixos-unified",
+        "rev": "e91aecaaa310065b067b946774660febc7f212a2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "srid",
+        "repo": "nixos-unified",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1730768919,
@@ -655,6 +670,7 @@
         "nix-index-database": "nix-index-database",
         "nixGL": "nixGL",
         "nixd": "nixd",
+        "nixos-unified": "nixos-unified",
         "nixpkgs": "nixpkgs_2",
         "tfenv": "tfenv",
         "treefmt-nix": "treefmt-nix_3"

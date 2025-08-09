@@ -33,19 +33,6 @@ let
     user:
     lib.singleton {
       nixpkgs.config = {
-        allowUnfree = true;
-        cudaSupport = false;
-        allowBroken = true;
-
-        allowUnfreePredicate =
-          pkg:
-          builtins.elem (inputs.nixpkgs.lib.getName pkg) [
-            "terraform-1.9.6"
-          ];
-
-        permittedInsecurePackages = [
-          "electron-19.1.9"
-        ];
       };
     }
     ++ lib.singleton (

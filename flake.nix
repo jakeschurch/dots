@@ -39,67 +39,61 @@
 
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-unified.url = "github:srid/nixos-unified";
   };
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
-
-      imports = [
-        inputs.treefmt-nix.flakeModule
-        inputs.home-manager.flakeModules.home-manager
-        inputs.git-hooks-nix.flakeModule
-      ];
-
-      perSystem =
-        {
-          pkgs,
-          lib,
-          system,
-          ...
-        }:
-        let
-          mkHome = import ./lib/mkHome.nix {
-            inherit
-              inputs
-              system
-              lib
-              pkgs
-              ;
-            inherit (pkgs) stdenv;
-            inherit (inputs) nix-index-database home-manager darwin;
-          };
-        in
-        {
-          treefmt = import ./treefmt.nix { };
-          pre-commit = import ./pre-commit-hooks.nix { };
-
-          _module.args.pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = import ./overlays.nix { inherit inputs; };
-
-            config.allowUnfree = true;
-          };
-
-          packages = rec {
-            jake = mkHome "jake";
-            droid = mkHome "droid"; # for pixel phone
-
-            default = jake;
-          };
-
-          # devShells.default = {
-          #   inherit (inputs.self.checks.${pkgs.system}.pre-commit-check) shellHook;
-          # };
-
-        };
+    inputs.nixos-unified.lib.mkFlake {
+      inherit inputs;
+      root = ./.;
     };
+
+  # outputs =
+  #   inputs:
+  #   inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  #     systems = [
+  #       "x86_64-linux"
+  #       "aarch64-linux"
+  #       "aarch64-darwin"
+  #       "x86_64-darwin"
+  #     ];
+
+  #     perSystem =
+  #       {
+  #         pkgs,
+  #         lib,
+  #         system,
+  #         ...
+  #       }:
+  #       let
+  #         mkHome = import ./lib/mkHome.nix {
+  #           inherit
+  #             inputs
+  #             system
+  #             lib
+  #             pkgs
+  #             ;
+  #           inherit (pkgs) stdenv;
+  #           inherit (inputs) nix-index-database home-manager darwin;
+  #         };
+  #       in
+  #       {
+  #         _module.args.pkgs = import inputs.nixpkgs {
+  #           inherit system;
+  #           overlays = import ./overlays.nix { inherit inputs; };
+
+  #           config.allowUnfree = true;
+  #         };
+
+  #         packages = rec {
+  #           jake = mkHome "jake";
+  #           droid = mkHome "droid"; # for pixel phone
+
+  #           default = jake;
+  #         };
+  #       };
+  #   };
 
   nixConfig = {
     download-attempts = 3;
