@@ -96,10 +96,8 @@ let
   mkHome =
     user:
     if stdenv.isLinux then
-      let
-        userConfig = applyConfig user;
-      in
-      home-manager.lib.homeManagerConfiguration { inherit userConfig; }
+      (home-manager.lib.homeManagerConfiguration.activationPackage (applyConfig user))
+      .config.system.build.toplevel
     else
       (darwin.lib.darwinSystem (applyConfig user)).config.system.build.toplevel;
 in
