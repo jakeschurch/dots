@@ -101,6 +101,7 @@
         pre-commit
 
         yq
+        docker
 
         awscli2
         entr

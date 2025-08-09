@@ -90,6 +90,7 @@
           packages = rec {
             jake = mkHome "jake";
             droid = mkHome "droid"; # for pixel phone
+            apollo = mkHome "jake";
 
             default = jake;
           };

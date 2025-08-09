@@ -97,7 +97,7 @@ let
   mkHome =
     user:
     if stdenv.isLinux then
-      home-manager.lib.homeManagerConfiguration.activationPackage
+      home-manager.lib.homeManagerConfiguration.activationPackage (applyConfig user);
     else
       (darwin.lib.darwinSystem (applyConfig user)).config.system.build.toplevel;
 in
