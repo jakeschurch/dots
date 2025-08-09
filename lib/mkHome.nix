@@ -57,20 +57,19 @@ let
           extraSpecialArgs = getSpecialArgs user;
         };
 
-        imports =
-          [
-            ../nix.nix
-          ]
-          ++ lib.optionals stdenv.isDarwin [
-            nix-index-database.darwinModules.nix-index
-            home-manager.darwinModules.home-manager
-            ../modules/homebrew.nix
-            ../darwin-configuration.nix
-          ]
-          ++ lib.optionals stdenv.isLinux [
-            ../home.nix
-            nix-index-database.hmModules.nix-index
-          ];
+        imports = [
+          ../nix.nix
+        ]
+        ++ lib.optionals stdenv.isDarwin [
+          nix-index-database.darwinModules.nix-index
+          home-manager.darwinModules.home-manager
+          ../modules/homebrew.nix
+          ../darwin-configuration.nix
+        ]
+        ++ lib.optionals stdenv.isLinux [
+          ../home.nix
+          nix-index-database.hmModules.nix-index
+        ];
       }
       // lib.optionalAttrs stdenv.isLinux {
         home = {
@@ -97,7 +96,10 @@ let
   mkHome =
     user:
     if stdenv.isLinux then
-      home-manager.lib.homeManagerConfiguration.activationPackage (applyConfig user);
+      let
+        userConfig = applyConfig user;
+      in
+      home-manager.lib.homeManagerConfiguration { inherit userConfig; }
     else
       (darwin.lib.darwinSystem (applyConfig user)).config.system.build.toplevel;
 in
