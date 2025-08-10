@@ -2,8 +2,7 @@
 let
   inherit (flake) inputs;
 in
-self: super:
-super.lib.singleton ({
+self: super: {
   lib =
     super.lib
     // (import ../lib {
@@ -33,8 +32,4 @@ super.lib.singleton ({
   mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
 
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${super.system}.default;
-})
-++ [
-  inputs.nixGL.overlay
-  inputs.tfenv.overlays.default
-]
+}

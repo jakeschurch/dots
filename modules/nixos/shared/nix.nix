@@ -19,7 +19,10 @@ in
       allowUnfreePredicate = pkg: builtins.elem (inputs.nixpkgs.lib.getName pkg) [ "terraform-1.9.6" ];
       permittedInsecurePackages = [ "electron-19.1.9" ];
     };
-    overlays = lib.attrValues self.overlays;
+    overlays = lib.attrValues self.overlays ++ [
+      inputs.nixGL.overlay
+      inputs.tfenv.overlays.default
+    ];
   };
 
   nix = {
