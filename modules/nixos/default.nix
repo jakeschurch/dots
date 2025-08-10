@@ -6,6 +6,7 @@ in
 {
   imports = [
     self.nixosModules.common
+    inputs.nix-index-database.nixosModules.nix-index
     {
       home-manager.sharedModules = [
         self.homeModules.default

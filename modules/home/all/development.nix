@@ -1,17 +1,8 @@
 {
-  flake,
   pkgs,
-  lib,
   ...
 }:
-let
-  inherit (flake) inputs;
-in
 {
-  imports = [
-    inputs.nix-index-database.homeModules.nix-index
-  ];
-
   home = {
     packages = with pkgs; [
       # (pkgs.callPackage ./vectorcode.nix { })
