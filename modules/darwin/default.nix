@@ -12,7 +12,12 @@ in
   imports = [
     ./homebrew.nix
     self.nixosModules.common
-    self.homeModules.darwin-only
+    {
+      home-manager.sharedModules = [
+        self.homeModules.default
+        self.homeModules.darwin-only
+      ];
+    }
   ];
 
   nix = {
