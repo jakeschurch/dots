@@ -1,7 +1,7 @@
 {
   pkgs,
   lib,
-  user,
+  config,
   ...
 }:
 {
@@ -32,7 +32,7 @@
   };
 
   system = {
-    primaryUser = user;
+    primaryUser = config.me.username;
 
     keyboard = {
       enableKeyMapping = true;
@@ -70,7 +70,7 @@
     knownUsers = lib.mkForce [ ];
     knownGroups = lib.mkForce [ ];
 
-    users."${user}".home = "/Users/${user}";
+    users."${config.me.username}".home = "/Users/${config.me.username}";
   };
 
   environment = {
@@ -106,5 +106,5 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
-  security.sudo.extraConfig = "jake    ALL = (ALL) NOPASSWD: ALL";
+  security.sudo.extraConfig = "${config.me.username}    ALL = (ALL) NOPASSWD: ALL";
 }

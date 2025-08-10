@@ -53,7 +53,6 @@
           })
         ]
         ++ [
-          inputs.nixGL.overlay
           inputs.tfenv.overlays.default
         ];
       };

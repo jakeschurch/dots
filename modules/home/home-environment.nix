@@ -31,7 +31,7 @@ in
     sessionPath = [
       "${GOPATH}/bin"
       "${config.home.homeDirectory}/dots/config/nixpkgs"
-      "/etc/static/profiles/per-user/${config.home.username}/bin"
+      "/etc/static/profiles/per-user/${config.me.username}/bin"
       "/sbin"
       "/bin"
       "${config.home.homeDirectory}/bin"
