@@ -5,129 +5,111 @@
 }:
 {
   home = {
-    packages =
-      with pkgs;
-      [
-        # (pkgs.callPackage ./vectorcode.nix { })
-        # python312Packages.chromadb
-        # vectorcode
-        pipx
-        nix-update
-        ssm-session-manager-plugin
-        kind
-        # latex
-        texlive.combined.scheme-small
-        lynx
-        # _1password-cli
-        ffmpeg
-        mtr
-        pngpaste
-        conftest
-        vectorcode
-        libressl
+    packages = with pkgs; [
+      # (pkgs.callPackage ./vectorcode.nix { })
+      # python312Packages.chromadb
+      # vectorcode
+      pipx
+      nix-update
+      ssm-session-manager-plugin
+      kind
+      # latex
+      texlive.combined.scheme-small
+      lynx
+      # _1password-cli
+      ffmpeg
+      mtr
+      pngpaste
+      conftest
+      vectorcode
+      libressl
 
-        mermaid-cli
+      mermaid-cli
 
-        sshuttle
+      sshuttle
 
-        chafa
-        act
+      chafa
+      act
 
-        procs
-        gnused
-        gnugrep
+      procs
+      gnused
+      gnugrep
 
-        moreutils
-        cloudflared
-        tmux
-        mosh
+      moreutils
+      cloudflared
+      tmux
+      mosh
 
-        bat
-        bat-extras.batdiff
-        bat-extras.batgrep
-        bat-extras.batwatch
-        bat-extras.batman
-        bat-extras.prettybat
-        wget
-        lsd
+      bat
+      bat-extras.batdiff
+      bat-extras.batgrep
+      bat-extras.batwatch
+      bat-extras.batman
+      bat-extras.prettybat
+      wget
+      lsd
 
-        terraform
-        asciinema
-        asciinema-agg
+      terraform
+      asciinema
+      asciinema-agg
 
-        k9s
-        kubectl
-        kubectx
-        kubernetes-helm
-        kubernetes-helmPlugins.helm-diff
-        kubelogin-oidc
+      k9s
+      kubectl
+      kubectx
+      kubernetes-helm
+      kubernetes-helmPlugins.helm-diff
+      kubelogin-oidc
 
-        lazydocker
-        docker-credential-helpers
-        pass
-        colima
-        dive
-        docker-compose
+      lazydocker
+      docker-credential-helpers
+      pass
+      colima
+      dive
+      docker-compose
 
-        jq
-        tealdeer
-        nix-tree
-        libiconv
+      jq
+      tealdeer
+      nix-tree
+      libiconv
 
-        sd
-        tokei
-        (aspellWithDicts (
-          ds: with ds; [
-            en
-            en-computers
-            en-science
-          ]
-        ))
-        coreutils
-        expect
-        difftastic
+      sd
+      tokei
+      (aspellWithDicts (
+        ds: with ds; [
+          en
+          en-computers
+          en-science
+        ]
+      ))
+      coreutils
+      expect
+      difftastic
 
-        arion
+      arion
 
-        sops
-        ssh-to-pgp
-        gnupg
+      sops
+      ssh-to-pgp
+      gnupg
 
-        cachix
+      cachix
 
-        ctags
+      ctags
 
-        pre-commit
+      pre-commit
 
-        yq
-        docker
+      yq
+      docker
 
-        awscli2
-        entr
-        watch
-        grex
-        nix-output-monitor
-        nvd
-        bc
-        gotop
-        ccache
-      ]
-      ++ (lib.optionals pkgs.stdenv.isLinux [
-        obs-studio
-        nixgl.nixGLIntel
-        steam
-        rofi
-        spotify
-        docker
-        wmctrl
-        xbanish
-        playerctl
-        xbindkeys
-        xautolock
-        yubikey-manager
-        ethtool
-        # xev-1.2.4
-      ]);
+      awscli2
+      entr
+      watch
+      grex
+      nix-output-monitor
+      nvd
+      bc
+      gotop
+      ccache
+    ];
 
     file."Documents/Templates" = {
       source = ../../Templates;
