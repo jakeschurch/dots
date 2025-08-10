@@ -31,5 +31,4 @@ in
       extra-platforms = lib.mkIf pkgs.stdenv.isDarwin "aarch64-darwin x86_64-darwin";
     };
   };
-
 }

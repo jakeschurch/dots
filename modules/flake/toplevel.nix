@@ -10,7 +10,12 @@
   ];
 
   perSystem =
-    { self', ... }:
+    {
+      self',
+      system,
+      lib,
+      ...
+    }:
     {
       packages = {
 
