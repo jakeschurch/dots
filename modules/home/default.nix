@@ -1,5 +1,8 @@
 {
-  imports = [ ./all ];
-
-  home-manager.backupFileExtension = "nix-bak";
+  imports = [
+    ./all
+    {
+      home-manager.backupFileExtension = "nix-bak";
+    }
+  ];
 }
