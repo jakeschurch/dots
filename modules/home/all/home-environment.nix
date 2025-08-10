@@ -1,10 +1,11 @@
 {
+  flake,
   lib,
   pkgs,
-  config,
   ...
 }:
 let
+  inherit (flake) config;
 
   shellAliases = import ./../../../config/aliases.nix { inherit pkgs; };
   concatSessionList = builtins.concatStringsSep ":";
