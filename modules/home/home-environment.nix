@@ -1,14 +1,17 @@
 {
   lib,
   pkgs,
-  config,
+  flake,
   ...
 }:
 let
+  inherit (flake) config inputs;
+  inherit (inputs) self;
+
   shellAliases = import ./../../config/aliases.nix { inherit pkgs; };
   concatSessionList = builtins.concatStringsSep ":";
 
-  GOPATH = "${config.home.homeDirectory}/go";
+  GOPATH = "${flake.config.home.homeDirectory}/go";
 in
 {
   home.file.bin = {
@@ -30,14 +33,14 @@ in
 
     sessionPath = [
       "${GOPATH}/bin"
-      "${config.home.homeDirectory}/dots/config/nixpkgs"
-      "/etc/static/profiles/per-user/${config.me.username}/bin"
+      "${flake.config.home.homeDirectory}/dots/config/nixpkgs"
+      "/etc/static/profiles/per-user/${flake.config.me.username}/bin"
       "/sbin"
       "/bin"
-      "${config.home.homeDirectory}/bin"
-      "${config.home.homeDirectory}/.local/bin"
-      "${config.home.homeDirectory}/.cargo/bin"
-      "${config.home.homeDirectory}/.nix-profile/bin"
+      "${flake.config.home.homeDirectory}/bin"
+      "${flake.config.home.homeDirectory}/.local/bin"
+      "${flake.config.home.homeDirectory}/.cargo/bin"
+      "${flake.config.home.homeDirectory}/.nix-profile/bin"
       "${pkgs.statix}/bin"
       "${pkgs.alejandra}/bin"
       "/usr/local/bin"
@@ -52,9 +55,9 @@ in
       inherit GOPATH;
 
       TERM = "wezterm";
-      NIX_PROFILES = config.home.profileDirectory;
-      MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
-      HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
+      NIX_PROFILES = flake.config.home.profileDirectory;
+      MIX_HOME = "${flake.config.home.homeDirectory}/.cache/.nix-mix";
+      HEX_HOME = "${flake.config.home.homeDirectory}/.cache/.nix-hex";
       PAGER = "bat";
       HISTSIZE = "50000";
       HISTCONTROL = concatSessionList [

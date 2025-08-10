@@ -1,5 +1,13 @@
-{ pkgs, ... }:
+{ flake, pkgs, ... }:
+let
+  inherit (flake) inputs;
+  inherit (inputs) self;
+in
 {
+  imports = [
+    self.nixosModules.common
+  ];
+
   home.packages = with pkgs; [
     obs-studio
     nixgl.nixGLIntel

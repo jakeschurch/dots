@@ -1,12 +1,17 @@
 {
+  flake,
   pkgs,
   lib,
-  config,
   ...
 }:
+let
+  inherit (flake) config inputs;
+  inherit (inputs) self;
+in
 {
   imports = [
     ./homebrew.nix
+    self.nixosModules.common
   ];
 
   nix = {
@@ -32,7 +37,7 @@
   };
 
   system = {
-    primaryUser = config.me.username;
+    primaryUser = flake.config.me.username;
 
     keyboard = {
       enableKeyMapping = true;
@@ -70,7 +75,7 @@
     knownUsers = lib.mkForce [ ];
     knownGroups = lib.mkForce [ ];
 
-    users."${config.me.username}".home = "/Users/${config.me.username}";
+    users."${flake.config.me.username}".home = "/Users/${flake.config.me.username}";
   };
 
   environment = {
@@ -106,5 +111,5 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
-  security.sudo.extraConfig = "${config.me.username}    ALL = (ALL) NOPASSWD: ALL";
+  security.sudo.extraConfig = "${flake.config.me.username}    ALL = (ALL) NOPASSWD: ALL";
 }
