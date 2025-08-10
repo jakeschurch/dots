@@ -12,6 +12,7 @@ in
   imports = [
     ./homebrew.nix
     self.nixosModules.common
+    self.homeModules.darwin-only
   ];
 
   nix = {

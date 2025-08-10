@@ -27,7 +27,6 @@ in
       # _1password-cli
       ffmpeg
       mtr
-      pngpaste
       conftest
       vectorcode
       libressl
