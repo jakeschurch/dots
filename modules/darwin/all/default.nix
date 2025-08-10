@@ -79,8 +79,6 @@
     ];
   };
 
-  home-manager.backupFileExtension = "bak";
-
   documentation = {
     enable = true;
     doc.enable = true;
