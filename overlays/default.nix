@@ -29,7 +29,7 @@ self: super: {
     };
   };
 
-  mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
+  mcp-hub = inputs.mcp-hub.packages.${self.system}.default;
 
-  neovim-nightly = inputs.neovim-nightly-overlay.packages.${super.system}.default;
+  neovim-nightly = inputs.neovim-nightly-overlay.packages.${self.system}.default;
 }

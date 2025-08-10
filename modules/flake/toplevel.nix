@@ -1,6 +1,8 @@
 # Top-level flake glue to get our configuration working
 { inputs, ... }:
-
+let
+  inherit (inputs) self;
+in
 {
   imports = [
     inputs.nixos-unified.flakeModules.default
@@ -17,6 +19,12 @@
       ...
     }:
     {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = lib.attrValues self.overlays;
+        config.allowUnfree = true;
+      };
+
       packages = {
 
         # For 'nix fmt'

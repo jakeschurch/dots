@@ -1,9 +1,17 @@
 {
+  flake,
   pkgs,
   lib,
   ...
 }:
+let
+  inherit (flake) inputs;
+in
 {
+  imports = [
+    inputs.nix-index-database.homeModules.nix-index
+  ];
+
   home = {
     packages = with pkgs; [
       # (pkgs.callPackage ./vectorcode.nix { })
@@ -112,7 +120,7 @@
     ];
 
     file."Documents/Templates" = {
-      source = ../../Templates;
+      source = ../../../Templates;
       recursive = true;
     };
 
