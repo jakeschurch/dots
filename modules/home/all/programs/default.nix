@@ -13,6 +13,21 @@ in
 {
   imports = [
     scripts
-  ]
-  ++ (with builtins; map (fn: ./${fn}) (filter (fn: fn != "default.nix") (attrNames (readDir ./.))));
+    ./eww
+    ./fd.nix
+    ./git
+    ./hammerspoon
+    ./i3
+    ./k9s
+    ./neovim
+    ./psql.nix
+    ./ripgrep.nix
+    ./rofi
+    ./scripts
+    ./slack.nix
+    ./ssh.nix
+    ./terragrunt.nix
+    ./wezterm
+    ./zsh
+  ];
 }

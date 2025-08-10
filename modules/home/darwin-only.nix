@@ -13,6 +13,8 @@ in
       ];
       users.users.${config.me.username} = {
         home = "/Users/${config.me.username}";
+        isNormalUser = true;
+        shell = pkgs.zsh;
       };
       home-manager.users.${config.me.username} = { };
     }

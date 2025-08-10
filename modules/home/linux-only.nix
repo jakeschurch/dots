@@ -2,8 +2,9 @@
 {
   home.packages = with pkgs; [
     obs-studio
-    nixgl.nixGLIntel
-    steam
+    nixgl.nixVulkanIntel
+    vulkan-tools
+    vulkan-validation-layers
     rofi
     spotify
     docker
