@@ -1,12 +1,11 @@
 { flake, ... }:
 let
   inherit (flake) inputs;
-  inherit (inputs) self;
 in
 self: super: {
   lib =
     super.lib
-    // (import ../../lib {
+    // (import ../lib {
       inherit inputs;
       pkgs = super;
     });
