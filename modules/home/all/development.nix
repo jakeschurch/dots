@@ -8,6 +8,7 @@
       # (pkgs.callPackage ./vectorcode.nix { })
       # python312Packages.chromadb
       # vectorcode
+      google-chrome
       pipx
       nix-update
       ssm-session-manager-plugin
