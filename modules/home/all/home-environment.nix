@@ -1,11 +1,12 @@
 {
   flake,
+  config,
   lib,
   pkgs,
   ...
 }:
 let
-  inherit (flake) config;
+  inherit (flake.config) me;
 
   shellAliases = import ./../../../config/aliases.nix { inherit pkgs; };
   concatSessionList = builtins.concatStringsSep ":";
@@ -33,7 +34,7 @@ in
     sessionPath = [
       "${GOPATH}/bin"
       "${config.home.homeDirectory}/dots/config/nixpkgs"
-      "/etc/static/profiles/per-user/${config.me.username}/bin"
+      "/etc/static/profiles/per-user/${me.username}/bin"
       "/sbin"
       "/bin"
       "${config.home.homeDirectory}/bin"
