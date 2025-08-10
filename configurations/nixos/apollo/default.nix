@@ -1,13 +1,13 @@
-{ flake, ...}:
+{ flake, ... }:
 
-let 
-inherit (flake) inputs;
-inherit (inputs) self;
-in 
+let
+  inherit (flake) inputs;
+  inherit (inputs) self;
+in
 {
-imports = [
-self.nixosModules.default
-./hardware-configuration.nix
-./configuration.nix
-];
+  imports = [
+    self.nixosModules.default
+    ./hardware-configuration.nix
+    ./configuration.nix
+  ];
 }
