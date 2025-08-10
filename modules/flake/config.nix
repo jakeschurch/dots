@@ -1,5 +1,5 @@
 # User configuration module
-{ config, lib, ... }:
+{ lib, ... }:
 {
   options = {
     me = {
@@ -17,7 +17,7 @@
       };
     };
   };
-  config = {
-    home.username = config.me.username;
-  };
+  imports = [
+    ../../config.nix
+  ];
 }
