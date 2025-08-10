@@ -8,6 +8,9 @@ let
 in
 {
   imports = [
+    {
+      home-manager.backupFileExtension = "nix-bak";
+    }
     self.nixosModules.common
     ./homebrew.nix
     ./all

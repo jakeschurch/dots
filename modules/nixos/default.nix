@@ -10,6 +10,7 @@ in
     {
       users.users.${config.me.username}.isNormalUser = lib.mkDefault true;
       home-manager.users.${config.me.username} = { };
+      home-manager.backupFileExtension = "nix-bak";
       home-manager.sharedModules = [
         self.homeModules.default
         self.homeModules.linux-only

@@ -5,6 +5,7 @@ let
 in
 {
   imports = [
+    inputs.nix-index-database.darwinModules.nix-index
     {
       home-manager.sharedModules = [
         self.homeModules.default
@@ -15,7 +16,6 @@ in
       };
       home-manager.users.${config.me.username} = { };
     }
-    inputs.nix-index-database.darwinModules.nix-index
   ];
   home.packages = with pkgs; [
     pngpaste
