@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
 # shellcheck disable=all
 

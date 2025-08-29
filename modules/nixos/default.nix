@@ -9,6 +9,8 @@ in
 {
   imports = [
     ./steam.nix
+    ./ssh.nix
+
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index
     {
@@ -23,4 +25,6 @@ in
       };
     }
   ];
+
+  boot.loader.grub.configurationLimit = 5;
 }

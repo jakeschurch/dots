@@ -23,6 +23,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko/latest";
+      flake = true;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     lexical-lsp.url = "github:lexical-lsp/lexical";
     lexical-lsp.inputs.nixpkgs.follows = "nixpkgs";
 

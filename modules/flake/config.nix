@@ -17,7 +17,12 @@
       };
     };
   };
-  imports = [
-    ../../config.nix
-  ];
+
+  config = {
+    me = {
+      username = "jake";
+      fullname = "Jake Schurch";
+      email = "jakeschurch@gmail.com";
+    };
+  };
 }

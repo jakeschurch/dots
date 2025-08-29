@@ -6,9 +6,10 @@ let
 in
 {
   imports = [
-    self.nixosModules.default
-    self.nixosModules.common
     ./configuration.nix
     ./hardware-configuration.nix
+    self.nixosModules.common
+    inputs.disko.nixosModules.disko
+    ./disko-config.nix
   ];
 }
