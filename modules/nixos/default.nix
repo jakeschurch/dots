@@ -8,23 +8,27 @@ let
 in
 {
   imports = [
-    ./steam.nix
-    ./ssh.nix
-
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index
     {
-
       home-manager = {
-        users.${config.me.username} = { };
+        users.${config.me.username} = {
+imports = [
+
+		    self.homeModules.default
+		    self.homeModules.linux-only
+];
+};
+	sharedModules = [
+		    self.homeModules.default
+		    self.homeModules.linux-only
+	];
         backupFileExtension = "nix-bak";
-        sharedModules = [
-          self.homeModules.default
-          self.homeModules.linux-only
-        ];
       };
     }
+    ./steam.nix
+    ./ssh.nix
   ];
 
-  boot.loader.grub.configurationLimit = 5;
+  boot.loader.grub.configurationLimit = 2;
 }

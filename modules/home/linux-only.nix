@@ -16,7 +16,7 @@
     yubikey-manager
     ethtool
     # xev-1.2.4
-
-    (builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts))
-  ];
+  ] ++ 
+(builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts))
+;
 }

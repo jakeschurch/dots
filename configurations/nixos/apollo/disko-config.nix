@@ -3,7 +3,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1";
+        device = "/dev/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0Y613885L_1";
         content = {
           type = "gpt";
           partitions = {
@@ -58,12 +58,6 @@
                       "nodiscard"
                     ];
                     mountpoint = "/nix";
-                  };
-                  "/swap" = {
-                    mountpoint = "/.swapvol";
-                    swap = {
-                      swapfile.size = "20M";
-                    };
                   };
                 };
               };

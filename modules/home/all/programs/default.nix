@@ -8,7 +8,6 @@ let
     inherit pkgs lib;
     inherit (pkgs.lib) mkScript;
   };
-
 in
 {
   imports = [

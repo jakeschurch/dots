@@ -24,15 +24,6 @@
 
   boot.blacklistedKernelModules = [ "nouveau" ];
 
-  fileSystems."/old_root" = {
-    device = "/dev/disk/by-uuid/90ddca5d-d771-49b7-a5e4-4e8e99da9c80";
-    fsType = "ext4";
-    options = [
-      "defaults"
-      "noatime"
-    ];
-  };
-
   fileSystems."/data" = {
     device = "/dev/disk/by-uuid/929d1911-3de3-44fe-a943-2ed07cd67135";
     fsType = "ext4";

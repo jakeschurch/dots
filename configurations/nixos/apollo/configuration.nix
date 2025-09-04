@@ -4,13 +4,28 @@
     ./hardware-configuration.nix
   ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 3;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-
   boot = {
+    # Use the systemd-boot EFI boot loader.
+    # boot.loader.systemd-boot.configurationLimit = 2;
+    # boot.loader.efi.canTouchEfiVariables = true;
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+
+    loader = {
+      systemd-boot.enable = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+      grub = {
+        enable = false;
+        device = "nodev";
+        efiInstallAsRemovable = false;
+        useOSProber = true;
+        efiSupport = true;
+        configurationLimit = 2;
+      };
+    };
+
     plymouth = {
       enable = true;
       theme = "lone";
@@ -36,6 +51,8 @@
     # It will just not appear on screen unless a key is pressed
     loader.timeout = 3;
 
+    initrd.kernelModules = [ "nvidia" ];
+    kernelPackages = pkgs.linuxPackages_zen;
   };
 
   hardware.graphics = {
@@ -72,31 +89,6 @@
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-
-  boot.initrd.kernelModules = [ "nvidia" ];
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-  systemd.services."systemd-resolved" = {
-    enable = true;
-    wantedBy = [
-      "multi-user.target"
-      "network-online.target"
-    ];
-  };
-
-  environment.etc."nsswitch.conf".text = ''
-    passwd:    files
-    group:     files [success=merge]
-    shadow:    files
-    sudoers:   files
-
-    hosts:     mymachines files myhostname dns
-    networks:  files
-
-    ethers:    files
-    services:  files
-    protocols: files
-    rpc:       files
-  '';
 
   networking = {
     hostName = "apollo"; # Define your hostname.
@@ -171,10 +163,20 @@
     ];
   };
 
-  programs.zsh.enable = true;
-  programs.firefox.enable = true;
+  programs = {
+    zsh.enable = true;
+    firefox.enable = true;
 
-  programs.git.enable = true;
+    git.enable = true;
+
+    # Some programs need SUID wrappers, can be configured further or are
+    # started in user sessions.
+    # programs.mtr.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+  };
 
   nix.trustedUsers = [
     "root"
@@ -190,14 +192,6 @@
   ];
 
   security.rtkit.enable = true;
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
