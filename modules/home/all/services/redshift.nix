@@ -5,7 +5,7 @@
 }:
 lib.mkIf (pkgs.system == "x86_64-linux") {
   services.redshift = {
-    enable = true;
+    enable = false;
     provider = "geoclue2";
     longitude = "-71.057083";
     latitude = "42.361145";
