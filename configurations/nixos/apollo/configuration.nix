@@ -5,6 +5,8 @@
   ];
 
   boot = {
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+
     plymouth = {
       enable = true;
       theme = "lone";
