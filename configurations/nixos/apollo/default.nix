@@ -19,6 +19,7 @@ in
   imports = [
     self.nixosModules.default
     inputs.disko.nixosModules.disko
+    inputs.hyprland.nixosModules.default
     ./configuration.nix
     ./disko-config.nix
   ];
