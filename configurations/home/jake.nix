@@ -1,5 +1,6 @@
 {
   flake,
+  pkgs,
   ...
 }:
 let
@@ -12,4 +13,5 @@ in
   ];
 
   home.username = "jake";
+  hyprland.enable = pkgs.stdenv.isLinux;
 }
