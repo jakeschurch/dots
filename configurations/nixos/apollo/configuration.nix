@@ -5,26 +5,8 @@
   ];
 
   boot = {
-    # Use the systemd-boot EFI boot loader.
-    loader.systemd-boot.configurationLimit = 5;
     # boot.loader.efi.canTouchEfiVariables = true;
     extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-
-    loader = {
-      systemd-boot.enable = true;
-      efi = {
-        canTouchEfiVariables = true;
-        efiSysMountPoint = "/boot";
-      };
-      grub = {
-        enable = false;
-        device = "nodev";
-        efiInstallAsRemovable = false;
-        useOSProber = true;
-        efiSupport = true;
-        configurationLimit = 5;
-      };
-    };
 
     plymouth = {
       enable = true;
@@ -41,15 +23,23 @@
     consoleLogLevel = 3;
     initrd.verbose = false;
     kernelParams = [
+      "nvidia-drm.modeset=1"
       "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
     ];
-    # Hide the OS choice for bootloaders.
-    # It's still possible to open the bootloader list by pressing any key
-    # It will just not appear on screen unless a key is pressed
-    loader.timeout = 3;
+    loader = {
+      # Use the systemd-boot EFI boot loader.
+      systemd-boot.configurationLimit = 5;
+      systemd-boot.enable = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+
+      timeout = 3;
+    };
 
     initrd.kernelModules = [ "nvidia" ];
     kernelPackages = pkgs.linuxPackages_zen;
