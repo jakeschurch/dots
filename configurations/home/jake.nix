@@ -24,6 +24,9 @@ in
       flake.inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars
       flake.inputs.hy3.packages.${pkgs.system}.hy3
     ];
+    extraConfig = ''
+      plugin = ${inputs.hy3.packages.${pkgs.system}.hy3}/lib/libhy3.so
+    '';
 
     settings = {
       # mouse movements
