@@ -14,7 +14,8 @@
           name = "activate-home";
           text = ''
             set -x
-            ${lib.getExe self'.packages.activate}
+
+            ${lib.getExe self'.packages.activate} "$(id -un)"@
           '';
         };
       };

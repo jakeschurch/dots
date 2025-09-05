@@ -46,7 +46,7 @@ let
           bindkey -M vicmd 'j' history-substring-search-down
 
           # Autopair from zplug
-          zsh-defer autopair-init
+          autopair-init
 
           # Lazy-load nix-shell and nix functions
           function nix-shell () {
@@ -65,8 +65,8 @@ let
 
           # Lazy-load zplug plugins
           if [[ -z "$ZPLUG_LOADED" ]]; then
-            zsh-defer source ~/.zplug/init.zsh
-            zsh-defer zplug load
+            source ~/.zplug/init.zsh
+            zplug load
             export ZPLUG_LOADED=1
           fi
         '';
@@ -142,7 +142,6 @@ in
       enable = true;
       plugins = [
         { name = "hlissner/zsh-autopair"; }
-        { name = "romkatv/zsh-defer"; }
       ];
     };
     oh-my-zsh = {

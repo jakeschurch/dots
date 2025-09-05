@@ -164,7 +164,6 @@
   };
 
   programs = {
-    zsh.enable = true;
     firefox.enable = true;
 
     git.enable = true;

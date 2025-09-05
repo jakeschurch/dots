@@ -6,8 +6,6 @@ _: {
   };
 
   home = {
-    homeDirectory = "/home/jake";
-    username = "jake";
 
     file = {
       ".xbindkeysrc".text = ''
@@ -26,8 +24,6 @@ _: {
       '';
 
       ".Xresources".text = ''
-        XTerm*kitty: xterm-256color
-
         ! hard contrast: *background: #1d2021
         *background: #282828
         ! soft contrast: *background: #32302f

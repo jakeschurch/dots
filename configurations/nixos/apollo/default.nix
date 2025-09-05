@@ -6,11 +6,14 @@ let
 in
 {
   imports = [
-    self.nixosModules.common
     self.nixosModules.default
     inputs.disko.nixosModules.disko
     ./configuration.nix
-    ./hardware-configuration.nix
     ./disko-config.nix
+  ];
+
+  home-manager.sharedModules = [
+    (self + /modules/home)
+    (self + /modules/home/linux-only.nix)
   ];
 }

@@ -1,33 +1,31 @@
 {
   flake,
+  config,
+  lib,
   ...
 }:
 let
-  inherit (flake) inputs config;
+  inherit (flake) inputs;
   inherit (inputs) self;
 in
 {
   imports = [
-    self.nixosModules.common
-    inputs.nix-index-database.nixosModules.nix-index
     {
+      users.users.${config.me.username}.isNormalUser = lib.mkDefault true;
       home-manager = {
-        users.${config.me.username} = {
-imports = [
-
-		    self.homeModules.default
-		    self.homeModules.linux-only
-];
-};
-	sharedModules = [
-		    self.homeModules.default
-		    self.homeModules.linux-only
-	];
-        backupFileExtension = "nix-bak";
+        users.${config.me.username} = { };
+        sharedModules = [
+          self.homeModules.default
+          self.homeModules.linux-only
+        ];
       };
     }
     ./steam.nix
     ./ssh.nix
+
+    self.nixosModules.common
+    inputs.nix-index-database.nixosModules.nix-index
+    ./shared
   ];
 
   boot.loader.grub.configurationLimit = 2;

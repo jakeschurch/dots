@@ -1,6 +1,10 @@
 # User configuration module
 { lib, ... }:
 {
+  imports = [
+    ../../config.nix
+  ];
+
   options = {
     me = {
       username = lib.mkOption {
@@ -15,14 +19,6 @@
         type = lib.types.str;
         description = "Your email for use in Git config";
       };
-    };
-  };
-
-  config = {
-    me = {
-      username = "jake";
-      fullname = "Jake Schurch";
-      email = "jakeschurch@gmail.com";
     };
   };
 }
