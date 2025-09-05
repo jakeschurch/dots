@@ -21,6 +21,10 @@ in
       hy3
     ];
 
+    extraConfig = ''
+      plugin = ${pkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+    '';
+
     settings = {
       # mouse movements
       bindm = [
