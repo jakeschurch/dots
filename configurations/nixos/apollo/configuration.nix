@@ -80,9 +80,6 @@
   services.xserver = {
     enable = true;
     videoDrivers = [ "nvidia" ];
-    # X11 keymap
-    layout = "en";
-    xkbVariant = "";
   };
 
   #NvidiaConfig
