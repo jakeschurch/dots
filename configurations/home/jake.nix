@@ -1,11 +1,11 @@
 {
   flake,
-  inputs,
   pkgs,
   ...
 }:
 let
-  inherit (flake.inputs) self;
+  inherit (flake) inputs;
+  inherit (inputs) self;
 in
 {
   imports = [
@@ -17,9 +17,9 @@ in
     systemd.enable = true;
 
     plugins = [
-      inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
-      inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+      flake.inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors
+      flake.inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
+      flake.inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
     ];
 
     settings = {
