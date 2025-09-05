@@ -11,18 +11,18 @@
     extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
       efi = {
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
       };
       grub = {
-        enable = false;
+        enable = true;
         device = "nodev";
         efiInstallAsRemovable = false;
         useOSProber = true;
         efiSupport = true;
-        configurationLimit = 2;
+        configurationLimit = 5;
       };
     };
 

@@ -27,6 +27,4 @@ in
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index
   ];
-
-  boot.loader.grub.configurationLimit = 2;
 }
