@@ -41,7 +41,7 @@
     initrd.kernelModules = [
       "nvidia"
     ];
-    kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages;
   };
 
   hardware.graphics = {
