@@ -14,6 +14,8 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
+    package = null;
+    portalPackage = null;
 
     plugins = [
       flake.inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
