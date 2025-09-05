@@ -203,7 +203,6 @@ in
         # "SUPER SHIFT, 0, hy3:movetoworkspace 10"
       ];
     };
-
   };
 
   environment.variables.NIXOS_OZONE_WL = "1";
