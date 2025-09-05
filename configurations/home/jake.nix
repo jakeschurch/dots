@@ -10,9 +10,6 @@ in
 {
   imports = [
     self.homeModules.default
-  ];
-
-  modules = [
     inputs.hyprland.homeManagerModules.default
   ];
 
