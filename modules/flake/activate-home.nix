@@ -15,7 +15,7 @@
           text = ''
             set -x
 
-            ${lib.getExe self'.packages.activate} "$(id -un)"@
+            ${lib.getExe self'.packages.activate}
           '';
         };
       };

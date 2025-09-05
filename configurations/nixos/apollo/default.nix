@@ -11,9 +11,4 @@ in
     ./configuration.nix
     ./disko-config.nix
   ];
-
-  home-manager.sharedModules = [
-    (self + /modules/home)
-    (self + /modules/home/linux-only.nix)
-  ];
 }

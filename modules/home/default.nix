@@ -1,4 +1,7 @@
-{ flake, ... }:
+{
+  flake,
+  ...
+}:
 {
   imports = [
     ./all

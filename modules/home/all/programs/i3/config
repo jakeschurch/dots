@@ -257,10 +257,9 @@ exec blueman-applet
 
 # exec $HOME/bin/locker.sh
 exec xrandr --dpi 144
-exec picom --config $HOME/.config/picom/picom.conf
 exec dunst
 # exec ~/.dots/config/.screenlayout/apollo_long.sh
-exec xbanish
+# exec xbanish
 exec xbindkeys
 exec wezterm
-exec $BROWSER
+# exec $BROWSER

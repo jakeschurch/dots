@@ -1,17 +1,8 @@
 # User configuration module
 {
-  flake,
-  pkgs,
   lib,
   ...
 }:
-let
-  inherit (flake)
-    inputs
-    config
-    ;
-  inherit (inputs) self;
-in
 {
   options = {
     me = {
@@ -27,27 +18,6 @@ in
         type = lib.types.str;
         description = "Your email for use in Git config";
       };
-    };
-  };
-
-  config = {
-    users.users.${config.me.username} =
-      lib.optionalAttrs pkgs.stdenv.isDarwin {
-        home = "/Users/${config.me.username}";
-      }
-      // lib.optionalAttrs pkgs.stdenv.isLinux {
-        isNormalUser = true;
-      };
-
-    home-manager = {
-      users.${config.me.username} = {
-        home.username = config.me.username;
-        imports = [
-          (self + /configurations/home/${config.me.username}.nix)
-        ];
-      };
-
-      backupFileExtension = "nix-bak";
     };
   };
 }

@@ -5,7 +5,7 @@
 }:
 lib.mkIf (pkgs.system == "x86_64-linux") {
   services.picom = {
-    enable = true;
+    enable = false;
     backend = "glx";
     vSync = true;
     fade = true;
