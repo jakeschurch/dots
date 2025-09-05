@@ -6,18 +6,18 @@
 
   boot = {
     # Use the systemd-boot EFI boot loader.
-    # boot.loader.systemd-boot.configurationLimit = 2;
+    loader.systemd-boot.configurationLimit = 5;
     # boot.loader.efi.canTouchEfiVariables = true;
     extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
     loader = {
-      systemd-boot.enable = false;
+      systemd-boot.enable = true;
       efi = {
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
       };
       grub = {
-        enable = true;
+        enable = false;
         device = "nodev";
         efiInstallAsRemovable = false;
         useOSProber = true;

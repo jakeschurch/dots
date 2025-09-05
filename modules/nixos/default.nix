@@ -7,13 +7,17 @@ let
   inherit (inputs) self;
 in
 {
-
   imports = [
+    inputs.home-manager.nixosModules.home-manager
+
     {
       home-manager = {
-        users.${config.me.username} = { };
+        useGlobalPkgs = true;
+        useUserPackages = true;
         backupFileExtension = "nix-bak";
+        users.${config.me.username} = { };
         sharedModules = [
+          (self + "/configurations/home/${config.me.username}.nix")
           self.homeModules.default
           self.homeModules.linux-only
         ];
