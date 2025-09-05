@@ -24,7 +24,7 @@
       allowed-users = [ "*" ];
       builders = "@/etc/nix/machines";
       extra-experimental-features = [
-        "nix-command flakes pipe-operators auto-allocate-uids ca-derivations git-hashing dynamic-derivations"
+        "nix-command flakes auto-allocate-uids"
       ];
       fallback = false;
 

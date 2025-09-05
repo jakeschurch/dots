@@ -46,6 +46,7 @@
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
+
     hyprland.url = "github:hyprwm/Hyprland";
 
     hyprland-plugins = {
@@ -63,6 +64,11 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland"; # to make sure that the plugin is built for the correct version of hyprland
+    };
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -82,6 +88,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
+      "auto-allocate-uids"
     ];
 
     allowed-impure-host-deps = [

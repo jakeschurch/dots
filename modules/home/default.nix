@@ -1,6 +1,5 @@
 {
   flake,
-  pkgs,
   ...
 }:
 {
@@ -11,6 +10,4 @@
   programs.bottom.enable = true;
 
   home.username = flake.config.me.username;
-
-  hyprland.enable = pkgs.stdenv.isLinux;
 }
