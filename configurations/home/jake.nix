@@ -18,7 +18,7 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
-      "hy3-hl0.50"
+      hy3-hl0.50.0
     ];
 
     settings = {
