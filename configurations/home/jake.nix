@@ -18,7 +18,6 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
-      hy3
     ];
 
     extraConfig = ''
