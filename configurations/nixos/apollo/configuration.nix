@@ -118,16 +118,16 @@
   };
 
   services = {
-    xserver = {
-      # Enable the X11 windowing system.
-      enable = true;
-      videoDrivers = [ "nvidia" ];
-      displayManager.lightdm.enable = true;
-      windowManager.i3.enable = true;
+    # REVIEW: xserver = {
+    #   # Enable the X11 windowing system.
+    #   enable = false;
+    #   videoDrivers = [ "nvidia" ];
+    #   displayManager.lightdm.enable = true;
+    #   windowManager.i3.enable = true;
 
-      # Configure keymap in X11
-      xkb.layout = "us";
-    };
+    #   # Configure keymap in X11
+    #   xkb.layout = "us";
+    # };
     # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
     # Enable CUPS to print documents.

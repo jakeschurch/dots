@@ -46,6 +46,24 @@
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
+    hyprland.url = "github:hyprwm/Hyprland";
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland"; # Prevents version mismatch.
+    };
+
+    hy3 = {
+      url = "github:outfoxxed/hy3";
+      # or github:outfoxxed/hy3 to follow the development branch.
+      # (you may encounter issues if you dont do the same for hyprland)
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    hypr-dynamic-cursors = {
+      url = "github:VirtCode/hypr-dynamic-cursors";
+      inputs.hyprland.follows = "hyprland"; # to make sure that the plugin is built for the correct version of hyprland
+    };
   };
 
   outputs =
@@ -54,52 +72,6 @@
       inherit inputs;
       root = ./.;
     };
-
-  # outputs =
-  #   inputs:
-  #   inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-  #     systems = [
-  #       "x86_64-linux"
-  #       "aarch64-linux"
-  #       "aarch64-darwin"
-  #       "x86_64-darwin"
-  #     ];
-
-  #     perSystem =
-  #       {
-  #         pkgs,
-  #         lib,
-  #         system,
-  #         ...
-  #       }:
-  #       let
-  #         mkHome = import ./lib/mkHome.nix {
-  #           inherit
-  #             inputs
-  #             system
-  #             lib
-  #             pkgs
-  #             ;
-  #           inherit (pkgs) stdenv;
-  #           inherit (inputs) nix-index-database home-manager darwin;
-  #         };
-  #       in
-  #       {
-  #         _module.args.pkgs = import inputs.nixpkgs {
-  #           inherit system;
-  #           overlays = import ./overlays.nix { inherit inputs; };
-
-  #           config.allowUnfree = true;
-  #         };
-
-  #         packages = rec {
-  #           jake = mkHome "jake";
-  #           droid = mkHome "droid"; # for pixel phone
-
-  #           default = jake;
-  #         };
-  #       };
-  #   };
 
   nixConfig = {
     download-attempts = 3;
@@ -110,10 +82,6 @@
     experimental-features = [
       "nix-command"
       "flakes"
-      "ca-derivations"
-      "auto-allocate-uids"
-      "pipe-operators"
-      "dynamic-derivations"
     ];
 
     allowed-impure-host-deps = [

@@ -1,9 +1,5 @@
 {
-  imports = [
-    ./ollama
-    ./dunst.nix
-    ./picom.nix
-    ./gpg.nix
-    ./redshift.nix
-  ];
+  imports =
+    with builtins;
+    map (fn: ./${fn}) (filter (fn: fn != "default.nix") (attrNames (readDir ./.)));
 }

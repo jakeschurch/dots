@@ -5,7 +5,7 @@
 }:
 lib.mkIf pkgs.stdenv.isLinux {
   xsession.windowManager.i3 = {
-    enable = true;
+    enable = false;
     package = pkgs.i3-gaps;
     extraConfig = builtins.readFile ./config;
     config = null;

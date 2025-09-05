@@ -11,4 +11,8 @@ in
     ./configuration.nix
     ./disko-config.nix
   ];
+
+  services.displayManager.ly = {
+    enable = true;
+  };
 }
