@@ -5,9 +5,6 @@
   ];
 
   boot = {
-    # boot.loader.efi.canTouchEfiVariables = true;
-    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-
     plymouth = {
       enable = true;
       theme = "lone";
@@ -24,6 +21,7 @@
     initrd.verbose = false;
     kernelParams = [
       "nvidia-drm.modeset=1"
+      "nomodeset"
       "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"
@@ -41,7 +39,12 @@
       timeout = 3;
     };
 
-    initrd.kernelModules = [ "nvidia" ];
+    initrd.kernelModules = [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"
+    ];
     kernelPackages = pkgs.linuxPackages_zen;
   };
 
@@ -103,7 +106,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = "Lat2-Terminus16";
+    font = pkgs.nerd-fonts.fira-code;
     useXkbConfig = true; # use xkb.options in tty.
   };
 
@@ -145,7 +148,10 @@
   users.users.jake = {
     isNormalUser = true;
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [
+      "wheel"
+      "video"
+    ]; # Enable ‘sudo’ for the user.
     hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
     home = "/home/jake";
     packages = with pkgs; [
@@ -158,6 +164,7 @@
     zsh.enable = true;
 
     git.enable = true;
+    bash.enable = true;
 
     # Some programs need SUID wrappers, can be configured further or are
     # started in user sessions.
