@@ -18,8 +18,12 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
-      hy3-hl0.50.0
+      hy3
     ];
+
+    extraConfig = ''
+      plugin = ${pkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+    '';
 
     settings = {
       # mouse movements
