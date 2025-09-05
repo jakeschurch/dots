@@ -42,11 +42,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754328163,
-        "narHash": "sha256-pE5HxryAfpMLRSRddr9kqhpI9hTnHZL/qgtHU53gt6k=",
+        "lastModified": 1757108414,
+        "narHash": "sha256-0S8/MQLpnYmwEIqWCU6TBr/NibagfaWkqMOTv7He2Zg=",
         "owner": "saghen",
         "repo": "blink.pairs",
-        "rev": "3cf0b660caf266992d6c62eb1f6049c483b35409",
+        "rev": "c2d4030c10e6628de159cbac79a32a70ad746290",
         "type": "github"
       },
       "original": {
@@ -1134,26 +1134,6 @@
         "type": "github"
       }
     },
-    "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1756981260,
-        "narHash": "sha256-GhuD9QVimjynHI0OOyZsqJsnlXr2orowh9H+HYz4YMs=",
-        "ref": "refs/heads/master",
-        "rev": "6eb12551baf924f8fdecdd04113863a754259c34",
-        "revCount": 672,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      }
-    },
     "root": {
       "inputs": {
         "blink-pairs": "blink-pairs",
@@ -1174,7 +1154,6 @@
         "nixd": "nixd",
         "nixos-unified": "nixos-unified",
         "nixpkgs": "nixpkgs_4",
-        "quickshell": "quickshell",
         "tfenv": "tfenv",
         "treefmt-nix": "treefmt-nix_3"
       }
