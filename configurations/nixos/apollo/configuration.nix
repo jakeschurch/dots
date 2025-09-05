@@ -77,15 +77,6 @@
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-  };
-
-  #NvidiaConfig
-  hardware.opengl = {
-    enable = true;
-  };
 
   networking = {
     hostName = "apollo"; # Define your hostname.
