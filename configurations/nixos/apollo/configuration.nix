@@ -22,7 +22,6 @@
     consoleLogLevel = 3;
     initrd.verbose = false;
     kernelParams = [
-      "nvidia-drm.modeset=1"
       "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"
@@ -69,7 +68,7 @@
     # supported GPUs is at:
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
-    open = true;
+    open = false;
 
     # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
@@ -77,6 +76,20 @@
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.latest;
+  };
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+    # X11 keymap
+    layout = "en";
+    xkbVariant = "";
+  };
+
+  #NvidiaConfig
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
   };
 
   networking = {
