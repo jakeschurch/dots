@@ -102,7 +102,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = pkgs.nerd-fonts.fira-code;
+    font = "jetbrains mono";
     useXkbConfig = true; # use xkb.options in tty.
   };
 
