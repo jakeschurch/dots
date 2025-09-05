@@ -1,18 +1,3 @@
-{
-  lib,
-  python3,
-  python3Packages,
-  fetchFromGitHub,
-  versionCheckHook,
-  lspSupport ? true,
-  mcpSupport ? true,
-  ...
-}:
-
-let
-  # Base dependencies without extras
-  baseDeps = with python3Packages; [
-    colorlog
     json5
     chromadb
     httpx

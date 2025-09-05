@@ -14,12 +14,11 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
 
-    plugins = [
-      flake.inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors
-      flake.inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprbars
-      flake.inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3
+    plugins = with pkgs.hyprlandPlugins; [
+      hypr-dynamic-cursors
+      hyprbars
+      hy3
     ];
 
     settings = {
@@ -153,6 +152,48 @@ in
         "$mod+SHIFT, j, hy3:movewindow, d, once"
         "$mod+SHIFT, k, hy3:movewindow, u, once"
         "$mod+SHIFT, l, hy3:movewindow, r, once"
+
+        # # Make groups / splits
+        # "SUPER D, hy3:makegroup, h"
+        # "SUPER S, hy3:makegroup, v"
+        # "SUPER Z, hy3:makegroup, tab"
+
+        # # Focus / lock / expand
+        # "SUPER A, hy3:changefocus, raise"
+        # "SUPER SHIFT, A, hy3:changefocus lower"
+        # "SUPER X, hy3:locktab"
+        # "SUPER E, hy3:expand, expand"
+        # "SUPER SHIFT, E, hy3:expand base"
+        # "SUPER R, hy3:changegroup, opposite"
+        # "SUPER TAB, hy3:togglefocuslayer"
+
+        # # Fullscreen
+        # "SUPER, F, fullscreen, 1"
+        # "SUPER SHIFT, F, fullscreen, 0"
+
+        # # Workspace switching
+        # "SUPER, 1, workspace, 01"
+        # "SUPER, 2, workspace, 02"
+        # "SUPER, 3, workspace, 03"
+        # "SUPER, 4, workspace, 04"
+        # "SUPER, 5, workspace, 05"
+        # "SUPER, 6, workspace, 06"
+        # "SUPER, 7, workspace, 07"
+        # "SUPER, 8, workspace, 08"
+        # "SUPER, 9, workspace, 09"
+        # "SUPER, 0, workspace, 10"
+
+        # # Move focused window to workspace
+        # "SUPER SHIFT, 1, hy3:movetoworkspace 01"
+        # "SUPER SHIFT, 2, hy3:movetoworkspace 02"
+        # "SUPER SHIFT, 3, hy3:movetoworkspace 03"
+        # "SUPER SHIFT, 4, hy3:movetoworkspace 04"
+        # "SUPER SHIFT, 5, hy3:movetoworkspace 05"
+        # "SUPER SHIFT, 6, hy3:movetoworkspace 06"
+        # "SUPER SHIFT, 7, hy3:movetoworkspace 07"
+        # "SUPER SHIFT, 8, hy3:movetoworkspace 08"
+        # "SUPER SHIFT, 9, hy3:movetoworkspace 09"
+        # "SUPER SHIFT, 0, hy3:movetoworkspace 10"
       ];
     };
   };

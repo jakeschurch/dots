@@ -1,0 +1,57 @@
++ /nix/store/f8kfdlvrv8ja4b43bkg600gx9847cr3n-activate/bin/activate.nu
+[39m2025-09-05T18:14:00.425|INF|[38;5;8mcurrentSystem=x86_64-linux currentHost=[1;32mapollo[38;5;8m targetHost=[7;32mapollo[0m[38;5;8m hostData={outputs: {nixArgs: [], overrideInputs: {}, system: x86_64-linux}, overrideInputs: [], sshTarget: , host: apollo, flake: /nix/store/3imwvs64075r53g2d9wp1mmflps69dv0-nixos-unified-activate-flake#apollo}[0m[0m
+[39m2025-09-05T18:14:00.425|INF|Activating [35mlocally[0m[0m
+[39m2025-09-05T18:14:00.425|INF|[1;34m>>>[0m nixos-rebuild switch --flake /nix/store/3imwvs64075r53g2d9wp1mmflps69dv0-nixos-unified-activate-flake#apollo  --use-remote-sudo [0m
+nixos-rebuild: warning: --use-remote-sudo is deprecated, use --sudo instead
+building the system configuration...
+these 15 derivations will be built:
+  /nix/store/ypi9rkjzm2g2rb79bbns4r1cav77mz0r-home-manager-path.drv
+  /nix/store/9r7dls5s1kdfvipwlhz395lsl4c8pj5w-user-environment.drv
+  /nix/store/sj7y9s7pr7j0nrr9y8bhgcx6kfy4xsiw-man-cache.drv
+  /nix/store/9s18n9kr4ddgnql1gxwb18n6zz122v1d-hm_.manpath.drv
+  /nix/store/zsblsqb9jqrwsvwcm4rlzvny1p8m81fy-hm_fontconfigconf.d10hmfonts.conf.drv
+  /nix/store/br9pg9317ghqz8yzaksh4l4gz9n4d87n-home-manager-files.drv
+  /nix/store/ww43r2x63zbxmwxnh7xdxhyrw0714cm3-home-manager-generation.drv
+  /nix/store/615ai7f8cxik49paha96xk78n7w2ci2w-unit-home-manager-jake.service.drv
+  /nix/store/bpaamaqr5vjbwl87hdrpwzip00j77rcj-system-units.drv
+  /nix/store/0zpgr8jk2r32jg1g3k6gkxpdkgcgxqbf-etc.drv
+  /nix/store/2f4zz98afzfsxc3wf141l5sxim44ri2d-linux-zen-6.16.3-modules-shrunk.drv
+  /nix/store/99b5is6b8nd3awb5332s99z1kff60zg2-closure-info.drv
+  /nix/store/lp4wnhajp99wn43wpw6r2csljxj2cfk1-initrd-linux-zen-6.16.3.drv
+  /nix/store/xz0ca890khpxvb62qfqvvs9g95jck8gs-boot.json.drv
+  /nix/store/8yz1rmnx74jxm5fmjwnqiqw9b1j1dq4b-nixos-system-apollo-25.11.20250903.c6a788f.drv
+building '/nix/store/2f4zz98afzfsxc3wf141l5sxim44ri2d-linux-zen-6.16.3-modules-shrunk.drv'...
+building '/nix/store/ypi9rkjzm2g2rb79bbns4r1cav77mz0r-home-manager-path.drv'...
+building '/nix/store/sj7y9s7pr7j0nrr9y8bhgcx6kfy4xsiw-man-cache.drv'...
+error: builder for '/nix/store/2f4zz98afzfsxc3wf141l5sxim44ri2d-linux-zen-6.16.3-modules-shrunk.drv' failed with exit code 1;
+       last 25 log lines:
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/usb/host/uhci-hcd.ko.xz
+       > root module: usb_storage
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/scsi/scsi_common.ko.xz
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/scsi/scsi_mod.ko.xz
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/usb/storage/usb-storage.ko.xz
+       > root module: usbhid
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/hid/hid.ko.xz
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/hid/usbhid/usbhid.ko.xz
+       > root module: xhci_hcd
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/usb/host/xhci-hcd.ko.xz
+       > root module: xhci_pci
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/usb/host/xhci-hcd.ko.xz
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/usb/host/xhci-pci.ko.xz
+       > root module: xxhash_generic
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/crypto/xxhash_generic.ko.xz
+       > root module: btrfs
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/lib/raid6/raid6_pq.ko.xz
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/crypto/xor.ko.xz
+       >   dependency already copied: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/crypto/blake2b_generic.ko.xz
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/fs/btrfs/btrfs.ko.xz
+       > root module: dm_mod
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/dax/dax.ko.xz
+       >   copying dependency: /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1/kernel/drivers/md/dm-mod.ko.xz
+       > root module: nvidia
+       > modprobe: FATAL: Module nvidia not found in directory /nix/store/is0n46xpdvvc8n6h1d7hfb8mlygqx6d5-linux-zen-6.16.3-modules/lib/modules/6.16.3-zen1
+       For full logs, run:
+         nix log /nix/store/2f4zz98afzfsxc3wf141l5sxim44ri2d-linux-zen-6.16.3-modules-shrunk.drv
+error: 1 dependencies of derivation '/nix/store/lp4wnhajp99wn43wpw6r2csljxj2cfk1-initrd-linux-zen-6.16.3.drv' failed to build
+error: 1 dependencies of derivation '/nix/store/8yz1rmnx74jxm5fmjwnqiqw9b1j1dq4b-nixos-system-apollo-25.11.20250903.c6a788f.drv' failed to build
+Command 'nix --extra-experimental-features 'nix-command flakes' build --print-out-paths '/nix/store/3imwvs64075r53g2d9wp1mmflps69dv0-nixos-unified-activate-flake#nixosConfigurations."apollo".config.system.build.toplevel' --no-link' returned non-zero exit status 1.
