@@ -137,18 +137,18 @@ fn main() -> Result<(), Error> {
                 // Randomly spawn shooting stars
                 if rng.gen_bool(dt as f64 * 0.05) {
                     // ~0.05 per second (about 1 every 20 seconds)
-                    let angle = rng.gen_range(-0.2..0.2) + std::f32::consts::PI; // mostly left
-                    let speed = rng.gen_range(800.0..1200.0);
-                    let vx = speed * angle.cos();
-                    let vy = speed * angle.sin();
-                    shooting_stars.push(ShootingStar {
-                        x: rng.gen_range(WIDTH as f32 * 0.7..WIDTH as f32),
-                        y: rng.gen_range(0.0..HEIGHT as f32 * 0.3),
-                        vx,
-                        vy,
-                        life: 0.0,
-                        max_life: rng.gen_range(0.7..1.2),
-                    });
+                      let angle = rng.gen_range(-0.2..0.2) + std::f32::consts::PI; // mostly left
+                      let speed = rng.gen_range(400.0..700.0); // slower shooting stars
+                      let vx = speed * angle.cos();
+                      let vy = speed * angle.sin();
+                      shooting_stars.push(ShootingStar {
+                          x: rng.gen_range(WIDTH as f32 * 0.7..WIDTH as f32),
+                          y: rng.gen_range(0.0..HEIGHT as f32 * 0.3),
+                          vx,
+                          vy,
+                          life: 0.0,
+                          max_life: rng.gen_range(0.7..1.2),
+                      });
                 }
 
                 // Update and draw shooting stars
@@ -157,23 +157,23 @@ fn main() -> Result<(), Error> {
                     s.vy += GRAVITY * dt;
                     s.y += s.vy * dt;
                     s.life += dt;
-                    let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
-                    let len = 80.0;
-                    let (r, g, b) = (255u8, 255u8, 255u8);
-                    for i in 0..len as i32 {
-                        let fx = s.x - s.vx * (i as f32 / len) * 0.03;
-                        let fy = s.y - s.vy * (i as f32 / len) * 0.03;
-                        let fade = alpha * (1.0 - i as f32 / len);
-                        let ix = fx as i32;
-                        let iy = fy as i32;
-                        if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
-                            let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
-                            frame[idx] = (r as f32 * fade) as u8;
-                            frame[idx + 1] = (g as f32 * fade) as u8;
-                            frame[idx + 2] = (b as f32 * fade) as u8;
-                            frame[idx + 3] = 255;
-                        }
-                    }
+                      let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
+                      let len = 160.0; // longer tail
+                      let (r, g, b) = (255u8, 255u8, 255u8);
+                      for i in 0..len as i32 {
+                          let fx = s.x - s.vx * (i as f32 / len) * 0.015; // stretch tail
+                          let fy = s.y - s.vy * (i as f32 / len) * 0.015;
+                          let fade = alpha * (1.0 - i as f32 / len);
+                          let ix = fx as i32;
+                          let iy = fy as i32;
+                          if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
+                              let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
+                              frame[idx] = (r as f32 * fade) as u8;
+                              frame[idx + 1] = (g as f32 * fade) as u8;
+                              frame[idx + 2] = (b as f32 * fade) as u8;
+                              frame[idx + 3] = 255;
+                          }
+                      }
                     s.life < s.max_life && s.x > -100.0 && s.y < HEIGHT as f32 + 100.0
                 });
 
