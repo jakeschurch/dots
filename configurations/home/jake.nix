@@ -58,16 +58,6 @@ in
 
       animations = {
         enabled = true;
-        bezier = [
-          "myBezier, 0.7, 0.2, 0.3, 1.0"
-        ];
-        animation = [
-          "windows, 7, 80, myBezier, slide"
-          "windowsOut, 7, 80, myBezier, slide"
-          "border, 5, 80, default"
-          "fade, 5, 80, default"
-          "workspaces, 8, 80, default"
-        ];
       };
 
       plugin = {
@@ -112,7 +102,6 @@ in
           bar_blur = true;
           bar_precedence_over_border = true;
 
-          bar_color = "rgba(36,36,38,0.92)";
           # buttons: color, size, icon, command
           hyprbars-button = [
             "rgb(ff5f56), 13, , hyprctl dispatch killactive" # Close (red)
@@ -156,32 +145,44 @@ in
         # "SUPER TAB, hy3:togglefocuslayer"
 
         # # Fullscreen
-        # "SUPER, F, fullscreen, 1"
-        # "SUPER SHIFT, F, fullscreen, 0"
+        "SUPER, F, fullscreen, 1"
+        "SUPER SHIFT, F, fullscreen, 0"
 
-        # # Workspace switching
-        # "SUPER, 1, workspace, 01"
-        # "SUPER, 2, workspace, 02"
-        # "SUPER, 3, workspace, 03"
-        # "SUPER, 4, workspace, 04"
-        # "SUPER, 5, workspace, 05"
-        # "SUPER, 6, workspace, 06"
-        # "SUPER, 7, workspace, 07"
-        # "SUPER, 8, workspace, 08"
-        # "SUPER, 9, workspace, 09"
-        # "SUPER, 0, workspace, 10"
+        # Workspace switching
+        "SUPER, 1, workspace, 01"
+        "SUPER, 2, workspace, 02"
+        "SUPER, 3, workspace, 03"
+        "SUPER, 4, workspace, 04"
+        "SUPER, 5, workspace, 05"
+        "SUPER, 6, workspace, 06"
+        "SUPER, 7, workspace, 07"
+        "SUPER, 8, workspace, 08"
+        "SUPER, 9, workspace, 09"
+        "SUPER, 0, workspace, 10"
 
         # # Move focused window to workspace
-        # "SUPER SHIFT, 1, hy3:movetoworkspace 01"
-        # "SUPER SHIFT, 2, hy3:movetoworkspace 02"
-        # "SUPER SHIFT, 3, hy3:movetoworkspace 03"
-        # "SUPER SHIFT, 4, hy3:movetoworkspace 04"
-        # "SUPER SHIFT, 5, hy3:movetoworkspace 05"
-        # "SUPER SHIFT, 6, hy3:movetoworkspace 06"
-        # "SUPER SHIFT, 7, hy3:movetoworkspace 07"
-        # "SUPER SHIFT, 8, hy3:movetoworkspace 08"
-        # "SUPER SHIFT, 9, hy3:movetoworkspace 09"
-        # "SUPER SHIFT, 0, hy3:movetoworkspace 10"
+        "SUPER SHIFT, 1, movetoworkspace 01"
+        "SUPER SHIFT, 2, movetoworkspace 02"
+        "SUPER SHIFT, 3, movetoworkspace 03"
+        "SUPER SHIFT, 4, movetoworkspace 04"
+        "SUPER SHIFT, 5, movetoworkspace 05"
+        "SUPER SHIFT, 6, movetoworkspace 06"
+        "SUPER SHIFT, 7, movetoworkspace 07"
+        "SUPER SHIFT, 8, movetoworkspace 08"
+        "SUPER SHIFT, 9, movetoworkspace 09"
+        "SUPER SHIFT, 0, movetoworkspace 10"
+
+        "$mod, r, submap, resize"
+        "submap=resize, h, resizeactive, -20 0"
+        "submap=resize, j, resizeactive, 0 20"
+        "submap=resize, k, resizeactive, 0 -20"
+        "submap=resize, l, resizeactive, 20 0"
+        "submap=resize, left, resizeactive, -20 0"
+        "submap=resize, down, resizeactive, 0 20"
+        "submap=resize, up, resizeactive, 0 -20"
+        "submap=resize, right, resizeactive, 20 0"
+        "submap=resize, escape, submap, reset"
+        "submap=resize, return, submap, reset"
       ];
     };
   };
