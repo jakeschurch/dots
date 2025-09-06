@@ -52,27 +52,34 @@ in
       };
 
       decoration = {
-        rounding = 5;
+        rounding = 10;
         dim_inactive = true;
+      };
+
+      animations = {
+        enabled = true;
+        bezier = [
+          "myBezier, 0.7, 0.2, 0.3, 1.0"
+        ];
+        animation = [
+          "windows, 3, 5, myBezier, slide"
+          "windowsOut, 3, 5, myBezier, slide"
+          "border, 2, 5, default"
+          "fade, 2, 5, default"
+          "workspaces, 2, 5, default"
+        ];
       };
 
       plugin = {
         dynamic-cursors = {
           enabled = true;
-
-          # only tilt mode
           mode = "tilt";
-
           threshold = 2;
-
-          # tilt-specific settings
           tilt = {
             limit = 5000;
             function = "negative_quadratic";
             window = 100;
           };
-
-          # shake settings
           shake = {
             enabled = true;
             nearest = true;
