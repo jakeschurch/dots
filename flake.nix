@@ -47,9 +47,9 @@
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
 
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1&ref=v0.50.0";
+    hyprland.url = "github:hyprwm/Hyprland?&rev=v0.50.0";
     hy3 = {
-      url = "github:outfoxxed/hy3?ref=hl0.50.0";
+      url = "github:outfoxxed/hy3?rev=hl0.50.0";
       inputs.hyprland.follows = "hyprland";
     };
   };
