@@ -133,10 +133,10 @@ in
         "$mod, l, movefocus, r"
 
         # hy3:Move windows
-        "$mod+SHIFT, h, movewindow, l, once"
-        "$mod+SHIFT, j, movewindow, d, once"
-        "$mod+SHIFT, k, movewindow, u, once"
-        "$mod+SHIFT, l, movewindow, r, once"
+        "$mod+SHIFT, h, movewindow, l"
+        "$mod+SHIFT, j, movewindow, d"
+        "$mod+SHIFT, k, movewindow, u"
+        "$mod+SHIFT, l, movewindow, r"
 
         # # Make groups / splits
         # "SUPER D, hy3:makegroup, h"
