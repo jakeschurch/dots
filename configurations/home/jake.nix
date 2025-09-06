@@ -111,6 +111,7 @@ in
           bar_title_enabled = false;
           bar_blur = true;
 
+          bar_color = "rgba(250,250,250,0.85)"; # <-- Add this line
           # buttons: color, size, icon, command
           hyprbars-button = [
             "rgb(ff5f56), 13, , hyprctl dispatch killactive" # Close (red)
