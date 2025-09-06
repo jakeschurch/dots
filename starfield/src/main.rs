@@ -1,10 +1,9 @@
 use pixels::{Error, Pixels, SurfaceTexture};
 use rand::Rng;
 use std::time::Instant;
-use winit::event::{ElementState, KeyboardInput, VirtualKeyCode, WindowEvent};
 use winit::{
     dpi::LogicalSize,
-    event::{Event, VirtualKeyCode, WindowEvent},
+    event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
