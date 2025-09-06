@@ -95,18 +95,22 @@ in
         # plugin-specific settings
         hyprbars = {
           enabled = true;
-          bar_height = 30;
+          bar_height = 40;
           bar_text_align = "left";
           bar_buttons_alignment = "left";
           bar_title_enabled = false;
-          bar_blur = true;
+          bar_part_of_window = false;
           bar_precedence_over_border = true;
+
+          bar_blur = true;
+          bar_padding = 12;
+          bar_button_padding = 10;
 
           # buttons: color, size, icon, command
           hyprbars-button = [
-            "rgb(ff5f56), 13, , hyprctl dispatch killactive" # Close (red)
-            "rgb(ffbd2e), 13, , hyprctl dispatch minizeactive" # Minimize (yellow)
-            "rgb(27c93f), 13, , hyprctl dispatch fullscreen 1" # Maximize (green)
+            "rgb(ff5f56), 15, , hyprctl dispatch killactive" # Close (red)
+            "rgb(ffbd2e), 15, , hyprctl dispatch minizeactive" # Minimize (yellow)
+            "rgb(27c93f), 15, , hyprctl dispatch fullscreen 1" # Maximize (green)
           ];
 
           # double-click command
