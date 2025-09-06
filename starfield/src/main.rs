@@ -137,17 +137,23 @@ fn main() -> Result<(), Error> {
                 // Randomly spawn shooting stars
                 if rng.gen_bool(dt as f64 * 0.05) {
                     // ~0.05 per second (about 1 every 20 seconds)
-                    let angle = rng.gen_range(-0.1..0.1) + std::f32::consts::PI; // almost perfectly horizontal
-                    let speed = rng.gen_range(40.0..80.0); // way slower, relaxing
-                    let vx = speed * angle.cos();
-                    let vy = speed * angle.sin();
+                    // Always start at right edge, random y in top 30%
+                    let start_x = WIDTH as f32;
+                    let start_y = rng.gen_range(0.0..HEIGHT as f32 * 0.3);
+                    // Negative vx so it goes left, small vy for slight downward angle
+                    let vx = -rng.gen_range(80.0..160.0) as f32; // slow, but enough to cross screen
+                    let vy = rng.gen_range(5.0..30.0) as f32;
+                    // Tail length in pixels (should match len in tail drawing)
+                    let tail_length = 1280.0f32 * 0.015f32 * vx.abs();
+                    // Time to cross the screen (plus a bit for tail)
+                    let max_life = (start_x + tail_length) / vx.abs();
                     shooting_stars.push(ShootingStar {
-                        x: rng.gen_range(WIDTH as f32 * 0.7..WIDTH as f32),
-                        y: rng.gen_range(0.0..HEIGHT as f32 * 0.3),
+                        x: start_x,
+                        y: start_y,
                         vx,
                         vy,
                         life: 0.0,
-                        max_life: rng.gen_range(0.7..1.2),
+                        max_life,
                     });
                 }
 
@@ -167,8 +173,8 @@ fn main() -> Result<(), Error> {
                         let fade = alpha * (1.0 - (i as f32 / len)).sqrt() * 0.8 + 0.2;
                         let ix = fx as i32;
                         let iy = fy as i32;
-                        for dx in 0..2 {
-                            for dy in 0..2 {
+                        for dx in 0..4 {
+                            for dy in 0..4 {
                                 let tx = ix + dx;
                                 let ty = iy + dy;
                                 if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
