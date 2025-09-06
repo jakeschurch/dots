@@ -128,11 +128,17 @@ in
         "$mod, k, movefocus, u"
         "$mod, l, movefocus, r"
 
-        # hy3:Move windows
+        # Move windows
         "$mod+SHIFT, h, movewindow, l"
         "$mod+SHIFT, j, movewindow, d"
         "$mod+SHIFT, k, movewindow, u"
         "$mod+SHIFT, l, movewindow, r"
+
+        # reload
+        "$mod+SHIFT, r, exec, hyperctl reload"
+
+        # quit
+        "$mod, Q, killactive"
 
         # # Make groups / splits
         # "SUPER D, hy3:makegroup, h"
