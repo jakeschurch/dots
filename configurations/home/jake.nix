@@ -17,11 +17,11 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
-      hy3
+      inputs.hy3.packages.${pkgs.system}.hy3
     ];
 
     extraConfig = ''
-      plugin = ${pkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+      plugin = ${inputs.hy3.packages.${pkgs.system}.hy3}/lib/libhy3.so
     '';
 
     settings = {
