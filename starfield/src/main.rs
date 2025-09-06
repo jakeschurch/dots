@@ -11,6 +11,7 @@ use winit::{
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
 const STAR_COUNT: usize = 500;
+const STAR_SIZE: u32 = 2; // Size of each star (2x2 pixels)
 
 struct Star {
     x: f32,
@@ -66,23 +67,35 @@ fn main() -> Result<(), Error> {
                     star.x -= star.speed * star.depth * dt;
                     if star.x < 0.0 {
                         star.x = WIDTH as f32;
-                        star.y = rand::thread_rng().gen_range(0.0..HEIGHT as f32);
+                        star.y = rng.gen_range(0.0..HEIGHT as f32);
+                        star.depth = rng.gen_range(0.5..4.0);
+                        star.twinkle_phase = rng.gen_range(0.0..std::f32::consts::TAU);
+                        star.twinkle_speed = rng.gen_range(1.0..3.0);
                     }
 
-                    let ix = star.x as i32;
-                    let iy = star.y as i32;
-                    if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
-                        let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
-                        let brightness =
-                            ((elapsed * star.twinkle_speed + star.twinkle_phase).sin() * 0.5 + 0.5)
-                                * 255.0
-                                / star.depth;
+                    // Twinkle factor
+                    let twinkle =
+                        (elapsed * star.twinkle_speed + star.twinkle_phase).sin() * 0.5 + 0.5;
+                    let intensity = (twinkle * 255.0 / star.depth).min(255.0) as u8;
 
-                        let c = brightness as u8;
-                        frame[idx] = c;
-                        frame[idx + 1] = c;
-                        frame[idx + 2] = c;
-                        frame[idx + 3] = 255;
+                    // Color tint (fixed factor, avoids borrow checker issue)
+                    let r = intensity;
+                    let g = (intensity as f32 * 0.85) as u8;
+                    let b = (intensity as f32 * 0.85) as u8;
+
+                    // Draw a small STAR_SIZE x STAR_SIZE block
+                    for dx in 0..STAR_SIZE {
+                        for dy in 0..STAR_SIZE {
+                            let ix = star.x as i32 + dx as i32;
+                            let iy = star.y as i32 + dy as i32;
+                            if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
+                                let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
+                                frame[idx] = r;
+                                frame[idx + 1] = g;
+                                frame[idx + 2] = b;
+                                frame[idx + 3] = 255;
+                            }
+                        }
                     }
                 }
 
@@ -94,10 +107,12 @@ fn main() -> Result<(), Error> {
                 window.request_redraw();
             }
             Event::WindowEvent { event, .. } => {
-                if let WindowEvent::KeyboardInput { input, .. } = event {
-                    if let Some(VirtualKeyCode::Escape) = input.virtual_keycode {
-                        *control_flow = ControlFlow::Exit;
-                    }
+                if let WindowEvent::KeyboardInput {
+                    virtual_keycode: Some(VirtualKeyCode::Escape),
+                    ..
+                } = event
+                {
+                    *control_flow = ControlFlow::Exit;
                 }
             }
             _ => {}
