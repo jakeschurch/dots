@@ -11,7 +11,7 @@ use winit::{
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
 const STAR_COUNT: usize = 5000;
-const GRAVITY: f32 = 400.0;
+const SHOOTING_STAR_GRAVITY: f32 = 40.0;
 const STAR_MIN_SIZE: u32 = 1;
 const STAR_MAX_SIZE: u32 = 4;
 const STAR_MIN_SPEED: f32 = 5.0;
@@ -137,7 +137,7 @@ fn main() -> Result<(), Error> {
                 // Randomly spawn shooting stars
                 if rng.gen_bool(dt as f64 * 0.05) {
                     // ~0.05 per second (about 1 every 20 seconds)
-                    let angle = rng.gen_range(-0.2..0.2) + std::f32::consts::PI; // mostly left
+                    let angle = rng.gen_range(-0.1..0.1) + std::f32::consts::PI; // almost perfectly horizontal
                     let speed = rng.gen_range(40.0..80.0); // way slower, relaxing
                     let vx = speed * angle.cos();
                     let vy = speed * angle.sin();
@@ -154,7 +154,7 @@ fn main() -> Result<(), Error> {
                 // Update and draw shooting stars
                 shooting_stars.retain_mut(|s| {
                     s.x += s.vx * dt;
-                    s.vy += GRAVITY * dt;
+                    s.vy += SHOOTING_STAR_GRAVITY * dt;
                     s.y += s.vy * dt;
                     s.life += dt;
                     let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
