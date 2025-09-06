@@ -62,11 +62,11 @@ in
           "myBezier, 0.7, 0.2, 0.3, 1.0"
         ];
         animation = [
-          "windows, 7, 5, myBezier, slide"
-          "windowsOut, 7, 5, myBezier, slide"
-          "border, 5, 5, default"
-          "fade, 5, 5, default"
-          "workspaces, 8, 5, default"
+          "windows, 7, 80, myBezier, slide"
+          "windowsOut, 7, 80, myBezier, slide"
+          "border, 5, 80, default"
+          "fade, 5, 80, default"
+          "workspaces, 8, 80, default"
         ];
       };
 
@@ -110,8 +110,9 @@ in
           bar_buttons_alignment = "left";
           bar_title_enabled = false;
           bar_blur = true;
+          bar_precedence_over_border = true;
 
-          bar_color = "rgba(250,250,250,0.85)"; # <-- Add this line
+          bar_color = "rgba(36,36,38,0.92)";
           # buttons: color, size, icon, command
           hyprbars-button = [
             "rgb(ff5f56), 13, , hyprctl dispatch killactive" # Close (red)
