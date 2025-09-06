@@ -10,7 +10,7 @@ use winit::{
 
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
-const STAR_COUNT: usize = 500;
+const STAR_COUNT: usize = 5000;
 const STAR_SIZE: u32 = 2; // Size of each star (2x2 pixels)
 
 struct Star {
@@ -60,7 +60,7 @@ fn main() -> Result<(), Error> {
             Star {
                 x: rng.gen_range(0.0..WIDTH as f32),
                 y: rng.gen_range(0.0..HEIGHT as f32),
-                speed: rng.gen_range(20.0..100.0),
+                speed: rng.gen_range(20.0..60.0),
                 twinkle_phase: rng.gen_range(0.0..std::f32::consts::TAU),
                 twinkle_speed: rng.gen_range(1.0..3.0),
                 depth: rng.gen_range(0.5..4.0),
@@ -92,7 +92,7 @@ fn main() -> Result<(), Error> {
                     if star.x < 0.0 {
                         star.x = WIDTH as f32;
                         star.y = rng.gen_range(0.0..HEIGHT as f32);
-                        star.depth = rng.gen_range(0.5..4.0);
+                        star.depth = rng.gen_range(0.5..2.0);
                         star.twinkle_phase = rng.gen_range(0.0..std::f32::consts::TAU);
                         star.twinkle_speed = rng.gen_range(1.0..3.0);
                     }
