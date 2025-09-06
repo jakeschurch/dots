@@ -11,7 +11,7 @@ use winit::{
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
 const STAR_COUNT: usize = 5000;
-const SHOOTING_STAR_GRAVITY: f32 = 20.0;
+const SHOOTING_STAR_GRAVITY: f32 = 30.0;
 const STAR_MIN_SIZE: u32 = 1;
 const STAR_MAX_SIZE: u32 = 4;
 const STAR_MIN_SPEED: f32 = 5.0;
@@ -24,7 +24,7 @@ struct Star {
     twinkle_phase: f32,
     twinkle_speed: f32,
     depth: f32,
-    color: (u8, u8, u8), // RGB color
+    color: (u8, u8, u8),
     size: u32,
 }
 
@@ -35,6 +35,126 @@ struct ShootingStar {
     vy: f32,
     life: f32,
     max_life: f32,
+    // Store previous positions for a natural trail
+    trail: Vec<(f32, f32)>,
+    trail_max_len: usize,
+}
+
+impl ShootingStar {
+    fn new(start_x: f32, start_y: f32, vx: f32, vy: f32) -> Self {
+        let max_life = 3.0; // Fixed lifetime for consistency
+        Self {
+            x: start_x,
+            y: start_y,
+            vx,
+            vy,
+            life: 0.0,
+            max_life,
+            trail: Vec::new(),
+            trail_max_len: 80, // Much shorter, more manageable trail
+        }
+    }
+
+    fn update(&mut self, dt: f32) {
+        // Store current position in trail
+        self.trail.push((self.x, self.y));
+        if self.trail.len() > self.trail_max_len {
+            self.trail.remove(0);
+        }
+
+        // Update physics
+        self.x += self.vx * dt;
+        self.vy += SHOOTING_STAR_GRAVITY * dt;
+        self.y += self.vy * dt;
+        self.life += dt;
+    }
+
+    fn is_alive(&self) -> bool {
+        self.life < self.max_life
+            && self.x > -200.0
+            && self.x < WIDTH as f32 + 200.0
+            && self.y > -200.0
+            && self.y < HEIGHT as f32 + 200.0
+    }
+
+    fn draw(&self, frame: &mut [u8]) {
+        let alpha = (1.0 - self.life / self.max_life).clamp(0.0, 1.0);
+
+        // Draw trail using stored positions
+        for (i, &(tx, ty)) in self.trail.iter().enumerate() {
+            let trail_progress = i as f32 / self.trail.len() as f32;
+            let trail_alpha = alpha * trail_progress * trail_progress; // Quadratic falloff
+
+            if trail_alpha < 0.01 {
+                continue; // Skip nearly invisible segments
+            }
+
+            // Color gradient: white/yellow at head to orange/red at tail
+            let r = (255.0 * (0.8 + 0.2 * trail_progress)) as u8;
+            let g = (255.0 * (0.6 + 0.4 * trail_progress)) as u8;
+            let b = (100.0 + 155.0 * (1.0 - trail_progress)) as u8;
+
+            // Variable width: thicker at head, thinner at tail
+            let width = (1.0 + 3.0 * trail_progress) as i32;
+
+            self.draw_point(frame, tx, ty, r, g, b, trail_alpha, width);
+        }
+
+        // Draw bright head
+        if alpha > 0.01 {
+            let head_size = 6;
+            self.draw_point(frame, self.x, self.y, 255, 255, 220, alpha, head_size);
+        }
+    }
+
+    fn draw_point(
+        &self,
+        frame: &mut [u8],
+        x: f32,
+        y: f32,
+        r: u8,
+        g: u8,
+        b: u8,
+        alpha: f32,
+        size: i32,
+    ) {
+        let center_x = x as i32;
+        let center_y = y as i32;
+
+        for dx in -size / 2..=size / 2 {
+            for dy in -size / 2..=size / 2 {
+                let px = center_x + dx;
+                let py = center_y + dy;
+
+                if px >= 0 && px < WIDTH as i32 && py >= 0 && py < HEIGHT as i32 {
+                    let idx = ((py as u32 * WIDTH + px as u32) * 4) as usize;
+
+                    // Soft circular falloff
+                    let dist = ((dx * dx + dy * dy) as f32).sqrt();
+                    let radius = size as f32 / 2.0;
+                    let falloff = (1.0 - (dist / radius).clamp(0.0, 1.0)).powf(2.0);
+                    let final_alpha = (alpha * falloff).clamp(0.0, 1.0);
+
+                    // Proper alpha blending
+                    let old_r = frame[idx] as f32 / 255.0;
+                    let old_g = frame[idx + 1] as f32 / 255.0;
+                    let old_b = frame[idx + 2] as f32 / 255.0;
+
+                    let new_r = r as f32 / 255.0;
+                    let new_g = g as f32 / 255.0;
+                    let new_b = b as f32 / 255.0;
+
+                    frame[idx] =
+                        ((old_r * (1.0 - final_alpha) + new_r * final_alpha) * 255.0) as u8;
+                    frame[idx + 1] =
+                        ((old_g * (1.0 - final_alpha) + new_g * final_alpha) * 255.0) as u8;
+                    frame[idx + 2] =
+                        ((old_b * (1.0 - final_alpha) + new_b * final_alpha) * 255.0) as u8;
+                    frame[idx + 3] = 255;
+                }
+            }
+        }
+    }
 }
 
 fn main() -> Result<(), Error> {
@@ -53,7 +173,6 @@ fn main() -> Result<(), Error> {
     let mut rng = rand::thread_rng();
     let mut stars: Vec<Star> = (0..STAR_COUNT)
         .map(|_| {
-            // Star color palette: blue, white, yellow, orange, red
             let palette = [
                 (180, 200, 255), // blue
                 (255, 255, 255), // white
@@ -76,7 +195,6 @@ fn main() -> Result<(), Error> {
         .collect();
 
     let mut shooting_stars: Vec<ShootingStar> = Vec::new();
-
     let start = Instant::now();
     let mut last_frame = start;
 
@@ -93,9 +211,9 @@ fn main() -> Result<(), Error> {
                 let frame = pixels.frame_mut();
                 frame.fill(0);
 
+                // Update and draw regular stars
                 for star in &mut stars {
-                    // Slow down stars over time (friction)
-                    star.speed *= 0.999_f32.powf(dt * 60.0); // gentle friction
+                    star.speed *= 0.999_f32.powf(dt * 60.0);
                     star.x -= star.speed * star.depth * dt;
                     if star.x < 0.0 {
                         star.x = WIDTH as f32;
@@ -107,18 +225,15 @@ fn main() -> Result<(), Error> {
                         star.size = rng.gen_range(STAR_MIN_SIZE..=STAR_MAX_SIZE);
                     }
 
-                    // Twinkle factor
                     let twinkle =
                         (elapsed * star.twinkle_speed + star.twinkle_phase).sin() * 0.5 + 0.5;
                     let intensity = (twinkle * 255.0 / star.depth).min(255.0) as u8;
 
-                    // Use star color tint
                     let (base_r, base_g, base_b) = star.color;
                     let r = ((base_r as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
                     let g = ((base_g as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
                     let b = ((base_b as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
 
-                    // Draw a star.size x star.size block
                     for dx in 0..star.size {
                         for dy in 0..star.size {
                             let ix = star.x as i32 + dx as i32;
@@ -134,89 +249,22 @@ fn main() -> Result<(), Error> {
                     }
                 }
 
-                // Randomly spawn shooting stars
-                if rng.gen_bool(dt as f64 * 0.05) {
-                    // ~0.05 per second (about 1 every 20 seconds)
-                    // Always start at right edge, random y in top 30%
-                    let start_x = WIDTH as f32;
-                    let start_y = rng.gen_range(0.0..HEIGHT as f32 * 0.3);
-                    // Negative vx so it goes left, small vy for slight downward angle
-                    let vx = -rng.gen_range(80.0..160.0) as f32; // slow, but enough to cross screen
-                    let vy = rng.gen_range(5.0..30.0) as f32;
-                    // Tail length in pixels (should match len in tail drawing)
-                    let tail_length = 1280.0f32 * 0.015f32 * vx.abs();
-                    // Time to cross the screen (plus a bit for tail)
-                    let max_life = (start_x + tail_length) / vx.abs();
-                    shooting_stars.push(ShootingStar {
-                        x: start_x,
-                        y: start_y,
-                        vx,
-                        vy,
-                        life: 0.0,
-                        max_life,
-                    });
+                // Spawn shooting stars less frequently but more predictably
+                if rng.gen_bool(dt as f64 * 0.3) {
+                    // About 1 every 3-4 seconds
+                    let start_x = WIDTH as f32 + 50.0; // Start off-screen
+                    let start_y = rng.gen_range(50.0..HEIGHT as f32 * 0.4);
+                    let vx = -rng.gen_range(200.0..400.0); // Faster horizontal speed
+                    let vy = rng.gen_range(10.0..50.0); // Moderate downward speed
+
+                    shooting_stars.push(ShootingStar::new(start_x, start_y, vx, vy));
                 }
 
                 // Update and draw shooting stars
-                shooting_stars.retain_mut(|s| {
-                    s.x += s.vx * dt;
-                    s.vy += SHOOTING_STAR_GRAVITY * dt;
-                    s.y += s.vy * dt;
-                    s.life += dt;
-                    let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
-                    let len = 6000.0; // much longer tail
-                    for i in 0..len as i32 {
-                        let t = i as f32 / len;
-                        let fx = s.x - s.vx * t * 0.018;
-                        let fy = s.y - s.vy * t * 0.018;
-                        let fade = alpha * (1.0 - t).powf(2.0) * 0.7 + 0.05;
-                        let r = (255.0 * (1.0 - t) + 100.0 * t) as u8;
-                        let g = (255.0 * (1.0 - t) + 180.0 * t) as u8;
-                        let b = (255.0 * (1.0 - t) + 255.0 * t) as u8;
-                        // Tapered width: thick at head, thin at tail
-                        let width = ((1.0 - t) * 8.0).ceil() as i32; // 8px at head, 1px at tail
-                        for dx in -width / 2..=width / 2 {
-                            for dy in -width / 2..=width / 2 {
-                                let tx = fx as i32 + dx;
-                                let ty = fy as i32 + dy;
-                                if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
-                                    // Fade more at the edge for a soft edge
-                                    let dist = ((dx * dx + dy * dy) as f32).sqrt() / (width as f32);
-                                    let edge_fade = 1.0 - dist.clamp(0.0, 1.0);
-                                    let final_fade = fade * edge_fade;
-                                    let idx = ((ty as u32 * WIDTH + tx as u32) * 4) as usize;
-                                    frame[idx] = ((frame[idx] as f32 * (1.0 - final_fade))
-                                        + (r as f32 * final_fade))
-                                        as u8;
-                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - final_fade))
-                                        + (g as f32 * final_fade))
-                                        as u8;
-                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - final_fade))
-                                        + (b as f32 * final_fade))
-                                        as u8;
-                                    frame[idx + 3] = 255;
-                                }
-                            }
-                        }
-                    }
-                    // Draw a larger head for the shooting star (e.g., 4x4 block)
-                    let head_size = 4;
-                    // Head color: bright white/yellow
-                    let (r, g, b) = (255u8, 255u8, 220u8);
-                    for dx in 0..head_size {
-                        for dy in 0..head_size {
-                            let hx = s.x as i32 + dx;
-                            let hy = s.y as i32 + dy;
-                            if hx >= 0 && hx < WIDTH as i32 && hy >= 0 && hy < HEIGHT as i32 {
-                                let idx = ((hy as u32 * WIDTH + hx as u32) * 4) as usize;
-                                frame[idx] = r;
-                                frame[idx + 1] = g;
-                                frame[idx + 2] = b;
-                                frame[idx + 3] = 255;
-                            }
-                        }
-                    }
-                    s.life < s.max_life && s.x > -100.0 && s.y < HEIGHT as f32 + 100.0
+                shooting_stars.retain_mut(|star| {
+                    star.update(dt);
+                    star.draw(frame);
+                    star.is_alive()
                 });
 
                 if pixels.render().is_err() {
