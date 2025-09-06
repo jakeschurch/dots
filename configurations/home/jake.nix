@@ -13,9 +13,6 @@ in
   ];
 
   wayland.windowManager.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-
     plugins = with pkgs.hyprlandPlugins; [
       # hypr-dynamic-cursors
       # hyprbars
@@ -89,35 +86,35 @@ in
           };
         };
 
-        # dynamic-cursors = {
-        #   enabled = true;
-        #
-        #   # only tilt mode
-        #   mode = "tilt";
-        #
-        #   threshold = 2;
-        #
-        #   # tilt-specific settings
-        #   tilt = {
-        #     limit = 5000;
-        #     function = "negative_quadratic";
-        #     window = 100;
-        #   };
-        #
-        #   # shake settings
-        #   shake = {
-        #     enabled = true;
-        #     nearest = true;
-        #     threshold = 6.0;
-        #     base = 4.0;
-        #     speed = 4.0;
-        #     influence = 0.0;
-        #     limit = 0.0;
-        #     timeout = 2000;
-        #     effects = false;
-        #     ipc = false;
-        #   };
-        # };
+        dynamic-cursors = {
+          enabled = true;
+
+          # only tilt mode
+          mode = "tilt";
+
+          threshold = 2;
+
+          # tilt-specific settings
+          tilt = {
+            limit = 5000;
+            function = "negative_quadratic";
+            window = 100;
+          };
+
+          # shake settings
+          shake = {
+            enabled = true;
+            nearest = true;
+            threshold = 6.0;
+            base = 4.0;
+            speed = 4.0;
+            influence = 0.0;
+            limit = 0.0;
+            timeout = 2000;
+            effects = false;
+            ipc = false;
+          };
+        };
 
         # TODO: optional: use hyprcursor for high-res when magnified
         # hyprcursor = {
@@ -128,18 +125,18 @@ in
         # };
 
         # plugin-specific settings
-        # hyprbars = {
-        #   bar_height = 20;
-        #
-        #   # buttons: color, size, icon, command
-        #   hyprbars_button = [
-        #     "rgb(ff4040), 10, 󰖭, hyprctl dispatch killactive"
-        #     "rgb(eeee11), 10, , hyprctl dispatch fullscreen 1"
-        #   ];
-        #
-        #   # double-click command
-        #   on_double_click = "hyprctl dispatch fullscreen 1";
-        # };
+        hyprbars = {
+          bar_height = 20;
+
+          # buttons: color, size, icon, command
+          hyprbars_button = [
+            "rgb(ff4040), 10, 󰖭, hyprctl dispatch killactive"
+            "rgb(eeee11), 10, , hyprctl dispatch fullscreen 1"
+          ];
+
+          # double-click command
+          on_double_click = "hyprctl dispatch fullscreen 1";
+        };
       };
 
       # Keybindings (from your i3 config)
