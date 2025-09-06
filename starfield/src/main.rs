@@ -163,15 +163,22 @@ fn main() -> Result<(), Error> {
                     for i in 0..len as i32 {
                         let fx = s.x - s.vx * (i as f32 / len) * 0.015; // stretch tail
                         let fy = s.y - s.vy * (i as f32 / len) * 0.015;
-                        let fade = alpha * (1.0 - i as f32 / len);
+                        // Use a slower fade (sqrt) and minimum opacity for visibility
+                        let fade = alpha * (1.0 - (i as f32 / len)).sqrt() * 0.8 + 0.2;
                         let ix = fx as i32;
                         let iy = fy as i32;
-                        if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
-                            let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
-                            frame[idx] = (r as f32 * fade) as u8;
-                            frame[idx + 1] = (g as f32 * fade) as u8;
-                            frame[idx + 2] = (b as f32 * fade) as u8;
-                            frame[idx + 3] = 255;
+                        for dx in 0..2 {
+                            for dy in 0..2 {
+                                let tx = ix + dx;
+                                let ty = iy + dy;
+                                if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
+                                    let idx = ((ty as u32 * WIDTH + tx as u32) * 4) as usize;
+                                    frame[idx] = (r as f32 * fade) as u8;
+                                    frame[idx + 1] = (g as f32 * fade) as u8;
+                                    frame[idx + 2] = (b as f32 * fade) as u8;
+                                    frame[idx + 3] = 255;
+                                }
+                            }
                         }
                     }
                     // Draw a larger head for the shooting star (e.g., 4x4 block)
