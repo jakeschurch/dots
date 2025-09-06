@@ -125,8 +125,8 @@ fn main() -> Result<(), Error> {
                 }
 
                 // Randomly spawn shooting stars
-                if rng.gen_bool(dt as f64 * 0.5) {
-                    // ~0.5 per second
+                if rng.gen_bool(dt as f64 * 0.05) {
+                    // ~0.05 per second (about 1 every 20 seconds)
                     let angle = rng.gen_range(-0.2..0.2) + std::f32::consts::PI; // mostly left
                     let speed = rng.gen_range(800.0..1200.0);
                     let vx = speed * angle.cos();
