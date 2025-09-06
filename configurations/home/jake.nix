@@ -148,7 +148,7 @@ in
         # "SUPER R, hy3:changegroup, opposite"
         # "SUPER TAB, hy3:togglefocuslayer"
 
-        # # Fullscreen
+        # Fullscreen
         "SUPER, F, fullscreen, 1"
         "SUPER SHIFT, F, fullscreen, 0"
 
@@ -164,30 +164,17 @@ in
         "SUPER, 9, workspace, 09"
         "SUPER, 0, workspace, 10"
 
-        # # Move focused window to workspace
-        "SUPER SHIFT, 1, movetoworkspace, 01"
-        "SUPER SHIFT, 2, movetoworkspace, 02"
-        "SUPER SHIFT, 3, movetoworkspace, 03"
-        "SUPER SHIFT, 4, movetoworkspace, 04"
-        "SUPER SHIFT, 5, movetoworkspace, 05"
-        "SUPER SHIFT, 6, movetoworkspace, 06"
-        "SUPER SHIFT, 7, movetoworkspace, 07"
-        "SUPER SHIFT, 8, movetoworkspace, 08"
-        "SUPER SHIFT, 9, movetoworkspace, 09"
-        "SUPER SHIFT, 0, movetoworkspace, 10"
-      ];
-      bindl = [
-        "$mod, r, submap, resize"
-        "submap=resize, h, resizeactive, -20 0"
-        "submap=resize, j, resizeactive, 0 20"
-        "submap=resize, k, resizeactive, 0 -20"
-        "submap=resize, l, resizeactive, 20 0"
-        "submap=resize, left, resizeactive, -20 0"
-        "submap=resize, down, resizeactive, 0 20"
-        "submap=resize, up, resizeactive, 0 -20"
-        "submap=resize, right, resizeactive, 20 0"
-        "submap=resize, escape, submap, reset"
-        "submap=resize, return, submap, reset"
+        # Move focused window to workspace
+        "SUPER SHIFT, 1, movetoworkspacesilent, 01"
+        "SUPER SHIFT, 2, movetoworkspacesilent, 02"
+        "SUPER SHIFT, 3, movetoworkspacesilent, 03"
+        "SUPER SHIFT, 4, movetoworkspacesilent, 04"
+        "SUPER SHIFT, 5, movetoworkspacesilent, 05"
+        "SUPER SHIFT, 6, movetoworkspacesilent, 06"
+        "SUPER SHIFT, 7, movetoworkspacesilent, 07"
+        "SUPER SHIFT, 8, movetoworkspacesilent, 08"
+        "SUPER SHIFT, 9, movetoworkspacesilent, 09"
+        "SUPER SHIFT, 0, movetoworkspacesilent, 10"
       ];
     };
   };
