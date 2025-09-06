@@ -41,14 +41,19 @@ in
       };
 
       "$mod" = "SUPER";
+
       general = {
         layout = "dwindle";
         gaps_in = 3;
-        gaps_out = 5;
-        border_size = 1;
-        col.active_border = "rgba(33ccffee)";
-        col.inactive_border = "rgba(595959aa)";
+        gaps_out = 10;
+        float_gaps = 5;
+        border_size = 5;
         resize_on_border = true;
+      };
+
+      decoration = {
+        rounding = 5;
+        dim_inactive = true;
       };
 
       plugin = {
@@ -92,12 +97,17 @@ in
 
         # plugin-specific settings
         hyprbars = {
-          bar_height = 20;
+          enabled = true;
+          bar_height = 30;
+          bar_text_align = "left";
+          bar_buttons_alignment = "left";
+          bar_title_enabled = false;
+          bar_blur = true;
 
           # buttons: color, size, icon, command
-          hyprbars_button = [
-            "rgb(ff4040), 10, 󰖭, hyprctl dispatch killactive"
-            "rgb(eeee11), 10, , hyprctl dispatch fullscreen 1"
+          hyprbars-button = [
+            "rgb(ff4040), 15, , hyprctl dispatch killactive"
+            "rgb(eeee11), 15, , hyprctl dispatch fullscreen 1"
           ];
 
           # double-click command
