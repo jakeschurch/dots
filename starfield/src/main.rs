@@ -164,24 +164,36 @@ fn main() -> Result<(), Error> {
                     s.y += s.vy * dt;
                     s.life += dt;
                     let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
-                    let len = 2560.0;
-                    let (r, g, b) = (255u8, 255u8, 255u8);
+                    let len = 4000.0; // longer tail
                     for i in 0..len as i32 {
-                        let fx = s.x - s.vx * (i as f32 / len) * 0.015; // stretch tail
-                        let fy = s.y - s.vy * (i as f32 / len) * 0.015;
-                        // Use a slower fade (sqrt) and minimum opacity for visibility
-                        let fade = alpha * (1.0 - (i as f32 / len)).sqrt() * 0.8 + 0.2;
+                        let t = i as f32 / len;
+                        let fx = s.x - s.vx * t * 0.018; // slightly more stretched
+                        let fy = s.y - s.vy * t * 0.018;
+                        // Quadratic fade, lower minimum
+                        let fade = alpha * (1.0 - t).powf(2.0) * 0.7 + 0.05;
+                        // Color gradient: white/yellow at head, blue at tail
+                        let r = (255.0 * (1.0 - t) + 100.0 * t) as u8;
+                        let g = (255.0 * (1.0 - t) + 180.0 * t) as u8;
+                        let b = (255.0 * (1.0 - t) + 255.0 * t) as u8;
                         let ix = fx as i32;
                         let iy = fy as i32;
-                        for dx in 0..4 {
-                            for dy in 0..4 {
+                        // Thin tail: 1x1 or 2x2 block
+                        for dx in 0..2 {
+                            for dy in 0..2 {
                                 let tx = ix + dx;
                                 let ty = iy + dy;
                                 if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
                                     let idx = ((ty as u32 * WIDTH + tx as u32) * 4) as usize;
-                                    frame[idx] = (r as f32 * fade) as u8;
-                                    frame[idx + 1] = (g as f32 * fade) as u8;
-                                    frame[idx + 2] = (b as f32 * fade) as u8;
+                                    // Blend with background for soft blur
+                                    frame[idx] = ((frame[idx] as f32 * (1.0 - fade))
+                                        + (r as f32 * fade))
+                                        as u8;
+                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - fade))
+                                        + (g as f32 * fade))
+                                        as u8;
+                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - fade))
+                                        + (b as f32 * fade))
+                                        as u8;
                                     frame[idx + 3] = 255;
                                 }
                             }
