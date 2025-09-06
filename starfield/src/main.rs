@@ -175,24 +175,24 @@ fn main() -> Result<(), Error> {
                         let b = (255.0 * (1.0 - t) + 255.0 * t) as u8;
                         // Tapered width: thick at head, thin at tail
                         let width = ((1.0 - t) * 8.0).ceil() as i32; // 8px at head, 1px at tail
-                        for dx in -width/2..=width/2 {
-                            for dy in -width/2..=width/2 {
+                        for dx in -width / 2..=width / 2 {
+                            for dy in -width / 2..=width / 2 {
                                 let tx = fx as i32 + dx;
                                 let ty = fy as i32 + dy;
                                 if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
                                     // Fade more at the edge for a soft edge
-                                    let dist = ((dx*dx + dy*dy) as f32).sqrt() / (width as f32);
+                                    let dist = ((dx * dx + dy * dy) as f32).sqrt() / (width as f32);
                                     let edge_fade = 1.0 - dist.clamp(0.0, 1.0);
                                     let final_fade = fade * edge_fade;
                                     let idx = ((ty as u32 * WIDTH + tx as u32) * 4) as usize;
-                                    frame[idx] = ((frame[idx] as f32 * (1.0 - final_fade)) + (r as f32 * final_fade)) as u8;
-                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - final_fade)) + (g as f32 * final_fade)) as u8;
-                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - final_fade)) + (b as f32 * final_fade)) as u8;
-                                    frame[idx + 3] = 255;
-                                }
-                            }
-                        }
-                    }
+                                    frame[idx] = ((frame[idx] as f32 * (1.0 - final_fade))
+                                        + (r as f32 * final_fade))
+                                        as u8;
+                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - final_fade))
+                                        + (g as f32 * final_fade))
+                                        as u8;
+                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - final_fade))
+                                        + (b as f32 * final_fade))
                                         as u8;
                                     frame[idx + 3] = 255;
                                 }
