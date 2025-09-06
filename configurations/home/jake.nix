@@ -17,12 +17,7 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
-      inputs.hy3.packages.${pkgs.system}.hy3
     ];
-
-    extraConfig = ''
-      plugin = ${inputs.hy3.packages.${pkgs.system}.hy3}/lib/libhy3.so
-    '';
 
     settings = {
       # mouse movements
@@ -47,8 +42,6 @@ in
 
       "$mod" = "SUPER";
       general = {
-        layout = "hy3"; # enables Hy3 tiling engine
-
         gaps_in = 3;
         gaps_out = 5;
         border_size = 1;
@@ -58,35 +51,6 @@ in
       };
 
       plugin = {
-        hy3 = {
-          # Hy3 plugin options
-          no_gaps_when_only = 1; # hide gaps if only one window
-          node_collapse_policy = 2; # keep nested group only if parent is a tab group
-          group_inset = 10; # offset when only one window in group
-
-          # gaps and border
-          gaps_in = 24;
-          gaps_out = 8;
-          border_size = 8;
-          rounded_gaps = true;
-
-          # tab bar (optional)
-          tabs = {
-            height = 22;
-            padding = 6;
-            from_top = false;
-            radius = 6;
-            border_width = 2;
-            render_text = true;
-            text_center = true;
-            text_font = "JetBrains Mono";
-            text_height = 8;
-            text_padding = 3;
-            blur = true;
-            opacity = 1.0;
-          };
-        };
-
         dynamic-cursors = {
           enabled = true;
 
@@ -145,16 +109,16 @@ in
         "$mod, return, exec, wezterm"
 
         # Focus
-        "$mod, h, hy3:movefocus, l"
-        "$mod, j, hy3:movefocus, d"
-        "$mod, k, hy3:movefocus, u"
-        "$mod, l, hy3:movefocus, r"
+        "$mod, h, movefocus, l"
+        "$mod, j, movefocus, d"
+        "$mod, k, movefocus, u"
+        "$mod, l, movefocus, r"
 
         # hy3:Move windows
-        "$mod+SHIFT, h, hy3:movewindow, l, once"
-        "$mod+SHIFT, j, hy3:movewindow, d, once"
-        "$mod+SHIFT, k, hy3:movewindow, u, once"
-        "$mod+SHIFT, l, hy3:movewindow, r, once"
+        "$mod+SHIFT, h, movewindow, l, once"
+        "$mod+SHIFT, j, movewindow, d, once"
+        "$mod+SHIFT, k, movewindow, u, once"
+        "$mod+SHIFT, l, movewindow, r, once"
 
         # # Make groups / splits
         # "SUPER D, hy3:makegroup, h"
