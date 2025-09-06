@@ -11,7 +11,7 @@ use winit::{
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
 const STAR_COUNT: usize = 5000;
-const SHOOTING_STAR_GRAVITY: f32 = 40.0;
+const SHOOTING_STAR_GRAVITY: f32 = 20.0;
 const STAR_MIN_SIZE: u32 = 1;
 const STAR_MAX_SIZE: u32 = 4;
 const STAR_MIN_SPEED: f32 = 5.0;
@@ -164,7 +164,7 @@ fn main() -> Result<(), Error> {
                     s.y += s.vy * dt;
                     s.life += dt;
                     let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
-                    let len = 1280.0; // 8x longer tail
+                    let len = 2560.0;
                     let (r, g, b) = (255u8, 255u8, 255u8);
                     for i in 0..len as i32 {
                         let fx = s.x - s.vx * (i as f32 / len) * 0.015; // stretch tail
