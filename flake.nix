@@ -46,8 +46,6 @@
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
-
-    hyprland.url = "github:hyprwm/Hyprland";
   };
 
   outputs =
