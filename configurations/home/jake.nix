@@ -62,11 +62,11 @@ in
           "myBezier, 0.7, 0.2, 0.3, 1.0"
         ];
         animation = [
-          "windows, 3, 5, myBezier, slide"
-          "windowsOut, 3, 5, myBezier, slide"
-          "border, 2, 5, default"
-          "fade, 2, 5, default"
-          "workspaces, 2, 5, default"
+          "windows, 7, 5, myBezier, slide"
+          "windowsOut, 7, 5, myBezier, slide"
+          "border, 5, 5, default"
+          "fade, 5, 5, default"
+          "workspaces, 8, 5, default"
         ];
       };
 
@@ -113,8 +113,9 @@ in
 
           # buttons: color, size, icon, command
           hyprbars-button = [
-            "rgb(ff4040), 15, , hyprctl dispatch killactive"
-            "rgb(eeee11), 15, , hyprctl dispatch fullscreen 1"
+            "rgb(ff5f56), 13, , hyprctl dispatch killactive" # Close (red)
+            "rgb(ffbd2e), 13, , hyprctl dispatch minizeactive" # Minimize (yellow)
+            "rgb(27c93f), 13, , hyprctl dispatch fullscreen 1" # Maximize (green)
           ];
 
           # double-click command
