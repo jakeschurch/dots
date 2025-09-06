@@ -11,7 +11,11 @@ use winit::{
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
 const STAR_COUNT: usize = 5000;
-const STAR_SIZE: u32 = 2; // Size of each star (2x2 pixels)
+const GRAVITY: f32 = 400.0;
+const STAR_MIN_SIZE: u32 = 1;
+const STAR_MAX_SIZE: u32 = 4;
+const STAR_MIN_SPEED: f32 = 5.0;
+const STAR_MAX_SPEED: f32 = 25.0;
 
 struct Star {
     x: f32,
@@ -21,6 +25,7 @@ struct Star {
     twinkle_speed: f32,
     depth: f32,
     color: (u8, u8, u8), // RGB color
+    size: u32,
 }
 
 struct ShootingStar {
@@ -60,11 +65,12 @@ fn main() -> Result<(), Error> {
             Star {
                 x: rng.gen_range(0.0..WIDTH as f32),
                 y: rng.gen_range(0.0..HEIGHT as f32),
-                speed: rng.gen_range(20.0..60.0),
+                speed: rng.gen_range(STAR_MIN_SPEED..STAR_MAX_SPEED),
                 twinkle_phase: rng.gen_range(0.0..std::f32::consts::TAU),
                 twinkle_speed: rng.gen_range(1.0..3.0),
                 depth: rng.gen_range(0.5..4.0),
                 color,
+                size: rng.gen_range(STAR_MIN_SIZE..=STAR_MAX_SIZE),
             }
         })
         .collect();
@@ -88,6 +94,8 @@ fn main() -> Result<(), Error> {
                 frame.fill(0);
 
                 for star in &mut stars {
+                    // Slow down stars over time (friction)
+                    star.speed *= 0.999_f32.powf(dt * 60.0); // gentle friction
                     star.x -= star.speed * star.depth * dt;
                     if star.x < 0.0 {
                         star.x = WIDTH as f32;
@@ -95,6 +103,8 @@ fn main() -> Result<(), Error> {
                         star.depth = rng.gen_range(0.5..2.0);
                         star.twinkle_phase = rng.gen_range(0.0..std::f32::consts::TAU);
                         star.twinkle_speed = rng.gen_range(1.0..3.0);
+                        star.speed = rng.gen_range(STAR_MIN_SPEED..STAR_MAX_SPEED);
+                        star.size = rng.gen_range(STAR_MIN_SIZE..=STAR_MAX_SIZE);
                     }
 
                     // Twinkle factor
@@ -108,9 +118,9 @@ fn main() -> Result<(), Error> {
                     let g = ((base_g as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
                     let b = ((base_b as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
 
-                    // Draw a small STAR_SIZE x STAR_SIZE block
-                    for dx in 0..STAR_SIZE {
-                        for dy in 0..STAR_SIZE {
+                    // Draw a star.size x star.size block
+                    for dx in 0..star.size {
+                        for dy in 0..star.size {
                             let ix = star.x as i32 + dx as i32;
                             let iy = star.y as i32 + dy as i32;
                             if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
@@ -144,6 +154,7 @@ fn main() -> Result<(), Error> {
                 // Update and draw shooting stars
                 shooting_stars.retain_mut(|s| {
                     s.x += s.vx * dt;
+                    s.vy += GRAVITY * dt;
                     s.y += s.vy * dt;
                     s.life += dt;
                     let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
