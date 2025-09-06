@@ -17,6 +17,8 @@ in
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
       hyprbars
+      hyprspace
+      hyprexpo
     ];
 
     settings = {
@@ -61,28 +63,34 @@ in
       };
 
       plugin = {
+        hyprspace = {
+          enable = true;
+        };
+
         dynamic-cursors = {
           enabled = true;
           mode = "rotate";
           threshold = 2;
           rotate = {
-            limit = 5000;
+            limit = 4000;
             function = "linear";
             window = 100;
           };
           shake = {
             enabled = true;
             nearest = true;
-            threshold = 6.0;
-            base = 4.0;
-            speed = 4.0;
+            threshold = 3.0;
+            base = 1.5;
+            speed = 3.0;
             influence = 0.0;
             limit = 0.0;
-            timeout = 2000;
+            timeout = 500;
             effects = false;
             ipc = false;
           };
         };
+
+        hyprexpo = { };
 
         # TODO: optional: use hyprcursor for high-res when magnified
         # hyprcursor = {
@@ -100,7 +108,7 @@ in
           bar_buttons_alignment = "left";
           bar_title_enabled = false;
           bar_part_of_window = false;
-          bar_precedence_over_border = true;
+          bar_precedence_over_border = false;
 
           bar_blur = true;
           bar_padding = 12;
@@ -120,6 +128,13 @@ in
 
       # Keybindings (from your i3 config)
       bind = [
+        "$mod, up, hyprexpo:expo, toggle"
+
+        "ctrl, left, workspace, e-1"
+        "ctrl, right, workspace, e+1"
+
+        "ctrl, up, overview:toggle, all"
+
         "$mod, return, exec, wezterm"
 
         # Focus
