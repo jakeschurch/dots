@@ -10,7 +10,7 @@ use winit::{
 
 const WIDTH: u32 = 1920;
 const HEIGHT: u32 = 1080;
-const STAR_COUNT: usize = 5000;
+const STAR_COUNT: usize = 500;
 const STAR_SIZE: u32 = 2; // Size of each star (2x2 pixels)
 
 struct Star {
@@ -20,6 +20,16 @@ struct Star {
     twinkle_phase: f32,
     twinkle_speed: f32,
     depth: f32,
+    color: (u8, u8, u8), // RGB color
+}
+
+struct ShootingStar {
+    x: f32,
+    y: f32,
+    vx: f32,
+    vy: f32,
+    life: f32,
+    max_life: f32,
 }
 
 fn main() -> Result<(), Error> {
@@ -37,15 +47,29 @@ fn main() -> Result<(), Error> {
 
     let mut rng = rand::thread_rng();
     let mut stars: Vec<Star> = (0..STAR_COUNT)
-        .map(|_| Star {
-            x: rng.gen_range(0.0..WIDTH as f32),
-            y: rng.gen_range(0.0..HEIGHT as f32),
-            speed: rng.gen_range(20.0..40.0),
-            twinkle_phase: rng.gen_range(0.0..std::f32::consts::TAU),
-            twinkle_speed: rng.gen_range(1.0..5.0),
-            depth: rng.gen_range(0.5..6.0),
+        .map(|_| {
+            // Star color palette: blue, white, yellow, orange, red
+            let palette = [
+                (180, 200, 255), // blue
+                (255, 255, 255), // white
+                (255, 255, 200), // yellow
+                (255, 220, 180), // orange
+                (255, 180, 180), // red
+            ];
+            let color = palette[rng.gen_range(0..palette.len())];
+            Star {
+                x: rng.gen_range(0.0..WIDTH as f32),
+                y: rng.gen_range(0.0..HEIGHT as f32),
+                speed: rng.gen_range(20.0..100.0),
+                twinkle_phase: rng.gen_range(0.0..std::f32::consts::TAU),
+                twinkle_speed: rng.gen_range(1.0..3.0),
+                depth: rng.gen_range(0.5..4.0),
+                color,
+            }
         })
         .collect();
+
+    let mut shooting_stars: Vec<ShootingStar> = Vec::new();
 
     let start = Instant::now();
     let mut last_frame = start;
@@ -78,10 +102,11 @@ fn main() -> Result<(), Error> {
                         (elapsed * star.twinkle_speed + star.twinkle_phase).sin() * 0.5 + 0.5;
                     let intensity = (twinkle * 255.0 / star.depth).min(255.0) as u8;
 
-                    // Color tint (fixed factor, avoids borrow checker issue)
-                    let r = intensity;
-                    let g = (intensity as f32 * 0.85) as u8;
-                    let b = (intensity as f32 * 0.85) as u8;
+                    // Use star color tint
+                    let (base_r, base_g, base_b) = star.color;
+                    let r = ((base_r as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
+                    let g = ((base_g as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
+                    let b = ((base_b as f32 * (intensity as f32 / 255.0)).min(255.0)) as u8;
 
                     // Draw a small STAR_SIZE x STAR_SIZE block
                     for dx in 0..STAR_SIZE {
@@ -98,6 +123,48 @@ fn main() -> Result<(), Error> {
                         }
                     }
                 }
+
+                // Randomly spawn shooting stars
+                if rng.gen_bool(dt as f64 * 0.5) {
+                    // ~0.5 per second
+                    let angle = rng.gen_range(-0.2..0.2) + std::f32::consts::PI; // mostly left
+                    let speed = rng.gen_range(800.0..1200.0);
+                    let vx = speed * angle.cos();
+                    let vy = speed * angle.sin();
+                    shooting_stars.push(ShootingStar {
+                        x: rng.gen_range(WIDTH as f32 * 0.7..WIDTH as f32),
+                        y: rng.gen_range(0.0..HEIGHT as f32 * 0.3),
+                        vx,
+                        vy,
+                        life: 0.0,
+                        max_life: rng.gen_range(0.7..1.2),
+                    });
+                }
+
+                // Update and draw shooting stars
+                shooting_stars.retain_mut(|s| {
+                    s.x += s.vx * dt;
+                    s.y += s.vy * dt;
+                    s.life += dt;
+                    let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
+                    let len = 80.0;
+                    let (r, g, b) = (255u8, 255u8, 255u8);
+                    for i in 0..len as i32 {
+                        let fx = s.x - s.vx * (i as f32 / len) * 0.03;
+                        let fy = s.y - s.vy * (i as f32 / len) * 0.03;
+                        let fade = alpha * (1.0 - i as f32 / len);
+                        let ix = fx as i32;
+                        let iy = fy as i32;
+                        if ix >= 0 && ix < WIDTH as i32 && iy >= 0 && iy < HEIGHT as i32 {
+                            let idx = ((iy as u32 * WIDTH + ix as u32) * 4) as usize;
+                            frame[idx] = (r as f32 * fade) as u8;
+                            frame[idx + 1] = (g as f32 * fade) as u8;
+                            frame[idx + 2] = (b as f32 * fade) as u8;
+                            frame[idx + 3] = 255;
+                        }
+                    }
+                    s.life < s.max_life && s.x > -100.0 && s.y < HEIGHT as f32 + 100.0
+                });
 
                 if pixels.render().is_err() {
                     *control_flow = ControlFlow::Exit;
