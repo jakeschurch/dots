@@ -73,11 +73,11 @@ in
       plugin = {
         dynamic-cursors = {
           enabled = true;
-          mode = "tilt";
+          mode = "rotate";
           threshold = 2;
-          tilt = {
+          rotate = {
             limit = 5000;
-            function = "negative_quadratic";
+            function = "linear";
             window = 100;
           };
           shake = {
