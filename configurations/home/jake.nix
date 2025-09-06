@@ -161,17 +161,18 @@ in
         "SUPER, 0, workspace, 10"
 
         # # Move focused window to workspace
-        "SUPER SHIFT, 1, movetoworkspace 01"
-        "SUPER SHIFT, 2, movetoworkspace 02"
-        "SUPER SHIFT, 3, movetoworkspace 03"
-        "SUPER SHIFT, 4, movetoworkspace 04"
-        "SUPER SHIFT, 5, movetoworkspace 05"
-        "SUPER SHIFT, 6, movetoworkspace 06"
-        "SUPER SHIFT, 7, movetoworkspace 07"
-        "SUPER SHIFT, 8, movetoworkspace 08"
-        "SUPER SHIFT, 9, movetoworkspace 09"
-        "SUPER SHIFT, 0, movetoworkspace 10"
-
+        "SUPER SHIFT, 1, movetoworkspace, 01"
+        "SUPER SHIFT, 2, movetoworkspace, 02"
+        "SUPER SHIFT, 3, movetoworkspace, 03"
+        "SUPER SHIFT, 4, movetoworkspace, 04"
+        "SUPER SHIFT, 5, movetoworkspace, 05"
+        "SUPER SHIFT, 6, movetoworkspace, 06"
+        "SUPER SHIFT, 7, movetoworkspace, 07"
+        "SUPER SHIFT, 8, movetoworkspace, 08"
+        "SUPER SHIFT, 9, movetoworkspace, 09"
+        "SUPER SHIFT, 0, movetoworkspace, 10"
+      ];
+      bindl = [
         "$mod, r, submap, resize"
         "submap=resize, h, resizeactive, -20 0"
         "submap=resize, j, resizeactive, 0 20"
