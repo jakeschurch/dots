@@ -201,6 +201,8 @@ fn main() -> Result<(), Error> {
                     }
                     // Draw a larger head for the shooting star (e.g., 4x4 block)
                     let head_size = 4;
+                    // Head color: bright white/yellow
+                    let (r, g, b) = (255u8, 255u8, 220u8);
                     for dx in 0..head_size {
                         for dy in 0..head_size {
                             let hx = s.x as i32 + dx;
