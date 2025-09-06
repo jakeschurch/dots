@@ -164,35 +164,35 @@ fn main() -> Result<(), Error> {
                     s.y += s.vy * dt;
                     s.life += dt;
                     let alpha = (1.0 - s.life / s.max_life).clamp(0.0, 1.0);
-                    let len = 4000.0; // longer tail
+                    let len = 6000.0; // much longer tail
                     for i in 0..len as i32 {
                         let t = i as f32 / len;
-                        let fx = s.x - s.vx * t * 0.018; // slightly more stretched
+                        let fx = s.x - s.vx * t * 0.018;
                         let fy = s.y - s.vy * t * 0.018;
-                        // Quadratic fade, lower minimum
                         let fade = alpha * (1.0 - t).powf(2.0) * 0.7 + 0.05;
-                        // Color gradient: white/yellow at head, blue at tail
                         let r = (255.0 * (1.0 - t) + 100.0 * t) as u8;
                         let g = (255.0 * (1.0 - t) + 180.0 * t) as u8;
                         let b = (255.0 * (1.0 - t) + 255.0 * t) as u8;
-                        let ix = fx as i32;
-                        let iy = fy as i32;
-                        // Thin tail: 1x1 or 2x2 block
-                        for dx in 0..2 {
-                            for dy in 0..2 {
-                                let tx = ix + dx;
-                                let ty = iy + dy;
+                        // Tapered width: thick at head, thin at tail
+                        let width = ((1.0 - t) * 8.0).ceil() as i32; // 8px at head, 1px at tail
+                        for dx in -width/2..=width/2 {
+                            for dy in -width/2..=width/2 {
+                                let tx = fx as i32 + dx;
+                                let ty = fy as i32 + dy;
                                 if tx >= 0 && tx < WIDTH as i32 && ty >= 0 && ty < HEIGHT as i32 {
+                                    // Fade more at the edge for a soft edge
+                                    let dist = ((dx*dx + dy*dy) as f32).sqrt() / (width as f32);
+                                    let edge_fade = 1.0 - dist.clamp(0.0, 1.0);
+                                    let final_fade = fade * edge_fade;
                                     let idx = ((ty as u32 * WIDTH + tx as u32) * 4) as usize;
-                                    // Blend with background for soft blur
-                                    frame[idx] = ((frame[idx] as f32 * (1.0 - fade))
-                                        + (r as f32 * fade))
-                                        as u8;
-                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - fade))
-                                        + (g as f32 * fade))
-                                        as u8;
-                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - fade))
-                                        + (b as f32 * fade))
+                                    frame[idx] = ((frame[idx] as f32 * (1.0 - final_fade)) + (r as f32 * final_fade)) as u8;
+                                    frame[idx + 1] = ((frame[idx + 1] as f32 * (1.0 - final_fade)) + (g as f32 * final_fade)) as u8;
+                                    frame[idx + 2] = ((frame[idx + 2] as f32 * (1.0 - final_fade)) + (b as f32 * final_fade)) as u8;
+                                    frame[idx + 3] = 255;
+                                }
+                            }
+                        }
+                    }
                                         as u8;
                                     frame[idx + 3] = 255;
                                 }
