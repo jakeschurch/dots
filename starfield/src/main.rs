@@ -1,6 +1,7 @@
 use pixels::{Error, Pixels, SurfaceTexture};
 use rand::Rng;
 use std::time::Instant;
+use winit::event::{ElementState, KeyboardInput, VirtualKeyCode, WindowEvent};
 use winit::{
     dpi::LogicalSize,
     event::{Event, VirtualKeyCode, WindowEvent},
@@ -108,7 +109,12 @@ fn main() -> Result<(), Error> {
             }
             Event::WindowEvent { event, .. } => {
                 if let WindowEvent::KeyboardInput {
-                    virtual_keycode: Some(VirtualKeyCode::Escape),
+                    input:
+                        KeyboardInput {
+                            virtual_keycode: Some(VirtualKeyCode::Escape),
+                            state: ElementState::Pressed,
+                            ..
+                        },
                     ..
                 } = event
                 {
