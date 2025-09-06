@@ -68,7 +68,7 @@
     # supported GPUs is at:
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
-    open = false;
+    open = true;
 
     # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
@@ -106,16 +106,11 @@
   };
 
   services = {
-    # REVIEW: xserver = {
-    #   # Enable the X11 windowing system.
-    #   enable = false;
-    #   videoDrivers = [ "nvidia" ];
-    #   displayManager.lightdm.enable = true;
-    #   windowManager.i3.enable = true;
-
-    #   # Configure keymap in X11
-    #   xkb.layout = "us";
-    # };
+    xserver = {
+      videoDrivers = [ "nvidia" ];
+      # Configure keymap in X11
+      xkb.layout = "us";
+    };
     # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
     # Enable CUPS to print documents.
