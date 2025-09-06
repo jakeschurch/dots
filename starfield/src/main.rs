@@ -42,7 +42,7 @@ fn main() -> Result<(), Error> {
             speed: rng.gen_range(20.0..100.0),
             twinkle_phase: rng.gen_range(0.0..std::f32::consts::TAU),
             twinkle_speed: rng.gen_range(1.0..3.0),
-            depth: rng.gen_range(0.5..2.0),
+            depth: rng.gen_range(0.5..4.0),
         })
         .collect();
 
