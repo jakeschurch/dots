@@ -42,6 +42,7 @@ in
 
       "$mod" = "SUPER";
       general = {
+        layout = "dwindle";
         gaps_in = 3;
         gaps_out = 5;
         border_size = 1;
