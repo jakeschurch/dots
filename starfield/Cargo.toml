@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-pixels = { version = "0.13", features = ["winit"] }
+pixels = { version = "0.13"}
 winit = "0.28"
 rand = "0.8"
