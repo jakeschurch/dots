@@ -155,6 +155,8 @@ let
 
       diffview-nvim
 
+      nvim-colorizer-lua
+
       vim-dadbod
       vim-dadbod-ui
       vim-dadbod-completion

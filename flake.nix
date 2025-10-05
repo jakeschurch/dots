@@ -46,6 +46,10 @@
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
+    walker.url = "github:abenz1267/walker";
+
+    wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
+    hyprland.url = "github:hyprwm/Hyprland";
   };
 
   outputs =

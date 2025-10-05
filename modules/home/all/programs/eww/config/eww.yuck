@@ -1,0 +1,62 @@
+(defwidget bar []
+  (centerbox :orientation "h"
+    (volume_bar :vol volume)
+    (center)
+    (powermenu_layout)))
+
+(defwidget center []
+  (box :halign "end"
+    (systray)
+    (label :text "${time}")))
+
+(defwindow bar
+  :monitor 0 ;; Optional for X11
+  :stacking "bg"
+  :windowtype "dock"
+  :geometry (geometry :x "0%" :y "0%" :width "90%" :height "8px" :anchor "top center")
+  :reserve (struts :side "top" :distance "4%")
+  (bar))
+
+(defwidget powermenu_layout []
+  (box :class "layout-box" :space-evenly false :orientation "vertical"
+       ; :style "background-image: url('./wallpaper')"
+  (_buttons :shutdown "poweroff" :reboot "reboot"
+                :logout "loginctl kill-session self"
+                :shutdown_icon "" :reboot_icon "" :logout_icon "")))
+
+(defpoll time :interval "5s"
+  :initial `date +'{"hour":"%H","min":"%M"}'`
+  `date +'{"hour":"%H","min":"%M"}'`)
+
+(defpoll net :interval "100s"
+  :initial `N/A`
+  `nmcli -t -f SIGNAL,ACTIVE device wifi \
+    | awk -F':' '{if($2=="yes")print$1}'`)
+
+(defwidget _buttons [shutdown shutdown_icon reboot
+                    reboot_icon logout logout_icon]
+  (box :class "btns-box" :spacing 5
+       :vexpand true :hexpand true
+       :valign "end" :halign "end"
+       :space-evenly true
+    (button :onclick shutdown shutdown_icon)
+    (button :onclick reboot reboot_icon)
+    (button :onclick logout logout_icon)))
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+(defpoll volume :interval "1s" :initial 0
+  "pamixer --get-volume")
+
+(defwidget volume_bar [vol]
+  (box :orientation "h" :class "layout-box"
+    (scale :class "scale--volume" :value vol :max 100 :min 0)))

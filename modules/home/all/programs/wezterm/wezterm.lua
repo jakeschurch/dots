@@ -4,8 +4,7 @@ local act = wezterm.action
 wezterm.add_to_config_reload_watch_list(wezterm.config_dir)
 
 local fonts = {
-  "JetBrains Mono",
-  "Noto Sans Emoji",
+  "JetBrainsMono Nerd Font",
   "Noto Color Emoji",
 }
 
@@ -50,7 +49,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
@@ -170,7 +169,7 @@ config.keys = {
   { key = "=", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
 }
 
-config.default_cwd = os.getenv("HOME") .. "/Projects/work"
+config.default_cwd = os.getenv("HOME") .. "/Projects"
 config.use_fancy_tab_bar = false
 config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
@@ -243,15 +242,10 @@ config.mouse_bindings = {
 
   {
     event = {
-      Up = {
-        streak = 1,
-        button = "Left",
-      },
+      Up = { streak = 1, button = "Left", },
     },
     mods = "NONE",
-    action = act({
-      CompleteSelectionOrOpenLinkAtMouseCursor = "PrimarySelection",
-    }),
+    action = wezterm.action.CompleteSelection 'ClipboardAndPrimarySelection',
   },
 
   {

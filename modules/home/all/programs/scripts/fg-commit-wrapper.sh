@@ -17,7 +17,7 @@ else
 fi
 
 # Remove default Git commit message comments
-/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
+perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
 
 # Extract story prefix from branch name
 STORY_PREFIX=$(git symbolic-ref --short HEAD | grep -Eo 'sc-[0-9]+')
@@ -30,7 +30,7 @@ SOB=$(git var GIT_COMMITTER_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
 git interpret-trailers --in-place --trailer "$SOB" "$COMMIT_MSG_FILE"
 
 # Ensure a newline at the end of the commit message
-/usr/bin/perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
+perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
 
 # Perform the actual commit
 git commit -F "$COMMIT_MSG_FILE"

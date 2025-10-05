@@ -1,0 +1,51 @@
+$surface-darkgrey: #20252b;
+$surface-fg: #949494;
+$surface-lightgrey: #3d464e;
+$surface-grey: #2b3238;
+$surface-red: #f87070;
+
+* { all: unset; }
+
+.layout-box {
+  font-family: Phosphor, Koulen;
+  background: no-repeat;
+  background-size: contain;
+  padding: 1em;
+  color: rgba($surface-fg, 0.8);
+}
+
+.vol-box {
+  background-color: rgba($surface-darkgrey, 0.3);
+}
+
+
+.btns-box {
+  font-size: 1.5em;
+  background-color: rgba($surface-darkgrey, 0.3);
+
+  button {
+    padding: 0.5em;
+    border-radius: 0.1em;
+    &:hover { transition: 200ms linear; background-color: rgba($surface-lightgrey, 0.6) }
+    &:first-child { color: rgba($surface-red, 0.8) }
+  }
+}
+
+
+$primary-neon: #00ffff;   /* Cyan    */
+$secondary-neon: #ff00ff; /* Magenta */
+
+.scale--volume scale {
+  background-color: rgba($primary-neon, 0.1);
+  border-radius: 10px;
+  min-height: 90px;
+  min-width: 16px;
+  border: 1px solid rgba($primary-neon, 0.3);
+  box-shadow: inset 0 0 3px rgba(0,0,0,0.4);
+}
+
+.sep {
+  font-size: 1em;                 // smaller
+  padding: 0.1em 0.15em 0;        // smaller
+  color: $surface-lightgrey
+}
