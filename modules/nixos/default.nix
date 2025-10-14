@@ -8,7 +8,12 @@ let
 in
 {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
+    ./shared
+    ./steam.nix
+    ./ssh.nix
+
+    self.nixosModules.common
+    inputs.nix-index-database.nixosModules.nix-index
 
     {
       home-manager = {
@@ -23,12 +28,6 @@ in
         ];
       };
     }
-
-    ./shared
-    ./steam.nix
-    ./ssh.nix
-
-    self.nixosModules.common
-    inputs.nix-index-database.nixosModules.nix-index
+    inputs.home-manager.nixosModules.home-manager
   ];
 }

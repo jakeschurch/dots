@@ -5,7 +5,7 @@
 }:
 lib.mkIf (pkgs.system == "x86_64-linux") {
   services.dunst = {
-    enable = true;
+    enable = false;
     /*
       REVIEW: iconTheme = {
         name = "gnome";

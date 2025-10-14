@@ -78,7 +78,7 @@ pkgs: {
   ];
 
   docker = with pkgs; [
-    nodePackages.dockerfile-language-server-nodejs
+    dockerfile-language-server
   ];
 
   hcl = with pkgs; [

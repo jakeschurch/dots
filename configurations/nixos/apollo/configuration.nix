@@ -48,7 +48,6 @@
   };
 
   hardware.nvidia = {
-
     # Modesetting is required.
     modesetting.enable = true;
 
@@ -101,7 +100,6 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = null;
     useXkbConfig = true; # use xkb.options in tty.
   };
 
@@ -165,7 +163,7 @@
     };
   };
 
-  nix.trustedUsers = [
+  nix.settings.trusted-users = [
     "root"
     "jake"
   ];

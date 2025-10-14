@@ -3,15 +3,26 @@
   pkgs,
   ...
 }:
-
 let
-  inherit (flake) inputs config;
+  inherit (flake) inputs;
   inherit (inputs) self;
 in
 {
+  imports = [
+    ./configuration.nix
+    ./disko-config.nix
+    self.nixosModules.default
+    inputs.disko.nixosModules.disko
+    inputs.hyprland.nixosModules.default
+    inputs.walker.nixosModules.default
+  ];
+
   environment = {
     systemPackages = with pkgs; [
       tuigreet
+      inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+      wl-clipboard-rs
+      hyprpanel
     ];
 
     etc."greetd/environments".text = ''
@@ -45,7 +56,7 @@ in
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    withUWSM = true;
+    withUWSM = false;
 
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
@@ -57,7 +68,8 @@ in
 
     settings = {
       exec-once = [
-        "systemctl --user enable --now hyprsunset.service"
+        "hyprsunset"
+        "hyprpanel"
         # "uswsm app -- eww --debug --no-daemonize daemon"
         # "wl-starfield"
       ];
@@ -83,6 +95,10 @@ in
       };
 
       "$mod" = "SUPER";
+
+      env = [
+        "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+      ];
 
       general = {
         layout = "dwindle";
@@ -139,7 +155,6 @@ in
 
         };
 
-        # TODO: optional: use hyprcursor for high-res when magnified
         hyprcursor = {
           nearest = true;
           enabled = true;
@@ -175,6 +190,9 @@ in
 
       # Keybindings (from your i3 config)
       bind = [
+        "$mod, c, exec, wl-copy"
+        "$mod, v, exec, wl-paste"
+
         "$mod,space, exec, walker"
 
         ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -272,12 +290,4 @@ in
     };
   };
 
-  imports = [
-    self.nixosModules.default
-    inputs.disko.nixosModules.disko
-    inputs.hyprland.nixosModules.default
-    inputs.walker.nixosModules.default
-    ./configuration.nix
-    ./disko-config.nix
-  ];
 }
