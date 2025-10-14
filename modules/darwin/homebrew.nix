@@ -3,8 +3,8 @@
     enable = true;
     onActivation = {
       cleanup = "uninstall";
-      autoUpdate = false;
-      upgrade = false;
+      autoUpdate = true;
+      upgrade = true;
     };
 
     brews = [

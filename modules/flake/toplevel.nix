@@ -18,15 +18,16 @@ in
       lib,
       ...
     }:
+    let
+      overlays = lib.attrValues self.overlays;
+    in
     {
       _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        overlays = lib.attrValues self.overlays;
+        inherit system overlays;
         config.allowUnfree = true;
       };
 
       packages = {
-
         # For 'nix fmt'
         # formatter = pkgs.nixpkgs-fmt;
 

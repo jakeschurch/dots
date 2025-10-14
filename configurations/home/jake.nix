@@ -2,6 +2,7 @@
   flake,
   pkgs,
   config,
+  lib,
   ...
 }:
 let
@@ -13,11 +14,15 @@ in
     self.homeModules.default
   ];
 
-  home.packages = with pkgs; [
-    inputs.wl-starfield.packages.${pkgs.system}.default
-    hyprsunset
-  ];
+  home.packages = lib.mkIf pkgs.stdenv.isLinux (
+    with pkgs;
+    [
+      hyprsunset
+    ]
+  );
 
-  xdg.configFile."uwsm/env".source =
-    "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+  # Only add this attribute on Linux
+  xdg.configFile = lib.optionalAttrs pkgs.stdenv.isLinux {
+    "uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+  };
 }
