@@ -68,7 +68,6 @@ in
 
     settings = {
       exec-once = [
-        "uwsm app -- hyprsunset"
         "systemctl --user enable --now hyprsunset.service"
         "uwsm app -- hyprpanel"
         # "uswsm app -- eww --debug --no-daemonize daemon"
@@ -122,11 +121,6 @@ in
       plugin = {
         hyprspace = {
           enable = true;
-        };
-
-        hyprwinwrap = {
-          # enabled = true;
-          # title = "wl-starfield";
         };
 
         dynamic-cursors = {
@@ -189,7 +183,6 @@ in
         };
       };
 
-      # Keybindings (from your i3 config)
       bind = [
         "$mod, c, exec, wl-copy"
         "$mod, v, exec, wl-paste"

@@ -49,7 +49,7 @@
     walker.url = "github:abenz1267/walker";
 
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.0";
 
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
