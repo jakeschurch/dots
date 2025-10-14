@@ -56,7 +56,7 @@ in
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
-    withUWSM = false;
+    withUWSM = true;
 
     plugins = with pkgs.hyprlandPlugins; [
       hypr-dynamic-cursors
@@ -68,8 +68,9 @@ in
 
     settings = {
       exec-once = [
-        "hyprsunset"
-        "hyprpanel"
+        "uwsm app -- hyprsunset"
+        "systemctl --user enable --now hyprsunset.service"
+        "uwsm app -- hyprpanel"
         # "uswsm app -- eww --debug --no-daemonize daemon"
         # "wl-starfield"
       ];

@@ -65,7 +65,7 @@ let
 
           # Lazy-load zplug plugins
           if [[ -z "$ZPLUG_LOADED" ]]; then
-            source ~/.zplug/init.zsh
+            # source ~/.zplug/init.zsh
             zplug load
             export ZPLUG_LOADED=1
           fi
