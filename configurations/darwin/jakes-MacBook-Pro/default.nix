@@ -1,4 +1,9 @@
-{ lib, flake, ... }:
+{
+  lib,
+  flake,
+  pkgs,
+  ...
+}:
 let
   inherit (flake) inputs;
   inherit (inputs) self;
@@ -13,4 +18,8 @@ in
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
+
+  environment.systemPackages = with pkgs; [
+    awscli2
+  ];
 }
