@@ -77,7 +77,7 @@ null_ls.setup({
 
 		-- Docs
 		null_ls.builtins.diagnostics.yamllint,
-		null_ls.builtins.diagnostics.actionlint,
+		-- null_ls.builtins.diagnostics.actionlint,
 
 		null_ls.builtins.formatting.tidy,
 

@@ -129,7 +129,7 @@ pkgs: {
     tree-sitter
     codespell
     nodePackages.yaml-language-server
-    actionlint
+    # actionlint
     yamllint
     semgrep
     hadolint

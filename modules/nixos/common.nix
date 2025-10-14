@@ -1,9 +1,11 @@
 {
   flake,
+  pkgs,
+  lib,
   ...
 }:
 {
-  security.sudo = {
+  security.sudo = lib.optionalAttrs pkgs.stdenv.isLinux {
     enable = true;
     extraConfig = ''
       Defaults pwfeedback
