@@ -14,6 +14,7 @@
         let
           args = lib.strings.concatStringsSep " " [
             "--download-dir $(git rev-parse --show-toplevel)/.terragrunt-cache"
+            "--dependency-fetch-output-from-state"
             "--provider-cache"
             "--provider-cache-dir $(git rev-parse --show-toplevel)/.provider-cache"
             "--tf-forward-stdout"

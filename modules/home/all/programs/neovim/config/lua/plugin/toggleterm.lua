@@ -18,7 +18,7 @@ local ft_shell_map = {
 toggleterm.setup({
 	close_on_exit = false,
 	direction = "float",
-	open_mapping = nil,
+	open_mapping = [[<c-\>]],
 	persist_size = true,
 	shade_filetypes = {},
 	shade_terminals = false,
@@ -33,11 +33,11 @@ toggleterm.setup({
 
 	float_opts = {
 		border = "curved",
-		-- winblend = 0,
-		-- highlights = {
-		--   border = "Normal",
-		--   background = "Normal",
-		-- },
+		winblend = 0,
+		highlights = {
+			border = "Normal",
+			background = "Normal",
+		},
 	},
 	-- for filetype repl mapping based on current filetype
 	shell = function()
@@ -57,76 +57,21 @@ vim.api.nvim_create_augroup("disable_folding_toggleterm", { clear = true })
 local toggleterm_pattern = {
 	"term://*#toggleterm#*",
 	"term://*::toggleterm::*",
-	"*.ts",
-	"*.graphql",
-	"*.tsx",
 }
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPre" }, {
+vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = toggleterm_pattern,
 	group = "disable_folding_toggleterm",
 	callback = function(ev)
 		local bufnr = ev.buf
-		vim.api.nvim_set_option_value("foldmethod", "manual", { buf = bufnr })
-		vim.api.nvim_set_option_value("foldexpr", "0", { buf = bufnr })
-		vim.api.nvim_set_option_value("foldtext", "foldtext()", { buf = bufnr })
+		local winid = vim.fn.bufwinid(bufnr)
+		if winid ~= -1 then
+			vim.api.nvim_set_option_value("foldmethod", "manual", { win = winid })
+			vim.api.nvim_set_option_value("foldexpr", "0", { win = winid })
+			vim.api.nvim_set_option_value("foldtext", "foldtext()", { win = winid })
+		end
 	end,
 })
-
-vim.api.nvim_create_user_command("ToggleTermClear", function()
-	local buffers = vim.api.nvim_list_bufs()
-
-	for _, buf in ipairs(buffers) do
-		local buf_name = vim.api.nvim_buf_get_name(buf)
-		local buf_num = buf
-
-		if buf_name:find("toggleterm#") then
-			local term_id = buf_num
-			vim.cmd(string.format("bdelete! %d", term_id))
-			require("toggleterm.terminal").Terminal:new({ direction = "vertical" }):toggle()
-		end
-	end
-end, {})
-
-local opts = { buffer = 0 }
-vim.keymap.set("t", "<C-x>", function()
-	if vim.bo.filetype == "toggleterm" then
-		vim.cmd("ToggleTermClear")
-	else
-		return vim.api.nvim_replace_termcodes("<C-x>", true, true, true)
-	end
-end, { noremap = true, silent = true })
-vim.keymap.set("t", "<esc><esc>", function()
-	if vim.bo.filetype == "toggleterm" then
-		vim.api.nvim_feedkeys([[<C-\><C-n>]], "t", true)
-	else
-		return vim.api.nvim_replace_termcodes("<esc><esc>", true, true, true)
-	end
-end, opts)
-
-vim.keymap.set("t", "C-h>", function()
-	if vim.bo.filetype == "toggleterm" then
-		vim.cmd("wincmd h")
-	else
-		return vim.api.nvim_replace_termcodes("<C-h>", true, true, true)
-	end
-end, { expr = true, noremap = true, silent = true })
-
-vim.keymap.set("t", "<C-j>", function()
-	if vim.bo.filetype == "toggleterm" then
-		vim.cmd("wincmd j")
-	else
-		return vim.api.nvim_replace_termcodes("<C-j>", true, true, true)
-	end
-end, { expr = true, noremap = true, silent = true })
-
-vim.keymap.set("t", "<C-k>", function()
-	if vim.bo.filetype == "toggleterm" then
-		vim.cmd("wincmd k")
-	else
-		return vim.api.nvim_replace_termcodes("<C-k>", true, true, true)
-	end
-end, { expr = true, noremap = true, silent = true })
 
 local trim_spaces = true
 vim.keymap.set({ "n", "v" }, "<space>h", function()
@@ -177,10 +122,13 @@ local hidden_term = Terminal:new({
 	end,
 })
 
--- Override the default toggleterm mapping to toggle the hidden terminal
-vim.keymap.set({ "n", "t" }, [[<c-\>]], function()
-	hidden_term:toggle()
-end, { noremap = true, silent = true })
+function _G.set_terminal_keymaps()
+	local opts = { buffer = 0 }
+	vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+	vim.keymap.set("t", "<C-x>", [[<C-\><C-n><C-w>]], opts)
+end
+
+vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
 
 local hidden_term_group = vim.api.nvim_create_augroup("HiddenTermGroup", { clear = true })
 
