@@ -1,0 +1,265 @@
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+# GENERAL {{{
+
+font pango:JetBrains Mono 8
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# start dmenu (a program launcher)
+bindsym $mod+d exec rofi -show drun
+bindsym $mod+Return exec nixGLIntel wezterm
+bindsym $mod+q kill
+
+# # Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioLowerVolume exec amixer -q -D pulse sset Master 5%- && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioMute exec amixer -q -D pulse sset Master toggle && pkill -RTMIN+10 i3blocks
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+
+# Navigation {{{
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# }}}
+
+bindsym ctrl+space exec dunstctl close
+bindsym ctrl+shift+space exec dunstctl close-all
+bindsym ctrl+grave exec dunstctl history-pop
+
+# Layout {{{
+
+# split in horizontal orientation
+bindsym $mod+Shift+b split h
+
+# split in vertical orientation
+bindsym $mod+Shift+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+# bindsym $mod+space focus mode_toggle
+
+# }}}
+
+# }}}
+
+# WORKSPACES {{{
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws0
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws0
+
+workspace $ws1 output DVI-D-0
+workspace $ws2 output primary
+workspace $ws3 output HDMI-A-0
+
+# }}}
+
+# MODES {{{
+
+bindsym --release $mod+b exec  "scrot ~/Pictures/Screenshots/$(date +%F-%H%M%S).png -s -e 'xclip -selection c -t image/png < $f'; notify-send 'Screenshot (custom) saved' -t 1"
+
+# set $mode_launcher Launch: [r]anger
+bindsym $mod+o mode $mode_launcher
+mode "$mode_launcher" {
+    bindsym f exec firefox-developer-edition, mode "default"
+    bindsym c exec google-chrome-stable, mode "default"
+    bindsym r exec alacritty -e ranger, mode "default"
+    bindsym n exec alacritty -e nvim, mode "default"
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+p mode "$mode_system"
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (p) shutdown
+mode "$mode_system" {
+    # exec --no-startup-id i3lock, mode "default"
+    bindsym l exec $HOME/bin/lockscreen, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id systemctl hibernate, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym p exec --no-startup-id systemctl poweroff, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym l resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym h resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Right resize shrink width 10 px or 10 ppt
+        bindsym Up resize grow height 10 px or 10 ppt
+        bindsym Down resize shrink height 10 px or 10 ppt
+        bindsym Left resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+# Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
+# gaps inner|outer current|all set|plus|minus <px>
+# gaps inner all set 10
+# gaps outer all plus 5
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+g mode "$mode_gaps"
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+# }}}
+
+# WINDOWS {{{
+
+# }}}
+
+bar {
+    position bottom
+    status_command i3blocks
+    font pango: JetBrains Mono, Icons 16
+    colors {
+        background #32302F
+    }
+}
+
+# create workspace variables
+set $ws1 "media"
+set $ws2 "code"
+set $ws3 "notes"
+set $ws4 "other"
+set $ws5 "ws5"
+set $ws6 "ws6"
+set $ws7 "ws7"
+set $ws8 "ws8"
+set $ws9 "ws9"
+set $ws0 "ws0"
+
+set $mod Mod4
+floating_modifier $mod
+
+# scratchpad
+bindsym $mod+x move scratchpad
+bindsym $mod+space scratchpad show
+
+# Startup
+# exec_always feh --bg-scale --scale-down "/home/jake/Pictures/nas/Wallpapers/$(ls -1 ~/Pictures/nas/Wallpapers | shuf -n 1)"
+
+for_window [class="Spotify"] move to workspace $ws1
+# for_window [class="Slack"] move to workspace $ws3
+# for_window [class="kitty"] move to workspace $ws2
+# for_window [class="firefoxdeveloperedition"] move to workspace $ws1
+for_window [class="^.*"] border pixel 8
+
+gaps inner 24
+gaps outer 8
+
+client.focused    #ffffff #9fa8da #ffffff #2e9ef4
+client.unfocused  #ffffff #8caba8 #ffffff #93a1a1
+
+focus_follows_mouse no
+
+exec blueman-applet
+
+# exec $HOME/bin/locker.sh
+exec xrandr --dpi 144
+exec dunst
+# exec ~/.dots/config/.screenlayout/apollo_long.sh
+# exec xbanish
+exec xbindkeys
+exec wezterm
+# exec $BROWSER

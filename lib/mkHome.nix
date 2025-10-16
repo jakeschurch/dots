@@ -33,19 +33,6 @@ let
     user:
     lib.singleton {
       nixpkgs.config = {
-        allowUnfree = true;
-        cudaSupport = false;
-        allowBroken = true;
-
-        allowUnfreePredicate =
-          pkg:
-          builtins.elem (inputs.nixpkgs.lib.getName pkg) [
-            "terraform-1.9.6"
-          ];
-
-        permittedInsecurePackages = [
-          "electron-19.1.9"
-        ];
       };
     }
     ++ lib.singleton (
@@ -57,26 +44,26 @@ let
           extraSpecialArgs = getSpecialArgs user;
         };
 
-        imports =
-          [
-            ../nix.nix
-          ]
-          ++ lib.optionals stdenv.isDarwin [
-            nix-index-database.darwinModules.nix-index
-            home-manager.darwinModules.home-manager
-            ../modules/homebrew.nix
-            ../darwin-configuration.nix
-          ]
-          ++ lib.optionals stdenv.isLinux [
-            ../home.nix
-            nix-index-database.hmModules.nix-index
-          ];
+        imports = [
+          ../nix.nix
+        ]
+        ++ lib.optionals stdenv.isDarwin [
+          nix-index-database.darwinModules.nix-index
+          home-manager.darwinModules.home-manager
+          ../modules/homebrew.nix
+          ../darwin-configuration.nix
+        ]
+        ++ lib.optionals stdenv.isLinux [
+          ../home.nix
+          nix-index-database.hmModules.nix-index
+        ];
       }
       // lib.optionalAttrs stdenv.isLinux {
-        home = {
-          homeDirectory = "/home/${user}";
-          username = user;
-          enableNixpkgsReleaseCheck = false;
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          users."${user}" = import ../home.nix;
+          extraSpecialArgs = getSpecialArgs user;
         };
       }
     );
@@ -97,7 +84,7 @@ let
   mkHome =
     user:
     if stdenv.isLinux then
-      home-manager.lib.homeManagerConfiguration.activationPackage (applyConfig user);
+      (home-manager.lib.homeManagerConfiguration (applyConfig user)).config.system.build.toplevel
     else
       (darwin.lib.darwinSystem (applyConfig user)).config.system.build.toplevel;
 in

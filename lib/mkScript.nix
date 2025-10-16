@@ -1,8 +1,7 @@
 {
   lib,
   makeWrapper,
-  stdenv,
-  python3,
+  pkgs,
   ...
 }:
 {
@@ -15,6 +14,8 @@
   description ? null,
 }:
 let
+  inherit (pkgs) stdenv python3;
+
   scriptType =
     let
       srcString = builtins.toString src;

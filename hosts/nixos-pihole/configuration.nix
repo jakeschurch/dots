@@ -81,7 +81,6 @@
   # };
 
   # Enable the X11 windowing system.
-  # services.xserver.enable = true;
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -91,7 +90,7 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  # sound.enable = true;
+  sound.enable = true;
   # hardware.pulseaudio.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).

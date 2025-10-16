@@ -23,6 +23,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko/latest";
+      flake = true;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     lexical-lsp.url = "github:lexical-lsp/lexical";
     lexical-lsp.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -31,75 +37,37 @@
 
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
 
-    darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     nixd.url = "github:nix-community/nixd";
     nixd.inputs.nixpkgs.follows = "nixpkgs";
 
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-unified.url = "github:srid/nixos-unified";
+    walker.url = "github:abenz1267/walker";
+
+    wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
+    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.0";
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    rose-pine-hyprcursor = {
+      url = "github:ndom91/rose-pine-hyprcursor";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.hyprlang.follows = "hyprland/hyprlang";
+    };
   };
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
-
-      imports = [
-        inputs.treefmt-nix.flakeModule
-        inputs.home-manager.flakeModules.home-manager
-        inputs.git-hooks-nix.flakeModule
-      ];
-
-      perSystem =
-        {
-          pkgs,
-          lib,
-          system,
-          ...
-        }:
-        let
-          mkHome = import ./lib/mkHome.nix {
-            inherit
-              inputs
-              system
-              lib
-              pkgs
-              ;
-            inherit (pkgs) stdenv;
-            inherit (inputs) nix-index-database home-manager darwin;
-          };
-        in
-        {
-          treefmt = import ./treefmt.nix { };
-          pre-commit = import ./pre-commit-hooks.nix { };
-
-          _module.args.pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = import ./overlays.nix { inherit inputs; };
-
-            config.allowUnfree = true;
-          };
-
-          packages = rec {
-            jake = mkHome "jake";
-            droid = mkHome "droid"; # for pixel phone
-            apollo = mkHome "jake";
-
-            default = jake;
-          };
-
-          # devShells.default = {
-          #   inherit (inputs.self.checks.${pkgs.system}.pre-commit-check) shellHook;
-          # };
-
-        };
+    inputs.nixos-unified.lib.mkFlake {
+      inherit inputs;
+      root = ./.;
     };
 
   nixConfig = {
@@ -111,10 +79,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
-      "ca-derivations"
       "auto-allocate-uids"
-      "pipe-operators"
-      "dynamic-derivations"
     ];
 
     allowed-impure-host-deps = [
