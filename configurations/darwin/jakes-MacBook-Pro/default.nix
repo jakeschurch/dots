@@ -21,5 +21,10 @@ in
 
   environment.systemPackages = with pkgs; [
     awscli2
+    nodejs_22
+    pnpm
+    hasura-cli
+    ngrok
+    eksctl
   ];
 }
