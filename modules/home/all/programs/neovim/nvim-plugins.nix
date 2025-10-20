@@ -50,6 +50,7 @@ let
     [
       fzf-lua
       rainbow-delimiters-nvim
+      nvim-notify
 
       guess-indent-nvim
 

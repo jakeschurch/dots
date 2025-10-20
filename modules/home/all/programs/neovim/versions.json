@@ -2,9 +2,9 @@
   {
     "owner": "jmbuhr",
     "repo": "otter.nvim",
-    "rev": "71fec0dc58c3a66078e691b9a77b2516fe3e319b",
+    "rev": "fc0aa35b1985077d11a20ddf4006bf40f2cd7397",
     "ref": "main",
-    "sha256": "0sib4n0v18xzzkmqiimih3hnx8v4nf5ybw8y1c8ppb3bma5mz4vd"
+    "sha256": "010yfxip47mrg01zbmfy9pqhs3yncrj6qp0dz35wi3zw3xpl3vxh"
   },
   {
     "owner": "JezerM",
@@ -23,16 +23,16 @@
   {
     "owner": "olimorris",
     "repo": "codecompanion.nvim",
-    "rev": "638b643a17a656a34d15c884e1fd059d0992d660",
+    "rev": "87a2f78767a03707fa85f108d374a320ff000f02",
     "ref": "main",
-    "sha256": "0kwh4fh1r93nl3ga5182sxlyqd8fg3z6ji6zv28qsl24xcmnaarp"
+    "sha256": "1jggmwsg2fi86ahkv0554phqj2nqy0v1z5iy8x274w810pp39yz8"
   },
   {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "e5cd7f0a3a73ef598267c1e9f29b0fe9a80925ab",
+    "rev": "a0cabe021d76de5b6227d23b09808ffbe114aadd",
     "ref": "master",
-    "sha256": "1rf141fsx7jlipf1vgyrx76yl7b1f6ny4j2ab5jg3gca63nl113i"
+    "sha256": "0i7bpcmwhcinbz8jsr4f7gbk74gp1v0hsz0w4n009q5n6y7ram50"
   },
   {
     "owner": "aymericbeaumet",
@@ -51,23 +51,23 @@
   {
     "owner": "nvimtools",
     "repo": "none-ls-extras.nvim",
-    "rev": "924fe88a9983c7d90dbb31fc4e3129a583ea0a90",
+    "rev": "402c6b5c29f0ab57fac924b863709f37f55dc298",
     "ref": "main",
-    "sha256": "0g25js6dbhxq1pf1g7x6lz1p9szdky792z5jxi5gkkkpx3dy149q"
+    "sha256": "1zrp4xk8x9p93ikdn96jd86w7b4zxa2lf6cqdxh8f0wdsm0g3kz2"
   },
   {
     "owner": "fang2hou",
     "repo": "blink-copilot",
-    "rev": "41e91a659bd9b8cba9ba2ea68a69b52ba5a9ebd8",
+    "rev": "5d35fd07fcc148be20442da1bdd2407e03263d7d",
     "ref": "main",
-    "sha256": "0sms1k0w4dim5inb696as03vc0w0f1xz318vywl0ry4405m53bv1"
+    "sha256": "1686djbjrk3327d7varbzqwwfimz9irgpagl7yk8nnighfygz7mk"
   },
   {
     "owner": "xzbdmw",
     "repo": "colorful-menu.nvim",
-    "rev": "bc3e82609f2fcf7dad7ca87c20e65e51d5d9d87c",
+    "rev": "d5b97d247528be308b6b69d96b5950a30e470f3d",
     "ref": "master",
-    "sha256": "0r6q17ldg0npx7d05szimp9ip2jpkx0cbr7rw1kp9vrinw8ppk2x"
+    "sha256": "1j1nbkjrcys0zjbhzxxgxdcaf9pk2wx9k0xkcp808rwd8ym641ha"
   },
   {
     "owner": "gbprod",
@@ -79,9 +79,9 @@
   {
     "owner": "ravitemer",
     "repo": "mcphub.nvim",
-    "rev": "424e8c988e2e958da6f2182e40d52ee54bb18b8c",
+    "rev": "8ff40b5edc649959bb7e89d25ae18e055554859a",
     "ref": "main",
-    "sha256": "17n00ssm8z5xafc0p7vvy1kiv9gwzshgmy8yb5jdbqfgvw8zy17f"
+    "sha256": "1saw3xfrbnwpjklcffp144q2y100kd51yrhvmxnhgc7niy0ip893"
   },
   {
     "owner": "jmckiern",

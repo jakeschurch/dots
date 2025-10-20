@@ -19,6 +19,7 @@
     ];
 
     casks = [
+      "cloudflare-warp"
       "arc"
       "balenaetcher"
       "caffeine"

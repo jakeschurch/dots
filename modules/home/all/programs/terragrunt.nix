@@ -7,6 +7,7 @@
   home = {
     packages = with pkgs; [
       terragrunt
+      terragrunt-ls
     ];
 
     shellAliases = {
