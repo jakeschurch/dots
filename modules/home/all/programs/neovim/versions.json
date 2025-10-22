@@ -23,16 +23,16 @@
   {
     "owner": "olimorris",
     "repo": "codecompanion.nvim",
-    "rev": "87a2f78767a03707fa85f108d374a320ff000f02",
+    "rev": "b1937ad400305860558c0adf6bd10ae7892fff26",
     "ref": "main",
-    "sha256": "1jggmwsg2fi86ahkv0554phqj2nqy0v1z5iy8x274w810pp39yz8"
+    "sha256": "1a8b9k8wvdprq7sdzvjkxq3r9bxy3jz8rpvwyv08h3qyna8xzijq"
   },
   {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "a0cabe021d76de5b6227d23b09808ffbe114aadd",
+    "rev": "aa259fdc1910acbbeef4562bf41a762ecb428828",
     "ref": "master",
-    "sha256": "0i7bpcmwhcinbz8jsr4f7gbk74gp1v0hsz0w4n009q5n6y7ram50"
+    "sha256": "137zzi40w9any05iy6vvjl05digjl6npg67mbnkan54n9bcxdhrc"
   },
   {
     "owner": "aymericbeaumet",
