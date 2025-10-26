@@ -11,7 +11,6 @@
       "detect-secrets"
       "gettext"
       "openssl"
-      "yajl"
     ];
 
     taps = [
