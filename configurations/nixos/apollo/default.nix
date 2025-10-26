@@ -62,7 +62,7 @@ in
       hypr-dynamic-cursors
       hyprbars
       hyprspace
-      hyprexpo
+      # hyprexpo
       hyprwinwrap
     ];
 
@@ -202,12 +202,12 @@ in
         ",XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
         ",XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
 
-        "$mod, up, hyprexpo:expo, toggle"
+        # "$mod, up, hyprexpo:expo, toggle"
 
         "$mod, left, workspace, e-1"
         "$mod, right, workspace, e+1"
 
-        "ctrl, up, overview:toggle, all"
+        # "ctrl, up, overview:toggle, all"
 
         "$mod, return, exec, wezterm"
 
