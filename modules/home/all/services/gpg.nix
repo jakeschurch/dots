@@ -12,6 +12,6 @@ lib.mkIf (pkgs.system == "x86_64-linux") {
 
   services.gpg-agent = {
     enable = true;
-    enableSshSupport = false;
+    enableSshSupport = true;
   };
 }
