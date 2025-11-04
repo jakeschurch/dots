@@ -61,7 +61,7 @@ pkgs: {
     luarocks
     luaPackages.luafilesystem
     lua53Packages.digestif
-    sumneko-lua-language-server
+    lua-language-server
     stylua
   ];
 

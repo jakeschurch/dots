@@ -18,9 +18,10 @@
     ];
 
     casks = [
-      "cloudflare-warp"
       "balenaetcher"
       "caffeine"
+      "cloudflare-warp"
+      "google-chrome"
       "hammerspoon"
       "notion"
       "notion"
