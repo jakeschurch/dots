@@ -100,25 +100,13 @@ local function get_git_root_or_cwd()
   end
 end
 
--- Wrapper function that injects cwd for virtual buffers
-local function wrap_fzf_command(fzf_fn)
-  return function(opts)
-    opts = opts or {}
-    -- Only inject cwd if not already specified
-    if not opts.cwd then
-      opts.cwd = get_git_root_or_cwd()
-    end
-    return fzf_fn(opts)
-  end
-end
-
 -- Create wrapped versions of commonly used fzf commands
 local wrapped = {
-  files = wrap_fzf_command(fzf_lua.files),
-  git_files = wrap_fzf_command(fzf_lua.git_files),
-  live_grep = wrap_fzf_command(fzf_lua.live_grep),
-  grep = wrap_fzf_command(fzf_lua.grep),
-  lgrep_curbuf = wrap_fzf_command(fzf_lua.lgrep_curbuf),
+  files = fzf_lua.files,
+  git_files = fzf_lua.git_files({ cwd = get_git_root_or_cwd() }),
+  live_grep = fzf_lua.live_grep({ cwd = get_git_root_or_cwd() }),
+  grep = fzf_lua.grep({ cwd = get_git_root_or_cwd() }),
+  lgrep_curbuf = fzf_lua.lgrep_curbuf,
 }
 
 -- The reason I added 'opts' as a parameter is so you can

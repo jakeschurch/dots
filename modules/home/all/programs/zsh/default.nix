@@ -131,7 +131,6 @@ in
       fi
 
       set -o vi
-      source ~/.zsh_lazy
       motd
     '';
     zplug = {
