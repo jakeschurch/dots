@@ -45,16 +45,15 @@ in
       plugins = with pkgs.hyprlandPlugins; [
         hypr-dynamic-cursors
         hyprbars
-        hyprspace
-        # hyprexpo
         hyprwinwrap
+        hyprexpo
+        inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
       ];
 
       settings = {
         exec-once = [
           "systemctl --user enable --now hyprsunset.service"
           "uwsm app -- hyprpanel"
-          # "uswsm app -- eww --debug --no-daemonize daemon"
           # "wl-starfield"
         ];
 
@@ -103,8 +102,8 @@ in
         };
 
         plugin = {
-          hyprspace = {
-            enable = true;
+          hyprexpo = {
+            enabled = true;
           };
 
           dynamic-cursors = {
@@ -130,10 +129,6 @@ in
             };
           };
 
-          hyprexpo = {
-
-          };
-
           hyprcursor = {
             nearest = true;
             enabled = true;
@@ -148,8 +143,7 @@ in
             bar_text_align = "left";
             bar_buttons_alignment = "left";
             bar_title_enabled = false;
-            bar_part_of_window = false;
-            bar_precedence_over_border = false;
+            bar_precedence_over_border = true;
 
             bar_blur = true;
             bar_padding = 12;
@@ -213,20 +207,6 @@ in
           # quit
           "$mod, Q, killactive"
 
-          # # Make groups / splits
-          # "SUPER D, hy3:makegroup, h"
-          # "SUPER S, hy3:makegroup, v"
-          # "SUPER Z, hy3:makegroup, tab"
-
-          # # Focus / lock / expand
-          # "SUPER A, hy3:changefocus, raise"
-          # "SUPER SHIFT, A, hy3:changefocus lower"
-          # "SUPER X, hy3:locktab"
-          # "SUPER E, hy3:expand, expand"
-          # "SUPER SHIFT, E, hy3:expand base"
-          # "SUPER R, hy3:changegroup, opposite"
-          # "SUPER TAB, hy3:togglefocuslayer"
-
           # Fullscreen
           "SUPER, F, fullscreen, 1"
           "SUPER SHIFT, F, fullscreen, 0"
@@ -256,6 +236,21 @@ in
           "SUPER SHIFT, 0, movetoworkspacesilent, 10"
         ];
       };
+
+      extraConfig = ''
+        misc:vfr = true
+
+        bind = $mod, R,submap,resize
+        submap=resize
+        binde = , h, resizeactive, -40 0
+        binde = , j, resizeactive, 0 40
+        binde = , k, resizeactive, 0 -40
+        binde = , l, resizeactive, 40 0
+        binde = , Return,submap,reset
+        binde = , escape,submap,reset
+        submap=reset
+      '';
+
     };
   };
 
@@ -276,14 +271,55 @@ in
     variables.NIXOS_OZONE_WL = "1";
   };
 
-  services.greetd = {
+  services.keyd = {
     enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --cmd hyprland";
-        user = "jake";
+    keyboards = {
+      default = {
+        ids = [ "*" ];
+        settings = {
+          alt = {
+            left = "C-left";
+            right = "C-right";
+            backspace = "C-backspace";
+          };
+
+          meta = {
+            # These become Ctrl when Super is held
+            backspace = "C-backspace";
+            c = "C-c";
+            v = "C-v";
+            x = "C-x";
+            a = "C-a";
+            s = "C-s";
+            z = "C-z";
+            t = "C-t";
+            w = "C-w";
+            up = "C-home";
+            down = "C-end";
+            left = "home";
+            right = "end";
+          };
+        };
       };
     };
   };
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session =
+        let
+          tuigreetArgs = builtins.concatStringsSep " " [
+            "--power-shutdown 'sudo systemctl poweroff'"
+            "--time"
+            "--asterisks"
+            "--cmd hyprland"
+          ];
+        in
+        {
+          command = "${pkgs.tuigreet}/bin/tuigreet ${tuigreetArgs}";
+          user = "jake";
+        };
+    };
+  };
 }

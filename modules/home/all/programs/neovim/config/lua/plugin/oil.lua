@@ -42,10 +42,12 @@ function _G.get_oil_winbar()
 	end
 end
 
--- require("oil").set_sort({ { "mtime", "desc" }, { "type", "asc" } })
-
 oil.setup({
-	watch_for_changes = true,
+	default_file_explorer = true,
+
+	watch_for_changes = false,
+	prompt_save_on_select_new_entry = false,
+
 	win_options = {
 		winbar = "%!v:lua.get_oil_winbar()",
 		signcolumn = "yes:2",

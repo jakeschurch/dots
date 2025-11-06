@@ -49,10 +49,19 @@
     walker.url = "github:abenz1267/walker";
 
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
-    hyprland.url = "github:hyprwm/Hyprland?ref=v0.50.0";
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland?ref=v0.50.0";
+    };
 
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
+      url = "github:hyprwm/hyprland-plugins?ref=v0.50.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    hypr-dynamic-cursors = {
+      url = "github:VirtCode/hypr-dynamic-cursors?ref=d6eb0b798c9b07f7f866647c8eb1d75a930501be";
       inputs.hyprland.follows = "hyprland";
     };
 

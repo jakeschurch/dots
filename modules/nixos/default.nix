@@ -1,5 +1,6 @@
 {
   flake,
+  pkgs,
   ...
 }:
 let
@@ -30,5 +31,9 @@ in
 
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index
+  ];
+
+  environment.systemPackages = with pkgs; [
+    google-chrome
   ];
 }
