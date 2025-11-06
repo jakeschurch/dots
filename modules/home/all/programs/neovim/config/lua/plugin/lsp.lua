@@ -4,7 +4,7 @@ local lspconfig = require("lspconfig")
 local lsp_status = require("lsp-status")
 lsp_status.register_progress()
 
-vim.lsp.set_log_level(vim.lsp.log_levels.WARN)
+vim.lsp.log.set_level("warn")
 
 vim.diagnostic.config({
   virtual_text = false, -- Enable virtual text for diagnostics
@@ -47,7 +47,6 @@ local function diagnostic_jump_next(severity)
   else
     vim.cmd("Lspsaga diagnostic_jump_next")
   end
-  require("lspsaga.diagnostic"):show_diagnostics({ cursor = true })
 end
 
 local function diagnostic_jump_prev(severity)
@@ -59,7 +58,6 @@ local function diagnostic_jump_prev(severity)
   else
     vim.cmd("Lspsaga diagnostic_jump_prev")
   end
-  require("lspsaga.diagnostic"):show_diagnostics({ cursor = true })
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -132,6 +130,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+local blink_cmp = require("blink.cmp")
+local util = require("lspconfig.util")
+
 for server, config in pairs(require("plugin.lsp_servers")) do
   config.capabilities = vim.tbl_deep_extend(
     "force",
@@ -139,14 +140,11 @@ for server, config in pairs(require("plugin.lsp_servers")) do
     -- File watching is disabled by default for neovim.
     -- See: https://github.com/neovim/neovim/pull/22405
     { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } },
-    require("blink.cmp").get_lsp_capabilities(
-      vim.lsp.protocol.make_client_capabilities()
-    )
+    blink_cmp.get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
   )
 
   config["root_dir"] = config["root_dir"]
     or function(fname)
-      local util = require("lspconfig.util")
       return util.root_pattern(".git")(fname) or nil
     end
 

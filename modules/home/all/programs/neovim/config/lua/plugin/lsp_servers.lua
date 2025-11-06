@@ -11,14 +11,14 @@ local function get_git_root()
   return nil
 end
 
-vim.lsp.config("terragrunt-ls", {
+vim.lsp.config("terragruntls", {
   cmd = { "terragrunt-ls" },
   filetypes = { "hcl" },
   root_dir = lspconfig.util.root_pattern(".git", "."),
   settings = {},
 })
 
-vim.lsp.enable("terragrunt-ls")
+vim.lsp.enable("terragruntls")
 
 -- vim.filetype.add({
 --   pattern = {

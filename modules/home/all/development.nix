@@ -40,12 +40,12 @@
 
       bat
       bat-extras.batdiff
-      bat-extras.batgrep
       bat-extras.batwatch
       bat-extras.batman
       bat-extras.prettybat
       wget
       lsd
+      dust
 
       terraform
       asciinema

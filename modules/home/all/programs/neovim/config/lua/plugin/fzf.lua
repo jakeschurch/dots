@@ -103,9 +103,15 @@ end
 -- Create wrapped versions of commonly used fzf commands
 local wrapped = {
   files = fzf_lua.files,
-  git_files = fzf_lua.git_files({ cwd = get_git_root_or_cwd() }),
-  live_grep = fzf_lua.live_grep({ cwd = get_git_root_or_cwd() }),
-  grep = fzf_lua.grep({ cwd = get_git_root_or_cwd() }),
+  git_files = function()
+    return fzf_lua.git_files({ cwd = get_git_root_or_cwd() })
+  end,
+  live_grep = function()
+    return fzf_lua.live_grep({ cwd = get_git_root_or_cwd() })
+  end,
+  grep = function()
+    return fzf_lua.grep({ cwd = get_git_root_or_cwd() })
+  end,
   lgrep_curbuf = fzf_lua.lgrep_curbuf,
 }
 

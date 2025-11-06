@@ -73,6 +73,7 @@
   nixConfig = {
     download-attempts = 3;
     http-connections = 0;
+    download-buffer-size = 904857600; # 900 MiB
 
     builders = [ ];
 
