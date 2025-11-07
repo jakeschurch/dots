@@ -16,6 +16,7 @@ in
     difftastic
     difftastic-inline
     perlPackages.TermReadKey
+    git-filter-repo
   ];
 
   home.shellAliases = {
