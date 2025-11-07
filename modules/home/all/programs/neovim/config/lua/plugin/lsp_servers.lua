@@ -20,11 +20,12 @@ vim.lsp.config("terragruntls", {
 
 vim.lsp.enable("terragruntls")
 
--- vim.filetype.add({
---   pattern = {
---     [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
---   },
--- })
+vim.filetype.add({
+  pattern = {
+    [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
+  },
+})
+
 return {
   vale_ls = {},
   regal = {},
