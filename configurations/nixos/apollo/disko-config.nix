@@ -29,7 +29,8 @@
                 extraArgs = [ "-f" ];
                 swap = {
                   swapfile = {
-                    size = "20G";
+                    size = "125G";
+                    path = "swap/swapfile";
                   };
                 };
                 subvolumes = {

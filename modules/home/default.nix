@@ -2,9 +2,13 @@
   flake,
   ...
 }:
+let
+  inherit (flake) inputs;
+in
 {
   imports = [
     ./all
+    inputs.nix-colors.homeManagerModules.default
   ];
 
   programs.bottom.enable = true;

@@ -6,6 +6,7 @@
 let
   inherit (flake) inputs;
   inherit (inputs) self;
+
 in
 {
   imports = [
@@ -42,17 +43,22 @@ in
       xwayland.enable = true;
       withUWSM = true;
 
-      plugins = with pkgs.hyprlandPlugins; [
-        hypr-dynamic-cursors
-        hyprbars
-        hyprwinwrap
-        hyprexpo
-        inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
-      ];
+      plugins =
+        with pkgs.hyprlandPlugins;
+        with pkgs;
+        [
+          hypr-dynamic-cursors
+          hyprbars
+          hyprwinwrap
+          hyprexpo
+          inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+          hyprsunset
+        ];
 
       settings = {
         exec-once = [
           "systemctl --user enable --now hyprsunset.service"
+          "systemctl --user enable --now hypridle.service"
           "uwsm app -- hyprpanel"
           # "wl-starfield"
         ];
@@ -63,6 +69,11 @@ in
           "$mod, mouse:273, resizewindow"
           "$mod ALT, mouse:272, resizewindow"
         ];
+
+        misc = {
+          force_default_wallpaper = 1;
+          disable_hyprland_logo = true;
+        };
 
         input = {
           kb_layout = "us";
@@ -249,8 +260,25 @@ in
         binde = , Return,submap,reset
         binde = , escape,submap,reset
         submap=reset
-      '';
 
+        bind = $mod, P,submap,powermenu
+        submap=powermenu
+        bind = , l, exec, hyprlock --immediate # Lock screen
+        bind = , l, submap, reset
+
+        bind = , p, exec, systemctl poweroff  # Power off (Shutdown)
+        bind = , p, submap, reset
+
+        bind = , r, exec, systemctl reboot   # Reboot
+        bind = , r, submap, reset
+
+        bind = , s, exec, systemctl suspend-then-hibernate  # Power off (suspend) or could also be hibernate
+        bind = , s, submap, reset
+
+        bind = , Return,submap,reset
+        bind = , escape,submap,reset
+        submap=reset
+      '';
     };
   };
 
@@ -260,6 +288,7 @@ in
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
       wl-clipboard-rs
       hyprpanel
+      libnotify
     ];
 
     etc."greetd/environments".text = ''
@@ -285,7 +314,7 @@ in
 
           meta = {
             # These become Ctrl when Super is held
-            backspace = "C-backspace";
+            backspace = "C-S-backspace";
             c = "C-c";
             v = "C-v";
             x = "C-x";
