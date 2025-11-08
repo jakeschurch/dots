@@ -140,6 +140,7 @@
     extraGroups = [
       "wheel"
       "video"
+      "kvm"
     ]; # Enable ‘sudo’ for the user.
     hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
     home = "/home/jake";
@@ -168,6 +169,8 @@
     "root"
     "jake"
   ];
+
+  virtualisation.libvirtd.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
