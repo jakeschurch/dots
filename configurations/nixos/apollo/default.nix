@@ -64,6 +64,11 @@ in
           "$mod ALT, mouse:272, resizewindow"
         ];
 
+        misc = {
+          force_default_wallpaper = 1;
+          disable_hyprland_logo = true;
+        };
+
         input = {
           kb_layout = "us";
           numlock_by_default = true;
@@ -249,8 +254,17 @@ in
         binde = , Return,submap,reset
         binde = , escape,submap,reset
         submap=reset
-      '';
 
+        bind = $mod, P,submap,powermenu
+        submap=powermenu
+        bind = , l, exec, hyprlock --immediate # Lock screen
+        bind = , p, exec, systemctl poweroff  # Power off (Shutdown)
+        bind = , r, exec, systemctl reboot   # Reboot
+        bind = , s, exec, systemctl suspend  # Power off (suspend) or could also be hibernate
+        bind = , Return,submap,reset
+        bind = , escape,submap,reset
+        submap=reset
+      '';
     };
   };
 
@@ -260,6 +274,7 @@ in
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
       wl-clipboard-rs
       hyprpanel
+      libnotify
     ];
 
     etc."greetd/environments".text = ''
@@ -285,7 +300,7 @@ in
 
           meta = {
             # These become Ctrl when Super is held
-            backspace = "C-backspace";
+            backspace = "C-S-backspace";
             c = "C-c";
             v = "C-v";
             x = "C-x";
