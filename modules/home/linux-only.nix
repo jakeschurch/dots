@@ -38,26 +38,32 @@
 
   fonts.fontconfig.enable = true;
 
-  services = {
-    hypridle = {
-      enable = true;
-      settings = {
-        general = {
-          lock_cmd = "${lib.getExe pkgs.hyprlock}";
-          before_sleep_cmd = "${lib.getExe pkgs.hyprlock}";
-        };
-        listener = [
-          {
-            timeout = 3600;
-            on-timeout = "${lib.getExe pkgs.hyprlock}";
-          }
-          {
-            timeout = 5400;
-            on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on";
-          }
-        ];
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        # Lock screen before sleep or on timeout
+        lock_cmd = "${lib.getExe pkgs.hyprlock}";
+        before_sleep_cmd = "${lib.getExe pkgs.hyprlock}";
       };
+      listener = [
+        # 10 minutes idle → lock the screen
+        {
+          timeout = 600; # 10 minutes in seconds
+          on-timeout = "${lib.getExe pkgs.hyprlock}";
+        }
+        # 20 minutes idle → turn off monitors (DPMS) and suspend-then-hibernate
+        {
+          timeout = 1200; # 20 minutes
+          # DPMS off: turns off monitors, system still awake
+          on-timeout = ''
+            hyprctl dispatch dpms off
+            systemctl suspend-then-hibernate
+          '';
+          # DPMS on: restore monitors when activity detected
+          on-resume = "hyprctl dispatch dpms on";
+        }
+      ];
     };
   };
 

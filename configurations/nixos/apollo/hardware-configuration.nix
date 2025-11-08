@@ -18,7 +18,11 @@
     "sd_mod"
     "sr_mod"
   ];
-  boot.kernelModules = [ "nvidia" ];
+  boot.kernelModules = [
+    "nvidia"
+    "kvm"
+    "kvm_amd"
+  ];
 
   boot.blacklistedKernelModules = [ "nouveau" ];
 

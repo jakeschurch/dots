@@ -6,10 +6,6 @@
 
   boot = {
     extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-    kernelModules = [
-      "kvm"
-      "kvm_amd"
-    ];
 
     plymouth = {
       enable = true;

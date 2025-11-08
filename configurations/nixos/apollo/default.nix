@@ -6,6 +6,11 @@
 let
   inherit (flake) inputs;
   inherit (inputs) self;
+
+  fix-hypr-resume = pkgs.writeShellScriptBin "fix-hypr-resume" ''
+    sleep 2
+    hyprctl dispatch dpms on
+  '';
 in
 {
   imports = [
@@ -16,6 +21,17 @@ in
     inputs.hyprland.nixosModules.default
     inputs.walker.nixosModules.default
   ];
+
+  # 2. Resume hook for NVIDIA DPMS fix
+  systemd.services.hypr-resume-fix = {
+    description = "Fix Hyprland DPMS after resume";
+    after = [ "suspend.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = fix-hypr-resume;
+    };
+    wantedBy = [ "suspend.target" ];
+  };
 
   programs = {
     walker = {
@@ -260,7 +276,7 @@ in
         bind = , l, exec, hyprlock --immediate # Lock screen
         bind = , p, exec, systemctl poweroff  # Power off (Shutdown)
         bind = , r, exec, systemctl reboot   # Reboot
-        bind = , s, exec, systemctl suspend  # Power off (suspend) or could also be hibernate
+        bind = , s, exec, systemctl suspend-then-hibernate  # Power off (suspend) or could also be hibernate
         bind = , Return,submap,reset
         bind = , escape,submap,reset
         submap=reset
@@ -270,6 +286,7 @@ in
 
   environment = {
     systemPackages = with pkgs; [
+      fix-hypr-resume
       tuigreet
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
       wl-clipboard-rs

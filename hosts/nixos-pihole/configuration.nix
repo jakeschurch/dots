@@ -50,8 +50,7 @@
 
   swapDevices = [
     {
-      device = "/swapfile";
-      size = 1024;
+      device = "/swap/swapfile";
     }
   ];
   networking = {

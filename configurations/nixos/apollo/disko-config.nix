@@ -30,7 +30,7 @@
                 swap = {
                   swapfile = {
                     size = "125G";
-                    noCow = true;
+                    path = "swap/swapfile";
                   };
                 };
                 subvolumes = {
