@@ -32,6 +32,11 @@ in
     };
 
     settings = {
+      trusted-users = [
+        "root"
+        flake.config.me.username
+        "@wheel"
+      ];
       experimental-features = [
         "nix-command"
         "flakes"

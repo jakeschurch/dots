@@ -1,12 +1,28 @@
 {
   flake,
   pkgs,
+  lib,
   ...
 }:
 let
   inherit (flake) inputs;
   inherit (inputs) self;
 
+  withWorkspaces =
+    keyset: cmd:
+    let
+      range = lib.lists.range 1 9;
+
+      createWorkspaceCmd =
+        i:
+        lib.concatStringsSep ", " [
+          keyset
+          (builtins.toString i)
+          cmd
+          "0${builtins.toString i}"
+        ];
+    in
+    builtins.map createWorkspaceCmd range;
 in
 {
   imports = [
@@ -44,23 +60,24 @@ in
       withUWSM = true;
 
       plugins =
-        with pkgs.hyprlandPlugins;
-        with pkgs;
+        with inputs.hyprland-plugins.packages.${pkgs.system};
         [
-          hypr-dynamic-cursors
           hyprbars
           hyprwinwrap
           hyprexpo
+        ]
+        ++ (with pkgs; [
           inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+          # inputs.hyprspace.packages.${pkgs.system}.Hyprspace
           hyprsunset
-        ];
+        ]);
 
       settings = {
         exec-once = [
           "systemctl --user enable --now hyprsunset.service"
           "systemctl --user enable --now hypridle.service"
           "uwsm app -- hyprpanel"
-          # "wl-starfield"
+          # "uwsm app -- ${hypr-dynamic-aspect}/bin/hypr-dynamic-aspect"
         ];
 
         # mouse movements
@@ -103,6 +120,11 @@ in
           resize_on_border = true;
         };
 
+        dwindle = {
+          force_split = 2; # always split to right
+          single_window_aspect_ratio = "4 3";
+        };
+
         decoration = {
           rounding = 10;
           dim_inactive = true;
@@ -133,7 +155,7 @@ in
               base = 1.5;
               speed = 3.0;
               influence = 0.0;
-              limit = 0.0;
+              limit = 0.2; # REVIEW
               timeout = 100;
               effects = false;
               ipc = false;
@@ -146,6 +168,8 @@ in
             resolution = -1;
             fallback = "clientside";
           };
+
+          hyprexpo = { };
 
           # plugin-specific settings
           hyprbars = {
@@ -191,12 +215,10 @@ in
           ",XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
           ",XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
 
-          # "$mod, up, hyprexpo:expo, toggle"
-
-          "$mod, left, workspace, e-1"
-          "$mod, right, workspace, e+1"
-
-          # "ctrl, up, overview:toggle, all"
+          # NOTE: use ctrl due to keyd re-mappings
+          # "ctrl, up, overview, toggle"
+          "ctrl, left, workspace, e-1"
+          "ctrl, right, workspace, e+1"
 
           "$mod, return, exec, wezterm"
 
@@ -213,39 +235,21 @@ in
           "$mod+SHIFT, l, movewindow, r"
 
           # reload
-          "$mod+SHIFT, r, exec, hyperctl reload"
+          "$mod+SHIFT, r, exec, hyperctl reload && notify-send 'hyprland reloaded 👍'"
 
           # quit
           "$mod, Q, killactive"
 
           # Fullscreen
-          "SUPER, F, fullscreen, 1"
-          "SUPER SHIFT, F, fullscreen, 0"
+          "SUPER, F, fullscreen, 0"
+        ]
+        ++
+          # Move focused window to workspace
+          (withWorkspaces "SUPER SHIFT" "movetoworkspacesilent")
+        ++
 
           # Workspace switching
-          "SUPER, 1, workspace, 01"
-          "SUPER, 2, workspace, 02"
-          "SUPER, 3, workspace, 03"
-          "SUPER, 4, workspace, 04"
-          "SUPER, 5, workspace, 05"
-          "SUPER, 6, workspace, 06"
-          "SUPER, 7, workspace, 07"
-          "SUPER, 8, workspace, 08"
-          "SUPER, 9, workspace, 09"
-          "SUPER, 0, workspace, 10"
-
-          # Move focused window to workspace
-          "SUPER SHIFT, 1, movetoworkspacesilent, 01"
-          "SUPER SHIFT, 2, movetoworkspacesilent, 02"
-          "SUPER SHIFT, 3, movetoworkspacesilent, 03"
-          "SUPER SHIFT, 4, movetoworkspacesilent, 04"
-          "SUPER SHIFT, 5, movetoworkspacesilent, 05"
-          "SUPER SHIFT, 6, movetoworkspacesilent, 06"
-          "SUPER SHIFT, 7, movetoworkspacesilent, 07"
-          "SUPER SHIFT, 8, movetoworkspacesilent, 08"
-          "SUPER SHIFT, 9, movetoworkspacesilent, 09"
-          "SUPER SHIFT, 0, movetoworkspacesilent, 10"
-        ];
+          (withWorkspaces "SUPER" "workspace");
       };
 
       extraConfig = ''
@@ -284,10 +288,10 @@ in
 
   environment = {
     systemPackages = with pkgs; [
+      hyprpanel
       tuigreet
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
       wl-clipboard-rs
-      hyprpanel
       libnotify
     ];
 
@@ -314,7 +318,7 @@ in
 
           meta = {
             # These become Ctrl when Super is held
-            backspace = "C-S-backspace";
+            backspace = "C-backspace";
             c = "C-c";
             v = "C-v";
             x = "C-x";

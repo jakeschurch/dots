@@ -93,7 +93,7 @@ pkgs: {
 
   ansible = with pkgs; [
     ansible
-    ansible-doctor
+    # ansible-doctor
     ansible-lint
   ];
 

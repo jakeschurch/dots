@@ -51,17 +51,23 @@
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
     hyprland = {
-      url = "github:hyprwm/Hyprland?ref=v0.50.0";
+      url = "github:hyprwm/Hyprland?ref=v0.52.0";
     };
+    nix-colors.url = "github:misterio77/nix-colors";
 
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins?ref=v0.50.0";
+      url = "github:hyprwm/hyprland-plugins?ref=v0.52.0";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprland.follows = "hyprland";
     };
 
     hypr-dynamic-cursors = {
-      url = "github:VirtCode/hypr-dynamic-cursors?ref=d6eb0b798c9b07f7f866647c8eb1d75a930501be";
+      url = "github:VirtCode/hypr-dynamic-cursors";
+      inputs.hyprland.follows = "hyprland";
+    };
+
+    hyprspace = {
+      url = "github:KZDKM/Hyprspace";
       inputs.hyprland.follows = "hyprland";
     };
 

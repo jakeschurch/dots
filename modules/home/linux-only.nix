@@ -5,6 +5,10 @@
   ...
 }:
 {
+  imports = [
+    ./hyprpanel
+  ];
+
   home.packages =
     with pkgs;
     [
@@ -35,7 +39,27 @@
     "${config.xdg.configHome}/hypr/theme/hyprlock/transparent/fg2.png".source = ./fg2.png;
   };
 
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      serif = [
+        "Noto Serif Nerd Font"
+        "Noto Color Emoji"
+      ];
+      sansSerif = [
+        "FiraCode Nerd Font"
+        "Noto Sans Nerd Font"
+        "Noto Color Emoji"
+      ];
+      monospace = [
+        "JetBrainsMono Nerd Font Mono"
+        "Noto Color Emoji"
+      ];
+      emoji = [
+        "Noto Color Emoji"
+      ];
+    };
+  };
 
   services.hypridle = {
     enable = true;
@@ -125,8 +149,8 @@
           outline_thickness = 2;
           outer_color = "rgba(0, 0, 0, 0.2)";
           inner_color = "rgba(0, 0, 0, 0.8)";
-          font_color = "rgba(255, 255, 255, 1)";
-          fade_on_empty = false;
+          font_color = "rgba(255, 255, 255, 0.8)";
+          fade_on_empty = true;
           rounding = 16;
           dots_size = 0.15;
           dots_spacing = 0.35;
