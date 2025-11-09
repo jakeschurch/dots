@@ -4,16 +4,18 @@
     "*" = {
       left = [
         "netstat"
-        "cpu"
+        "storage"
         "ram"
+        "cputemp"
+        "cpu"
         "workspaces"
         "windowtitle"
       ];
       middle = [
-        "notifications"
-        "clock"
-        "media"
         "weather"
+        "clock"
+        "notifications"
+        "media"
       ];
       right = [
         "systray"
@@ -34,7 +36,6 @@
   bar.customModules.updates.autoHide = true;
   bar.launcher.autoDetectIcon = true;
   bar.media.show_active_only = true;
-  bar.network.showWifiInfo = true;
   bar.notifications.hideCountWhenZero = true;
   bar.notifications.show_total = true;
   bar.workspaces.numbered_active_indicator = "highlight";
