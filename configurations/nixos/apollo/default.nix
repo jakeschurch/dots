@@ -113,7 +113,7 @@ in
           gaps_in = 3;
           gaps_out = 10;
           float_gaps = 5;
-          border_size = 5;
+          border_size = 3;
           resize_on_border = true;
         };
 
@@ -132,10 +132,6 @@ in
         };
 
         plugin = {
-          hyprexpo = {
-            enabled = true;
-          };
-
           dynamic-cursors = {
             enabled = true;
             mode = "rotate";
@@ -148,7 +144,7 @@ in
             shake = {
               enabled = true;
               nearest = true;
-              threshold = 3.0;
+              threshold = 2.0;
               base = 1.5;
               speed = 3.0;
               influence = 0.0;
@@ -166,23 +162,18 @@ in
             fallback = "clientside";
           };
 
-          hyprexpo = { };
-
           # plugin-specific settings
           hyprbars = {
-            enabled = true;
-            bar_height = 40;
-            bar_text_align = "left";
-            bar_buttons_alignment = "left";
+            bar_height = 30;
             bar_title_enabled = false;
-            bar_precedence_over_border = true;
+            bar_buttons_alignment = "right";
             bar_part_of_window = true;
 
             bar_blur = true;
             bar_padding = 12;
             bar_button_padding = 10;
 
-            # buttons: color, size, icon, command
+            # # buttons: color, size, icon, command
             hyprbars-button = [
               "rgb(ff5f56), 15, , hyprctl dispatch killactive" # Close (red)
               "rgb(ffbd2e), 15, , hyprctl dispatch minimizeactive" # Minimize (yellow)
@@ -232,7 +223,7 @@ in
           "$mod+SHIFT, l, movewindow, r"
 
           # reload
-          "$mod+SHIFT, r, exec, hyperctl reload && notify-send 'hyprland reloaded 👍'"
+          "$mod+SHIFT, r, exec, hyprctl reload && notify-send 'hyprland reloaded 👍'"
 
           # quit
           "$mod, Q, killactive"
@@ -240,13 +231,9 @@ in
           # Fullscreen
           "SUPER, F, fullscreen, 0"
         ]
-        ++
-          # Move focused window to workspace
-          (withWorkspaces "SUPER SHIFT" "movetoworkspacesilent")
-        ++
-
-          # Workspace switching
-          (withWorkspaces "SUPER" "workspace");
+        ++ (withWorkspaces "SUPER+SHIFT" "movetoworkspace") # Move focused window to workspace
+        ++ (withWorkspaces "SUPER" "workspace") # Workspace switching
+        ;
       };
 
       extraConfig = ''

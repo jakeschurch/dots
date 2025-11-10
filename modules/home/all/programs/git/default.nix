@@ -93,7 +93,7 @@ in
 
         gpg.format = "ssh";
         commit = {
-          gpgSign = true;
+          gpgSign = false;
           verbose = true;
           template = "~/.config/git/commit-template";
         };
