@@ -24,10 +24,13 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKfXxg1EoEPjICGcwbhmLP7CRRGCFc7GAWE0znnYmRYw"
   ];
 
-  environment.systemPackages = with pkgs; [
-    bitwarden-cli
-    bitwarden-desktop
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      bitwarden-cli
+      bitwarden-desktop
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [ ssh-to-age ]);
 
   environment.sessionVariables = {
     SSH_AUTH_SOCK = "${config.users.users.${me.username}.home}/.bitwarden-ssh-agent.sock";
