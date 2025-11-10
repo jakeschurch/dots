@@ -11,6 +11,12 @@ local fonts = {
 local config = wezterm.config_builder()
 
 config.disable_default_key_bindings = true
+config.mux_enable_ssh_agent = false
+
+local SSH_AUTH_SOCK = string.format("%s/.bitwarden-ssh-agent.sock", os.getenv "HOME")
+config.default_ssh_auth_sock = SSH_AUTH_SOCK
+
+
 config.keys = {
   { key = "v", mods = "CMD|CTRL",  action = act.PasteFrom("Clipboard") },
   {
@@ -178,7 +184,7 @@ config.front_end = "OpenGL"
 config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = true
-config.harfbuzz_features = { "calt=0" }
+-- config.harfbuzz_features = { "calt=0" }
 config.window_padding = {
   left = 8,
   right = 8,

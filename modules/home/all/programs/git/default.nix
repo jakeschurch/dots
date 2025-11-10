@@ -91,8 +91,9 @@ in
 
         advice.addIgnoredFile = false;
 
+        gpg.format = "ssh";
         commit = {
-          gpgSign = false;
+          gpgSign = true;
           verbose = true;
           template = "~/.config/git/commit-template";
         };
