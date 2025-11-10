@@ -64,20 +64,17 @@ in
         [
           hyprbars
           hyprwinwrap
-          hyprexpo
         ]
         ++ (with pkgs; [
           inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
-          # inputs.hyprspace.packages.${pkgs.system}.Hyprspace
           hyprsunset
         ]);
 
       settings = {
         exec-once = [
           "systemctl --user enable --now hyprsunset.service"
-          "systemctl --user enable --now hypridle.service"
+          "uwsm app -- hypridle"
           "uwsm app -- hyprpanel"
-          # "uwsm app -- ${hypr-dynamic-aspect}/bin/hypr-dynamic-aspect"
         ];
 
         # mouse movements
@@ -179,6 +176,7 @@ in
             bar_buttons_alignment = "left";
             bar_title_enabled = false;
             bar_precedence_over_border = true;
+            bar_part_of_window = true;
 
             bar_blur = true;
             bar_padding = 12;
@@ -216,7 +214,6 @@ in
           ",XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
 
           # NOTE: use ctrl due to keyd re-mappings
-          # "ctrl, up, overview, toggle"
           "ctrl, left, workspace, e-1"
           "ctrl, right, workspace, e+1"
 
