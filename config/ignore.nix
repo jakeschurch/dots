@@ -10,7 +10,7 @@ let
     (map addDirEntries [
       "venv"
       "\.direnv"
-      "\.git"
+      "\.git/"
       "\.mypy_cache"
       "\.pytest_cache"
       "\.terraform"

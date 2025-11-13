@@ -76,11 +76,30 @@ in
     initExtra = ''
       # Custom cd function
       function cd() {
+        # Handle "cd" (no args)
+        if [[ $# -eq 0 ]]; then
+          builtin cd ~ || return
+          return
+        fi
+
+        # Handle "cd -" (previous directory)
+        if [[ "$1" == "-" ]]; then
+          builtin cd - || return
+          return
+        fi
+
+        # Handle normal case or path to file
         if [[ -d "$1" ]]; then
           builtin cd "$@" || return
         else
-          builtin cd "$(dirname "$1")" || return
+          local dir
+          dir="$(dirname "$1")"
+          builtin cd "$dir" || return
         fi
+      }
+
+      function ripvim() {
+        rg --hidden --pcre2 --vimgrep "$@" | nvim -q - -c copen
       }
 
       if [[ -n "$ZSH_DEBUGRC" ]]; then
@@ -108,7 +127,6 @@ in
       # Autopair from zplug
       autopair-init
 
-      # Lazy-load nix-shell and nix functions
       function nix-shell () {
         nix-your-shell zsh nix-shell -- "$@"
       }

@@ -44,13 +44,6 @@ _: {
       '';
 
       ".psqlrc".source = ./psqlrc;
-
-      ".ripgreprc".text = ''
-        --max-columns=150
-        --max-columns-preview
-        --glob=!{git,node_modules,dist}/*
-        --smart-case
-      '';
     };
 
     activation.psql-setup = ''

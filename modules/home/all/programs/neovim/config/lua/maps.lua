@@ -1,3 +1,5 @@
+local oil = require("oil")
+--
 -- window movements
 vim.keymap.set("n", "<C-q>", "<C-w>q")
 vim.keymap.set("n", "<C-h>", "<C-w>h")
@@ -15,7 +17,43 @@ vim.keymap.set("n", "Y", "^y$")
 vim.keymap.set("n", "W", ":wa!<cr>", { noremap = true, silent = true })
 
 -- change pwd to file dir
-vim.keymap.set("n", "<leader>hf", ":lcd %:p:h<cr>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>hf", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local buf_path = vim.api.nvim_buf_get_name(bufnr)
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+
+  local dir
+  if filetype == "fugitive" then
+    -- Extract the actual file path from fugitive URI
+    -- fugitive://path/to/repo/.git//commit-hash/path/to/file
+    local file_path = buf_path:match("fugitive://.*%.git//[^/]+/(.*)")
+    if file_path then
+      -- Get the git root
+      local git_root =
+        vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })[1]
+      if git_root and git_root ~= "" and not git_root:match("^fatal") then
+        dir = git_root .. "/" .. vim.fn.fnamemodify(file_path, ":h")
+      end
+    end
+    if not dir then
+      -- Fallback to git root
+      dir = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })[1]
+    end
+  elseif filetype == "oil" then
+    if oil.get_current_dir then
+      dir = oil.get_current_dir(bufnr)
+    end
+  else
+    dir = vim.fn.expand("%:p:h")
+  end
+
+  if dir and dir ~= "" and not dir:match("^fatal") then
+    vim.cmd("lcd " .. vim.fn.fnameescape(dir))
+    vim.notify("Changed directory to: " .. dir)
+  else
+    vim.notify("Could not determine directory", vim.log.levels.WARN)
+  end
+end, { noremap = true, silent = true, desc = "LCD to file directory" })
 
 vim.keymap.set("n", "J", "mzJ`z") -- keep cursor in original place while joining lines
 vim.keymap.set("n", "<C-d>", "<C-d>zz") -- pgdn
@@ -31,29 +69,29 @@ vim.keymap.set("n", "}", "}zz")
 
 -- Map <Esc> to itself with feedkeys for immediate recognition
 vim.keymap.set("i", "<Esc>", function()
-	return vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
+  return vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
 end, { expr = true })
 
 function ToggleQuickFix()
-	local qf_exists = false
-	-- Check if the quickfix window is open
-	for _, win in ipairs(vim.fn.getwininfo()) do
-		if win.quickfix == 1 then
-			qf_exists = true
-			break
-		end
-	end
+  local qf_exists = false
+  -- Check if the quickfix window is open
+  for _, win in ipairs(vim.fn.getwininfo()) do
+    if win.quickfix == 1 then
+      qf_exists = true
+      break
+    end
+  end
 
-	if qf_exists then
-		vim.cmd("cclose")
-	else
-		vim.cmd("copen")
-	end
+  if qf_exists then
+    vim.cmd("cclose")
+  else
+    vim.cmd("copen")
+  end
 end
 
 -- Optionally, map this function to a keybinding, e.g., <leader>q
 vim.keymap.set("n", "<leader>q", function()
-	ToggleQuickFix()
+  ToggleQuickFix()
 end, { noremap = true, silent = true })
 
 vim.cmd([[
@@ -64,85 +102,97 @@ cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'a') ? 'G add %' : 
 ]])
 
 function Cycle(direction)
-	local line = vim.api.nvim_get_current_line()
-	local original_cursor = vim.api.nvim_win_get_cursor(0) -- Save original position
-	local col = original_cursor[2]
+  local line = vim.api.nvim_get_current_line()
+  local original_cursor = vim.api.nvim_win_get_cursor(0) -- Save original position
+  local col = original_cursor[2]
 
-	local booleans = {
-		["true"] = "false",
-		["false"] = "true",
-		["on"] = "off",
-		["off"] = "on",
-		["yes"] = "no",
-		["no"] = "yes",
-	}
+  local booleans = {
+    ["true"] = "false",
+    ["false"] = "true",
+    ["on"] = "off",
+    ["off"] = "on",
+    ["yes"] = "no",
+    ["no"] = "yes",
+  }
 
-	for bool, replacement in pairs(booleans) do
-		local start_pos, end_pos = string.find(line, "%f[%a]" .. bool .. "%f[%A]") -- Match whole word
+  for bool, replacement in pairs(booleans) do
+    local start_pos, end_pos = string.find(line, "%f[%a]" .. bool .. "%f[%A]") -- Match whole word
 
-		if start_pos then
-			vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], start_pos - 1 })
+    if start_pos then
+      vim.api.nvim_win_set_cursor(
+        0,
+        { vim.api.nvim_win_get_cursor(0)[1], start_pos - 1 }
+      )
 
-			vim.cmd("normal! ciw" .. replacement)
+      vim.cmd("normal! ciw" .. replacement)
 
-			vim.api.nvim_win_set_cursor(0, { original_cursor[1], col })
-			return
-		end
-	end
+      vim.api.nvim_win_set_cursor(0, { original_cursor[1], col })
+      return
+    end
+  end
 
-	local direction_mapping = {
-		["down"] = "<C-X>",
-		["up"] = "<C-A>",
-	}
+  local direction_mapping = {
+    ["down"] = "<C-X>",
+    ["up"] = "<C-A>",
+  }
 
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(direction_mapping[direction], true, false, true), "n", true)
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(
+      direction_mapping[direction],
+      true,
+      false,
+      true
+    ),
+    "n",
+    true
+  )
 
-	vim.api.nvim_win_set_cursor(0, original_cursor)
+  vim.api.nvim_win_set_cursor(0, original_cursor)
 end
 
 vim.keymap.set("n", "<C-X>", function()
-	Cycle("down")
+  Cycle("down")
 end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "<C-A>", function()
-	Cycle("up")
+  Cycle("up")
 end, { noremap = true, silent = true })
 
 function ToggleLocationList()
-	local loclist_exists = false
-	-- Check if the location list is open for the current window
-	for _, win in ipairs(vim.fn.getwininfo()) do
-		if win.loclist == 1 and win.winid == vim.api.nvim_get_current_win() then
-			loclist_exists = true
-			break
-		end
-	end
+  local loclist_exists = false
+  -- Check if the location list is open for the current window
+  for _, win in ipairs(vim.fn.getwininfo()) do
+    if win.loclist == 1 and win.winid == vim.api.nvim_get_current_win() then
+      loclist_exists = true
+      break
+    end
+  end
 
-	if loclist_exists then
-		vim.cmd("lclose")
-	else
-		vim.cmd("lopen")
-	end
+  if loclist_exists then
+    vim.cmd("lclose")
+  else
+    vim.cmd("lopen")
+  end
 end
 
 vim.keymap.set("n", "<leader>l", function()
-	ToggleLocationList()
+  ToggleLocationList()
 end, { noremap = true, silent = true })
 
 -- Smart paste in insert mode (adjusts indentation after pasting)
 function SmartPasteInsert()
-	-- Turn off 'paste' mode to respect indentation settings
-	vim.opt.paste = false
-	-- Use normal mode commands to re-indent the last pasted block
-	vim.cmd("normal! `[v`]=")
+  -- Turn off 'paste' mode to respect indentation settings
+  vim.opt.paste = false
+  -- Use normal mode commands to re-indent the last pasted block
+  vim.cmd("normal! `[v`]=")
 end
 
 -- Smart paste in normal mode (adjusts indentation after pasting)
 function SmartPasteNormal()
-	-- Turn off 'paste' mode to respect indentation settings
-	vim.opt.paste = false
-	-- Use visual selection to re-indent the pasted block
-	vim.cmd("normal! `[v`]=")
+  -- Turn off 'paste' mode to respect indentation settings
+  vim.opt.paste = false
+  -- Use visual selection to re-indent the pasted block
+  vim.cmd("normal! `[v`]=")
 end
 
 -- -- Key mappings for smart pasting

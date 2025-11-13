@@ -77,34 +77,33 @@ local function sanitize_buf_path(bufnr)
   return buf_path
 end
 
-local function get_git_root()
+local function get_git_root_or_cwd()
   local buf_path = sanitize_buf_path(vim.api.nvim_get_current_buf())
-  if not buf_path then
-    return nil
+  if buf_path == "" then
+    -- No file loaded, fallback to current working directory
+    return vim.fn.getcwd()
   end
 
-  local dir
   if vim.fn.isdirectory(buf_path) == 1 then
-    dir = buf_path
-  else
-    dir = vim.fn.fnamemodify(buf_path, ":p:h")
+    return buf_path
   end
 
+  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
   -- Try to get git root from the buffer's directory
   local git_root =
     vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })[1]
 
   if git_root and git_root ~= "" and not git_root:match("^fatal") then
     return git_root
+  else
+    return dir
   end
-
-  return nil
 end
 
 -- Create wrapped versions of commonly used fzf commands
 local wrapped = {
   git_files = function()
-    local git_root = get_git_root()
+    local git_root = get_git_root_or_cwd()
     if git_root then
       return fzf_lua.git_files({ cwd = git_root })
     else
@@ -112,7 +111,7 @@ local wrapped = {
     end
   end,
   live_grep = function()
-    local git_root = get_git_root()
+    local git_root = get_git_root_or_cwd()
     if git_root then
       return fzf_lua.live_grep({ cwd = git_root })
     else
@@ -120,7 +119,7 @@ local wrapped = {
     end
   end,
   grep = function()
-    local git_root = get_git_root()
+    local git_root = get_git_root_or_cwd()
     if git_root then
       return fzf_lua.grep({ cwd = git_root })
     else
