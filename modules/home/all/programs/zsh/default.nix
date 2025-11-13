@@ -154,7 +154,6 @@ in
         "postgres"
         "pre-commit"
         "procs"
-        "safe-paste"
         "terraform"
         "vi-mode"
       ];

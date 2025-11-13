@@ -11,17 +11,20 @@ local fonts = {
 local config = wezterm.config_builder()
 
 config.disable_default_key_bindings = true
-config.mux_enable_ssh_agent = false
 
-local SSH_AUTH_SOCK = string.format("%s/.bitwarden-ssh-agent.sock", os.getenv "HOME")
-config.default_ssh_auth_sock = SSH_AUTH_SOCK
+if wezterm.target_triple:find("linux") then
+  config.mux_enable_ssh_agent = false
 
+  local SSH_AUTH_SOCK =
+    string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
+  config.default_ssh_auth_sock = SSH_AUTH_SOCK
+end
 
 config.keys = {
-  { key = "v", mods = "CMD|CTRL",  action = act.PasteFrom("Clipboard") },
+  { key = "v", mods = "SUPER", action = act.PasteFrom("Clipboard") },
   {
     key = "c",
-    mods = "CMD|CTRL",
+    mods = "SUPER",
     action = act({ CopyTo = "ClipboardAndPrimarySelection" }),
   },
 
@@ -59,7 +62,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
@@ -269,7 +272,10 @@ config.mouse_bindings = {
 }
 
 config.set_environment_variables = {
-  TERMINFO_DIRS = "/Users/jake/.nix-profile/share/terminfo",
+  TERMINFO_DIRS = string.format(
+    "%s/.nix-profile/share/terminfo",
+    os.getenv("HOME")
+  ),
 }
 
 return config

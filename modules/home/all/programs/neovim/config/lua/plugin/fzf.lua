@@ -60,7 +60,7 @@ local function sanitize_buf_path(bufnr)
     if ok and oil.get_current_dir then
       return oil.get_current_dir(bufnr)
     end
-    return ""
+    return nil
   elseif filetype == "fugitive" then
     -- Try to get git root from buffer path
     local dir = vim.fn.fnamemodify(buf_path, ":p:h")
@@ -69,70 +69,65 @@ local function sanitize_buf_path(bufnr)
     if git_root and git_root ~= "" and not git_root:match("^fatal") then
       return git_root
     end
-    return ""
+    return nil
   elseif buf_path == "" or buf_path:match("^[a-z]+://") then
-    return ""
+    return nil
   end
 
   return buf_path
 end
 
-local function get_git_root_or_cwd()
+local function get_git_root()
   local buf_path = sanitize_buf_path(vim.api.nvim_get_current_buf())
-  if buf_path == "" then
-    -- No file loaded, fallback to current working directory
-    return vim.fn.getcwd()
+  if not buf_path then
+    return nil
   end
 
+  local dir
   if vim.fn.isdirectory(buf_path) == 1 then
-    return buf_path
+    dir = buf_path
+  else
+    dir = vim.fn.fnamemodify(buf_path, ":p:h")
   end
 
-  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
   -- Try to get git root from the buffer's directory
   local git_root =
     vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })[1]
 
   if git_root and git_root ~= "" and not git_root:match("^fatal") then
     return git_root
-  else
-    return dir
   end
+
+  return nil
 end
 
 -- Create wrapped versions of commonly used fzf commands
 local wrapped = {
-  files = fzf_lua.files,
   git_files = function()
-    return fzf_lua.git_files({ cwd = get_git_root_or_cwd() })
+    local git_root = get_git_root()
+    if git_root then
+      return fzf_lua.git_files({ cwd = git_root })
+    else
+      vim.notify("Not in a git repository", vim.log.levels.WARN)
+    end
   end,
   live_grep = function()
-    return fzf_lua.live_grep({ cwd = get_git_root_or_cwd() })
+    local git_root = get_git_root()
+    if git_root then
+      return fzf_lua.live_grep({ cwd = git_root })
+    else
+      vim.notify("Not in a git repository", vim.log.levels.WARN)
+    end
   end,
   grep = function()
-    return fzf_lua.grep({ cwd = get_git_root_or_cwd() })
+    local git_root = get_git_root()
+    if git_root then
+      return fzf_lua.grep({ cwd = git_root })
+    else
+      vim.notify("Not in a git repository", vim.log.levels.WARN)
+    end
   end,
-  lgrep_curbuf = fzf_lua.lgrep_curbuf,
 }
-
--- The reason I added 'opts' as a parameter is so you can
--- call this function with your own parameters / customizations
--- for example: 'git_files_cwd_aware({ cwd = <another git repo> })'
-function M.git_files_cwd_aware(opts)
-  opts = opts or {}
-  local path = fzf_lua.path
-  -- git_root() will warn us if we're not inside a git repo
-  -- so we don't have to add another warning here, if
-  -- you want to avoid the error message change it to:
-  -- local git_root = fzf_lua.path.git_root(opts, true)
-  local git_root = path.git_root(opts)
-  if not git_root then
-    return
-  end
-  local relative = path.relative_to(vim.loop.cwd(), git_root)
-  opts.fzf_opts = { ["--query"] = git_root ~= relative and relative or nil }
-  return fzf_lua.git_files(opts)
-end
 
 local function recent_git_branches()
   -- Use git reflog to get unique, most recently checked-out branches
@@ -221,7 +216,6 @@ which_key.add({
     nowait = true,
     remap = false,
   },
-  --- git mappings
   {
     "<leader>jk",
     wrapped.git_files,
