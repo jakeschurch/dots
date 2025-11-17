@@ -47,6 +47,7 @@ in
         key = "6A8B32A193C5727F7ED7CBCEDCE52B50B91728F9";
       };
       aliases = {
+        cleanenv = "clean -xfd -e .envrc";
         ai = "add --interactive";
         select-branch = "! f() { ${gitBin} checkout $(${gitBin} branch --all | ${fzfBin}); }; f";
         branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainbranch)..$(${gitBin} head) ;}; f";
