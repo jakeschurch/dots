@@ -95,7 +95,7 @@
 
       pre-commit
 
-      yq
+      yq-go
       docker
 
       awscli2

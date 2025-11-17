@@ -34,6 +34,12 @@
 
     defaults = {
       spaces.spans-displays = false;
+      NSGlobalDomain = {
+        _HIHideMenuBar = true;
+        NSAutomaticWindowAnimationsEnabled = true;
+        NSWindowShouldDragOnGesture = true;
+      };
+
       dock = {
         autohide = true;
         orientation = "left";
@@ -50,12 +56,13 @@
 
       finder = {
         AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
         QuitMenuItem = true;
         FXEnableExtensionChangeWarning = false;
       };
     };
 
-    stateVersion = 5;
+    stateVersion = 6;
   };
 
   environment = {

@@ -28,7 +28,7 @@ in
         sharedModules = [
           (self + "/configurations/home/${config.me.username}.nix")
           self.homeModules.default
-          self.homeModules.darwin-only
+          self.homeModules.darwin
         ];
       };
     }
