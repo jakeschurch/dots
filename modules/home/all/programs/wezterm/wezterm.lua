@@ -278,4 +278,31 @@ config.set_environment_variables = {
   ),
 }
 
+-- Enable shell integration
+config.enable_kitty_graphics = true
+wezterm.on(
+  "format-tab-title",
+  function(tab, tabs, panes, config, hover, max_width)
+    local exit_status = tab.active_pane.user_vars.WEZTERM_LAST_EXIT_STATUS
+    local status_icon = ""
+
+    if exit_status == "0" then
+      status_icon = "✓"
+    elseif exit_status and exit_status ~= "" then
+      status_icon = "✗"
+    end
+
+    local title = string.format(
+      " %d: %s %s ",
+      tab.tab_index + 1,
+      tab.active_pane.title,
+      status_icon
+    )
+
+    return {
+      { Text = title },
+    }
+  end
+)
+
 return config

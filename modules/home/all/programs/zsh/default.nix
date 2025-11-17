@@ -102,6 +102,14 @@ in
         rg --hidden --pcre2 --vimgrep "$@" | nvim -q - -c copen
       }
 
+      __wezterm_set_user_var() {
+        printf "\033]1337;SetUserVar=%s=%s\007" "$1" "$(echo -n "$2" | base64)"
+      }
+
+      precmd() {
+        __wezterm_set_user_var WEZTERM_LAST_EXIT_STATUS $?
+      }
+
       if [[ -n "$ZSH_DEBUGRC" ]]; then
         zmodload zsh/zprof
         zprof
