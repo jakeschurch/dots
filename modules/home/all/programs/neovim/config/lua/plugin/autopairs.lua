@@ -125,6 +125,21 @@ npairs.add_rules({
     return false -- Don't move over the semicolon
   end),
 
+  -- Single backtick pairing (inline code)
+  Rule("`", "`"):with_pair(function(opts)
+    -- Only pair if not inside a word (avoid `` `word` `` conflicts)
+    return not opts.prev_char:match("[%w`]")
+  end):with_move(function(opts)
+    -- Move over closing backtick if preceded by a word character
+    return not opts.prev_char:match("[%w`]")
+  end),
+
+  -- Triple backtick pairing (code block)
+  Rule("```", "```"):with_pair(function(opts)
+    -- Only pair if at start of line or after whitespace
+    return opts.line:sub(1, opts.col - 1):match("^%s*$")
+  end),
+
   -- Add semicolon after inherit keyword
   Rule("inherit", ";", { "nix" }):with_move(function(opts)
     return false -- Don't move over the semicolon

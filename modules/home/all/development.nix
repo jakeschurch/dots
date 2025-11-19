@@ -19,7 +19,6 @@
       ffmpeg
       mtr
       conftest
-      vectorcode
       libressl
 
       mermaid-cli

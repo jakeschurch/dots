@@ -32,7 +32,6 @@ in
         ];
       };
     }
-    self.nixosModules.common
     inputs.nix-index-database.darwinModules.nix-index
 
     ./all

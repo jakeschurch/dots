@@ -9,9 +9,9 @@
 
     file.".ripgreprc".text = ''
       --hidden
+      --ignore-case
       --pcre2
       --no-heading
-      --smart-case
     '';
   };
 }
