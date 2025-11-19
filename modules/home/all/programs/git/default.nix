@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 let
@@ -11,27 +12,27 @@ let
   '';
 in
 {
-  home.packages = with pkgs; [
-    git-extras
-    difftastic
-    difftastic-inline
-    perlPackages.TermReadKey
-    git-filter-repo
-  ];
+  home = {
+    packages = with pkgs; [
+      git-extras
+      difftastic
+      difftastic-inline
+      perlPackages.TermReadKey
+      git-filter-repo
+    ];
 
-  home.shellAliases = {
-    g = "git";
-    gco = "git checkout";
-    gs = "git switch -c";
+    shellAliases = {
+      g = "git";
+      gco = "git checkout";
+      gs = "git switch -c";
+    };
+
+    file.".ssh/allowedSigners".text = ''
+      jakeschurch@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXkQmmWeoRqR2jdPRH7PJN8QSpdofdf6hVxXtyMo1Vs
+    '';
   };
 
   xdg.configFile = {
-    "git/config.work".text = ''
-      [user]
-        name = Jake Schurch
-        email = jakeschurch@gmail.com
-        signingkey = D43F2816596BFF67F80B049651BD69A43BB80786
-    '';
     "git/commit-template".source = ./git-commit-template;
     "git/gitignore".source = ./gitignore;
     "git/templates".source = ./templates;
@@ -43,9 +44,13 @@ in
       package = pkgs.git;
       userName = "Jake Schurch";
       userEmail = "jakeschurch@gmail.com";
+
       signing = {
-        key = "6A8B32A193C5727F7ED7CBCEDCE52B50B91728F9";
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXkQmmWeoRqR2jdPRH7PJN8QSpdofdf6hVxXtyMo1Vs";
+        format = "ssh";
+        signByDefault = true;
       };
+
       aliases = {
         cleanenv = "clean -xfd -e .envrc";
         ai = "add --interactive";
@@ -53,7 +58,7 @@ in
         branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainbranch)..$(${gitBin} head) ;}; f";
         delete = "branch -d";
         sc = "switch -c";
-        c = "! f() { ~/bin/git/abbrevs.sh git-commit $@; }; f";
+        c = "commit";
         ca = "commit --amend";
         co = "checkout";
         empty = "commit --allow-empty";
@@ -80,21 +85,15 @@ in
         top = "rev-parse --show-toplevel";
         mainbranch = "! git branch | grep -Eo 'main|master'";
       };
-      includes = [
-        {
-          path = "~/.config/git/config.work";
-          condition = "gitdir:~/Projects/work";
-        }
-      ];
 
-      extraConfig = {
+      settings = {
         gc.auto = 200;
+
+        gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowedSigners";
 
         advice.addIgnoredFile = false;
 
-        gpg.format = "ssh";
         commit = {
-          gpgSign = false;
           verbose = true;
           template = "~/.config/git/commit-template";
         };
@@ -161,7 +160,7 @@ in
 
         log = {
           abbrevCommit = true;
-          showSignature = false;
+          showSignature = true;
         };
 
         color = {

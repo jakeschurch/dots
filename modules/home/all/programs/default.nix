@@ -28,5 +28,6 @@ in
     ./terragrunt.nix
     ./wezterm
     ./zsh
+    ./ssh.nix
   ];
 }
