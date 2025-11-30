@@ -177,6 +177,10 @@ config.freetype_load_target = "HorizontalLcd"
 config.font_shaper = "Harfbuzz"
 config.font = wezterm.font_with_fallback(fonts)
 config.font_size = 14.0
+config.window_frame = {
+  font = wezterm.font_with_fallback(fonts),
+  font_size = 12.0, -- or whatever you want
+}
 config.max_fps = 165
 
 config.dpi = 96
@@ -185,9 +189,8 @@ config.check_for_updates = false
 config.force_reverse_video_cursor = false
 config.front_end = "OpenGL"
 config.tab_bar_at_bottom = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = true
--- config.harfbuzz_features = { "calt=0" }
 config.window_padding = {
   left = 8,
   right = 8,
@@ -208,69 +211,41 @@ config.quick_select_patterns = {
 }
 
 config.mouse_bindings = {
+  -- Middle click = paste
   {
-    event = {
-      Down = {
-        streak = 1,
-        button = "Left",
-      },
-    },
-    mods = "NONE",
-    action = act({ SelectTextAtMouseCursor = "Cell" }),
-  },
-  {
-    event = {
-      Down = {
-        streak = 2,
-        button = "Left",
-      },
-    },
-    mods = "NONE",
-    action = act({ SelectTextAtMouseCursor = "Word" }),
-  },
-
-  {
-    event = {
-      Down = {
-        streak = 3,
-        button = "Left",
-      },
-    },
-    mods = "NONE",
-    action = act({ SelectTextAtMouseCursor = "Line" }),
-  },
-
-  {
-    event = {
-      Up = { streak = 1, button = "Left" },
-    },
-    mods = "NONE",
-    action = wezterm.action.CompleteSelection("ClipboardAndPrimarySelection"),
-  },
-
-  {
-    event = {
-      Down = {
-        streak = 1,
-        button = "Middle",
-      },
-    },
+    event = { Down = { streak = 1, button = "Middle" } },
     mods = "NONE",
     action = act.PasteFrom("Clipboard"),
   },
 
+  -- Right click = paste (your preference)
   {
-    event = {
-      Down = {
-        streak = 1,
-        button = "Right",
-      },
-    },
+    event = { Down = { streak = 1, button = "Right" } },
     mods = "NONE",
     action = act.PasteFrom("Clipboard"),
   },
 }
 
+-- Word/line select logic on mouse down
+for streak = 1, 3 do
+  table.insert(config.mouse_bindings, {
+    event = { Down = { streak = streak, button = "Left" } },
+    mods = "NONE",
+    action = wezterm.action_callback(function(win, pane)
+      -- Do NOT open links here; only handle selection.
+      if streak == 1 then
+        local hyperlink = pane:get_hyperlink_at_mouse_cursor()
+        if hyperlink then
+          win:perform_action(act.OpenLinkAtMouseCursor, pane)
+        else
+          win:perform_action(act.SelectTextAtMouseCursor("Word"), pane)
+        end
+      else
+        win:perform_action(act.SelectTextAtMouseCursor("Block"), pane)
+      end
+    end),
+  })
+end
 config.set_environment_variables = {
   TERMINFO_DIRS = string.format(
     "%s/.nix-profile/share/terminfo",
@@ -278,28 +253,65 @@ config.set_environment_variables = {
   ),
 }
 
+-- Hyperlink rules for clickable URLs
+config.hyperlink_rules = {
+  -- Match http/https URLs
+  {
+    regex = [[https?://\S+]],
+    format = "$0",
+  },
+  -- Match www URLs
+  {
+    regex = [[www\.\S+\.\S+]],
+    format = "https://$0",
+  },
+  -- Match email addresses
+  {
+    regex = [[\b[\w\.-]+@[\w\.-]+\.\w{2,}\b]],
+    format = "mailto:$0",
+  },
+  -- Match git@ URLs
+  {
+    regex = [[\b\w+@[\w\.-]+:[\w./-]+\b]],
+    format = "ssh://$0",
+  },
+}
+
 -- Enable shell integration
 config.enable_kitty_graphics = true
+
 wezterm.on(
   "format-tab-title",
   function(tab, tabs, panes, config, hover, max_width)
     local exit_status = tab.active_pane.user_vars.WEZTERM_LAST_EXIT_STATUS
-    local status_icon = ""
+    local bg_color = "#3c3836" -- default gruvbox bg
+    local fg_color = "#ebdbb2" -- default gruvbox fg
+
+    local symbol = ""
+    local symbol_fg = fg_color
 
     if exit_status == "0" then
-      status_icon = "✓"
+      symbol = "✔"
+      symbol_fg = "#b8bb26" -- green
     elseif exit_status and exit_status ~= "" then
-      status_icon = "✗"
+      symbol = "✖"
+      symbol_fg = "#fb4934" -- red
     end
 
+    local active_marker = tab.is_active and "*" or " "
+
     local title = string.format(
-      " %d: %s %s ",
+      " %s%d: %s ",
+      active_marker,
       tab.tab_index + 1,
-      tab.active_pane.title,
-      status_icon
+      tab.active_pane.title
     )
 
     return {
+      { Background = { Color = bg_color } },
+      { Foreground = { Color = symbol_fg } },
+      { Text = symbol .. " " },
+      { Foreground = { Color = fg_color } },
       { Text = title },
     }
   end

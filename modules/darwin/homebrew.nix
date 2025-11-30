@@ -20,7 +20,7 @@
     casks = [
       "balenaetcher"
       "caffeine"
-      "cloudflare-warp"
+      "moonlight"
       "google-chrome"
       "notion"
       "notion"

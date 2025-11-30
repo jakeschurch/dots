@@ -118,6 +118,19 @@ pkgs: {
 
   markdown = with pkgs; [
     vale-ls
+
+    python313Packages.mdformat
+    python313Packages.mdformat-admon
+    python313Packages.mdformat-beautysh
+    python313Packages.mdformat-footnote
+    python313Packages.mdformat-frontmatter
+    python313Packages.mdformat-gfm
+    python313Packages.mdformat-gfm-alerts
+    python313Packages.mdformat-mkdocs
+    python313Packages.mdformat-myst
+    python313Packages.mdformat-nix-alejandra
+    python313Packages.mdformat-simple-breaks
+    python313Packages.mdformat-tables
   ];
 
   html = with pkgs; [

@@ -37,7 +37,7 @@ local function add_icon_button(filepath, shortcut_key, text)
   return add_button(filepath, shortcut_key, icon_text)
 end
 
-function get_mru_dirfiles(dir, n_files)
+local function get_mru_dirfiles(dir, n_files)
   dir = dir:gsub("^~", os.getenv("HOME"))
 
   -- Use 'fd' to find files, then use 'stat' to get modification times, sort by time, and limit the results

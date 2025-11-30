@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
     jankyborders
@@ -6,7 +6,7 @@
 
   programs.aerospace = {
     enable = true;
-    launchd.enable = false;
+    launchd.enable = true;
 
     userSettings = {
       enable-normalization-flatten-containers = true;
@@ -15,6 +15,7 @@
       exec.inherit-env-vars = true;
 
       after-startup-command = [
+        "exec-and-forget bitwarden-desktop"
         "exec-and-forget ${pkgs.jankyborders}/bin/borders style=round hidpi=on inactive_color=0x000000 active_color=0xcc8ec07c width=32.0"
       ];
 
@@ -75,10 +76,7 @@
             # apps
             cmd-enter = "exec-and-forget osascript -e 'tell application \"WezTerm\" to activate'";
             cmd-shift-enter = "exec-and-forget open -na Wezterm ";
-            cmd-o = "exec-and-forget osascript -e 'tell application \"Google Chrome\" to activate'";
             cmd-shift-o = "exec-and-forget open -na \"Google Chrome\"";
-            cmd-z = "exec-and-forget osascript -e 'tell application \"zoom.us\" to activate'";
-            cmd-m = "exec-and-forget osascript -e 'tell application \"spotify\" to activate'";
 
             # Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
             cmd-f = "fullscreen";
@@ -143,11 +141,41 @@
               "workspace 9"
             ];
 
+            cmd-shift-s = [
+              "move-node-to-workspace s"
+              "workspace s"
+            ];
+
             cmd-shift-r = "reload-config";
 
             cmd-r = "mode resize";
             cmd-p = "mode powermenu";
+
+            cmd-o = "mode app";
           };
+        };
+
+        app = {
+          binding =
+            let
+              createActivationBinding = app: [
+                "exec-and-forget osascript -e 'tell application \"${app}\" to activate'"
+                "mode main"
+              ];
+
+              appBindings = {
+                enter = "Wezterm";
+                o = "Google Chrome";
+                z = "zoom.us";
+                n = "Notion";
+                comma = "Notion Calendar";
+                m = "spotify";
+              };
+            in
+            (lib.mapAttrs (_k: createActivationBinding) appBindings)
+            // {
+              esc = "mode main";
+            };
         };
 
         resize = {
