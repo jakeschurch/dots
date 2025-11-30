@@ -1,12 +1,17 @@
 {
   lib,
   pkgs,
+  flake,
   ...
 }:
 {
   nix = {
     distributedBuilds = true;
     channel.enable = false;
+    settings.trusted-users = [
+      "root"
+      flake.config.me.username
+    ];
   };
 
   ids.gids.nixbld = 350;
@@ -35,7 +40,7 @@
     defaults = {
       spaces.spans-displays = false;
       NSGlobalDomain = {
-        _HIHideMenuBar = true;
+        _HIHideMenuBar = false;
         NSAutomaticWindowAnimationsEnabled = true;
         NSWindowShouldDragOnGesture = true;
       };
