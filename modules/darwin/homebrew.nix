@@ -21,6 +21,7 @@
       "balenaetcher"
       "caffeine"
       "moonlight"
+      "wifiman"
       "google-chrome"
       "notion"
       "notion"
