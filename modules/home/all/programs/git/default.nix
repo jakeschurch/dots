@@ -221,6 +221,10 @@ in
     };
 
     gh.enable = true;
+    gh.extensions = with pkgs; [
+      gh-copilot
+    ];
+
     gh-dash = {
       enable = true;
       settings = {
