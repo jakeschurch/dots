@@ -12,6 +12,8 @@
       "root"
       flake.config.me.username
     ];
+    optimise.automatic = true;
+    gc.automatic = true;
   };
 
   ids.gids.nixbld = 350;

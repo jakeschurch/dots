@@ -1,9 +1,8 @@
 { pkgs, config, ... }:
 {
-
   programs.ssh = {
     enable = true;
-    forwardAgent = false;
+    forwardAgent = true;
     compression = true;
     hashKnownHosts = false;
     controlMaster = "no";

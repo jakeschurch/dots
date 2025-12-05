@@ -16,11 +16,13 @@ in
   services = {
     endlessh.enable = true;
     sshd.enable = true;
+    fail2ban.enable = true;
 
     openssh = {
       enable = true;
       ports = [ 22222 ];
       settings = {
+        AllowAgentForwarding = "yes";
         PasswordAuthentication = false;
         UseDns = true;
         KbdInteractiveAuthentication = false;

@@ -16,12 +16,12 @@ if wezterm.target_triple:find("linux") then
   config.mux_enable_ssh_agent = false
 
   local SSH_AUTH_SOCK =
-    string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
+      string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
   config.default_ssh_auth_sock = SSH_AUTH_SOCK
 end
 
 config.keys = {
-  { key = "v", mods = "SUPER", action = act.PasteFrom("Clipboard") },
+  { key = "v", mods = "SUPER",     action = act.PasteFrom("Clipboard") },
   {
     key = "c",
     mods = "SUPER",
@@ -62,7 +62,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
@@ -210,42 +210,43 @@ config.quick_select_patterns = {
   "\\b\\w+://[\\w.-]+\\.[a-z]{2,15}\\S*\\b",
 }
 
-config.mouse_bindings = {
-  -- Middle click = paste
-  {
-    event = { Down = { streak = 1, button = "Middle" } },
-    mods = "NONE",
-    action = act.PasteFrom("Clipboard"),
-  },
+-- config.mouse_bindings = {
+--   -- Middle click = paste
+--   {
+--     event = { Down = { streak = 1, button = "Middle" } },
+--     mods = "NONE",
+--     action = act.PasteFrom("Clipboard"),
+--   },
+--
+--   -- Right click = paste (your preference)
+--   {
+--     event = { Down = { streak = 1, button = "Right" } },
+--     mods = "NONE",
+--     action = act.PasteFrom("Clipboard"),
+--   },
+-- }
+--
+-- -- Word/line select logic on mouse down
+-- for streak = 1, 3 do
+--   table.insert(config.mouse_bindings, {
+--     event = { Down = { streak = streak, button = "Left" } },
+--     mods = "NONE",
+--     action = wezterm.action_callback(function(win, pane)
+--       -- Do NOT open links here; only handle selection.
+--       if streak == 1 then
+--         local hyperlink = pane:get_hyperlink_at_mouse_cursor()
+--         if hyperlink then
+--           win:perform_action(act.OpenLinkAtMouseCursor, pane)
+--         else
+--           win:perform_action(act.SelectTextAtMouseCursor("Word"), pane)
+--         end
+--       else
+--         win:perform_action(act.SelectTextAtMouseCursor("Block"), pane)
+--       end
+--     end),
+--   })
+-- end
 
-  -- Right click = paste (your preference)
-  {
-    event = { Down = { streak = 1, button = "Right" } },
-    mods = "NONE",
-    action = act.PasteFrom("Clipboard"),
-  },
-}
-
--- Word/line select logic on mouse down
-for streak = 1, 3 do
-  table.insert(config.mouse_bindings, {
-    event = { Down = { streak = streak, button = "Left" } },
-    mods = "NONE",
-    action = wezterm.action_callback(function(win, pane)
-      -- Do NOT open links here; only handle selection.
-      if streak == 1 then
-        local hyperlink = pane:get_hyperlink_at_mouse_cursor()
-        if hyperlink then
-          win:perform_action(act.OpenLinkAtMouseCursor, pane)
-        else
-          win:perform_action(act.SelectTextAtMouseCursor("Word"), pane)
-        end
-      else
-        win:perform_action(act.SelectTextAtMouseCursor("Block"), pane)
-      end
-    end),
-  })
-end
 config.set_environment_variables = {
   TERMINFO_DIRS = string.format(
     "%s/.nix-profile/share/terminfo",
