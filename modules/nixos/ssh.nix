@@ -22,7 +22,7 @@ in
       enable = true;
       ports = [ 22222 ];
       settings = {
-        AllowAgentForwarding = "yes";
+        AllowAgentForwarding = true;
         PasswordAuthentication = false;
         UseDns = true;
         KbdInteractiveAuthentication = false;
