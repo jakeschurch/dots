@@ -35,16 +35,16 @@ Note: Your thoughts and reasoning under `Thinking`:
 
 ---@param chat CodeCompanion.Chat
 local function callback(chat)
-	chat:add_reference({
-		content = prompt,
-		role = "system",
-	}, "system-prompt", "<systemPrompt>thinking</systemPrompt>")
+  chat:add_reference({
+    content = prompt,
+    role = "system",
+  }, "system-prompt", "<systemPrompt>thinking</systemPrompt>")
 end
 
 return {
-	description = "Assistant with visible thinking process",
-	callback = callback,
-	opts = {
-		contains_code = false,
-	},
+  description = "Assistant with visible thinking process",
+  callback = callback,
+  opts = {
+    contains_code = false,
+  },
 }

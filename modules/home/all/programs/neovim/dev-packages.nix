@@ -3,22 +3,6 @@ pkgs: {
     pipenv
     pyright
     pylint
-    (python3.withPackages (
-      ps: with ps; [
-        debugpy
-        setuptools # Required by pylama for some reason
-        proselint
-        poetry-core
-        toolz
-        pylama
-        black
-        isort
-        pip
-        flake8
-        neovim
-        mypy
-      ]
-    ))
   ];
 
   elixir = with pkgs; [

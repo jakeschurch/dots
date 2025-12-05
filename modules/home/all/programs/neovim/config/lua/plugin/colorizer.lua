@@ -1,4 +1,4 @@
 require("colorizer").setup({
-	"*",
-	"!vim",
+  "*",
+  "!vim",
 })

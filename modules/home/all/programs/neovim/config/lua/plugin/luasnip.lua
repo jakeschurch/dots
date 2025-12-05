@@ -36,17 +36,17 @@ local function gen_date_snippets()
   for _, target_date in pairs(target_dates) do
     table.insert(
       snippets,
-      s(
-        { trig = "@" .. target_date:gsub(" ", "-"), snippetType = "autosnippet" },
-        {
-          t(""),
-          f(function(_, _, _)
-            return vim.fn.trim(
-              vim.fn.system([[date -d ']] .. target_date .. [[' +'%Y-%m-%d']])
-            )
-          end, {}),
-        }
-      )
+      s({
+        trig = "@" .. target_date:gsub(" ", "-"),
+        snippetType = "autosnippet",
+      }, {
+        t(""),
+        f(function(_, _, _)
+          return vim.fn.trim(
+            vim.fn.system([[date -d ']] .. target_date .. [[' +'%Y-%m-%d']])
+          )
+        end, {}),
+      })
     )
   end
 

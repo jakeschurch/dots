@@ -34,17 +34,17 @@ Respond in a structured bullet-point format under each heading. Think from the p
 
 ---@param chat CodeCompanion.Chat
 local function callback(chat)
-	local content = prompt
-	chat:add_buf_message({
-		role = "user",
-		content = content,
-	})
+  local content = prompt
+  chat:add_buf_message({
+    role = "user",
+    content = content,
+  })
 end
 
 return {
-	description = "Review RFC",
-	callback = callback,
-	opts = {
-		contains_code = false,
-	},
+  description = "Review RFC",
+  callback = callback,
+  opts = {
+    contains_code = false,
+  },
 }

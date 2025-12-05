@@ -23,16 +23,16 @@
   {
     "owner": "olimorris",
     "repo": "codecompanion.nvim",
-    "rev": "5b454ce8cba1e2f252c5880081d464c27dada836",
+    "rev": "e7762c68daf24c3e356401f5223eeb5217047754",
     "ref": "main",
-    "sha256": "1pzy5n6my46xvjrdf0r93g43n2fr3862c29bwpdmlcq4z0447z4n"
+    "sha256": "06v94y95czh92vs45228jcral6amxr5g6vi4djz4pi1vm83qmwrg"
   },
   {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "4d563c6dfaf854260314cb5cdc9df577ec512805",
+    "rev": "1d5e87f5e48d5c720d040bd738db5c8785fbe225",
     "ref": "master",
-    "sha256": "1brq5qrl64vyr9g1zv8pjk4pv1hax4qx8bnsjwny0dhfnhc2w0i0"
+    "sha256": "0gh0d6vm1c19jfpzk9vmmm48fdgrj37w8lpib91sng1148m9rxdz"
   },
   {
     "owner": "aymericbeaumet",
@@ -44,16 +44,16 @@
   {
     "owner": "daliusd",
     "repo": "ghlite.nvim",
-    "rev": "416a38ba76069adad87d2b51387dff285c554356",
+    "rev": "653f0993241deffb9e69a23f1c73fa4a11991ba1",
     "ref": "main",
-    "sha256": "0zib8fls3hknk8gq7gcv9f9nwbfmzs0k891jfs7kq37qzxkg4ka6"
+    "sha256": "0qmbgs58afsnni9mwz36g86lxywxigfwnqmilwi5nh3r7xg32f94"
   },
   {
     "owner": "nvimtools",
     "repo": "none-ls-extras.nvim",
-    "rev": "71b5e3419f1f995e21480aaf871d88c21db339a2",
+    "rev": "70659cc3d38151424298ab46b0f67f2251cef231",
     "ref": "main",
-    "sha256": "01mcg1kyl1pl4j8gqkxz2c426zva5cm9swfl5c4m2xm4zh0g73xg"
+    "sha256": "1qcm1dgwaaq31k6s8k48dff0djylgf4h7gwxi9ry0rrhiqjc2v9j"
   },
   {
     "owner": "fang2hou",
@@ -65,9 +65,9 @@
   {
     "owner": "xzbdmw",
     "repo": "colorful-menu.nvim",
-    "rev": "d5b97d247528be308b6b69d96b5950a30e470f3d",
+    "rev": "932d589a55816063051ad9e599516a6e70a1c63f",
     "ref": "master",
-    "sha256": "1j1nbkjrcys0zjbhzxxgxdcaf9pk2wx9k0xkcp808rwd8ym641ha"
+    "sha256": "0sbdr7zxdmmw6p2a78ilim45jj9ybjjxiixabb8gjqxlyycv2gf9"
   },
   {
     "owner": "gbprod",

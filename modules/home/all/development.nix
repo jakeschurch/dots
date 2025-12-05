@@ -21,6 +21,25 @@
       conftest
       libressl
 
+      (python313.withPackages (
+        ps: with ps; [
+          requests
+          pip
+          debugpy
+          setuptools # Required by pylama for some reason
+          proselint
+          poetry-core
+          toolz
+          pylama
+          black
+          isort
+          pip
+          flake8
+          neovim
+          mypy
+        ]
+      ))
+
       mermaid-cli
 
       sshuttle
@@ -163,6 +182,7 @@
     nix-your-shell = {
       enable = true;
       enableZshIntegration = true;
+      enableFishIntegration = true;
     };
 
     readline = {

@@ -78,41 +78,41 @@ TODO
 ]]
 
 return {
-	strategy = "chat",
-	description = "Write Request for Comments (RFC)",
-	opts = {
-		short_name = "rfc",
-		contains_code = true,
-		user_prompt = false,
-		is_slash_cmd = true,
-		ignore_system_prompt = false,
-	},
-	prompts = {
-		{
-			role = constants.SYSTEM_ROLE,
-			content = base_prompt,
-			opts = {
-				visible = false,
-				---@return number
-				pre_hook = function()
-					local bufnr = vim.api.nvim_create_buf(true, false)
-					vim.api.nvim_set_current_buf(bufnr)
-					vim.api.nvim_set_option_value("filetype", "markdown", { buf = bufnr })
-					return bufnr
-				end,
-			},
-		},
-		{
-			role = constants.USER_ROLE,
-			content = function()
-				vim.g.codecompanion_auto_tool_mode = true
+  strategy = "chat",
+  description = "Write Request for Comments (RFC)",
+  opts = {
+    short_name = "rfc",
+    contains_code = true,
+    user_prompt = false,
+    is_slash_cmd = true,
+    ignore_system_prompt = false,
+  },
+  prompts = {
+    {
+      role = constants.SYSTEM_ROLE,
+      content = base_prompt,
+      opts = {
+        visible = false,
+        ---@return number
+        pre_hook = function()
+          local bufnr = vim.api.nvim_create_buf(true, false)
+          vim.api.nvim_set_current_buf(bufnr)
+          vim.api.nvim_set_option_value("filetype", "markdown", { buf = bufnr })
+          return bufnr
+        end,
+      },
+    },
+    {
+      role = constants.USER_ROLE,
+      content = function()
+        vim.g.codecompanion_auto_tool_mode = true
 
-				return "Generate an RFC about "
-			end,
-			opts = {
-				visible = true,
-				auto_submit = false,
-			},
-		},
-	},
+        return "Generate an RFC about "
+      end,
+      opts = {
+        visible = true,
+        auto_submit = false,
+      },
+    },
+  },
 }

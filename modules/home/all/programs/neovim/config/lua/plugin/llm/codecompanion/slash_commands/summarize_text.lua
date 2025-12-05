@@ -43,17 +43,17 @@ Now start.]]
 
 ---@param chat CodeCompanion.Chat
 local function callback(chat)
-	local content = prompt
-	chat:add_buf_message({
-		role = "user",
-		content = content,
-	})
+  local content = prompt
+  chat:add_buf_message({
+    role = "user",
+    content = content,
+  })
 end
 
 return {
-	description = "Summarize text",
-	callback = callback,
-	opts = {
-		contains_code = false,
-	},
+  description = "Summarize text",
+  callback = callback,
+  opts = {
+    contains_code = false,
+  },
 }

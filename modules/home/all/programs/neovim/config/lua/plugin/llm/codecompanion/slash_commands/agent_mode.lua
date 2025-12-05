@@ -36,15 +36,19 @@ Attention, example above should follow user's spoken language. It should help yo
 
 ---@param chat CodeCompanion.Chat
 local function callback(chat)
-	chat:add_reference({ content = prompt, role = "system" }, "system-prompt", "<mode>agent</mode>")
-	-- Disable this for safety
-	-- vim.g.codecompanion_auto_tool_mode = true -- run tools without confirmation
+  chat:add_reference(
+    { content = prompt, role = "system" },
+    "system-prompt",
+    "<mode>agent</mode>"
+  )
+  -- Disable this for safety
+  -- vim.g.codecompanion_auto_tool_mode = true -- run tools without confirmation
 end
 
 return {
-	description = "Agent mode",
-	callback = callback,
-	opts = {
-		contains_code = false,
-	},
+  description = "Agent mode",
+  callback = callback,
+  opts = {
+    contains_code = false,
+  },
 }

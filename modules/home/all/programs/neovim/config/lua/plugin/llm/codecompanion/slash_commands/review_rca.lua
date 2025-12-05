@@ -60,17 +60,17 @@ Be objective, constructive, and systemic in your review.
 
 ---@param chat CodeCompanion.Chat
 local function callback(chat)
-	local content = prompt
-	chat:add_buf_message({
-		role = "user",
-		content = content,
-	})
+  local content = prompt
+  chat:add_buf_message({
+    role = "user",
+    content = content,
+  })
 end
 
 return {
-	description = "Review RCA",
-	callback = callback,
-	opts = {
-		contains_code = false,
-	},
+  description = "Review RCA",
+  callback = callback,
+  opts = {
+    contains_code = false,
+  },
 }

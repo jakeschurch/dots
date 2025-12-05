@@ -11,20 +11,20 @@ hs.grid.setMargins("0x0")
 
 -- Function to list all open window names
 local function listOpenWindows()
-	local windows = hs.window.allWindows() -- Get all open windows
-	for i, win in ipairs(windows) do
-		local appName = win:application():name() -- Get the application name
-		local windowTitle = win:title() -- Get the window title
-		print(string.format("Window %d: %s - %s", i, appName, windowTitle))
-	end
+  local windows = hs.window.allWindows() -- Get all open windows
+  for i, win in ipairs(windows) do
+    local appName = win:application():name() -- Get the application name
+    local windowTitle = win:title() -- Get the window title
+    print(string.format("Window %d: %s - %s", i, appName, windowTitle))
+  end
 end
 
 hs.hotkey.bind({ leaderKey }, "w", function()
-	listOpenWindows()
+  listOpenWindows()
 end)
 
 hs.hotkey.bind({ leaderKey }, "r", function()
-	hs.reload()
+  hs.reload()
 end)
 
 hs.alert.show("hs config reloaded")

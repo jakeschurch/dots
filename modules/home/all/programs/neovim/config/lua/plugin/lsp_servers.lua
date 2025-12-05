@@ -242,6 +242,7 @@ return {
           defaultConfig = {
             indent_style = "space",
             indent_size = "2",
+            column_width = "80",
           },
         },
         workspace = {
