@@ -63,7 +63,9 @@ let
 
       nvim-dap-python
       nvim-lspconfig
+      copilot-vim
       copilot-lua
+      img-clip-nvim
       nvim-autopairs
       vimwiki
       vim-git

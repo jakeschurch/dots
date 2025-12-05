@@ -19,6 +19,8 @@ in
       difftastic-inline
       perlPackages.TermReadKey
       git-filter-repo
+
+      github-copilot-cli
     ];
 
     shellAliases = {
@@ -221,9 +223,6 @@ in
     };
 
     gh.enable = true;
-    gh.extensions = with pkgs; [
-      gh-copilot
-    ];
 
     gh-dash = {
       enable = true;
