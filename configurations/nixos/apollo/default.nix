@@ -324,19 +324,23 @@ in
   services.greetd = {
     enable = true;
     settings = {
-      default_session =
-        let
-          tuigreetArgs = builtins.concatStringsSep " " [
-            "--power-shutdown 'sudo systemctl poweroff'"
-            "--time"
-            "--asterisks"
-            "--cmd hyprland"
-          ];
-        in
-        {
-          command = "${pkgs.tuigreet}/bin/tuigreet ${tuigreetArgs}";
-          user = "jake";
-        };
+      # default_session =
+      #   let
+      #     tuigreetArgs = builtins.concatStringsSep " " [
+      #       "--power-shutdown 'sudo systemctl poweroff'"
+      #       "--time"
+      #       "--asterisks"
+      #       "--cmd hyprland"
+      #     ];
+      #   in
+      #   {
+      #     command = "${pkgs.tuigreet}/bin/tuigreet ${tuigreetArgs}";
+      #     user = "jake";
+      #   };
+      default_session = {
+        command = "${pkgs.hyprland}/bin/Hyprland";
+        user = "jake";
+      };
     };
   };
 }
