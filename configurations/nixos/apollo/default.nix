@@ -89,6 +89,11 @@ in
           disable_hyprland_logo = true;
         };
 
+        windowrulev2 = [
+          "nofullscreen, class:^steam$"
+          "fullscreen, parentclass:^steam$"
+        ];
+
         input = {
           kb_layout = "us";
           numlock_by_default = true;
