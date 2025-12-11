@@ -31,6 +31,7 @@
 
       hyprlock
       hypridle
+      inotify-tools
     ]
     ++ (builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts));
 
