@@ -3,6 +3,12 @@ vim.treesitter.language.register("markdown", "vimwiki")
 vim.cmd([[
 let g:vimwiki_tag_format = {'pre': '',
 \ 'pre_mark': '@', 'post_mark': '', 'sep': '>><<'}
+
+augroup VimwikiMentions
+  autocmd!
+  autocmd FileType vimwiki syntax match VimwikiMention /@\w\+/
+  autocmd FileType vimwiki highlight VimwikiMention ctermfg=red guifg=red
+augroup END
 ]])
 
 local g = vim.g

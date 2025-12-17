@@ -30,7 +30,7 @@
 
   programs.zsh.initExtra = ''
     if [ -z "$SSH_CONNECTION" ]; then
-       export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock;"
+       export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"
      fi
   '';
 }

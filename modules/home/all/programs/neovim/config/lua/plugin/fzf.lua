@@ -105,7 +105,7 @@ local wrapped = {
   git_files = function()
     local git_root = get_git_root_or_cwd()
     if git_root then
-      return fzf_lua.git_files({ cwd = git_root })
+      return fzf_lua.git_files()
     else
       vim.notify("Not in a git repository", vim.log.levels.WARN)
     end

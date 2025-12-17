@@ -154,16 +154,13 @@ return {
   },
   elixirls = {
     cmd = { "elixir-ls" },
-    root_dir = require("lspconfig").util.root_pattern(
-      "mix.exs",
-      "rebar.config"
-    ),
     settings = {
       elixirLS = {
         dialyzerEnabled = true,
-        fetchDeps = true,
         enableTestLenses = true,
         suggestSpecs = true,
+        signatureAfterComplete = true,
+        mcpEnabled = false,
       },
     },
   },
