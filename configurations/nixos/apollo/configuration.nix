@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 {
+  nixpkgs.config.cudaSupport = true;
+
   imports = [
     ./hardware-configuration.nix
   ];

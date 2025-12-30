@@ -9,7 +9,17 @@ let
     schema = "https://opencode.ai/config.json";
     theme = "gruvbox";
 
-    model = "ollama/${lib.findFirst (m: m.primary) models.name}";
+    model =
+      let
+        primaryModel = lib.findFirst (m: m.primary) null models;
+        primaryModelName =
+          if primaryModel != null then
+            primaryModel.name
+          else
+            assert false;
+            "Primary model not found";
+      in
+      "ollama/${primaryModelName}";
 
     provider = {
       ollama = {
