@@ -7,10 +7,27 @@
 with lib;
 let
   ollamaModels = [
-    "qwen2.5-coder:7b-instruct"
-    "deepseek-coder:6.7b-instruct"
-    "codellama:7b"
-    "hf.co/Kortix/FastApply-7B-v1.0_GGUF:Q4_K_M"
+   # Primary models - Fast 7B for quick tasks
+    {
+      name = "qwen2.5-coder:7b-instruct";
+      description = "Qwen 2.5 Coder 7B (Fast)";
+      primary = true;
+      num_ctx = 8192;  # Default context for fast agents
+    }
+
+    # Primary models - Powerful 14B for complex work
+    {
+      name = "qwen2.5-coder:14b-instruct-q4_K_M";
+      description = "Qwen 2.5 Coder 14B Q4 (Powerful)";
+      num_ctx = 16384;  # Higher context for complex tasks
+    }
+
+    # Alternative fast model
+    {
+      name = "deepseek-coder:6.7b-instruct";
+      description = "DeepSeek Coder 6.7B";
+      num_ctx = 8192;
+    }
   ];
 
   ollama-model-loader = pkgs.lib.mkScript {
@@ -23,21 +40,33 @@ let
 in
 {
   services.ollama = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     port = 11434;
     acceleration = "cuda";
     host = "0.0.0.0";
+
     environmentVariables = {
       CUDA_VISIBLE_DEVICES = "0";
       OLLAMA_FLASH_ATTENTION = "1";
-      OLLAMA_CONTEXT_LENGTH = "131072";
 
-      # Let it use system RAM for context overflow
-      OLLAMA_NUM_GPU = "999"; # Put as much as possible on GPU
+      # Start conservative, tune per agent
+      OLLAMA_CONTEXT_LENGTH = "8192";
+
+      OLLAMA_NUM_GPU = "999";
+      OLLAMA_NUM_PARALLEL = "1";
+      OLLAMA_MAX_LOADED_MODELS = "2"; # Keep 7B + 14B loaded
     };
+
   };
 
-  home.packages = [
+  imports = [
+    (import ./opencode.nix {
+      inherit pkgs;
+      models = ollamaModels;
+    })
+  ];
+
+  home.packages = mkIf pkgs.stdenv.isLinux [
     ollama-model-loader
   ];
 
@@ -46,7 +75,9 @@ in
     config = {
       Program = getExe ollama-model-loader;
       EnvironmentVariables = {
-        OLLAMA_MODELS_STRINGIFIED = concatStringsSep "," ollamaModels;
+        OLLAMA_MODELS_STRINGIFIED = concatStringsSep "," (
+          mapAttrsToList (_: model: model.name) ollamaModels
+        );
         OLLAMA_PORT = toString config.services.ollama.port;
         OLLAMA_HOST = "${config.services.ollama.host}:${toString config.services.ollama.port}";
       };
@@ -68,7 +99,9 @@ in
     Service = {
       ExecStart = "${getExe ollama-model-loader}";
       Environment = [
-        "OLLAMA_MODELS_STRINGIFIED=${concatStringsSep "," ollamaModels}"
+        "OLLAMA_MODELS_STRINGIFIED = ${
+          concatStringsSep "," (mapAttrsToList (_: model: model.name) ollamaModels)
+        }"
         "OLLAMA_PORT=${toString config.services.ollama.port}"
         "OLLAMA_HOST=${config.services.ollama.host}:${toString config.services.ollama.port}"
       ];
