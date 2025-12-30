@@ -6,7 +6,7 @@
 }:
 let
   cfg = {
-    schema = "https://opencode.ai/config.json";
+    "$schema" = "https://opencode.ai/config.json";
     theme = "gruvbox";
 
     model =
