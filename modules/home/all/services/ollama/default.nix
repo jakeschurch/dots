@@ -9,7 +9,14 @@ let
   ollamaModels = [
     # Primary models - Fast 7B for quick tasks
     {
-      name = "qwen2.5-coder:7b-instruct";
+      name = "qwen3-coder:7b-instruct";
+      description = "Qwen 3 Coder 7B (Fast)";
+      primary = true;
+      num_ctx = 8192; # Default context for fast agents
+    }
+
+    {
+      name = "qwen3:7b-instruct";
       description = "Qwen 2.5 Coder 7B (Fast)";
       primary = true;
       num_ctx = 8192; # Default context for fast agents
@@ -17,7 +24,7 @@ let
 
     # Primary models - Powerful 14B for complex work
     {
-      name = "qwen2.5-coder:14b-instruct-q4_K_M";
+      name = "qwen3-coder:14b-instruct-q4_K_M";
       description = "Qwen 2.5 Coder 14B Q4 (Powerful)";
       num_ctx = 16384; # Higher context for complex tasks
     }
@@ -44,6 +51,7 @@ in
 {
   services.ollama = {
     enable = pkgs.stdenv.isLinux;
+    package = pkgs.ollama-cuda;
     port = 11434;
     acceleration = "cuda";
     host = "0.0.0.0";
@@ -51,9 +59,10 @@ in
     environmentVariables = {
       CUDA_VISIBLE_DEVICES = "0";
       OLLAMA_FLASH_ATTENTION = "1";
+      OLLAMA_NUM_GPU = "999";
 
       # Start conservative, tune per agent
-      OLLAMA_CONTEXT_LENGTH = "8192";
+      OLLAMA_CONTEXT_LENGTH = "20000";
 
       OLLAMA_NUM_PARALLEL = "1";
       OLLAMA_MAX_LOADED_MODELS = "2"; # Keep 7B + 14B loaded
