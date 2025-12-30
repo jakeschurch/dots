@@ -7,29 +7,42 @@
 with lib;
 let
   ollamaModels = [
-    # Primary models - Fast 7B for quick tasks
     {
-      name = "qwen3-coder:7b-instruct";
-      description = "Qwen 3 Coder 7B (Fast)";
+      name = "qwen3:4b-instruct";
+      description = "Qwen 3 4B Instruct";
       primary = true;
       num_ctx = 8192; # Default context for fast agents
     }
 
     {
-      name = "qwen3:7b-instruct";
-      description = "Qwen 2.5 Coder 7B (Fast)";
-      primary = true;
+      name = "qwen3:8b";
+      description = "Qwen 3 8B";
       num_ctx = 8192; # Default context for fast agents
     }
 
-    # Primary models - Powerful 14B for complex work
     {
-      name = "qwen3-coder:14b-instruct-q4_K_M";
-      description = "Qwen 2.5 Coder 14B Q4 (Powerful)";
-      num_ctx = 16384; # Higher context for complex tasks
+      name = "dolphin3:8b";
+      description = "Dolphin 3 8B";
+      num_ctx = 8192;
     }
 
-    # Alternative fast model
+    {
+      name = "qwen2.5:14b-instruct-q5_K_M";
+      description = "Qwen 2.5 14B (Fast)";
+      num_ctx = 8192;
+    }
+
+    {
+      name = "qwen2.5:7b-instruct";
+      description = "Qwen 2.5 7B (Fast)";
+      num_ctx = 8192;
+    }
+    {
+      name = "llama3.1:8b";
+      description = "Llama 3.1 8B";
+      num_ctx = 8192;
+    }
+
     {
       name = "deepseek-coder:6.7b-instruct";
       description = "DeepSeek Coder 6.7B";
