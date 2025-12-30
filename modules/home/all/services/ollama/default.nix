@@ -7,19 +7,19 @@
 with lib;
 let
   ollamaModels = [
-   # Primary models - Fast 7B for quick tasks
+    # Primary models - Fast 7B for quick tasks
     {
       name = "qwen2.5-coder:7b-instruct";
       description = "Qwen 2.5 Coder 7B (Fast)";
       primary = true;
-      num_ctx = 8192;  # Default context for fast agents
+      num_ctx = 8192; # Default context for fast agents
     }
 
     # Primary models - Powerful 14B for complex work
     {
       name = "qwen2.5-coder:14b-instruct-q4_K_M";
       description = "Qwen 2.5 Coder 14B Q4 (Powerful)";
-      num_ctx = 16384;  # Higher context for complex tasks
+      num_ctx = 16384; # Higher context for complex tasks
     }
 
     # Alternative fast model
@@ -29,6 +29,9 @@ let
       num_ctx = 8192;
     }
   ];
+
+  ollamaModelNames = map (model: model.name) ollamaModels;
+  ollamaModelNamesStringified = concatStringsSep "," ollamaModelNames;
 
   ollama-model-loader = pkgs.lib.mkScript {
     pname = "ollama-model-loader";
@@ -61,7 +64,7 @@ in
 
   imports = [
     (import ./opencode.nix {
-      inherit pkgs;
+      inherit pkgs lib;
       models = ollamaModels;
     })
   ];
@@ -75,9 +78,7 @@ in
     config = {
       Program = getExe ollama-model-loader;
       EnvironmentVariables = {
-        OLLAMA_MODELS_STRINGIFIED = concatStringsSep "," (
-          mapAttrsToList (_: model: model.name) ollamaModels
-        );
+        OLLAMA_MODELS_STRINGIFIED = ollamaModelNamesStringified;
         OLLAMA_PORT = toString config.services.ollama.port;
         OLLAMA_HOST = "${config.services.ollama.host}:${toString config.services.ollama.port}";
       };
@@ -99,9 +100,7 @@ in
     Service = {
       ExecStart = "${getExe ollama-model-loader}";
       Environment = [
-        "OLLAMA_MODELS_STRINGIFIED = ${
-          concatStringsSep "," (mapAttrsToList (_: model: model.name) ollamaModels)
-        }"
+        "OLLAMA_MODELS_STRINGIFIED=${ollamaModelNamesStringified}"
         "OLLAMA_PORT=${toString config.services.ollama.port}"
         "OLLAMA_HOST=${config.services.ollama.host}:${toString config.services.ollama.port}"
       ];
