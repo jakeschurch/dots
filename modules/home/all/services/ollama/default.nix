@@ -55,7 +55,6 @@ in
       # Start conservative, tune per agent
       OLLAMA_CONTEXT_LENGTH = "8192";
 
-      OLLAMA_NUM_GPU = "999";
       OLLAMA_NUM_PARALLEL = "1";
       OLLAMA_MAX_LOADED_MODELS = "2"; # Keep 7B + 14B loaded
     };

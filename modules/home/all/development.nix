@@ -107,8 +107,6 @@
       ssh-to-pgp
       gnupg
 
-      cachix
-
       ctags
 
       pre-commit

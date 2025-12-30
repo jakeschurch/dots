@@ -192,6 +192,23 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 require("codecompanion").setup({
+  interactions = {
+    chat = {
+      opts = {
+        completion_provider = "blink"
+      },
+      variables = {
+        ["buffer"] = {
+          opts = {
+            -- Always sync the buffer by sharing its "diff"
+            -- Or choose "all" to share the entire buffer
+            default_params = "diff",
+          },
+        },
+      },
+    }
+  },
+
   strategies = {
     chat = {
       slash_commands = slash_commands,
@@ -218,6 +235,7 @@ require("codecompanion").setup({
       },
     },
   },
+
   display = {
     opts = {},
     chat = {
@@ -239,19 +257,22 @@ require("codecompanion").setup({
       width = 95,
       height = 10,
       prompt = "Prompt ",
-      provider = "telescope",
+      provider = "fzf_lua",
       opts = {
         show_default_actions = true,
         show_default_prompt_library = true,
       },
     },
   },
+
   opts = {
     log_level = "DEBUG",
     send_code = true,
     system_prompt = require("plugin.llm.codecompanion.system_prompt"),
   },
+
   extensions = {
+
     mcphub = {
       enabled = true,
       auto_approve = true,
@@ -262,6 +283,7 @@ require("codecompanion").setup({
         make_slash_commands = true, -- Add prompts as /slash commands
       },
     },
+
     history = {
       enabled = true,
       opts = {

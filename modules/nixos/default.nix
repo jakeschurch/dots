@@ -37,4 +37,9 @@ in
     google-chrome
     pcmanfm
   ];
+
+  programs.nix-ld.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+  };
 }

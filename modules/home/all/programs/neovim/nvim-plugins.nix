@@ -97,8 +97,6 @@ let
 
       lspsaga-nvim
 
-      playground
-
       telescope-nvim
       telescope-dap-nvim
       grug-far-nvim
