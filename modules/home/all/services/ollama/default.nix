@@ -7,7 +7,7 @@
 with lib;
 let
   ollamaModels = [
-    "qwen2.5-coder:14b-instruct-q4_K_M"
+    "qwen2.5-coder:7b-instruct"
     "deepseek-coder:6.7b-instruct"
     "codellama:7b"
     "hf.co/Kortix/FastApply-7B-v1.0_GGUF:Q4_K_M"
