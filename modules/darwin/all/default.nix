@@ -8,10 +8,30 @@
   nix = {
     distributedBuilds = true;
     channel.enable = false;
-    settings.trusted-users = [
-      "root"
-      flake.config.me.username
-    ];
+
+    settings = {
+
+      auto-optimise-store = false;
+      build-users-group = "nixbld";
+      cores = 0;
+      experimental-features = "nix-command flakes";
+      max-jobs = "auto";
+      require-sigs = true;
+      sandbox = false;
+      sandbox-fallback = false;
+      substituters = [
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      ];
+      trusted-users = [
+        "root"
+        flake.config.me.username
+      ];
+    };
     optimise.automatic = true;
     gc.automatic = true;
   };
