@@ -33,12 +33,44 @@ let
           acc: model:
           acc
           // {
-            "${model.name}" = {
-              name = model.description;
+            "${model.id}" = {
+              inherit (model) description;
             };
           }
         ) { } models;
       };
+    };
+
+    tools = {
+      write = true;
+      edit = true;
+      read = true;
+      grep = true;
+      glob = true;
+      list = true;
+      lsp = true;
+      bash = true;
+      patch = true;
+      skill = true;
+      webfetch = true;
+      todowrite = true;
+      todoread = true;
+    };
+
+    permission = {
+      edit = "allow";
+      bash = "ask";
+      read = "allow";
+      write = "allow";
+      grep = "allow";
+      glob = "allow";
+      list = "allow";
+      lsp = "allow";
+      patch = "allow";
+      skill = "allow";
+      webfetch = "allow";
+      todowrite = "allow";
+      todoread = "allow";
     };
   };
 in

@@ -8,44 +8,44 @@ with lib;
 let
   ollamaModels = [
     {
-      name = "qwen3:4b-instruct";
-      description = "Qwen 3 4B Instruct";
+      id = "qwen3:4b-instruct";
+      name = "Qwen 3 4B Instruct";
       primary = true;
       num_ctx = 8192; # Default context for fast agents
     }
 
     {
-      name = "qwen3:8b";
-      description = "Qwen 3 8B";
+      id = "qwen3:8b";
+      name = "Qwen 3 8B";
       num_ctx = 8192; # Default context for fast agents
     }
 
     {
-      name = "dolphin3:8b";
-      description = "Dolphin 3 8B";
+      id = "dolphin3:8b";
+      name = "Dolphin 3 8B";
       num_ctx = 8192;
     }
 
     {
-      name = "qwen2.5:14b-instruct-q5_K_M";
-      description = "Qwen 2.5 14B (Fast)";
+      id = "qwen2.5:14b-instruct-q5_K_M";
+      name = "Qwen 2.5 14B (Fast)";
       num_ctx = 8192;
     }
 
     {
-      name = "qwen2.5:7b-instruct";
-      description = "Qwen 2.5 7B (Fast)";
+      id = "qwen2.5:7b-instruct";
+      name = "Qwen 2.5 7B (Fast)";
       num_ctx = 8192;
     }
     {
-      name = "llama3.1:8b";
-      description = "Llama 3.1 8B";
+      id = "llama3.1:8b";
+      name = "Llama 3.1 8B";
       num_ctx = 8192;
     }
 
     {
-      name = "deepseek-coder:6.7b-instruct";
-      description = "DeepSeek Coder 6.7B";
+      id = "deepseek-coder:6.7b-instruct";
+      name = "DeepSeek Coder 6.7B";
       num_ctx = 8192;
     }
   ];
