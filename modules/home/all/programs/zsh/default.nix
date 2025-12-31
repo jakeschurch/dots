@@ -75,6 +75,10 @@ in
       fi
     '';
     initExtra = ''
+      function calc() {
+        python3 -c "print(eval('$*'))"
+      }
+
       # Custom cd function
       function cd() {
         # Handle "cd" (no args)

@@ -36,6 +36,7 @@ pkgs: {
 
   lua = with pkgs; [
     luajitPackages.fzf-lua
+    luajitPackages.magick
     luajitPackages.jsregexp
     luajitPackages.plenary-nvim
     luajitPackages.tiktoken_core

@@ -12,7 +12,6 @@
     file.".config/mcphub/servers.json".text = builtins.toJSON {
 
       mcpServers = {
-
         shortcut = {
           command = "npx";
           args = [
@@ -42,26 +41,6 @@
                 ghcr.io/github/github-mcp-server "$@"
             ''
           ];
-        };
-
-        diagram-mcp-server = {
-          command = "uvx";
-          args = [ "awslabs.aws-diagram-mcp-server" ];
-          env = {
-            FASTMCP_LOG_LEVEL = "ERROR";
-          };
-          disabled = false;
-          autoApprove = [ ];
-        };
-
-        aws-cost-analysis = {
-          command = "uvx";
-          args = [ "awslabs.cost-analysis-mcp-server@latest" ];
-          env = {
-            FASTMCP_LOG_LEVEL = "ERROR";
-          };
-          disabled = false;
-          autoApprove = [ ];
         };
 
         fetch = {

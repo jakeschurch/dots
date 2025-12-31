@@ -161,6 +161,8 @@ let
       vim-dadbod
       vim-dadbod-ui
       vim-dadbod-completion
+
+      image-nvim
     ]
     ++ pkgs.lib.singleton none-ls-nvim-patched;
 

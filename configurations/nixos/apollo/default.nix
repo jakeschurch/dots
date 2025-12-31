@@ -7,22 +7,6 @@
 let
   inherit (flake) inputs;
   inherit (inputs) self;
-
-  withWorkspaces =
-    keyset: cmd:
-    let
-      range = lib.lists.range 1 9;
-
-      createWorkspaceCmd =
-        i:
-        lib.concatStringsSep ", " [
-          keyset
-          (builtins.toString i)
-          cmd
-          "0${builtins.toString i}"
-        ];
-    in
-    builtins.map createWorkspaceCmd range;
 in
 {
   imports = [
@@ -185,55 +169,94 @@ in
           };
         };
 
-        bind = [
-          "$mod, c, exec, wl-copy"
-          "$mod, v, exec, wl-paste"
+        bind =
+          let
+            workspaces = lib.lists.range 1 9;
+            withWorkspaces = x: builtins.map x workspaces;
 
-          "$mod,space, exec, walker"
+            mkCmd = lib.concatStringsSep ", ";
 
-          ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-          ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+            mkCmdFromAttrs =
+              bindPrefix: cmd: bindKey: value:
+              mkCmd [
+                bindPrefix
+                bindKey
+                cmd
+                value
+              ];
 
-          ",XF86AudioPlay, exec, playerctl play-pause"
-          ",XF86AudioNext, exec, playerctl next"
-          ",XF86AudioPrev, exec, playerctl previous"
+            mkWorkspaceCmd =
+              modPrefix: cmd: workspace:
+              let
+                workspaceStr = builtins.toString workspace;
+              in
+              mkCmd [
+                modPrefix
+                workspaceStr
+                cmd
+                "0${workspaceStr}"
+              ];
 
-          "$mod,XF86MonBrightnessDown, exec, hyprctl hyprsunset temperature -250"
-          "$mod,XF86MonBrightnessUp, exec, hyprctl hyprsunset temperature +250"
+            # Move focused window to workspace
+            mkFocusWorkspaceCmds = withWorkspaces (mkWorkspaceCmd "SUPER+SHIFT" "movetoworkspace");
+            # Workspace switching
+            mkSwitchWorkspaceCmds = withWorkspaces (mkWorkspaceCmd "SUPER" "switchtoworkspace");
 
-          ",XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
-          ",XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
+            mkMoveCmds =
+              let
+                mkFocusCmd = mkCmdFromAttrs "$mod" "movefocus";
+                mkMoveCmd = mkCmdFromAttrs "$mod+shift" "movewindow";
+                directions = {
+                  h = "l";
+                  j = "d";
+                  k = "u";
+                  l = "r";
+                };
+              in
+              lib.flatten (
+                lib.mapAttrsToList (key: value: [
+                  (mkFocusCmd key value)
+                  (mkMoveCmd key value)
+                ]) directions
+              );
+          in
+          mkFocusWorkspaceCmds
+          ++ mkSwitchWorkspaceCmds
+          ++ mkMoveCmds
+          ++ [
+            "$mod, c, exec, wl-copy"
+            "$mod, v, exec, wl-paste"
 
-          # NOTE: use ctrl due to keyd re-mappings
-          "ctrl, left, workspace, e-1"
-          "ctrl, right, workspace, e+1"
+            "$mod,space, exec, walker"
 
-          "$mod, return, exec, wezterm"
+            ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+            ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
 
-          # Focus
-          "$mod, h, movefocus, l"
-          "$mod, j, movefocus, d"
-          "$mod, k, movefocus, u"
-          "$mod, l, movefocus, r"
+            ",XF86AudioPlay, exec, playerctl play-pause"
+            ",XF86AudioNext, exec, playerctl next"
+            ",XF86AudioPrev, exec, playerctl previous"
 
-          # Move windows
-          "$mod+SHIFT, h, movewindow, l"
-          "$mod+SHIFT, j, movewindow, d"
-          "$mod+SHIFT, k, movewindow, u"
-          "$mod+SHIFT, l, movewindow, r"
+            "$mod,XF86MonBrightnessDown, exec, hyprctl hyprsunset temperature -250"
+            "$mod,XF86MonBrightnessUp, exec, hyprctl hyprsunset temperature +250"
 
-          # reload
-          "$mod+SHIFT, r, exec, hyprctl reload && notify-send 'hyprland reloaded 👍'"
+            ",XF86MonBrightnessDown, exec, hyprctl hyprsunset gamma -10"
+            ",XF86MonBrightnessUp, exec, hyprctl hyprsunset gamma +10"
 
-          # quit
-          "$mod, Q, killactive"
+            # NOTE: use ctrl due to keyd re-mappings
+            "ctrl, left, workspace, e-1"
+            "ctrl, right, workspace, e+1"
 
-          # Fullscreen
-          "SUPER, F, fullscreen, 0"
-        ]
-        ++ (withWorkspaces "SUPER+SHIFT" "movetoworkspace") # Move focused window to workspace
-        ++ (withWorkspaces "SUPER" "workspace") # Workspace switching
-        ;
+            "$mod, return, exec, wezterm"
+
+            # reload
+            "$mod+SHIFT, r, exec, hyprctl reload && notify-send 'hyprland reloaded 👍'"
+
+            # quit
+            "$mod, Q, killactive"
+
+            # Fullscreen
+            "SUPER, F, fullscreen, 0"
+          ];
       };
 
       extraConfig = ''

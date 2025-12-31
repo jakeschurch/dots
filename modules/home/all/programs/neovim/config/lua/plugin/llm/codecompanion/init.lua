@@ -1,117 +1,7 @@
 vim.g.codecompanion_auto_tool_mode = true
 
-require("plugin.llm.codecompanion.lualine_integration"):init()
-
-local tools = {
-  -- ["lsp_files"] = require("plugin.llm.codecompanion.tools.lsp_files"),
-  ["checklist"] = require("plugin.llm.codecompanion.tools.checklist_dag"),
-  ["file"] = {
-    opts = {
-      provider = "fzf_lua", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
-      contains_code = true,
-    },
-  },
-}
-
-local groups = {
-  ["agent"] = {
-    description = "Agentic Dev Workflow",
-    system_prompt = "You are a developer with access to various tools.",
-    tools = {
-      "cmd_runner",
-      "editor",
-      "files",
-      "code_editor",
-      "mcp",
-    },
-  },
-}
-
-local prompts = {
-  ["refactor"] = require("plugin.llm.codecompanion.prompts.refactoring"),
-  ["rfc"] = require("plugin.llm.codecompanion.prompts.rfc"),
-  ["git_commit"] = require("plugin.llm.codecompanion.prompts.git_commit"),
-  ["default"] = {
-    strategy = "chat",
-    description = "The default prompt with nice context",
-    opts = {
-      short_name = "def",
-      auto_submit = false,
-      user_prompt = false,
-      is_slash_cmd = true,
-      ignore_system_prompt = false,
-      contains_code = true,
-    },
-    -- references = {
-    --   {
-    --     type = "file",
-    --     path = ".github/copilot-instructions.md",
-    --   },
-    -- },
-    prompts = {
-      {
-        role = "user",
-        content = [[#buffer]],
-      },
-    },
-  },
-  ["dynamic"] = {
-    strategy = "chat",
-    description = "The default prompt with nice context",
-    opts = {
-      short_name = "dynamic",
-      auto_submit = false,
-      user_prompt = false,
-      is_slash_cmd = true,
-      ignore_system_prompt = false,
-      contains_code = true,
-      stop_context_insertion = true,
-    },
-    references = {},
-    prompts = {
-      {
-        role = "user",
-        opts = {
-          contains_code = true,
-        },
-        content = function(context)
-          local rules = require("plugin.llm.codecompanion.rules")
-          local rule_files = rules.init(context.filename, {
-            root_markers = { ".git" },
-            rules_dir = ".cursor/rules",
-            gist_ids = {},
-          })
-          local content = rules.format(rule_files)
-          return [[#buffer]] .. "\n\n" .. content
-        end,
-      },
-    },
-  },
-  ["inline"] = {
-    strategy = "inline",
-    description = "The default inline with nice context",
-    opts = {
-      short_name = "inline",
-      user_prompt = true,
-      ignore_system_prompt = false,
-      contains_code = true,
-    },
-    prompts = {
-      {
-        role = "user",
-        content = [[#buffer]],
-      },
-    },
-    -- references = {
-    --   {
-    --     type = "file",
-    --     path = ".github/copilot-instructions.md",
-    --   },
-    -- },
-  },
-}
-
 local slash_commands = require("plugin.llm.codecompanion.slash_commands")
+
 local keys = {
   {
     "<leader>aa",
@@ -129,41 +19,9 @@ local keys = {
   {
     "<leader>ac",
     function()
-      require("codecompanion").prompt("def")
-    end,
-    desc = "[a]i ch[a]t",
-    mode = { "n", "v" },
-  },
-  {
-    desc = "[a]i [q]uick chat",
-    "<leader>aq",
-    function()
-      require("codecompanion").prompt("inline")
-    end,
-    mode = { "n", "v" },
-  },
-  {
-    "<leader>ac",
-    function()
       require("codecompanion").actions({})
     end,
     desc = "[a]i [c]ommands",
-    mode = { "n", "v" },
-  },
-  {
-    "<leader>ad",
-    function()
-      require("codecompanion").prompt("dynamic")
-    end,
-    desc = "[a]i [d]ynamic prompt",
-    mode = { "n", "v" },
-  },
-  {
-    "<leader>at",
-    function()
-      require("codecompanion").toggle()
-    end,
-    desc = "[a]i [t]oggle chat",
     mode = { "n", "v" },
   },
   {
@@ -178,42 +36,42 @@ local keys = {
 
 require("which-key").add(keys)
 
---- treesitter for chat buffers
---- NOTE remove when this PR is merged #1547
-vim.api.nvim_create_autocmd("User", {
-  pattern = "CodeCompanionChatCreated",
-  group = vim.api.nvim_create_augroup(
-    "my-codecompanion-chat",
-    { clear = true }
-  ),
-  callback = function(event)
-    vim.treesitter.start(event.data.bufnr, "markdown")
-  end,
-})
-
 require("codecompanion").setup({
   interactions = {
     chat = {
+      adapter = "opencode",
       opts = {
-        completion_provider = "blink"
+        completion_provider = "blink",
       },
       variables = {
         ["buffer"] = {
           opts = {
             -- Always sync the buffer by sharing its "diff"
             -- Or choose "all" to share the entire buffer
-            default_params = "diff",
+            default_params = "all",
           },
         },
       },
-    }
+    },
+    inline = {
+      adapter = "opencode",
+      opts = {
+        completion_provider = "blink",
+      },
+    },
+    cmd = {
+      adapter = "opencode",
+      opts = {
+        completion_provider = "blink",
+      },
+    },
   },
 
   strategies = {
     chat = {
-      slash_commands = slash_commands,
-      variables = {},
-      tools = tools,
+      adapter = "opencode",
+      -- slash_commands = slash_commands,
+      -- tools = tools,
       keymaps = {
         close = {
           modes = { n = { "q", "<C-c>" }, i = "<C-c>" },
@@ -221,8 +79,9 @@ require("codecompanion").setup({
       },
     },
     inline = {
-      slash_commands = slash_commands,
-      tools = {},
+      adapter = "opencode",
+      -- slash_commands = slash_commands,
+      -- tools = {},
       keymaps = {
         accept_change = {
           modes = { n = "ca" },
@@ -245,7 +104,7 @@ require("codecompanion").setup({
         pinned_buffer = "📌 ",
         watched_buffer = "👀 ",
       },
-      show_settings = true,
+      show_settings = false,
       window = {
         position = "right",
       },
@@ -268,7 +127,6 @@ require("codecompanion").setup({
   opts = {
     log_level = "DEBUG",
     send_code = true,
-    system_prompt = require("plugin.llm.codecompanion.system_prompt"),
   },
 
   extensions = {
@@ -292,9 +150,9 @@ require("codecompanion").setup({
         picker = "fzf-lua",
         auto_generate_title = true,
         title_generation_opts = {
-          adapter = nil, -- "copilot"
+          adapter = "copilot", -- "copilot"
           ---Model for generating titles (defaults to current chat model)
-          model = nil, -- "gpt-4o"
+          -- model = nil,                 -- "gpt-4o"
           refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
           max_refreshes = 3,
         },

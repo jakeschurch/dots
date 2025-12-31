@@ -40,6 +40,11 @@ local config = {
 
     per_filetype = {
       markdown = { inherit_defaults = true },
+      codecompanion = {
+        "codecompanion",
+        "copilot",
+        "lsp",
+      },
     },
 
     -- REVIEW:
@@ -57,7 +62,7 @@ local config = {
     min_keyword_length = 1,
     providers = {
       snippets = {
-        score_offset = 50,
+        score_offset = 20,
       },
 
       copilot = {
@@ -85,8 +90,10 @@ local config = {
         score_offset = 15, -- Tune by preference
         opts = { insert = true }, -- Insert emoji (default) or complete its name
         enabled = function(_)
-          local valid_filetype =
-            vim.tbl_contains({ "gitcommit", "markdown" }, vim.o.filetype)
+          local valid_filetype = vim.tbl_contains(
+            { "gitcommit", "markdown", "vimwiki" },
+            vim.o.filetype
+          )
 
           local success, node = pcall(vim.treesitter.get_node)
           local in_comment_block = (
@@ -139,13 +146,6 @@ local config = {
       local lower_typo_bound = 3
       return math.max(lower_typo_bound, math.floor(#keyword / 4))
     end,
-    sorts = {
-      "exact",
-      -- defaults
-      "score",
-      "sort_text",
-    },
-
     use_proximity = true,
   },
 
