@@ -2,8 +2,8 @@
   pkgs,
   models,
   mcpServers,
+  tools,
   lib,
-  ...
 }:
 let
   cfg = {
@@ -15,7 +15,7 @@ let
         primaryModel = lib.findFirst (m: m.primary) null models;
         primaryModelName =
           if primaryModel != null then
-            primaryModel.name
+            primaryModel.id
           else
             assert false;
             "Primary model not found";
@@ -35,7 +35,7 @@ let
           acc
           // {
             "${model.id}" = {
-              inherit (model) description;
+              inherit (model) name;
             };
           }
         ) { } models;
@@ -45,74 +45,40 @@ let
     mcp =
       let
         mkLocalDef = server: {
-          enabled = true;
-          type = "local";
           inherit (server) command;
+
+          type = "local";
           timeout = server.timeout or 60;
           environment =
             server.env or { }
-            // lib.optionalAttrs (server ? env_keys) (
-              lib.foldl' (
-                acc: key:
-                acc
-                // {
-                  "${key}" = "{env:${key}}";
-                }
-              ) { } server.env_keys
-            );
+            // lib.foldl' (
+              acc: key:
+              acc
+              // {
+                "${key}" = "{env:${key}}";
+              }
+            ) { } (server.env_keys or [ ]);
         };
 
         mkRemoteDef = server: {
           inherit (server) url;
           type = "remote";
 
-          enabled = server.enabled or true;
           timeout = server.timeout or 60;
           headers = server.headers or { };
         };
 
-        toDefinition = server: if server ? uri then mkRemoteDef server else mkLocalDef server;
+        toDefinition = server: if server ? url then mkRemoteDef server else mkLocalDef server;
 
       in
-      builtins.foldAttrs' (
-        acc: name: server:
-        acc
-        // {
-          "${name}" = toDefinition server;
-        }
-      ) { } mcpServers;
+      lib.mapAttrs (_name: toDefinition) mcpServers;
 
-    tools = {
-      write = true;
-      edit = true;
-      read = true;
-      grep = true;
-      glob = true;
-      list = true;
-      lsp = true;
-      bash = true;
-      patch = true;
-      skill = true;
-      webfetch = true;
-      todowrite = true;
-      todoread = true;
-    };
+    tools =
+      # NOTE: disable mcp tools globally so we can instead set permissions per-agent
+      lib.mapAttrs (name: _tool: { "${name}" = false; }) tools
+      // lib.mapAttrs (name: _tool: { "${name}" = false; }) mcpServers;
 
-    permission = {
-      edit = "allow";
-      bash = "ask";
-      read = "allow";
-      write = "allow";
-      grep = "allow";
-      glob = "allow";
-      list = "allow";
-      lsp = "allow";
-      patch = "allow";
-      skill = "allow";
-      webfetch = "allow";
-      todowrite = "allow";
-      todoread = "allow";
-    };
+    permission = tools // lib.mapAttrs (name: tool: { "${name}" = tool.permission; }) mcpServers;
   };
 in
 {

@@ -1,5 +1,6 @@
-{
+_: {
   web-search = {
+    permission = "allow";
     command = [
       "npx"
       "-y"
@@ -11,11 +12,13 @@
   };
 
   notion = {
+    permission = "allow";
     description = "notion mcp server";
     url = "https://mcp.notion.com/mcp";
   };
 
   kubernetes-mcp = {
+    permission = "ask";
     description = "k8s mcp server";
     command = [
       "npx"
@@ -27,8 +30,9 @@
   };
 
   datadog = {
+    permission = "ask";
     description = "datadog logs, metrics, and monitors for incident management";
-    cmd = [
+    command = [
       "npx"
       "-y"
       "@winor30/mcp-server-datadog"
@@ -42,10 +46,11 @@
   };
 
   github-mcp = {
+    permission = "ask";
     description = "GitHub repository management and operations";
     url = "https://api.githubcopilot.com/mcp/";
     headers = {
-      Authorization = "Bearer ";
+      Authorization = "Bearer";
     };
   };
 }

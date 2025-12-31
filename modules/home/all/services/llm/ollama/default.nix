@@ -45,7 +45,7 @@ in
     ollama-model-loader
   ];
 
-  launchd.agents.ollama-model-loader = mkIf (ollamaModels != [ ] && pkgs.stdenv.isDarwin) {
+  launchd.agents.ollama-model-loader = mkIf (models != [ ] && pkgs.stdenv.isDarwin) {
     enable = false;
     config = {
       Program = getExe ollama-model-loader;
@@ -64,7 +64,7 @@ in
     };
   };
 
-  systemd.user.services.ollama-model-loader = mkIf (ollamaModels != [ ] && pkgs.stdenv.isLinux) {
+  systemd.user.services.ollama-model-loader = mkIf (models != [ ] && pkgs.stdenv.isLinux) {
     Unit = {
       Description = "Ollama Model Loader";
       After = [ "network.target" ];

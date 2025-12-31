@@ -1,12 +1,36 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   models = import ./models.nix { };
-  mcpServers = import ./mcp-servers.nix { inherit pkgs; };
+  mcpServers = import ./mcp-servers.nix { };
+  tools = import ./tools.nix { };
+
+  opencode = import ./opencode.nix {
+    inherit
+      models
+      mcpServers
+      tools
+      pkgs
+      lib
+      ;
+  };
+
+  ollama = import ./ollama {
+    inherit
+      pkgs
+      models
+      lib
+      config
+      ;
+  };
 in
 {
-
   imports = [
-    (pkgs.callPackage ./opencode.nix { inherit models mcpServers; })
-    (pkgs.callPackage ./ollama { inherit models; })
+    opencode
+    ollama
   ];
 }
