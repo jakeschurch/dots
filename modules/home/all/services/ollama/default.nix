@@ -50,7 +50,7 @@ let
     }
   ];
 
-  ollamaModelNames = map (model: model.name) ollamaModels;
+  ollamaModelNames = map (model: model.id) ollamaModels;
   ollamaModelNamesStringified = concatStringsSep "," ollamaModelNames;
 
   ollama-model-loader = pkgs.lib.mkScript {

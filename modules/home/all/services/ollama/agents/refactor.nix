@@ -1,14 +1,14 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Safe refactoring agent; extracts methods, renames, restructures.";
-  tools = {
-    write = true;
-    edit = true;
-    bash = true;
-    webfetch = false;
-  };
   temperature = 0.1;
   maxSteps = 10;
   num_ctx = toString num_ctx;
@@ -28,3 +28,4 @@
       4. Document why refactoring improves the code
   '';
 }
+

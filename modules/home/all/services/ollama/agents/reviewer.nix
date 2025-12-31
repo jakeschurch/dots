@@ -1,14 +1,14 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Senior code reviewer; enforces standards and catches issues.";
-  tools = {
-    write = false;
-    edit = false;
-    bash = false;
-    webfetch = false;
-  };
   temperature = 0.1;
   maxSteps = 6;
   num_ctx = toString num_ctx;

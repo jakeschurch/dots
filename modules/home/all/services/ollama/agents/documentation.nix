@@ -1,14 +1,9 @@
-{ model, num_ctx, ... }:
+{ model, num_ctx, tools, ... }:
 {
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Generates and maintains documentation; docstrings, READMEs, API docs.";
-  tools = {
-    write = true;
-    edit = true;
-    bash = false;
-    webfetch = true;
-  };
   temperature = 0.3;
   maxSteps = 6;
   num_ctx = toString num_ctx;

@@ -1,14 +1,14 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Security-focused agent; identifies vulnerabilities and suggests mitigations.";
-  tools = {
-    write = false;
-    edit = false;
-    bash = true;
-    webfetch = true;
-  };
   temperature = 0.1;
   maxSteps = 6;
   num_ctx = toString num_ctx;
@@ -31,3 +31,4 @@
       - Reference: CWE/OWASP links if applicable
   '';
 }
+

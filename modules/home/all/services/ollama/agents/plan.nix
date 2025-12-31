@@ -1,14 +1,14 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Analysis and planning agent; read-only mode for strategy and design.";
-  tools = {
-    write = false;
-    edit = false;
-    bash = false;
-    webfetch = true;
-  };
   temperature = 0.3;
   maxSteps = 8;
   num_ctx = toString num_ctx;
@@ -19,3 +19,4 @@
     You do not modify code directly.
   '';
 }
+

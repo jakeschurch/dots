@@ -1,15 +1,15 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "primary";
-  inherit model;
   num_ctx = toString num_ctx;
   description = "Senior-level coding agent; implements features with best practices.";
-  tools = {
-    write = true;
-    edit = true;
-    bash = true;
-    webfetch = true;
-  };
   temperature = 0.2;
   maxSteps = 15;
   prompt = ''

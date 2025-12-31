@@ -1,14 +1,14 @@
-{ model, num_ctx, ... }:
 {
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
+{
+  inherit model tools;
+
   mode = "subagent";
-  inherit model;
   description = "Research agent; fetches and summarizes web content for context.";
-  tools = {
-    write = false;
-    edit = false;
-    bash = false;
-    webfetch = true;
-  };
   temperature = 0.4;
   maxSteps = 5;
   num_ctx = toString num_ctx;
@@ -26,3 +26,4 @@
       - Output in Markdown with headings and bullet points.
   '';
 }
+
