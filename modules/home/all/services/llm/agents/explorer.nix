@@ -1,11 +1,11 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
 
   mode = "subagent";
   description = "Codebase exploration agent; finds files, patterns, and symbols.";

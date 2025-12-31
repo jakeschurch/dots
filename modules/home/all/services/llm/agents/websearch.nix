@@ -1,16 +1,16 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
 
   mode = "subagent";
   description = "Research agent; fetches and summarizes web content for context.";
   temperature = 0.4;
-  maxSteps = 5;
+  maxSteps = 15;
   num_ctx = toString num_ctx;
   prompt = ''
     You are the Web Search agent.

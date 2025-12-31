@@ -1,11 +1,11 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
 
   mode = "subagent";
   description = "Security-focused agent; identifies vulnerabilities and suggests mitigations.";

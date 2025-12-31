@@ -1,11 +1,11 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
 
   mode = "primary";
   num_ctx = toString num_ctx;

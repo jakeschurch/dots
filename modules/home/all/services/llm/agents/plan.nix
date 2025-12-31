@@ -1,11 +1,11 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
 
   mode = "subagent";
   description = "Analysis and planning agent; read-only mode for strategy and design.";

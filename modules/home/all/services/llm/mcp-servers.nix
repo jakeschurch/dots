@@ -1,5 +1,5 @@
 _: {
-  web-search = {
+  websearch = {
     permission = "allow";
     command = [
       "npx"

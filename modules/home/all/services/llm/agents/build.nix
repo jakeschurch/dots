@@ -1,11 +1,11 @@
 {
   model,
   num_ctx,
-  tools,
+
   ...
 }:
 {
-  inherit model tools;
+  inherit model;
   mode = "primary";
   description = "Senior-level coding agent; implements features with best practices.";
   temperature = 0.2;
