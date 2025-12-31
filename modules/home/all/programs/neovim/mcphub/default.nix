@@ -20,16 +20,6 @@
           ];
         };
 
-        web-search = {
-          command = "npx";
-          args = [ "websearch-mcp" ];
-          env = {
-            FASTMCP_LOG_LEVEL = "ERROR";
-          };
-          disabled = false;
-          autoApprove = [ ];
-        };
-
         github = {
           command = "sh";
           args = [
@@ -87,19 +77,6 @@
           disabled = false;
           env = {
             FASTMCP_LOG_LEVEL = "ERROR";
-          };
-        };
-
-        sequentialthinking = {
-          command = "docker";
-          args = [
-            "run"
-            "--rm"
-            "-i"
-            "mcp/sequentialthinking"
-          ];
-          env = {
-            FASTMCP_LOG_LEVEL = "INFO";
           };
         };
 

@@ -17,7 +17,7 @@ _: [
 
   {
     id = "qwen2.5:14b-instruct-q5_K_M";
-    name = "Qwen 2.5 14B (Fast)";
+    name = "Qwen 2.5 14B";
   }
 
   {

@@ -45,7 +45,7 @@ _: {
     ];
   };
 
-  github-mcp = {
+  github = {
     permission = "ask";
     description = "GitHub repository management and operations";
     url = "https://api.githubcopilot.com/mcp/";

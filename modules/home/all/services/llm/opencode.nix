@@ -51,13 +51,7 @@ let
           timeout = server.timeout or 60;
           environment =
             server.env or { }
-            // lib.foldl' (
-              acc: key:
-              acc
-              // {
-                "${key}" = "{env:${key}}";
-              }
-            ) { } (server.env_keys or [ ]);
+            // lib.foldl' (acc: key: acc // lib.nameValuePair key "{env:${key}}") { } (server.env_keys or [ ]);
         };
 
         mkRemoteDef = server: {
@@ -75,10 +69,9 @@ let
 
     tools =
       # NOTE: disable mcp tools globally so we can instead set permissions per-agent
-      lib.mapAttrs (name: _tool: { "${name}" = false; }) tools
-      // lib.mapAttrs (name: _tool: { "${name}" = false; }) mcpServers;
+      lib.mapAttrs (_name: _tool: true) tools // lib.mapAttrs (_name: _tool: false) mcpServers;
 
-    permission = tools // lib.mapAttrs (name: tool: { "${name}" = tool.permission; }) mcpServers;
+    permission = tools // lib.mapAttrs (_name: tool: tool.permission) mcpServers;
   };
 in
 {
