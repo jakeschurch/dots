@@ -28,4 +28,3 @@
       4. Document why refactoring improves the code
   '';
 }
-

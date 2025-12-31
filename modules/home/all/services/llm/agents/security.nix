@@ -31,4 +31,3 @@
       - Reference: CWE/OWASP links if applicable
   '';
 }
-

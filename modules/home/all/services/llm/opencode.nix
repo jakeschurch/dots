@@ -1,6 +1,7 @@
 {
   pkgs,
   models,
+  mcpServers,
   lib,
   ...
 }:
@@ -40,6 +41,46 @@ let
         ) { } models;
       };
     };
+
+    mcp =
+      let
+        mkLocalDef = server: {
+          enabled = true;
+          type = "local";
+          inherit (server) command;
+          timeout = server.timeout or 60;
+          environment =
+            server.env or { }
+            // lib.optionalAttrs (server ? env_keys) (
+              lib.foldl' (
+                acc: key:
+                acc
+                // {
+                  "${key}" = "{env:${key}}";
+                }
+              ) { } server.env_keys
+            );
+        };
+
+        mkRemoteDef = server: {
+          inherit (server) url;
+          type = "remote";
+
+          enabled = server.enabled or true;
+          timeout = server.timeout or 60;
+          headers = server.headers or { };
+        };
+
+        toDefinition = server: if server ? uri then mkRemoteDef server else mkLocalDef server;
+
+      in
+      builtins.foldAttrs' (
+        acc: name: server:
+        acc
+        // {
+          "${name}" = toDefinition server;
+        }
+      ) { } mcpServers;
 
     tools = {
       write = true;

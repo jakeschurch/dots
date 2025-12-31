@@ -26,4 +26,3 @@
       - Output in Markdown with headings and bullet points.
   '';
 }
-

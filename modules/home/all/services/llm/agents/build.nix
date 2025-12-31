@@ -1,4 +1,9 @@
-{ model, num_ctx, tools, ... }:
+{
+  model,
+  num_ctx,
+  tools,
+  ...
+}:
 {
   inherit model tools;
   mode = "primary";
