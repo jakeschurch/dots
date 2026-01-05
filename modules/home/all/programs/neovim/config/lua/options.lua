@@ -90,3 +90,17 @@ end
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
+
+-- Use OSC 52 for clipboard (works through terminal emulators like wezterm)
+-- This is the most reliable clipboard method for terminal vim on Wayland
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+  },
+}

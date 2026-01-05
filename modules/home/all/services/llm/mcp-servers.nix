@@ -53,4 +53,18 @@ _: {
       Authorization = "Bearer";
     };
   };
+
+  qdrant-memory = {
+    permission = "allow";
+    description = "Semantic memory storage and retrieval via Qdrant";
+    command = [
+      "uvx"
+      "mcp-server-qdrant"
+    ];
+    env = {
+      QDRANT_URL = "http://10.10.5.52:6333";
+      COLLECTION_NAME = "memory";
+      EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2";
+    };
+  };
 }

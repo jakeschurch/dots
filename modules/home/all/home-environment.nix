@@ -64,7 +64,6 @@ in
         "ignoredups"
         "ignorespace"
       ];
-      NIX_PATH = "nixpkgs=flake:nixpkgs";
       HISTIGNORE = concatSessionList [
         "ls *"
         "history"

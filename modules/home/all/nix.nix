@@ -1,4 +1,5 @@
 {
+  flake,
   pkgs,
   config,
   lib,
@@ -13,6 +14,11 @@
     enable = true;
     package = lib.mkDefault pkgs.nix;
 
+    nixPath = [ "nixpkgs=${flake.inputs.nixpkgs}" ]; # Enables use of `nix-shell -p ...` etc
+    registry = {
+      nixpkgs.flake = flake.inputs.nixpkgs; # Make `nix shell` etc use pinned nixpkgs
+    };
+
     settings = {
       trusted-users = [
         "root"
@@ -22,7 +28,7 @@
       ];
 
       allowed-users = [ "*" ];
-      builders = "@/etc/nix/machines";
+      # builders = "@/etc/nix/machines";
       extra-experimental-features = [
         "nix-command flakes auto-allocate-uids"
       ];
@@ -31,7 +37,8 @@
       cores = 0;
       max-jobs = "auto";
       max-substitution-jobs = 40;
-      sandbox = false;
+      sandbox = true;
+      sandbox-fallback = true;
 
       substituters = [
         "https://nix-community.cachix.org"

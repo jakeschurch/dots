@@ -2,7 +2,7 @@ pkgs: {
   python = with pkgs; [
     pipenv
     pyright
-    pylint
+    # pylint
   ];
 
   elixir = with pkgs; [
@@ -10,6 +10,7 @@ pkgs: {
   ];
 
   nix = with pkgs; [
+    nixd
     nixfmt-rfc-style
     statix
     alejandra

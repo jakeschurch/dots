@@ -1,4 +1,4 @@
-local lspconfig = require("lspconfig")
+local lspconfig = vim.lsp.config
 local util = lspconfig.util
 
 -- Function to find git root
@@ -113,16 +113,7 @@ return {
     },
     cmd = { "emmet-ls", "--stdio" },
   },
-  nil_ls = {
-    cmd = { "nil" },
-    settings = {
-      ["nil"] = {
-        formatting = {
-          command = { "nixfmt" },
-        },
-      },
-    },
-  },
+  nixd = {},
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },

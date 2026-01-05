@@ -88,6 +88,13 @@
     download-attempts = 3;
     http-connections = 0;
     download-buffer-size = 904857600; # 900 MiB
+    fallback = false;
+
+    sandbox = true;
+    sandbox-fallback = true;
+    cores = 0;
+    max-jobs = "auto";
+    max-substitution-jobs = 40;
 
     substituters = [
       "https://nix-community.cachix.org"

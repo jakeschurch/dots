@@ -17,8 +17,8 @@
       experimental-features = "nix-command flakes";
       max-jobs = "auto";
       require-sigs = true;
-      sandbox = false;
-      sandbox-fallback = false;
+      sandbox = true;
+      sandbox-fallback = true;
       substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org/"

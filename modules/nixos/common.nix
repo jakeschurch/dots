@@ -7,11 +7,20 @@
 {
   security.sudo = lib.optionalAttrs pkgs.stdenv.isLinux {
     enable = true;
+    wheelNeedsPassword = false;
     extraConfig = ''
       Defaults pwfeedback
-
-      @wheel    ALL = (ALL) NOPASSWD: ALL
-      ${flake.config.me.username}    ALL = (ALL) NOPASSWD: ALL
     '';
+    extraRules = [
+      {
+        users = [ flake.config.me.username ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+      }
+    ];
   };
 }

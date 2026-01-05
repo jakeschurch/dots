@@ -123,6 +123,23 @@
       alsa.support32Bit = true;
       wireplumber.enable = true;
     };
+
+    # Qdrant vector database for AI memory
+    # qdrant = {
+    #   enable = true;
+    #   settings = {
+    #     storage = {
+    #       storage_path = "/var/lib/qdrant/storage";
+    #       snapshots_path = "/var/lib/qdrant/snapshots";
+    #     };
+    #     service = {
+    #       host = "0.0.0.0";
+    #       http_port = 6333;
+    #       grpc_port = 6334;
+    #     };
+    #     telemetry_disabled = true;
+    #   };
+    # };
   };
 
   users.users.root = {

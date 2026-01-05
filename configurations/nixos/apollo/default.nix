@@ -225,9 +225,6 @@ in
           ++ mkSwitchWorkspaceCmds
           ++ mkMoveCmds
           ++ [
-            "$mod, c, exec, wl-copy"
-            "$mod, v, exec, wl-paste"
-
             "$mod,space, exec, walker"
 
             ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -265,10 +262,10 @@ in
 
         bind = $mod, R,submap,resize
         submap=resize
-        binde = , h, resizeactive, -40 0
-        binde = , j, resizeactive, 0 40
-        binde = , k, resizeactive, 0 -40
-        binde = , l, resizeactive, 40 0
+        binde = , h, resizeactive, -60 0
+        binde = , j, resizeactive, 0 60
+        binde = , k, resizeactive, 0 -60
+        binde = , l, resizeactive, 60 0
         binde = , Return,submap,reset
         binde = , escape,submap,reset
         submap=reset
@@ -326,9 +323,8 @@ in
 
           meta = {
             # These become Ctrl when Super is held
+            # NOTE: c/v excluded - handled by wezterm directly as SUPER+c/v
             backspace = "C-backspace";
-            c = "C-c";
-            v = "C-v";
             x = "C-x";
             a = "C-a";
             s = "C-s";

@@ -2,9 +2,7 @@
   pkgs,
   bun2nix ? pkgs.bun2nix,
 }:
-let
-  inherit (bun2nix.passthru) fetchBunDeps writeBunApplication;
-
+bun2nix.mkDerivation {
   pname = "oh-my-opencode";
   version = "2.12.4";
 
@@ -15,14 +13,12 @@ let
     hash = "sha256-VK1UXFcKHPTMoKPAXSCeo+EJ5xH600xo7NRJiI+Uuo0=";
   };
 
-  bunDeps = fetchBunDeps {
-    inherit pname version;
+  bunDeps = bun2nix.fetchBunDeps {
     bunNix = ./bun.nix;
   };
-in
-writeBunApplication {
-  inherit pname version;
-  inherit bunDeps src;
+
+  # Skip default bun build phase - we need custom build commands
+  dontUseBunBuild = true;
 
   buildPhase = ''
     runHook preBuild
@@ -38,8 +34,8 @@ writeBunApplication {
 
     # Create wrapper script
     cat > $out/bin/oh-my-opencode <<EOF
-      #!${pkgs.bash}/bin/bash
-      exec ${pkgs.bun}/bin/bun $out/lib/oh-my-opencode/cli/index.js "\$@"
+    #!${pkgs.bash}/bin/bash
+    exec ${pkgs.bun}/bin/bun $out/lib/oh-my-opencode/cli/index.js "\$@"
     EOF
     chmod +x $out/bin/oh-my-opencode
     runHook postInstall

@@ -31,7 +31,16 @@ in
       nixpkgs.flake = flake.inputs.nixpkgs; # Make `nix shell` etc use pinned nixpkgs
     };
 
+    gc.automatic = true;
+
     settings = {
+      fallback = false;
+      cores = 0;
+      max-jobs = "auto";
+      max-substitution-jobs = 40;
+      sandbox = lib.mkForce true;
+      sandbox-fallback = lib.mkForce true;
+
       trusted-users = [
         "root"
         flake.config.me.username

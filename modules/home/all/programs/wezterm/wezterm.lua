@@ -21,6 +21,7 @@ if wezterm.target_triple:find("linux") then
 end
 
 config.keys = {
+  -- Cmd+c/v for clipboard (keyd excludes c/v from meta->ctrl remap)
   { key = "v", mods = "SUPER", action = act.PasteFrom("Clipboard") },
   {
     key = "c",
@@ -280,6 +281,9 @@ config.hyperlink_rules = {
 
 -- Enable shell integration
 config.enable_kitty_graphics = true
+
+-- Enable OSC 52 for clipboard integration (allows terminal apps like neovim to copy to system clipboard)
+config.enable_osc52_clipboard = true
 
 wezterm.on(
   "format-tab-title",
