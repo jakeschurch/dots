@@ -199,8 +199,9 @@ in
 
             # Move focused window to workspace
             mkFocusWorkspaceCmds = withWorkspaces (mkWorkspaceCmd "SUPER+SHIFT" "movetoworkspace");
+
             # Workspace switching
-            mkSwitchWorkspaceCmds = withWorkspaces (mkWorkspaceCmd "SUPER" "switchtoworkspace");
+            mkSwitchWorkspaceCmds = withWorkspaces (mkWorkspaceCmd "SUPER" "workspace");
 
             mkMoveCmds =
               let

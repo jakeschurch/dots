@@ -48,6 +48,7 @@ let
   nix-nvim-plugins =
     with pkgs.vimPlugins;
     [
+
       fzf-lua
       rainbow-delimiters-nvim
       nvim-notify
@@ -99,6 +100,7 @@ let
 
       telescope-nvim
       telescope-dap-nvim
+      vim-matchup
       grug-far-nvim
 
       nvim-nio
