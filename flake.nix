@@ -52,10 +52,12 @@
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
     walker.url = "github:abenz1267/walker";
+    walker.inputs.nixpkgs.follows = "nixpkgs";
 
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
     hyprland.url = "github:hyprwm/Hyprland?ref=v0.53.0";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-colors.url = "github:misterio77/nix-colors";
 

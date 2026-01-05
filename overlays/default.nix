@@ -47,9 +47,6 @@ in
   inherit (inputs) lexical-lsp;
   inherit (inputs.nixpkgs) narHash;
 
-  nodejs = super.pkgs.nodejs_22;
-  nodejs_20 = super.pkgs.nodejs_22;
-
   VimPlugins.blink-pairs = inputs.blink-pairs;
 
   VimPlugins.none-ls-nvim = super.vimUtils.buildVimPlugin {
