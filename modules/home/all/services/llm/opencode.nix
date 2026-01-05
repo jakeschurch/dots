@@ -9,6 +9,7 @@ let
   cfg = {
     "$schema" = "https://opencode.ai/config.json";
     theme = "gruvbox";
+    plugin = [ "oh-my-opencode" ];
 
     model =
       let
@@ -76,5 +77,8 @@ let
 in
 {
   home.file.".config/opencode/opencode.json".text = builtins.toJSON cfg;
-  home.packages = with pkgs; [ opencode ];
+  home.packages = with pkgs; [
+    opencode
+    oh-my-opencode
+  ];
 }

@@ -108,6 +108,7 @@
       gnupg
 
       ctags
+      bun2nix
 
       pre-commit
 
