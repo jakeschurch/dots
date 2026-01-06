@@ -2,12 +2,12 @@ _: [
   {
     id = "qwen3:4b-instruct";
     name = "Qwen 3 4B Instruct";
-    primary = true;
   }
 
   {
     id = "qwen3:8b";
     name = "Qwen 3 8B";
+    primary = true;
   }
 
   {
