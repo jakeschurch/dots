@@ -18,7 +18,7 @@
       max-jobs = "auto";
       require-sigs = true;
       sandbox = true;
-      sandbox-fallback = true;
+      sandbox-fallback = lib.mkForce true;
       substituters = [
         "https://nix-community.cachix.org"
         "https://cache.nixos.org/"

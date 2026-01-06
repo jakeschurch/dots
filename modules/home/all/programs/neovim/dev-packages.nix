@@ -127,7 +127,7 @@ pkgs: {
     nodePackages.yaml-language-server
     # actionlint
     yamllint
-    semgrep
+    # semgrep
     hadolint
     helm-ls
     regols
