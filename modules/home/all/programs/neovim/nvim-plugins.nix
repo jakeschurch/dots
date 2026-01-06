@@ -4,10 +4,6 @@ let
     doCheck = false;
   };
 
-  nvim-treesitter-textsubjects-patched = pkgs.vimPlugins.nvim-treesitter-textsubjects.overrideAttrs {
-    doCheck = false;
-  };
-
   none-ls-nvim-patched = pkgs.vimUtils.buildVimPlugin {
     pname = "none-ls-nvim";
     version = "git-HEAD";
@@ -156,7 +152,6 @@ let
 
       img-clip-nvim
       nvim-treesitter-textobjects-patched
-      nvim-treesitter-textsubjects-patched
       dressing-nvim
       nui-nvim
 

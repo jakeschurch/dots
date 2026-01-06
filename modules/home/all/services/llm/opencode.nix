@@ -70,7 +70,7 @@ let
 
     tools =
       # NOTE: disable mcp tools globally so we can instead set permissions per-agent
-      lib.mapAttrs (_name: _tool: true) tools // lib.mapAttrs (_name: _tool: false) mcpServers;
+      lib.mapAttrs (_name: _tool: true) tools // lib.mapAttrs (_name: _tool: true) mcpServers;
 
     permission = tools // lib.mapAttrs (_name: tool: tool.permission) mcpServers;
   };

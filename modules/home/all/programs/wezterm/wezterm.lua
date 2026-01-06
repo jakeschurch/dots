@@ -282,9 +282,6 @@ config.hyperlink_rules = {
 -- Enable shell integration
 config.enable_kitty_graphics = true
 
--- Enable OSC 52 for clipboard integration (allows terminal apps like neovim to copy to system clipboard)
-config.enable_osc52_clipboard = true
-
 wezterm.on(
   "format-tab-title",
   function(tab, tabs, panes, config, hover, max_width)

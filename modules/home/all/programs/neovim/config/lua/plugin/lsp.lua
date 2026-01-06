@@ -1,13 +1,10 @@
-local lsp = {}
-local lspconfig = require("lspconfig")
-
 local lsp_status = require("lsp-status")
 lsp_status.register_progress()
 
 vim.lsp.log.set_level("warn")
 
 vim.diagnostic.config({
-  virtual_text = false, -- Enable virtual text for diagnostics
+  virtual_text = true,
   underline = true, -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
   severity_sort = true, -- Sort diagnostics by severity
@@ -31,12 +28,12 @@ vim.api.nvim_create_user_command("Format", function()
   vim.lsp.buf.format()
 end, {})
 
-local wk = require("which-key")
-wk.add({
-  { "<leader>K", "Hover doc" },
-  { "<leader>gd", "Go to definition" },
-  { "<leader>gi", "Go to implementation" },
-})
+-- Inlay hints toggle (global, not per-buffer)
+vim.keymap.set("n", "<leader>l", function()
+  local enabled = vim.lsp.inlay_hint.is_enabled()
+  vim.lsp.inlay_hint.enable(not enabled)
+  print("Inlay hints " .. (enabled and "disabled" or "enabled"))
+end, { desc = "Toggle Inlay Hints" })
 
 local function diagnostic_jump_next(severity)
   if #require("lspsaga.diagnostic"):get_diagnostic({ buffer = true }) == 0 then
@@ -63,75 +60,75 @@ end
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
-    local opts = { buffer = bufnr, noremap = true, silent = true }
 
-    vim.keymap.set("n", "<leader>l", function()
-      local enabled = vim.lsp.inlay_hint.is_enabled()
-      vim.lsp.inlay_hint.enable(not enabled)
-      print("Inlay hints " .. (enabled and "disabled" or "enabled"))
-    end, { desc = "Toggle Inlay Hints" })
+    local function buf_map(mode, lhs, rhs, desc)
+      vim.keymap.set(
+        mode,
+        lhs,
+        rhs,
+        { buffer = bufnr, noremap = true, silent = true, desc = desc }
+      )
+    end
 
-    vim.keymap.set("i", "<C-k>", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, opts)
+    buf_map("i", "<C-k>", vim.lsp.buf.hover, "Hover (insert)")
+    buf_map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+    buf_map("n", "gk", vim.lsp.buf.signature_help, "Signature help")
+    buf_map("n", "<leader>f", vim.lsp.buf.format, "Format buffer")
 
-    vim.keymap.set("n", "<leader>f", function()
-      vim.lsp.buf.format()
-    end, { buffer = bufnr })
-
-    vim.keymap.set("n", "gy", function()
-      vim.cmd("Lspsaga goto_type_definition")
-    end, opts)
-
-    vim.keymap.set("n", "gd", function()
-      vim.cmd("Lspsaga goto_definition")
-    end, opts)
-
-    vim.keymap.set("n", "gr", function()
-      vim.cmd("Lspsaga finder")
-    end, opts)
-
-    vim.keymap.set("n", "gp", function()
-      vim.cmd("Lspsaga peek_definition")
-    end, opts)
-    vim.keymap.set("n", "<leader>rn", function()
-      vim.cmd("Lspsaga rename")
-    end, opts)
+    buf_map(
+      "n",
+      "gy",
+      "<cmd>Lspsaga goto_type_definition<cr>",
+      "Go to type definition"
+    )
+    buf_map("n", "gd", "<cmd>Lspsaga goto_definition<cr>", "Go to definition")
+    buf_map("n", "gr", "<cmd>Lspsaga finder<cr>", "Find references")
+    buf_map("n", "gp", "<cmd>Lspsaga peek_definition<cr>", "Peek definition")
+    buf_map("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", "Rename symbol")
 
     -- Diagnostic navigation
-    vim.keymap.set("n", "[d", function()
+    buf_map("n", "[d", function()
       diagnostic_jump_prev(vim.diagnostic.severity.ERROR)
-    end, opts)
-
-    vim.keymap.set("n", "]d", function()
+    end, "Prev error")
+    buf_map("n", "]d", function()
       diagnostic_jump_next(vim.diagnostic.severity.ERROR)
-    end, opts)
-
-    vim.keymap.set("n", "[g", function()
-      diagnostic_jump_prev()
-    end, opts)
-
-    vim.keymap.set("n", "]g", function()
-      diagnostic_jump_next()
-    end, opts)
+    end, "Next error")
+    buf_map("n", "[g", diagnostic_jump_prev, "Prev diagnostic")
+    buf_map("n", "]g", diagnostic_jump_next, "Next diagnostic")
 
     -- Call hierarchy
-    vim.keymap.set("n", "<Leader>hc", function()
-      vim.cmd("Lspsaga incoming_calls")
-    end, opts)
-    vim.keymap.set("n", "<Leader>ho", function()
-      vim.cmd("Lspsaga outgoing_calls")
-    end, opts)
+    buf_map(
+      "n",
+      "<Leader>hc",
+      "<cmd>Lspsaga incoming_calls<cr>",
+      "Incoming calls"
+    )
+    buf_map(
+      "n",
+      "<Leader>ho",
+      "<cmd>Lspsaga outgoing_calls<cr>",
+      "Outgoing calls"
+    )
 
     -- Code actions
-    vim.keymap.set({ "n", "v" }, "<leader>qf", function()
-      vim.cmd("Lspsaga code_action")
-    end, opts)
+    buf_map(
+      { "n", "v" },
+      "<leader>qf",
+      "<cmd>Lspsaga code_action<cr>",
+      "Code action"
+    )
   end,
 })
 
 local blink_cmp = require("blink.cmp")
-local util = require("lspconfig.util")
+
+-- Default root_dir function using git
+local function default_root_dir(bufnr, on_dir)
+  local root = vim.fs.root(bufnr, { ".git" })
+  if root then
+    on_dir(root)
+  end
+end
 
 for server, config in pairs(require("plugin.lsp_servers")) do
   config.capabilities = vim.tbl_deep_extend(
@@ -143,12 +140,8 @@ for server, config in pairs(require("plugin.lsp_servers")) do
     blink_cmp.get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
   )
 
-  config["root_dir"] = config["root_dir"]
-    or function(fname)
-      return util.root_pattern(".git")(fname) or nil
-    end
+  config["root_dir"] = config["root_dir"] or default_root_dir
 
-  lspconfig[server].setup(config)
+  vim.lsp.config(server, config)
+  vim.lsp.enable(server)
 end
-
-return lsp

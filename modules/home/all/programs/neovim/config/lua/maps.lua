@@ -72,7 +72,7 @@ vim.keymap.set("i", "<Esc>", function()
   return vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
 end, { expr = true })
 
-function ToggleQuickFix()
+local function ToggleQuickFix()
   local qf_exists = false
   -- Check if the quickfix window is open
   for _, win in ipairs(vim.fn.getwininfo()) do
@@ -101,7 +101,7 @@ cnoreabbrev <expr> c (getcmdtype() == ':' && getcmdline() == 'c') ? 'G commit -m
 cnoreabbrev <expr> a (getcmdtype() == ':' && getcmdline() == 'a') ? 'G add %' : 'a'
 ]])
 
-function Cycle(direction)
+local function Cycle(direction)
   local line = vim.api.nvim_get_current_line()
   local original_cursor = vim.api.nvim_win_get_cursor(0) -- Save original position
   local col = original_cursor[2]
@@ -158,7 +158,7 @@ vim.keymap.set("n", "<C-A>", function()
   Cycle("up")
 end, { noremap = true, silent = true })
 
-function ToggleLocationList()
+local function ToggleLocationList()
   local loclist_exists = false
   -- Check if the location list is open for the current window
   for _, win in ipairs(vim.fn.getwininfo()) do
@@ -175,12 +175,12 @@ function ToggleLocationList()
   end
 end
 
-vim.keymap.set("n", "<leader>l", function()
+vim.keymap.set("n", "<leader>L", function()
   ToggleLocationList()
-end, { noremap = true, silent = true })
+end, { noremap = true, silent = true, desc = "Toggle location list" })
 
 -- Smart paste in insert mode (adjusts indentation after pasting)
-function SmartPasteInsert()
+local function SmartPasteInsert()
   -- Turn off 'paste' mode to respect indentation settings
   vim.opt.paste = false
   -- Use normal mode commands to re-indent the last pasted block
@@ -188,7 +188,7 @@ function SmartPasteInsert()
 end
 
 -- Smart paste in normal mode (adjusts indentation after pasting)
-function SmartPasteNormal()
+local function SmartPasteNormal()
   -- Turn off 'paste' mode to respect indentation settings
   vim.opt.paste = false
   -- Use visual selection to re-indent the pasted block

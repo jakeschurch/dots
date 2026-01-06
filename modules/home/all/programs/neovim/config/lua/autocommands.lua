@@ -53,14 +53,11 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
 })
 
 local function scandir(directory)
-  local i, t, popen = 0, {}, io.popen
-  local pfile = popen('ls -a "' .. directory .. '"')
-  for filename in pfile:lines() do
-    i = i + 1
-    t[i] = filename
+  local ok, files = pcall(vim.fn.readdir, directory)
+  if not ok then
+    return {}
   end
-  pfile:close()
-  return t
+  return files
 end
 
 local HOME_DIR = os.getenv("HOME") or "~"

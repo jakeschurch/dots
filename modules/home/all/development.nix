@@ -21,6 +21,7 @@
       conftest
       libressl
 
+      nodejs
       (python313.withPackages (
         ps: with ps; [
           requests

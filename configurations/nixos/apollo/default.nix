@@ -358,7 +358,7 @@ in
       #     user = "jake";
       #   };
       default_session = {
-        command = "${pkgs.hyprland}/bin/Hyprland";
+        command = "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop";
         user = "jake";
       };
     };

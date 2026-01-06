@@ -1,24 +1,13 @@
-local lspconfig = vim.lsp.config
-local util = lspconfig.util
-
--- Function to find git root
-local function get_git_root()
-  local git_root =
-    vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })[1]
-  if git_root and git_root ~= "" and not git_root:match("^fatal") then
-    return git_root
+-- Helper to create root_dir functions compatible with vim.lsp.config
+local function root_pattern(...)
+  local patterns = { ... }
+  return function(bufnr, on_dir)
+    local root = vim.fs.root(bufnr, patterns)
+    if root then
+      on_dir(root)
+    end
   end
-  return nil
 end
-
-vim.lsp.config("terragruntls", {
-  cmd = { "terragrunt-ls" },
-  filetypes = { "hcl" },
-  root_dir = lspconfig.util.root_pattern(".git", "."),
-  settings = {},
-})
-
-vim.lsp.enable("terragruntls")
 
 vim.filetype.add({
   pattern = {
@@ -32,7 +21,7 @@ return {
   regols = {
     cmd = { "regols" },
     filetypes = { "rego" },
-    root_dir = util.root_pattern(".git"),
+    root_dir = root_pattern(".git"),
   },
   digestif = {}, -- latex
   yamlls = {
@@ -59,30 +48,16 @@ return {
         },
       },
     },
-    on_attach = function(client, bufnr)
-      -- Disable specific diagnostics for line length
-      vim.diagnostic.config({
-        virtual_text = {
-          source = "if_many",
-          -- Filter out line-too-long errors
-          format = function(diagnostic)
-            if
-              diagnostic.source == "actionlint"
-              and diagnostic.message:match("line too long")
-            then
-              return nil
-            end
-            if
-              diagnostic.message:match("line too long")
-              or diagnostic.message:match("line length")
-            then
-              return nil
-            end
-            return diagnostic.message
-          end,
-        },
-      }, bufnr)
-    end,
+    handlers = {
+      ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
+        result.diagnostics = vim.tbl_filter(function(d)
+          return not (
+            d.message:match("line too long") or d.message:match("line length")
+          )
+        end, result.diagnostics)
+        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+      end,
+    },
   },
   helm_ls = {
     settings = {
@@ -167,7 +142,11 @@ return {
     },
   },
 
-  terragruntls = {},
+  terragruntls = {
+    cmd = { "terragrunt-ls" },
+    filetypes = { "hcl" },
+    root_dir = root_pattern(".git", "terragrunt.hcl"),
+  },
   gopls = {
     settings = {
       gopls = {
