@@ -4,7 +4,7 @@ lsp_status.register_progress()
 vim.lsp.log.set_level("warn")
 
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = false,
   underline = true, -- Underline the text with diagnostics
   update_in_insert = false, -- Don't update diagnostics in insert mode
   severity_sort = true, -- Sort diagnostics by severity

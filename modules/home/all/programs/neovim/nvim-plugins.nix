@@ -1,8 +1,5 @@
 { pkgs, ... }:
 let
-  nvim-treesitter-textobjects-patched = pkgs.vimPlugins.nvim-treesitter-textobjects.overrideAttrs {
-    doCheck = false;
-  };
 
   none-ls-nvim-patched = pkgs.vimUtils.buildVimPlugin {
     pname = "none-ls-nvim";
@@ -151,7 +148,7 @@ let
       nvim-ts-context-commentstring
 
       img-clip-nvim
-      nvim-treesitter-textobjects-patched
+      # nvim-treesitter-textobjects-patched
       dressing-nvim
       nui-nvim
 
