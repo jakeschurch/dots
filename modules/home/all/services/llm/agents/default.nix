@@ -42,10 +42,14 @@ let
         "todowrite"
         "list"
         "qdrant-memory"
+        "skill"
       ];
 
-      prompt = _: ''
+      prompt = subAgentDetails: ''
         You are the PRIMARY ORCHESTRATOR in a Mixture of Experts (MoE) system.
+
+        Available subagents:
+        ${subAgentDetails}
 
         Your role:
           - Analyze the user's request to determine the optimal expert(s) to execute it.
@@ -182,7 +186,7 @@ let
     build = {
       model = "ollama/deepseek-coder:6.7b-instruct";
       num_ctx = 20000;
-      mode = "primary";
+      mode = "subagent";
       description = "Senior-level coding agent; implements features with best practices.";
       temperature = 0.2;
       maxSteps = 10;
