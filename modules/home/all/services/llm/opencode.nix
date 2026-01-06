@@ -13,7 +13,7 @@ let
 
     model =
       let
-        primaryModel = lib.findFirst (m: m.primary) null models;
+        primaryModel = lib.findFirst (m: m ? primary && m.primary) null models;
         primaryModelName =
           if primaryModel != null then
             primaryModel.id
