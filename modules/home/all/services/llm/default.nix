@@ -34,4 +34,8 @@ in
     ollama
     (import ./agents { inherit lib tools mcpServers; })
   ];
+
+  home.packages = with pkgs; [
+    claude-code
+  ];
 }
