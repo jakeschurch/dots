@@ -6,6 +6,10 @@
   lib,
 }:
 let
+  # llama.cpp serves on port 11434 with OpenAI-compatible API
+  llamaCppPort = 11434;
+  llamaCppHost = "127.0.0.1";
+
   cfg = {
     "$schema" = "https://opencode.ai/config.json";
     theme = "gruvbox";
@@ -21,14 +25,14 @@ let
             assert false;
             "Primary model not found";
       in
-      "ollama-local/${primaryModelName}";
+      "llama-cpp/${primaryModelName}";
 
     provider = {
-      ollama = {
+      llama-cpp = {
         npm = "@ai-sdk/openai-compatible";
-        name = "Ollama-local";
+        name = "llama.cpp";
         options = {
-          baseURL = "http://10.10.5.52:11434/v1";
+          baseURL = "http://${llamaCppHost}:${toString llamaCppPort}/v1";
         };
 
         models = builtins.foldl' (
@@ -69,7 +73,6 @@ let
       lib.mapAttrs (_name: toDefinition) mcpServers;
 
     tools =
-      # NOTE: disable mcp tools globally so we can instead set permissions per-agent
       lib.mapAttrs (_name: _tool: true) tools // lib.mapAttrs (_name: _tool: true) mcpServers;
 
     permission = tools // lib.mapAttrs (_name: tool: tool.permission) mcpServers;

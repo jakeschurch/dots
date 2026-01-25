@@ -19,7 +19,7 @@ let
       ;
   };
 
-  ollama = import ./ollama {
+  llama-cpp = import ./llama-cpp {
     inherit
       pkgs
       models
@@ -31,7 +31,7 @@ in
 {
   imports = [
     opencode
-    ollama
+    llama-cpp
     (import ./agents {
       inherit
         lib

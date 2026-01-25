@@ -63,5 +63,14 @@ in
   mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${super.system}.default;
   bun2nix = inputs.bun2nix.packages.${super.system}.default;
+
+  # llama.cpp with CUDA support (NVIDIA only)
+  llama-cpp-cuda = super.llama-cpp.override {
+    cudaSupport = true;
+    openclSupport = false;
+  };
+
+  # llama.cpp with Vulkan support for cross-vendor multi-GPU (Intel + NVIDIA)
+  llama-cpp-vulkan-multi = super.llama-cpp-vulkan;
 }
 // packageOverlays

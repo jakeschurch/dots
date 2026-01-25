@@ -321,7 +321,6 @@ in
       slurp
       grim
 
-      hyprshot-mouse-daemon
       hyprshot
       tuigreet
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
