@@ -32,7 +32,14 @@ in
   imports = [
     opencode
     ollama
-    (import ./agents { inherit lib tools mcpServers; })
+    (import ./agents {
+      inherit
+        lib
+        tools
+        models
+        mcpServers
+        ;
+    })
   ];
 
   home.packages = with pkgs; [

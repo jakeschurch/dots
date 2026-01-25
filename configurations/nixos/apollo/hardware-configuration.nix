@@ -26,30 +26,12 @@
 
   boot.blacklistedKernelModules = [ "nouveau" ];
 
-  fileSystems."/data" = {
-    device = "/dev/disk/by-uuid/929d1911-3de3-44fe-a943-2ed07cd67135";
-    fsType = "ext4";
-    options = [
-      "defaults"
-      "noatime"
-    ];
-  };
-
   fileSystems."/boot" = {
     device = "/dev/disk/by-partlabel/disk-main-ESP";
     fsType = "vfat";
     options = [
       "fmask=0022"
       "dmask=0022"
-    ];
-  };
-
-  fileSystems."/old_home" = {
-    device = "/dev/disk/by-uuid/ff3faa6a-ead3-4681-aab9-42f55e2697b6";
-    fsType = "ext4";
-    options = [
-      "defaults"
-      "noatime"
     ];
   };
 

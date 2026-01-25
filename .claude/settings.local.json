@@ -14,7 +14,14 @@
       "Bash(nix log:*)",
       "Bash(wezterm --version:*)",
       "Bash(xargs basename:*)",
-      "Bash(git -C /home/jake/.dots log --oneline)"
+      "Bash(git -C /home/jake/.dots log --oneline)",
+      "WebFetch(domain:codeberg.org)",
+      "WebFetch(domain:docs.noctalia.dev)",
+      "Bash(nix flake update:*)",
+      "Bash(hyprctl binds:*)",
+      "Bash(nix-shell:*)",
+      "Bash(hyprctl monitors:*)",
+      "Bash(glxinfo:*)"
     ]
   }
 }

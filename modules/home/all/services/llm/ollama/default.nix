@@ -16,6 +16,7 @@ let
     src = ./ollama-model-loader.sh;
     propagatedBuildInputs = [
       config.services.ollama.package
+      pkgs.netcat
     ];
   };
 in
@@ -33,7 +34,7 @@ in
       OLLAMA_NUM_GPU = "999";
 
       # Start conservative, tune per agent
-      OLLAMA_CONTEXT_LENGTH = "20000";
+      OLLAMA_CONTEXT_LENGTH = "200000";
 
       OLLAMA_NUM_PARALLEL = "1";
       OLLAMA_MAX_LOADED_MODELS = "2"; # Keep 7B + 14B loaded

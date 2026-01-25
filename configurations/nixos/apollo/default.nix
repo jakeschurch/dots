@@ -15,29 +15,33 @@ in
     self.nixosModules.default
     inputs.disko.nixosModules.disko
     inputs.hyprland.nixosModules.default
-    inputs.walker.nixosModules.default
+    inputs.noctalia.nixosModules.default
+
+    # MicroVM host configuration for K3s cluster
+    # inputs.vmetal.nixosModules.baremetal
   ];
 
-  programs = {
-    walker = {
-      enable = true;
-      runAsService = true;
-      package = pkgs.walker;
+  # NAT for microVM external network access
+  networking.nat.externalInterface = "enp5s0";
 
-      config = {
-        providers.prefixes = [
-          {
-            provider = "websearch";
-            prefix = "?";
-          }
-          {
-            provider = "switcher";
-            prefix = "/";
-          }
-        ];
-      };
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  services.qdrant = {
+    enable = true;
+    settings = {
+      storage_path = "/var/lib/qdrant/storage";
+      http_port = 6333;
+      grpc_port = 6334;
     };
+  };
 
+  services.noctalia-shell.enable = true;
+
+  programs = {
     hyprland = {
       enable = true;
       xwayland.enable = true;
@@ -58,14 +62,8 @@ in
         exec-once = [
           "systemctl --user enable --now hyprsunset.service"
           "uwsm app -- hypridle"
-          "uwsm app -- hyprpanel"
-        ];
-
-        # mouse movements
-        bindm = [
-          "$mod, mouse:272, movewindow"
-          "$mod, mouse:273, resizewindow"
-          "$mod ALT, mouse:272, resizewindow"
+          "uwsm app -- awww-daemon"
+          "sleep 1 && awww img ~/Pictures/Wallpapers/animated --transition-type grow --transition-fps 60"
         ];
 
         misc = {
@@ -88,8 +86,19 @@ in
 
         "$mod" = "SUPER";
 
+        windowrulev2 = [ "monitor DP-1, fullscreen 3, class:^(steam_app_.*)$" ];
+
         env = [
+          # Force Hyprland to only use NVIDIA GPU (card1), Intel B580 (card2) reserved for compute
+          # "AQ_DRM_DEVICES,/dev/dri/card1"
+
           "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+          "WLR_NO_HARDWARE_CURSORS,1"
+          "WLR_RENDERER_ALLOW_SOFTWARE,1"
+          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+          "GBM_BACKEND,nvidia-drm"
+          "__GL_GSYNC_ALLOWED,1"
+          "__GL_VRR_ALLOWED,1"
         ];
 
         general = {
@@ -172,7 +181,7 @@ in
         bind =
           let
             workspaces = lib.lists.range 1 9;
-            withWorkspaces = x: builtins.map x workspaces;
+            withWorkspaces = x: map x workspaces;
 
             mkCmd = lib.concatStringsSep ", ";
 
@@ -188,7 +197,7 @@ in
             mkWorkspaceCmd =
               modPrefix: cmd: workspace:
               let
-                workspaceStr = builtins.toString workspace;
+                workspaceStr = toString workspace;
               in
               mkCmd [
                 modPrefix
@@ -225,7 +234,7 @@ in
           ++ mkSwitchWorkspaceCmds
           ++ mkMoveCmds
           ++ [
-            "$mod,space, exec, walker"
+            "$mod,space, exec, noctalia-shell ipc call launcher toggle"
 
             ",XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
             ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
@@ -233,6 +242,10 @@ in
             ",XF86AudioPlay, exec, playerctl play-pause"
             ",XF86AudioNext, exec, playerctl next"
             ",XF86AudioPrev, exec, playerctl previous"
+
+            "$mod, S, exec, hyprshot -m region"
+            "$mod, mouse:272, exec, hyprshot -m region --clipboard-only"
+            "$mod+SHIFT, mouse:272, exec, ocr-shot"
 
             "$mod,XF86MonBrightnessDown, exec, hyprctl hyprsunset temperature -250"
             "$mod,XF86MonBrightnessUp, exec, hyprctl hyprsunset temperature +250"
@@ -252,8 +265,12 @@ in
             # quit
             "$mod, Q, killactive"
 
+            "$mod+SHIFT, v, exec, wl-paste --primary"
+            "$mod+SHIFT, c, exec, wl-copy --primary --regular"
+
             # Fullscreen
-            "SUPER, F, fullscreen, 0"
+            "SUPER, F, fullscreen, 1"
+            "SUPER+SHIFT, F, fullscreen, 3"
           ];
       };
 
@@ -262,10 +279,10 @@ in
 
         bind = $mod, R,submap,resize
         submap=resize
-        binde = , h, resizeactive, -60 0
-        binde = , j, resizeactive, 0 60
-        binde = , k, resizeactive, 0 -60
-        binde = , l, resizeactive, 60 0
+        binde = , h, resizeactive, -85 0
+        binde = , j, resizeactive, 0 85
+        binde = , k, resizeactive, 0 -85
+        binde = , l, resizeactive, 85 0
         binde = , Return,submap,reset
         binde = , escape,submap,reset
         submap=reset
@@ -293,9 +310,22 @@ in
 
   environment = {
     systemPackages = with pkgs; [
-      hyprpanel
+      (pkgs.writeScriptBin "ocr-shot" (builtins.readFile ./ocr-shot.sh))
+
+      (tesseract5.override {
+        enableLanguages = [
+          "eng"
+          "osd"
+        ];
+      })
+      slurp
+      grim
+
+      hyprshot-mouse-daemon
+      hyprshot
       tuigreet
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+      inputs.awww.packages.${pkgs.system}.awww
       wl-clipboard-rs
       libnotify
     ];
@@ -322,8 +352,6 @@ in
           };
 
           meta = {
-            # These become Ctrl when Super is held
-            # NOTE: c/v excluded - handled by wezterm directly as SUPER+c/v
             backspace = "C-backspace";
             x = "C-x";
             a = "C-a";
@@ -335,11 +363,16 @@ in
             down = "C-end";
             left = "home";
             right = "end";
+
+            c = "M-c";
+            v = "M-v";
           };
         };
       };
     };
   };
+
+  environment.variables.HYPRSHOT_DIR = "/home/jake/Pictures/Screenshots";
 
   services.greetd = {
     enable = true;
@@ -363,4 +396,15 @@ in
       };
     };
   };
+
+  # hyprshot mouse daemon // ocr-shot
+  # Set up proper permissions for input devices
+  users.groups.input = { };
+  users.users.jake.extraGroups = [ "input" ];
+
+  services.udev.extraRules = ''
+    KERNEL=="event*", GROUP="input", MODE="0660"
+    SUBSYSTEM=="input", GROUP="input", MODE="0660"
+  '';
+
 }

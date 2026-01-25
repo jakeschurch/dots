@@ -68,7 +68,8 @@
     };
 
     hypr-dynamic-cursors = {
-      url = "github:VirtCode/hypr-dynamic-cursors";
+      # Pinned to commit compatible with Hyprland v0.53.0
+      url = "github:VirtCode/hypr-dynamic-cursors/7e9b7bc";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -76,6 +77,21 @@
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
+    };
+
+    vmetal = {
+      url = "path:/home/jake/Projects/homelab/vmetal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    awww = {
+      url = "git+https://codeberg.org/LGFae/awww";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -91,6 +107,12 @@
     http-connections = 0;
     download-buffer-size = 904857600; # 900 MiB
     fallback = false;
+
+    extra-experimental-features = [
+      "nix-command"
+      "flakes"
+      "pipe-operators"
+    ];
 
     sandbox = true;
     sandbox-fallback = true;
@@ -112,6 +134,7 @@
     experimental-features = [
       "nix-command"
       "flakes"
+      "pipe-operators"
       "auto-allocate-uids"
     ];
 

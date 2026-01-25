@@ -21,12 +21,12 @@ let
             assert false;
             "Primary model not found";
       in
-      "ollama/${primaryModelName}";
+      "ollama-local/${primaryModelName}";
 
     provider = {
       ollama = {
         npm = "@ai-sdk/openai-compatible";
-        name = "Ollama";
+        name = "Ollama-local";
         options = {
           baseURL = "http://10.10.5.52:11434/v1";
         };

@@ -21,7 +21,6 @@
   dc = "docker compose";
   du = "dust";
   fg = " fg";
-  find = "fd";
   k = "kubectl";
   ls = "lsd -lhSt --icon never --color auto --date relative";
   vi = "nvim";
@@ -34,7 +33,7 @@
   tf = "terraform";
   sf = "fish && source ~/.config/fish/config.fish";
   now = ''date -u +"%H:%M:%S"'';
-  xclip = "xclip -sel clip <";
+  xclip = "wl-copy <"; # wl-clipboard-rs for Wayland
 
   grep = "${pkgs.gnugrep}/bin/grep";
   egrep = "${pkgs.gnugrep}/bin/egrep";

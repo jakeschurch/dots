@@ -49,6 +49,26 @@
 
   hardware.graphics = {
     enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      # Intel Arc B580 compute support for LLM inference
+      intel-compute-runtime # OpenCL
+      intel-media-driver # VA-API
+      level-zero # oneAPI Level Zero (for SYCL/llama.cpp)
+      vpl-gpu-rt # Intel Video Processing Library
+
+      # NVIDIA Vulkan support
+      vulkan-loader
+      vulkan-validation-layers
+      vulkan-tools
+    ];
+
+    # Also need 32-bit packages for Steam games
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      mesa
+      vulkan-loader
+      libva
+    ];
   };
 
   hardware.nvidia = {
@@ -113,7 +133,7 @@
     # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
     # Enable CUPS to print documents.
-    # services.printing.enable = true;
+    printing.enable = true;
 
     # Enable sound.
     pipewire = {
@@ -125,21 +145,21 @@
     };
 
     # Qdrant vector database for AI memory
-    # qdrant = {
-    #   enable = true;
-    #   settings = {
-    #     storage = {
-    #       storage_path = "/var/lib/qdrant/storage";
-    #       snapshots_path = "/var/lib/qdrant/snapshots";
-    #     };
-    #     service = {
-    #       host = "0.0.0.0";
-    #       http_port = 6333;
-    #       grpc_port = 6334;
-    #     };
-    #     telemetry_disabled = true;
-    #   };
-    # };
+    qdrant = {
+      enable = true;
+      settings = {
+        storage = {
+          storage_path = "/var/lib/qdrant/storage";
+          snapshots_path = "/var/lib/qdrant/snapshots";
+        };
+        service = {
+          host = "0.0.0.0";
+          http_port = 6333;
+          grpc_port = 6334;
+        };
+        telemetry_disabled = true;
+      };
+    };
   };
 
   users.users.root = {
@@ -155,6 +175,8 @@
     isNormalUser = true;
     shell = pkgs.zsh;
     extraGroups = [
+      "lp"
+      "lpadmin"
       "wheel"
       "video"
       "kvm"
@@ -196,6 +218,7 @@
     wget
     pavucontrol
     pamixer
+    mesa-demos
   ];
 
   security.rtkit.enable = true;

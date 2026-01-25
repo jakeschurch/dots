@@ -10,7 +10,7 @@
     stateVersion = "25.05";
 
     activation = {
-      diff = lib.hm.dag.entryAnywhere '''';
+      diff = lib.hm.dag.entryAnywhere "";
       darwinFileLimits = lib.mkIf pkgs.stdenv.isDarwin (
         lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           #launchctl limit maxfiles 5000000 5000000

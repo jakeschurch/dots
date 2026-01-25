@@ -8,8 +8,9 @@
         deadnix.enable = true;
         detect-private-keys.enable = true;
         end-of-file-fixer.enable = true;
-        nixfmt-rfc-style.enable = true;
+        nixfmt.enable = true;
         pretty-format-json.enable = true;
+        pre-commit-hook-ensure-sops.enable = true;
         shellcheck.enable = true;
         sort-simple-yaml.enable = true;
         statix.enable = true;

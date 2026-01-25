@@ -1,8 +1,8 @@
-{
-  lib,
-  tools,
-  mcpServers,
-  ...
+{ lib
+, tools
+, models
+, mcpServers
+, ...
 }:
 let
   allAvailableTools = lib.attrNames tools ++ lib.attrNames mcpServers;
@@ -11,25 +11,28 @@ let
     enabledTools:
     let
       enabledAttrs = builtins.listToAttrs (
-        map (tool: {
-          name = tool;
-          value = true;
-        }) enabledTools
+        map
+          (tool: {
+            name = tool;
+            value = true;
+          })
+          enabledTools
       );
       disabledAttrs = builtins.listToAttrs (
-        map (tool: {
-          name = tool;
-          value = false;
-        }) (builtins.filter (t: !(builtins.elem t enabledTools)) allAvailableTools)
+        map
+          (tool: {
+            name = tool;
+            value = false;
+          })
+          (builtins.filter (t: !(builtins.elem t enabledTools)) allAvailableTools)
       );
     in
     enabledAttrs // disabledAttrs;
 
   # Complete agent definitions with prompts and config
   agentDefinitions = {
-
     orchestrator = {
-      model = "ollama/qwen3:8b";
+      model = "ollama-local/qwen2.5:14b";
       num_ctx = 32000;
       mode = "primary";
       description = "Primary orchestrator; decomposes work, delegates to subagents, and synthesizes results.";
@@ -106,8 +109,8 @@ let
     };
 
     engineer = {
-      model = "ollama/qwen2.5:14b-instruct-q5_K_M";
-      num_ctx = 20000;
+      model = "ollama-local/qwen2.5-coder:14b";
+      num_ctx = 32000;
       mode = "subagent";
       description = "Senior software engineer; implements features with best practices.";
       temperature = 0.2;
@@ -184,8 +187,8 @@ let
     };
 
     build = {
-      model = "ollama/deepseek-coder:6.7b-instruct";
-      num_ctx = 20000;
+      model = "ollama-local/qwen2.5-coder:7b";
+      num_ctx = 16000;
       mode = "subagent";
       description = "Senior-level coding agent; implements features with best practices.";
       temperature = 0.2;
@@ -233,7 +236,7 @@ let
     };
 
     explorer = {
-      model = "ollama/qwen3:4b-instruct";
+      model = "ollama-local/qwen2.5:3b";
       num_ctx = 8000;
       mode = "subagent";
       description = "Codebase exploration agent; finds files, patterns, and symbols.";
@@ -266,7 +269,7 @@ let
     };
 
     plan = {
-      model = "ollama/qwen2.5:14b-instruct-q5_K_M";
+      model = "ollama-local/qwen2.5:7b";
       num_ctx = 12000;
       mode = "subagent";
       description = "Analysis and planning agent; read-only mode for strategy and design.";
@@ -305,7 +308,7 @@ let
     };
 
     documentation = {
-      model = "ollama/llama3.1:8b";
+      model = "ollama-local/qwen2.5:3b";
       num_ctx = 8000;
       mode = "subagent";
       description = "Generates and maintains documentation; docstrings, READMEs, API docs.";
@@ -345,7 +348,7 @@ let
     };
 
     refactor = {
-      model = "ollama/deepseek-coder:6.7b-instruct";
+      model = "ollama-local/deepseek-coder-v2:16b";
       num_ctx = 12000;
       mode = "subagent";
       description = "Safe refactoring agent; extracts methods, renames, restructures.";
@@ -388,7 +391,7 @@ let
     };
 
     reviewer = {
-      model = "ollama/qwen2.5:7b-instruct";
+      model = "ollama-local/qwen2.5-coder:3b-instruct";
       num_ctx = 8000;
       mode = "subagent";
       description = "Senior code reviewer; enforces standards and catches issues.";
@@ -429,7 +432,7 @@ let
     };
 
     security = {
-      model = "ollama/qwen3:4b-instruct";
+      model = "ollama-local/qwen2.5:3b";
       num_ctx = 12000;
       mode = "subagent";
       description = "Security-focused agent; identifies vulnerabilities and suggests mitigations.";
@@ -473,7 +476,7 @@ let
     };
 
     testqa = {
-      model = "ollama/deepseek-coder:6.7b-instruct";
+      model = "ollama-local/deepseek-coder:6.7b";
       num_ctx = 8000;
       mode = "subagent";
       description = "Generates and validates tests; executes test suites.";
@@ -516,7 +519,7 @@ let
     };
 
     debug = {
-      model = "ollama/qwen2.5:14b-instruct-q5_K_M";
+      model = "ollama-local/phi3:mini";
       num_ctx = 16000;
       mode = "subagent";
       description = "Diagnostic agent; analyzes failures and identifies root causes.";
@@ -563,8 +566,8 @@ let
     };
 
     web = {
-      model = "ollama/llama3.1:8b";
-      num_ctx = 16000;
+      model = "ollama-local/llama3.1:8b";
+      num_ctx = 32000;
       mode = "subagent";
       description = "Research agent; fetches and summarizes web content for context.";
       temperature = 0.4;
@@ -599,42 +602,46 @@ let
     lib.concatStringsSep "\n" (lib.mapAttrsToList formatAgent subAgents);
 
   # Build final agents with prompts applied
-  agents = lib.mapAttrs (
-    name: agent:
-    let
-      promptText = if name == "orchestrator" then agent.prompt subAgentDetails else agent.prompt null;
-    in
-    {
-      inherit (agent)
-        model
-        mode
-        description
-        temperature
-        maxSteps
-        tools
-        ;
-      num_ctx = toString agent.num_ctx;
-      prompt = promptText;
-    }
-  ) agentDefinitions;
+  agents = lib.mapAttrs
+    (
+      name: agent:
+        let
+          promptText = if name == "orchestrator" then agent.prompt subAgentDetails else agent.prompt null;
+        in
+        {
+          inherit (agent)
+            model
+            mode
+            description
+            temperature
+            maxSteps
+            tools
+            ;
+          num_ctx = toString agent.num_ctx;
+          prompt = promptText;
+        }
+    )
+    agentDefinitions;
 
   # Generate markdown files for each agent
   mkAgentMarkdown =
     agentName: agent:
     let
       frontMatter = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList (
-          k: v:
-          if k == "tools" then
-            let
-              toolLines = lib.mapAttrsToList (name: val: "  ${name}: ${lib.boolToString val}") v;
-            in
-            "tools:\n${lib.concatStringsSep "\n" toolLines}"
-          else if k == "prompt" then
-            ""
-          else
-            "${k}: ${toString v}"
-        ) (lib.filterAttrs (k: _: k != "prompt") agent)
+        lib.mapAttrsToList
+          (
+            k: v:
+              if k == "tools" then
+                let
+                  toolLines = lib.mapAttrsToList (name: val: "  ${name}: ${lib.boolToString val}") v;
+                in
+                "tools:\n${lib.concatStringsSep "\n" toolLines}"
+              else if k == "prompt" then
+                ""
+              else
+                "${k}: ${toString v}"
+          )
+          (lib.filterAttrs (k: _: k != "prompt") agent)
       );
     in
     {
@@ -651,3 +658,16 @@ let
   agentFiles = lib.foldl' lib.recursiveUpdate { } (lib.mapAttrsToList mkAgentMarkdown agents);
 in
 agentFiles
+  // {
+  assertions =
+    let
+      getModelId = agent: lib.splitString "/" agent.model |> lib.last;
+      contains = model: lib.findFirst (m: m.id == model) models != null;
+    in
+    lib.mapAttrsToList
+      (_: agent: {
+        assertion = contains (getModelId agent);
+        message = "Model '${agent.model}' for agent is not defined in models.nix";
+      })
+      agentDefinitions;
+}

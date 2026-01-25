@@ -162,6 +162,11 @@ in
       fi
 
       set -o vi
+
+      # Bind Ctrl+R to fzf history AFTER vi mode is set (vi mode clobbers it)
+      bindkey -M viins '^R' fzf-history-widget
+      bindkey -M vicmd '^R' fzf-history-widget
+
       motd
     '';
     zplug = {
@@ -186,7 +191,6 @@ in
         "pre-commit"
         "procs"
         "terraform"
-        "vi-mode"
       ];
     };
   };

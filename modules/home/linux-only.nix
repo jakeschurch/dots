@@ -5,10 +5,6 @@
   ...
 }:
 {
-  imports = [
-    ./hyprpanel
-  ];
-
   home.packages =
     with pkgs;
     [
@@ -27,7 +23,6 @@
       yubikey-manager
       ethtool
       # xev-1.2.4
-      xclip
 
       hyprlock
       hypridle
@@ -39,6 +34,9 @@
     "${config.xdg.configHome}/hypr/theme/hyprlock/transparent/wall2.jpg".source = ./wall2.jpg;
     "${config.xdg.configHome}/hypr/theme/hyprlock/transparent/fg2.png".source = ./fg2.png;
   };
+
+  xdg.configFile."noctalia/settings.json".source =
+    ../../configurations/nixos/apollo/noctalia-settings.json;
 
   fonts.fontconfig = {
     enable = true;
@@ -63,7 +61,7 @@
   };
 
   services.hypridle = {
-    enable = true;
+    enable = false;
     settings = {
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";

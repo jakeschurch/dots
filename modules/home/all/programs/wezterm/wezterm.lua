@@ -16,13 +16,13 @@ if wezterm.target_triple:find("linux") then
   config.mux_enable_ssh_agent = false
 
   local SSH_AUTH_SOCK =
-      string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
+    string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
   config.default_ssh_auth_sock = SSH_AUTH_SOCK
 end
 
 config.keys = {
   -- Cmd+c/v for clipboard (keyd excludes c/v from meta->ctrl remap)
-  { key = "v", mods = "SUPER",     action = act.PasteFrom("Clipboard") },
+  { key = "v", mods = "SUPER", action = act.PasteFrom("Clipboard") },
   {
     key = "c",
     mods = "SUPER",
@@ -63,7 +63,7 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT",       action = act.CopyMode("NextMatch") },
+  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
   { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
