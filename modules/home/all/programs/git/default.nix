@@ -19,8 +19,6 @@ in
       difftastic-inline
       perlPackages.TermReadKey
       git-filter-repo
-
-      github-copilot-cli
     ];
 
     shellAliases = {
@@ -57,7 +55,7 @@ in
         cleanenv = "clean -xfd -e .envrc";
         ai = "add --interactive";
         select-branch = "! f() { ${gitBin} checkout $(${gitBin} branch --all | ${fzfBin}); }; f";
-        branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainbranch)..$(${gitBin} head) ;}; f";
+        branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainline)..$(${gitBin} head) ;}; f";
         delete = "branch -d";
         sc = "switch -c";
         c = "commit";
@@ -85,7 +83,7 @@ in
         who = "shortlog -s -e -";
         revs = "! f() { ~/bin/git/abbrevs.sh git-revs $@ ;}; f";
         top = "rev-parse --show-toplevel";
-        mainbranch = "! git branch | grep -Eo 'main|master'";
+        mainline = "! git branch | grep -Eo 'main|master'";
       };
 
       settings = {

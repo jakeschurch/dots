@@ -1,6 +1,69 @@
 { pkgs, lib, ... }:
 let
-  workspaceNames = (builtins.map builtins.toString (lib.lists.range 1 9)) ++ [ "s" ];
+  workspaceNames = (map toString (lib.lists.range 1 9)) ++ [ "s" ];
+  WithBindingFallthrough =
+    bindingAttrs:
+    let
+      alphaNumKeys = lib.strings.stringToCharacters "abcdefghijklmnopqrstuvwxyz1234567890";
+
+      nonAlphaNumKeys = [
+        # control
+        "esc"
+        "enter"
+        "tab"
+        "backspace"
+        "space"
+        "home"
+        "end"
+
+        # arrows
+        "left"
+        "right"
+        "up"
+        "down"
+
+        # function
+        "f1"
+        "f2"
+        "f3"
+        "f4"
+        "f5"
+        "f6"
+        "f7"
+        "f8"
+        "f9"
+        "f10"
+        "f11"
+        "f12"
+        "f13"
+        "f14"
+        "f15"
+        "f16"
+        "f17"
+        "f18"
+        "f19"
+        "f20"
+
+        # punctuation
+        "minus"
+        "equal"
+        "backslash"
+        "semicolon"
+        "comma"
+        "period"
+        "slash"
+      ];
+
+      allKeys = alphaNumKeys ++ nonAlphaNumKeys;
+      fallthroughKeys = lib.lists.subtractLists (builtins.attrNames bindingAttrs) allKeys;
+    in
+    bindingAttrs
+    // (builtins.listToAttrs (
+      map (key: {
+        name = key;
+        value = "mode main";
+      }) fallthroughKeys
+    ));
 in
 {
   home.packages = with pkgs; [
@@ -20,7 +83,7 @@ in
 
       after-startup-command = [
         "exec-and-forget bitwarden-desktop"
-        "exec-and-forget borders style=round hidpi=on inactive_color=0x000000 active_color=0xcc8ec07c width=32.0"
+        "exec-and-forget ${lib.getExe pkgs.jankyborders} style=round hidpi=on inactive_color=0x000000 active_color=0xcc8ec07c width=32.0"
       ];
 
       start-at-login = true;
@@ -91,8 +154,8 @@ in
 
               # apps
               cmd-enter = "exec-and-forget osascript -e 'tell application \"WezTerm\" to activate'";
-              cmd-shift-enter = "exec-and-forget open -na Wezterm ";
-              cmd-shift-o = "exec-and-forget open -na \"Google Chrome\"";
+              cmd-shift-enter = "exec-and-forget open -na Wezterm";
+              cmd-shift-o = "exec-and-forget open -na Firefox";
 
               # Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
               cmd-f = "fullscreen";
@@ -135,18 +198,15 @@ in
                 n = "Notion";
                 comma = "Notion Calendar";
                 m = "spotify";
-                esc = "mode main";
               };
           };
 
           resize = {
-            binding = {
+            binding = WithBindingFallthrough {
               h = "resize width -150";
               j = "resize height -150";
               k = "resize height +150";
               l = "resize width +150";
-              enter = "mode main";
-              esc = "mode main";
             };
           };
 
@@ -158,16 +218,14 @@ in
                   "mode main"
                 ];
               in
-              builtins.mapAttrs (_name: mkPowerBinding) {
-                r = "sudo shutdown -r now"; # restart
-                s = "pmset sleepnow"; # sleep
-                p = "sudo shutdown -h now"; # power off
-                l = "open -a ScreenSaverEngine"; # lock screen
-              }
-              // {
-                esc = "mode main";
-                enter = "mode main";
-              };
+              WithBindingFallthrough (
+                builtins.mapAttrs (_name: mkPowerBinding) {
+                  r = "sudo shutdown -r now"; # restart
+                  s = "pmset sleepnow"; # sleep
+                  p = "sudo shutdown -h now"; # power off
+                  l = "open -a ScreenSaverEngine"; # lock screen
+                }
+              );
           };
         };
     };

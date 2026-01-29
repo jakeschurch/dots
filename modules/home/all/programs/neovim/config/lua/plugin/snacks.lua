@@ -23,6 +23,13 @@ snacks.setup({
         and vim.tbl_contains(ignored_filetypes, vim.bo[buf].filetype) == false
     end,
   },
+  image = {
+    enabled = true, -- turn on image support
+    doc = {
+      inline = true, -- enable inline rendering
+      float = true, -- fallback floating display
+    },
+  },
 })
 
 require("which-key").add({

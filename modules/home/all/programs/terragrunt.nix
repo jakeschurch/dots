@@ -17,9 +17,9 @@
             "--download-dir $(git rev-parse --show-toplevel)/.terragrunt-cache"
             "--dependency-fetch-output-from-state"
             "--provider-cache"
+            "--summary-per-unit"
             "--provider-cache-dir $(git rev-parse --show-toplevel)/.provider-cache"
             "--tf-forward-stdout"
-            "--use-partial-parse-config-cache"
             "--source-map \"git::git@github.com:fieldguide/infrastructure.git=$(git rev-parse --show-toplevel)\""
           ];
         in

@@ -12,6 +12,7 @@ in
 {
   imports = [
     scripts
+    ./browser.nix
     ./eww
     ./fd.nix
     ./git

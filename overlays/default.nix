@@ -70,7 +70,9 @@ in
     openclSupport = false;
   };
 
-  # llama.cpp with Vulkan support for cross-vendor multi-GPU (Intel + NVIDIA)
-  llama-cpp-vulkan-multi = super.llama-cpp-vulkan;
+  nur = import inputs.nur {
+    nurpkgs = super;
+    pkgs = super;
+  };
 }
 // packageOverlays

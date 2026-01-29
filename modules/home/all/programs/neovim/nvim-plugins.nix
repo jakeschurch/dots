@@ -12,6 +12,17 @@ let
     };
   };
 
+  presenting-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "presenting-nvim";
+    version = "0.1.0";
+    src = pkgs.fetchFromGitHub {
+      owner = "sotte";
+      repo = "presenting.nvim";
+      rev = "main";
+      sha256 = "sha256-Q/SNFkMSREVEeDiikdMXQCVxrt3iThQUh08YMcN9qSk=";
+    };
+  };
+
   custom-sourced-nvim-plugins =
     let
       pluginGit =
@@ -49,6 +60,7 @@ let
   nix-nvim-plugins =
     with pkgs.vimPlugins;
     [
+      presenting-nvim
 
       fzf-lua
       rainbow-delimiters-nvim
@@ -67,7 +79,10 @@ let
       nvim-lspconfig
       copilot-vim
       copilot-lua
+
       img-clip-nvim
+      image-nvim
+
       nvim-autopairs
       vimwiki
       vim-git
@@ -163,8 +178,6 @@ let
       vim-dadbod
       vim-dadbod-ui
       vim-dadbod-completion
-
-      image-nvim
     ]
     ++ pkgs.lib.singleton none-ls-nvim-patched;
 

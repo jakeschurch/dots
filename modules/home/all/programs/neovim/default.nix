@@ -37,6 +37,13 @@ in
   programs.neovim = {
     package = pkgs.neovim-nightly;
     enable = true;
+    extraLuaPackages =
+      ps: with ps; [
+        magick
+      ];
+    extraPackages = with pkgs; [
+      imagemagick
+    ];
     defaultEditor = true;
     extraConfig = ''
       lua <<EOF
