@@ -79,6 +79,17 @@ in
         python3 -c "print(eval('$*'))"
       }
 
+      # AWS Profile Switcher with fzf
+      function awsp() {
+        local profile
+        profile=$(grep -E '^\[profile ' ~/.aws/config | sed 's/\[profile \(.*\)\]/\1/' | fzf --height 40% --reverse --prompt="AWS Profile> ")
+
+        if [[ -n "$profile" ]]; then
+          export AWS_PROFILE="$profile"
+          echo "✓ AWS_PROFILE set to: $profile"
+        fi
+      }
+
       # Custom cd function
       function cd() {
         # Handle "cd" (no args)
@@ -166,6 +177,13 @@ in
       # Bind Ctrl+R to fzf history AFTER vi mode is set (vi mode clobbers it)
       bindkey -M viins '^R' fzf-history-widget
       bindkey -M vicmd '^R' fzf-history-widget
+
+      awsp-widget() {
+          awsp
+          zle reset-prompt
+      }
+      zle -N awsp-widget
+      bindkey '^P' awsp-widget
 
       motd
     '';

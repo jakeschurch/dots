@@ -2,4 +2,4 @@
 
 set -Eeuo pipefail
 
-nix run "$*"
+nix run "$*" --accept-flake-config
