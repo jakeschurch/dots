@@ -82,13 +82,23 @@ in
       # AWS Profile Switcher with fzf
       function awsp() {
         local profile
-        profile=$(grep -E '^\[profile ' ~/.aws/config | sed 's/\[profile \(.*\)\]/\1/' | fzf --height 40% --reverse --prompt="AWS Profile> ")
+        profile=$(grep -E '^\[profile ' ~/.aws/config | sed 's/^\[profile \(.*\)\]/\1/' | fzf --height 40% --reverse --prompt="AWS Profile> ")
 
         if [[ -n "$profile" ]]; then
           export AWS_PROFILE="$profile"
           echo "✓ AWS_PROFILE set to: $profile"
         fi
       }
+
+      function kctx() {
+        local context
+        context=$(kubectl config get-contexts -o name | fzf --height 40% --reverse --prompt="K8s Context> ")
+
+        if [[ -n "$context" ]]; then
+          kubectl config use-context "$context"
+          echo "✓ Kubernetes context set to: $context"
+        fi
+      };
 
       # Custom cd function
       function cd() {
@@ -134,19 +144,6 @@ in
       # Keybindings
       autoload -U up-line-or-beginning-search
       autoload -U down-line-or-beginning-search
-      zle -N up-line-or-beginning-search
-      zle -N down-line-or-beginning-search
-
-      bindkey "^[[A" up-line-or-search     # Up arrow
-      bindkey '^I' expand-or-complete      # Tab completion
-
-      # Vicmd edit line with 'v'
-      autoload -z edit-command-line
-      zle -N edit-command-line
-      bindkey -M vicmd v edit-command-line
-
-      bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down
 
       # Autopair from zplug
       autopair-init
@@ -178,8 +175,33 @@ in
       bindkey -M viins '^R' fzf-history-widget
       bindkey -M vicmd '^R' fzf-history-widget
 
+      zle -N up-line-or-beginning-search
+      zle -N down-line-or-beginning-search
+
+      bindkey "^[[A" up-line-or-search     # Up arrow
+      bindkey '^I' expand-or-complete      # Tab completion
+
+      # Vicmd edit line with 'v'
+      autoload -z edit-command-line
+      zle -N edit-command-line
+      bindkey -M vicmd v edit-command-line
+
+      bindkey -M vicmd 'k' history-substring-search-up
+      bindkey -M vicmd 'j' history-substring-search-down
+
+
+      kctx-widget() {
+          kctx
+          sleep 0.5
+          zle reset-prompt
+      }
+
+      zle -N kctx-widget
+      bindkey '^K' kctx-widget
+
       awsp-widget() {
           awsp
+          sleep 0.5
           zle reset-prompt
       }
       zle -N awsp-widget

@@ -1,7 +1,5 @@
 local img_clip = require("img-clip")
 
-require("image").setup({})
-
 -- Helper to get git root
 local function get_git_root()
   local handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
@@ -27,6 +25,6 @@ img_clip.setup({
 vim.keymap.set(
   "n",
   "<leader>p",
-  "<cmd>PasteImg<CR>",
+  "<cmd>PasteImage<CR>",
   { noremap = true, silent = true }
 )

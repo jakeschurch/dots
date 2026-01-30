@@ -40,15 +40,16 @@
   ids.uids.nixbld = 350;
 
   nix.linux-builder = {
-    enable = false;
-    ephemeral = false;
+    enable = true;
+    ephemeral = true;
+    maxJobs = 4;
     config = {
       virtualisation = {
         darwin-builder = {
-          diskSize = 40 * 1024;
-          memorySize = 2 * 1024;
+          diskSize = 60 * 1024;  # 60GB for k3s images
+          memorySize = 8 * 1024;  # 8GB RAM
         };
-        cores = 1;
+        cores = 4;
       };
     };
   };

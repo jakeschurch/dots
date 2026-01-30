@@ -63,6 +63,15 @@ oil.setup({
     ["<C-p>"] = function()
       ToggleOilPreview()
     end,
+    ["<leader>p"] = function()
+      local oil = require("oil")
+      local filename = oil.get_cursor_entry().name
+      local dir = oil.get_current_dir()
+      oil.close()
+
+      local img_clip = require("img-clip")
+      img_clip.paste_image({}, dir .. filename)
+    end,
     ["<C-l>"] = false,
     ["<C-w>"] = false,
     ["<C-h>"] = false,
