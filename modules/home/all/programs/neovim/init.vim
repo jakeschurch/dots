@@ -1,3 +1,5 @@
+let g:fugitive_no_maps = 1
+
 lua <<EOF
 
 vim.g.mapleader = " "
@@ -12,14 +14,13 @@ EOF
 
 let winfixbuf = "off"
 
-nmap <leader>gh :diffget //2<CR>
-nmap <leader>gp :diffget //3<CR>
-
 set rtp+=~/.local/share/nvim/site/pack/packer/start/himalaya/vim
 
 iab <expr> TODAY strftime("%Y-%m-%d")
 iab <expr> TIME strftime("%H:%M")
 iab <expr> todo "TODO(@jake:" . strftime("%Y-%m-%d") . ")"
+
+
 
 set updatetime=200
 set guicursor=a:blinkon20

@@ -80,11 +80,6 @@
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
 
-    vmetal = {
-      url = "path:/home/jake/Projects/homelab/vmetal";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     awww = {
       url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";

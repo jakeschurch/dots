@@ -12,11 +12,11 @@ require("image").setup({
       filetypes = { "markdown", "vimwiki" },
     },
     neorg = {
-      enabled = true,
+      enabled = false,
       filetypes = { "norg" },
     },
     typst = {
-      enabled = true,
+      enabled = false,
       filetypes = { "typst" },
     },
     html = {
