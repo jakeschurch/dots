@@ -82,7 +82,15 @@ in
       # AWS Profile Switcher with fzf
       function awsp() {
         local profile
-        profile=$(grep -E '^\[profile ' ~/.aws/config | sed 's/^\[profile \(.*\)\]/\1/' | fzf --height 40% --reverse --prompt="AWS Profile> ")
+        sso_profiles=$(grep -E '^\[profile ' ~/.aws/config | sed 's/^\[profile \(.*\)\]/\1/')
+        cred_profiles=$(grep -E '^\[profile ' ~/.aws/credentials | sed 's/^\[profile \(.*\)\]/\1/')
+
+        profile_selections=$({
+          echo "$sso_profiles"
+          echo "$cred_profiles"
+        })
+
+        profile=$(echo $profile_selections | fzf --height 40% --reverse --prompt="AWS Profile> ")
 
         if [[ -n "$profile" ]]; then
           export AWS_PROFILE="$profile"
