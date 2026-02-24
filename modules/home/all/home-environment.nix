@@ -59,6 +59,8 @@ in
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
       PAGER = "bat";
+      MANPAGER = "nvim +Man! -u NORC";
+      MANWIDTH = "999";
       HISTSIZE = "50000";
       HISTCONTROL = concatSessionList [
         "ignoredups"

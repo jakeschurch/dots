@@ -17,7 +17,7 @@
       experimental-features = "nix-command flakes";
       max-jobs = "auto";
       require-sigs = true;
-      sandbox = true;
+      sandbox = "relaxed";
       sandbox-fallback = lib.mkForce true;
       substituters = [
         "https://nix-community.cachix.org"
@@ -46,8 +46,8 @@
     config = {
       virtualisation = {
         darwin-builder = {
-          diskSize = 60 * 1024;  # 60GB for k3s images
-          memorySize = 8 * 1024;  # 8GB RAM
+          diskSize = 60 * 1024; # 60GB for k3s images
+          memorySize = 8 * 1024; # 8GB RAM
         };
         cores = 4;
       };

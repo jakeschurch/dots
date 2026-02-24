@@ -38,7 +38,7 @@ in
       cores = 0;
       max-jobs = "auto";
       max-substitution-jobs = 40;
-      sandbox = lib.mkForce true;
+      sandbox = "relaxed";
       sandbox-fallback = lib.mkForce true;
 
       trusted-users = [

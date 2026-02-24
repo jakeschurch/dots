@@ -37,7 +37,7 @@
       cores = 0;
       max-jobs = "auto";
       max-substitution-jobs = 40;
-      sandbox = true;
+      sandbox = "relaxed";
       sandbox-fallback = true;
 
       substituters = [

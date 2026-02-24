@@ -10,6 +10,20 @@
     compression = true;
     hashKnownHosts = false;
     controlMaster = "no";
+
+    matchBlocks = {
+      "linux-builder" = {
+        hostname = "localhost";
+        port = 31022;
+        user = "builder";
+        identityFile = "/etc/nix/builder_ed25519";
+        identitiesOnly = true;
+        extraOptions = {
+          StrictHostKeyChecking = "accept-new";
+        };
+      };
+    };
+
     extraConfig = ''
       Host *
         HashKnownHosts no

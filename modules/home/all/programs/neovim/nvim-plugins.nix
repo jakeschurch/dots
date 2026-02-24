@@ -135,8 +135,6 @@ let
 
       indent-blankline-nvim
 
-      impatient-nvim
-
       gitsigns-nvim
 
       nvim-surround

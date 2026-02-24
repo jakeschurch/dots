@@ -16,7 +16,7 @@ if wezterm.target_triple:find("linux") then
   config.mux_enable_ssh_agent = false
 
   local SSH_AUTH_SOCK =
-    string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
+      string.format("%s/.bitwarden-ssh-agent.sock", os.getenv("HOME"))
   config.default_ssh_auth_sock = SSH_AUTH_SOCK
 end
 
@@ -63,8 +63,6 @@ config.keys = {
     mods = "ALT",
     action = act.Search({ CaseInSensitiveString = "" }),
   },
-  { key = "n", mods = "ALT", action = act.CopyMode("NextMatch") },
-  { key = "n", mods = "ALT|SHIFT", action = act.CopyMode("PriorMatch") },
 
   {
     key = "r",
@@ -86,8 +84,8 @@ config.keys = {
       SplitVertical = { domain = "CurrentPaneDomain" },
     }),
   },
-  { key = "+", mods = "ALT", action = act.IncreaseFontSize },
-  { key = "-", mods = "ALT", action = act.DecreaseFontSize },
+  { key = "+", mods = "ALT",   action = act.IncreaseFontSize },
+  { key = "-", mods = "ALT",   action = act.DecreaseFontSize },
   {
     key = "t",
     mods = "ALT",
@@ -170,11 +168,9 @@ config.keys = {
 }
 
 config.default_cwd = os.getenv("HOME") .. "/Projects"
-config.use_fancy_tab_bar = false
 config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
 config.color_scheme = "Gruvbox dark, soft (base16)"
-config.freetype_load_target = "HorizontalLcd"
 config.font_shaper = "Harfbuzz"
 config.font = wezterm.font_with_fallback(fonts)
 config.font_size = 14.0
@@ -188,7 +184,9 @@ config.dpi = 96
 config.audible_bell = "Disabled"
 config.check_for_updates = false
 config.force_reverse_video_cursor = false
-config.front_end = "OpenGL"
+config.front_end = "WebGpu"
+config.webgpu_power_preference = "HighPerformance"
+
 config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = true
@@ -198,7 +196,7 @@ config.window_padding = {
   top = 6,
   bottom = 4,
 }
-config.use_resize_increments = true
+config.use_resize_increments = false
 config.animation_fps = 60
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"

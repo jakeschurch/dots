@@ -1,5 +1,6 @@
 require("render-markdown").setup({
   completions = { blink = { enabled = true } },
+  hover = { enabled = true },
   file_types = { "markdown", "vimwiki", "Avante", "help", "codecompanion" },
   quote = {
     enabled = true,

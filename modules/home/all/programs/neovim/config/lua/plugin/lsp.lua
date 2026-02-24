@@ -99,13 +99,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- Call hierarchy
     buf_map(
       "n",
-      "<Leader>hc",
+      "<Leader>gc",
       "<cmd>Lspsaga incoming_calls<cr>",
       "Incoming calls"
     )
     buf_map(
       "n",
-      "<Leader>ho",
+      "<Leader>go",
       "<cmd>Lspsaga outgoing_calls<cr>",
       "Outgoing calls"
     )

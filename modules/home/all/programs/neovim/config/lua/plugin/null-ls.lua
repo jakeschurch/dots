@@ -106,7 +106,6 @@ null_ls.setup({
         "mdformat-gfm",
         "mdformat-gfm-alerts",
         "mdformat-frontmatter",
-        "mdformat-tables",
         "mdformat-beautysh",
         "mdformat-footnote",
         "--code-formatters",

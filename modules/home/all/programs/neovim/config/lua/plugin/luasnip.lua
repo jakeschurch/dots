@@ -55,3 +55,15 @@ end
 
 -- Snippets
 ls.add_snippets("all", gen_date_snippets())
+
+-- Simple "date" snippet for today's date
+ls.add_snippets("all", {
+  s({
+    trig = "date",
+    snippetType = "autosnippet",
+  }, {
+    f(function()
+      return vim.fn.strftime("%Y-%m-%d")
+    end, {}),
+  }),
+})

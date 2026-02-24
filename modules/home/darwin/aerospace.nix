@@ -66,10 +66,6 @@ let
     ));
 in
 {
-  home.packages = with pkgs; [
-    jankyborders
-  ];
-
   programs.aerospace = {
     enable = true;
     launchd.enable = true;
@@ -83,7 +79,6 @@ in
 
       after-startup-command = [
         "exec-and-forget bitwarden-desktop"
-        "exec-and-forget ${lib.getExe pkgs.jankyborders} style=round hidpi=on inactive_color=0x000000 active_color=0xcc8ec07c width=32.0"
       ];
 
       start-at-login = true;

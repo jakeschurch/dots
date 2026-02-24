@@ -28,6 +28,7 @@ in
     ./ssh.nix
     ./terragrunt.nix
     ./wezterm
+    ./fish
     ./zsh
     ./ssh.nix
   ];

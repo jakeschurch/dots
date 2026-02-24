@@ -171,7 +171,36 @@ return {
       usePlaceholders = true,
     },
   },
-  vtsls = {},
+  vtsls = {
+    settings = {
+      typescript = {
+        inlayHints = {
+          parameterNames = { enabled = "literals" },
+          parameterTypes = { enabled = true },
+          variableTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          enumMemberValues = { enabled = true },
+        },
+        updateImportsOnFileMove = { enabled = "always" },
+      },
+      javascript = {
+        inlayHints = {
+          parameterNames = { enabled = "literals" },
+          parameterTypes = { enabled = true },
+          variableTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          enumMemberValues = { enabled = true },
+        },
+        updateImportsOnFileMove = { enabled = "always" },
+      },
+      vtsls = {
+        enableMoveToFileCodeAction = true,
+        autoUseWorkspaceTsdk = true,
+      },
+    },
+  },
   eslint = {},
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   lua_ls = {
@@ -214,8 +243,8 @@ return {
         },
         workspace = {
           checkThirdParty = false,
-          library = vim.api.nvim_get_runtime_file("", true),
-          maxPreload = 20000,
+          library = { vim.env.VIMRUNTIME },
+          maxPreload = 1000,
           requestTimeout = 5000,
         },
         semantic = { enable = false },

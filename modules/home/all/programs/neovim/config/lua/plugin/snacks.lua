@@ -37,5 +37,3 @@ require("which-key").add({
   { "<leader>ba", snacks.bufdelete.all, desc = "Delete all buffers" },
   { "<leader>bo", snacks.bufdelete.other, desc = "Delete other buffers" },
 })
-
-local autocmd = vim.api.nvim_create_autocmd

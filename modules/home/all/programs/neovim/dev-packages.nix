@@ -113,7 +113,6 @@ pkgs: {
     python313Packages.mdformat-myst
     python313Packages.mdformat-nix-alejandra
     python313Packages.mdformat-simple-breaks
-    python313Packages.mdformat-tables
   ];
 
   html = with pkgs; [

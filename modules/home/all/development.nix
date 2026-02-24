@@ -252,17 +252,6 @@
       '';
     };
 
-    fish = {
-      enable = false;
-      interactiveShellInit = ''
-        set fish_greeting
-        fish_vi_key_bindings
-      '';
-      plugins = with pkgs.fishPlugins; [
-        autopair
-      ];
-    };
-
     fzf = {
       enable = true;
       defaultCommand = "rg --files --hidden --no-heading --height 40% --pcre2 --ignore-file=~/.rgignore";

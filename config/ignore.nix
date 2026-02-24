@@ -28,6 +28,7 @@ let
       "tags"
       "~*"
       ".DS_Store"
+      "*.tfstate"
     ];
 in
 lib.strings.concatLines (lib.flatten dirEntries)

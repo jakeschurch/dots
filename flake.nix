@@ -110,7 +110,7 @@
       "pipe-operators"
     ];
 
-    sandbox = true;
+    sandbox = "relaxed";
     sandbox-fallback = true;
     cores = 0;
     max-jobs = "auto";

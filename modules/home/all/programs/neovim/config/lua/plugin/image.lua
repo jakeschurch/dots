@@ -8,7 +8,7 @@ require("image").setup({
       download_remote_images = true,
       only_render_image_at_cursor = false,
       only_render_image_at_cursor_mode = "popup",
-      floating_windows = false,
+      floating_windows = true,
       filetypes = { "markdown", "vimwiki" },
     },
     neorg = {

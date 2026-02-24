@@ -27,8 +27,8 @@ lualine.setup({
         "branch",
         fmt = function(str)
           local short_prefix = str:gsub("%a+/", "")
-          if string.len(short_prefix) > 12 then
-            return short_prefix:sub(1, 12) .. " ..."
+          if string.len(short_prefix) > 15 then
+            return short_prefix:sub(1, 15) .. " ..."
           else
             return short_prefix
           end

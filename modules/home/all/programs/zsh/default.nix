@@ -75,6 +75,9 @@ in
       fi
     '';
     initExtra = ''
+      autoload -Uz bracketed-paste-magic
+      zle -N bracketed-paste bracketed-paste-magic
+
       function calc() {
         python3 -c "print(eval('$*'))"
       }
@@ -88,9 +91,9 @@ in
         profile_selections=$({
           echo "$sso_profiles"
           echo "$cred_profiles"
-        })
+        } | uniq)
 
-        profile=$(echo $profile_selections | fzf --height 40% --reverse --prompt="AWS Profile> ")
+        profile=$(echo $profile_selections | fzf --height 40% --prompt="AWS Profile> ")
 
         if [[ -n "$profile" ]]; then
           export AWS_PROFILE="$profile"
