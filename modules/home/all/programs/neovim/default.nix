@@ -89,12 +89,12 @@ in
       inherit (config.home) homeDirectory;
 
       mkOutOfStoreNeovimSymlink =
-        path: mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/programs/neovim/${path}";
+        path: mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/home/all/programs/neovim/${path}";
     in
     (mapPairsToAttrs mapToXdgConfigFile bindings)
     // {
       "nvim/spell/en.utf-8.add".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add";
-
       "nvim/spell/en.utf-8.add.spl".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add.spl";
+      "nvim/manpager.lua".source = mkOutOfStoreNeovimSymlink "config/manpager.lua";
     };
 }

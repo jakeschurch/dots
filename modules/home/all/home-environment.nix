@@ -59,7 +59,7 @@ in
       MIX_HOME = "${config.home.homeDirectory}/.cache/.nix-mix";
       HEX_HOME = "${config.home.homeDirectory}/.cache/.nix-hex";
       PAGER = "bat";
-      MANPAGER = "nvim +Man! -u NORC";
+      MANPAGER = "nvim -u ~/.config/nvim/manpager.lua +Man!";
       MANWIDTH = "999";
       HISTSIZE = "50000";
       HISTCONTROL = concatSessionList [
