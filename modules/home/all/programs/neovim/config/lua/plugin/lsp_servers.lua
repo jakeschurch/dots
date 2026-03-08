@@ -130,6 +130,11 @@ return {
       },
     },
   },
+  expert = {
+    cmd = { "expert", "--stdio" },
+    filetypes = { "elixir", "eelixir", "heex" },
+    root_dir = root_pattern("mix.exs", ".git"),
+  },
   -- REVIEW tailwindcss = {},
   hls = {},
   dockerls = {},

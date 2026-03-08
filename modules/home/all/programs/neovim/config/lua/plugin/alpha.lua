@@ -1,5 +1,3 @@
-local merge_tables = require("utils").merge_tables
-
 local status_ok, alpha = pcall(require, "alpha")
 if not status_ok then
   return
@@ -37,61 +35,28 @@ local function add_icon_button(filepath, shortcut_key, text)
   return add_button(filepath, shortcut_key, icon_text)
 end
 
-local function get_mru_dirfiles(dir, n_files)
-  dir = dir:gsub("^~", os.getenv("HOME"))
+local function get_mru_projects(directory, n_projects)
+  directory = vim.fn.expand(directory)
+  local seen = {}
+  local projects = {}
 
-  -- Use 'fd' to find files, then use 'stat' to get modification times, sort by time, and limit the results
-  local command = string.format(
-    'fd --type f --hidden --exclude .git %s | xargs -I{} stat --format="%%Y %%n" {} | sort -n -r | head -n %d',
-    dir,
-    n_files
-  )
-
-  local handle = io.popen(command)
-  local recent_files = {}
-
-  if handle then
-    for line in handle:lines() do
-      local last_modified, path = line:match("^(%d+) (.+)")
-      if last_modified and path then
-        table.insert(recent_files, path)
+  for _, file in ipairs(vim.v.oldfiles) do
+    if #projects >= n_projects then
+      break
+    end
+    -- Check if file is under the target directory
+    if file:sub(1, #directory) == directory then
+      -- Extract the project dir (first path component after directory)
+      local relative = file:sub(#directory + 1)
+      local project_name = relative:match("^([^/]+)")
+      if project_name and not seen[project_name] then
+        seen[project_name] = true
+        table.insert(projects, directory .. project_name)
       end
     end
-    handle:close()
   end
 
-  return recent_files
-end
-
-local function get_git_repos(directory)
-  local repos = {}
-
-  directory = directory:gsub("^~", os.getenv("HOME"))
-
-  local handle = io.popen(
-    "fd .git$ "
-      .. directory
-      .. ' -d 2 -u -H  -t d -x stat -c "%Y %n" | sort -n -r | head -n 5'
-  )
-  if handle then
-    for line in handle:lines() do
-      local last_modified, path = line:match("(%d+) (.+)")
-      if last_modified and path then
-        table.insert(
-          repos,
-          { path = path, last_modified = tonumber(last_modified) }
-        )
-      end
-    end
-    handle:close()
-  end
-
-  local top_repos = {}
-  for i = 1, math.min(5, #repos) do
-    table.insert(top_repos, repos[i].path)
-  end
-
-  return top_repos
+  return projects
 end
 
 startify.section.header.opts.position = "center"
@@ -106,27 +71,26 @@ startify.section.header.val = {
   [[#########    ########      ###       ###   ########   ###    ###  ##########]],
 }
 
-startify.section.mru_git = {
+startify.section.mru_projects = {
   type = "group",
   val = {
     {
       type = "text",
-      val = "MRU Work Projects",
+      val = "MRU Projects",
       opts = { hl = "SpecialComment", position = "left" },
     },
     {
       type = "group",
       val = function()
-        local expanded_dir = vim.fn.expand("~/Projects/work/")
-        local repos = get_git_repos(expanded_dir)
+        local projects_dir = "~/Projects/"
+        local projects = get_mru_projects(projects_dir, 5)
+        local expanded_dir = vim.fn.expand(projects_dir)
 
         local buttons = {}
-        for i, repo in ipairs(repos) do
+        for i, project in ipairs(projects) do
           local index = tostring(i + 4)
-          repo = repo:gsub("%.git$", "")
-          local trimmed_path = repo:gsub(expanded_dir, "")
-
-          table.insert(buttons, add_icon_button(repo, index, trimmed_path))
+          local trimmed_path = project:gsub(expanded_dir, "")
+          table.insert(buttons, add_icon_button(project, index, trimmed_path))
         end
 
         return buttons
@@ -209,7 +173,7 @@ startify.config.layout = {
   { type = "padding", val = 3 },
   startify.section.mru,
   { type = "padding", val = 2 },
-  startify.section.mru_git,
+  startify.section.mru_projects,
   { type = "padding", val = 2 },
   startify.section.bookmarks,
   { type = "padding", val = 2 },
@@ -221,11 +185,22 @@ startify.config.layout = {
 
 alpha.setup(startify.config)
 
+-- Refresh alpha when entering the buffer to update MRU
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    if vim.bo.filetype == "alpha" then
+      vim.schedule(function()
+        require("alpha").redraw()
+      end)
+    end
+  end,
+})
+
 vim.keymap.set("n", "<leader>e", function()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if
       vim.api.nvim_buf_is_loaded(buf)
-      and vim.api.nvim_buf_get_option(buf, "filetype") == "alpha"
+      and vim.api.nvim_get_option_value("filetype", { buf = buf }) == "alpha"
     then
       vim.api.nvim_buf_delete(buf, { force = true })
     end

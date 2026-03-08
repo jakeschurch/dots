@@ -1,0 +1,210 @@
+releases:
+  - chart: cert-manager/cert-manager
+    createNamespace: true
+    name: cert-manager
+    namespace: cert-manager
+    set:
+      - name: installCRDs
+        value: "true"
+      - name: prometheus.enabled
+        value: "true"
+      - name: prometheus.servicemonitor.enabled
+        value: "true"
+  - chart: datahub-local/garage
+    createNamespace: true
+    name: garage
+    namespace: garage
+    set:
+      - name: image.tag
+        value: v2.1.0
+      - name: persistence.data.size
+        value: 100Gi
+      - name: persistence.data.storageClass
+        value: longhorn
+      - name: persistence.meta.size
+        value: 1Gi
+      - name: persistence.meta.storageClass
+        value: longhorn
+      - name: replicaCount
+        value: "1"
+      - name: resources.limits.cpu
+        value: "2"
+      - name: resources.limits.memory
+        value: 4Gi
+      - name: resources.requests.cpu
+        value: 100m
+      - name: resources.requests.memory
+        value: 512Mi
+      - name: service.s3.port
+        value: "3900"
+      - name: service.type
+        value: ClusterIP
+      - name: topologySpreadConstraints.enabled
+        value: "false"
+  - chart: harbor/harbor
+    createNamespace: true
+    name: harbor
+    namespace: harbor
+    set:
+      - name: core.replicas
+        value: "1"
+      - name: database.internal.image.tag
+        value: 15.7.2
+      - name: database.internal.resources.limits.cpu
+        value: 1000m
+      - name: database.internal.resources.limits.memory
+        value: 512Mi
+      - name: expose.tls.auto.enabled
+        value: "true"
+      - name: expose.tls.auto.source
+        value: letsencrypt
+      - name: expose.tls.enabled
+        value: "true"
+      - name: expose.type
+        value: loadBalancer
+      - name: jobservice.replicas
+        value: "1"
+      - name: notary.enabled
+        value: "true"
+      - name: notary.server.replicas
+        value: "1"
+      - name: notary.signer.replicas
+        value: "1"
+      - name: persistence.persistentVolumeClaim.chartmuseum.size
+        value: 10Gi
+      - name: persistence.persistentVolumeClaim.chartmuseum.storageClass
+        value: longhorn
+      - name: persistence.persistentVolumeClaim.registry.size
+        value: 50Gi
+      - name: persistence.persistentVolumeClaim.registry.storageClass
+        value: longhorn
+      - name: portal.replicas
+        value: "1"
+      - name: redis.internal.image.tag
+        value: 7.4.1
+      - name: registry.replicas
+        value: "1"
+      - name: trivy.enabled
+        value: "true"
+      - name: trivy.replicas
+        value: "1"
+  - chart: linkerd/linkerd2
+    createNamespace: true
+    name: linkerd-viz
+    namespace: linkerd-viz
+    set:
+      - name: grafanaUrl
+        value: http://grafana:3000
+      - name: prometheusUrl
+        value: http://prometheus:9090
+  - chart: linkerd/linkerd2
+    createNamespace: true
+    name: linkerd
+    namespace: linkerd
+    set:
+      - name: cniEnabled
+        value: "false"
+      - name: enableEndpointSlices
+        value: "true"
+      - name: enableProxy
+        value: "true"
+      - name: identity.issuer.tls.crtPEM
+        value: '{{ .Values.identity.issuer.tls.crtPEM }}'
+      - name: identity.issuer.tls.keyPEM
+        value: '{{ .Values.identity.issuer.tls.keyPEM }}'
+      - name: linkerdVersion
+        value: stable-2.16.0
+  - chart: kubernetes-sigs/node-feature-discovery
+    createNamespace: true
+    name: node-feature-discovery
+    namespace: node-feature-discovery
+    set:
+      - name: master.serviceAccountName
+        value: nfd-master
+      - name: topologyupdater.enable
+        value: "true"
+      - name: worker.serviceAccountName
+        value: nfd-worker
+  - chart: node-local-dns/node-local-dns
+    createNamespace: false
+    name: node-local-dns
+    namespace: kube-system
+    set:
+      - name: config.dnsDomain
+        value: cluster.local
+      - name: config.dnsServer
+        value: 172.20.0.10
+      - name: config.dnsServerPort
+        value: "53"
+      - name: config.localDns
+        value: 169.254.20.25
+      - name: image.repository
+        value: registry.k8s.io/dns/k8s-nodelocaldns
+      - name: image.tag
+        value: v1.23.1
+      - name: resources.requests.cpu
+        value: 25m
+      - name: resources.requests.memory
+        value: 16Mi
+  - chart: nvidia/gpu-operator
+    createNamespace: true
+    name: gpu-operator
+    namespace: gpu-operator
+    set:
+      - name: dcgm.enabled
+        value: "true"
+      - name: devicePlugin.enabled
+        value: "true"
+      - name: driver.enabled
+        value: "true"
+      - name: operator.defaultRuntime
+        value: containerd
+      - name: operator.useNvidiaDriverCRD
+        value: "true"
+  - chart: prometheus-community/kube-prometheus-stack
+    createNamespace: true
+    name: kube-prometheus-stack
+    namespace: monitoring
+    set:
+      - name: grafana.persistence.enabled
+        value: "true"
+      - name: grafana.persistence.size
+        value: 10Gi
+      - name: grafana.persistence.storageClassName
+        value: longhorn
+      - name: prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues
+        value: "false"
+      - name: prometheus.prometheusSpec.retention
+        value: 15d
+      - name: prometheus.prometheusSpec.ruleSelectorNilUsesHelmValues
+        value: "false"
+      - name: prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues
+        value: "false"
+      - name: prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage
+        value: 20Gi
+      - name: prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.storageClassName
+        value: longhorn
+  - chart: cert-manager/trust-manager
+    createNamespace: false
+    name: trust-manager
+    namespace: cert-manager
+    set:
+      - name: appTrust.enabled
+        value: "true"
+repositories:
+  - name: cert-manager
+    url: https://charts.jetstack.io
+  - name: datahub-local
+    url: https://datahub-local.github.io/garage-helm
+  - name: harbor
+    url: https://helm.goharbor.io
+  - name: linkerd
+    url: https://helm.linkerd.io/stable
+  - name: kubernetes-sigs
+    url: https://kubernetes-sigs.github.io/node-feature-discovery/charts
+  - name: node-local-dns
+    url: https://lablabs.github.io/k8s-nodelocaldns-helm/
+  - name: nvidia
+    url: https://nvidia.github.io/gpu-operator
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts

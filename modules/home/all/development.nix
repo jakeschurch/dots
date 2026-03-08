@@ -5,9 +5,9 @@
 {
   home = {
     packages = with pkgs; [
-      # (pkgs.callPackage ./vectorcode.nix { })
-      # python312Packages.chromadb
-      # vectorcode
+      claude-code
+      opencode
+
       pipx
       nix-update
       ssm-session-manager-plugin

@@ -182,9 +182,7 @@ local config = {
           kind_icon = {
             ellipsis = false,
             text = function(ctx)
-              return lspkind.symbolic(ctx.kind, {
-                mode = "symbol",
-              })
+              return lspkind.symbol_map[ctx.kind] or ""
             end,
           },
         },

@@ -18,25 +18,135 @@ in
     inputs.noctalia.nixosModules.default
 
     # MicroVM host configuration for K3s cluster
-    # inputs.vmetal.nixosModules.baremetal
+    inputs.vmetal.nixosModules.microvm-host
+    inputs.vmetal.nixosModules.k3s-cluster
   ];
+
+  environment.variables = {
+    VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
+  };
+
+  services.microvm-host = {
+    enable = true;
+    network = {
+      gateway = "192.168.100.1";
+      subnet = "192.168.100.0/24";
+      externalInterface = "enp5s0";
+    };
+  };
+
+  services.k3s-cluster = {
+    enable = true;
+    token = "my-cluster-token-12345";
+    vip = "192.168.100.100";
+
+    embeddedRegistry = {
+      enable = true;
+      mirrors = [
+        "docker.io"
+        "registry.k8s.io"
+      ];
+    };
+
+    cilium.enable = true;
+    argocd = {
+      enable = true;
+      targetRevision = "v1";
+      path = "vmetal/manifests";
+    };
+
+    network = {
+      prefix = "192.168.100";
+      firstServerIp = "192.168.100.10";
+      gateway = "192.168.100.1";
+      dns = "192.168.100.1";
+    };
+
+    sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];
+
+    servers.k3s-server-1 = {
+      ip = "192.168.100.10";
+      mac = "02:00:00:00:00:10";
+      initial = true;
+      vsockCid = 10;
+    };
+
+    servers.k3s-server-2 = {
+      ip = "192.168.100.11";
+      mac = "02:00:00:00:00:11";
+      vsockCid = 11;
+    };
+
+    servers.k3s-server-3 = {
+      ip = "192.168.100.12";
+      mac = "02:00:00:00:00:12";
+      vsockCid = 12;
+    };
+
+    workers.k3s-worker-1 = {
+      ip = "192.168.100.20";
+      mac = "02:00:00:00:00:20";
+      vsockCid = 20;
+      mem = 16384;
+      dataDisk = 250;
+    };
+
+    workers.k3s-worker-2 = {
+      ip = "192.168.100.21";
+      mac = "02:00:00:00:00:21";
+      vsockCid = 21;
+      mem = 16384;
+      dataDisk = 250;
+    };
+
+    workers.k3s-worker-3 = {
+      ip = "192.168.100.22";
+      mac = "02:00:00:00:00:22";
+      vsockCid = 22;
+      mem = 16384;
+      dataDisk = 250;
+    };
+
+    workers.k3s-worker-4 = {
+      ip = "192.168.100.23";
+      mac = "02:00:00:00:00:24";
+      vsockCid = 23;
+      mem = 20000;
+      dataDisk = 250;
+      passthroughDevices = [
+        {
+          bus = "pci";
+          path = "0000:0c:00.0";
+        }
+      ];
+    };
+  };
 
   # NAT for microVM external network access
   networking.nat.externalInterface = "enp5s0";
+
+  networking.nameservers = [
+    "1.1.1.1#one.one.one.one"
+    "1.0.0.1#one.one.one.one"
+  ];
+
+  services.resolved = {
+    enable = true;
+    settings.Resolve = {
+      DNSSEC = "allow-downgrade";
+      Domains = [ "~." ];
+      FallbackDNS = [
+        "1.1.1.1#one.one.one.one"
+        "1.0.0.1#one.one.one.one"
+      ];
+      DNSOverTLS = "opportunistic";
+    };
+  };
 
   xdg.portal = {
     enable = true;
     wlr.enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
-
-  services.qdrant = {
-    enable = true;
-    settings = {
-      storage_path = "/var/lib/qdrant/storage";
-      http_port = 6333;
-      grpc_port = 6334;
-    };
   };
 
   services.noctalia-shell.enable = true;
@@ -64,6 +174,8 @@ in
           "uwsm app -- hypridle"
           "uwsm app -- awww-daemon"
           "sleep 1 && awww img ~/Pictures/Wallpapers/animated --transition-type grow --transition-fps 60"
+          "wl-paste --type text --watch cliphist store"
+          "wl-paste --type image --watch cliphist store"
         ];
 
         misc = {
@@ -84,22 +196,36 @@ in
           };
         };
 
+        layout = {
+          single_window_aspect_ratio = "4 3";
+        };
+
         "$mod" = "SUPER";
 
-        windowrulev2 = [ "monitor DP-1, fullscreen 3, class:^(steam_app_.*)$" ];
+        windowrule = [
+          "monitor DP-1, fullscreen 3, match:class ^(steam_app_.*)$"
+          "match:class ^(cliphist-picker)$, float on"
+          "match:class ^(cliphist-picker)$, size 800 500"
+          "match:class ^(cliphist-picker)$, float on, center on"
+        ];
 
         env = [
-          # Force Hyprland to only use NVIDIA GPU (card1), Intel B580 (card2) reserved for compute
-          # "AQ_DRM_DEVICES,/dev/dri/card1"
+          # Force Hyprland to only use NVIDIA GPU (card1), Intel B60 (card2) reserved for compute
+          "AQ_DRM_DEVICES,/dev/dri/card1"
 
           "HYPRCURSOR_THEME,rose-pine-hyprcursor"
           "WLR_NO_HARDWARE_CURSORS,1"
-          "WLR_RENDERER_ALLOW_SOFTWARE,1"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
           "GBM_BACKEND,nvidia-drm"
           "__GL_GSYNC_ALLOWED,1"
           "__GL_VRR_ALLOWED,1"
+          "__NV_PRIME_RENDER_OFFLOAD,1"
+          "__VK_LAYER_NV_optimus,NVIDIA_only"
         ];
+
+        xwayland = {
+          force_zero_scaling = true;
+        };
 
         general = {
           layout = "dwindle";
@@ -112,7 +238,9 @@ in
 
         dwindle = {
           force_split = 2; # always split to right
-          single_window_aspect_ratio = "4 3";
+          smart_split = false;
+          smart_resizing = false;
+          preserve_split = true;
         };
 
         decoration = {
@@ -168,8 +296,8 @@ in
 
             # # buttons: color, size, icon, command
             hyprbars-button = [
-              "rgb(ff5f56), 15, , hyprctl dispatch killactive" # Close (red)
-              "rgb(ffbd2e), 15, , hyprctl dispatch minimizeactive" # Minimize (yellow)
+              "rgb(ff5f56), 15, , smart-kill" # Close (red)
+              "rgb(ffbd2e), 15, , hyprctl dispatch movetoworkspacesilent special" # Minimize (yellow)
               "rgb(27c93f), 15, , hyprctl dispatch fullscreen 1" # Maximize (green)
             ];
 
@@ -262,11 +390,17 @@ in
             # reload
             "$mod+SHIFT, r, exec, hyprctl reload && notify-send 'hyprland reloaded 👍'"
 
-            # quit
-            "$mod, Q, killactive"
+            # "$mod,space, exec, noctalia-shell ipc call launcher toggle"
 
-            "$mod+SHIFT, v, exec, wl-paste --primary"
-            "$mod+SHIFT, c, exec, wl-copy --primary --regular"
+            "$mod+SHIFT, v, exec, cliphist-pick"
+            "$mod+ALT, v, exec, cliphist-pick"
+
+            # quit - minimize Steam/Bitwarden to tray, kill everything else
+            "$mod, Q, exec, smart-kill"
+
+            "$mod, minus, togglespecialworkspace, magic"
+
+            "$mod+shift, minus, movetoworkspace, +0"
 
             # Fullscreen
             "SUPER, F, fullscreen, 1"
@@ -312,6 +446,15 @@ in
     systemPackages = with pkgs; [
       (pkgs.writeScriptBin "ocr-shot" (builtins.readFile ./ocr-shot.sh))
 
+      (pkgs.writeShellScriptBin "smart-kill" ''
+        class=$(${pkgs.hyprland}/bin/hyprctl activewindow -j | ${pkgs.jq}/bin/jq -r ".class")
+        if [ "$class" = "Steam" ] || [ "$class" = "Bitwarden" ]; then
+          ${pkgs.xdotool}/bin/xdotool getactivewindow windowunmap
+        else
+          ${pkgs.hyprland}/bin/hyprctl dispatch killactive ""
+        fi
+      '')
+
       (tesseract5.override {
         enableLanguages = [
           "eng"
@@ -320,8 +463,10 @@ in
       })
       slurp
       grim
+      xdotool
 
       hyprshot
+      cliphist
       tuigreet
       inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
       inputs.awww.packages.${pkgs.system}.awww
@@ -352,6 +497,9 @@ in
 
           meta = {
             backspace = "C-backspace";
+            v = "C-v";
+            c = "C-c";
+
             x = "C-x";
             a = "C-a";
             s = "C-s";
@@ -362,9 +510,6 @@ in
             down = "C-end";
             left = "home";
             right = "end";
-
-            c = "M-c";
-            v = "M-v";
           };
         };
       };

@@ -6,10 +6,7 @@
 {
   programs.ssh = {
     enable = true;
-    forwardAgent = true;
-    compression = true;
-    hashKnownHosts = false;
-    controlMaster = "no";
+    enableDefaultConfig = false;
 
     matchBlocks = {
       "linux-builder" = {
@@ -22,14 +19,19 @@
           StrictHostKeyChecking = "accept-new";
         };
       };
+
+      "*" = {
+        forwardAgent = true;
+        compression = true;
+        hashKnownHosts = false;
+        controlMaster = "no";
+      };
     };
 
     extraConfig = ''
       Host *
-        HashKnownHosts no
         StrictHostKeyChecking no
         UserKnownHostsFile /dev/null
-        ForwardAgent yes
     '';
   };
 
@@ -38,11 +40,11 @@
     bitwarden-desktop
   ];
 
-  # home.sessionVariables = {
-  #   SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
-  # };
+  home.sessionVariables = {
+    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
+  };
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     if [ -z "$SSH_CONNECTION" ]; then
        export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"
      fi

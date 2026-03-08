@@ -1,17 +1,17 @@
 --@type AvanteProvider
 local M = {}
 
--- llama.cpp OpenAI-compatible API for Avante
--- llama.cpp serves OpenAI-compatible API at /v1/chat/completions
+-- Ollama for Avante (NVIDIA 4080 Super on port 11434)
+-- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md
 
 M["local"] = true
 M.api_key_name = nil
-M.endpoint = "http://127.0.0.1:11434/v1"
+M.endpoint = "http://127.0.0.1:11434/api"
 M.options = {
   num_ctx = 32768,
   temperature = 0,
 }
-M.model = "qwen2.5-coder-14b"
+M.model = "qwen2.5-coder:14b"
 
 M.parse_response = function(data_stream, _, opts)
   if data_stream:match('"%[DONE%]":') then
@@ -45,14 +45,9 @@ M.parse_stream_data = function(data, handler_opts)
   if json_data and json_data.done then
     handler_opts.on_complete(nil)
   end
-  if json_data and json_data.choices and #json_data.choices > 0 then
-    local choice = json_data.choices[1]
-    if choice.delta and choice.delta.content then
-      handler_opts.on_chunk(choice.delta.content)
-    end
-    if choice.finish_reason == "stop" then
-      handler_opts.on_complete(nil)
-    end
+  if json_data and json_data.message and json_data.message.content then
+    local content = json_data.message.content
+    handler_opts.on_chunk(content)
   end
 end
 
@@ -65,7 +60,7 @@ M.parse_curl_args = function(self, prompt_opts)
   }
 
   return {
-    url = M.endpoint .. "/chat/completions",
+    url = M.endpoint .. "/chat",
     headers = {
       Accept = "application/json",
       ["Content-Type"] = "application/json",
@@ -75,8 +70,7 @@ M.parse_curl_args = function(self, prompt_opts)
       messages = require("avante.providers").copilot.parse_messages(
         prompt_opts
       ),
-      max_tokens = options.num_ctx,
-      temperature = options.temperature,
+      options = options,
       stream = true,
     },
   }

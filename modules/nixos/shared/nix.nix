@@ -34,9 +34,11 @@ in
     gc.automatic = true;
 
     settings = {
-      fallback = false;
+      fallback = true;
+      auto-optimise-store = true;
       cores = 0;
       max-jobs = "auto";
+      http-connections = 25;
       max-substitution-jobs = 40;
       sandbox = "relaxed";
       sandbox-fallback = lib.mkForce true;

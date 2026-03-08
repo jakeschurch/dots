@@ -84,6 +84,21 @@ local options = {
 
 vim.opt.mouse:append("a")
 
+if vim.fn.has("mac") == 0 then
+  vim.g.clipboard = {
+    name = "wl-clipboard",
+    copy = {
+      ["+"] = "wl-copy",
+      ["*"] = "wl-copy --primary",
+    },
+    paste = {
+      ["+"] = "wl-paste --no-newline",
+      ["*"] = "wl-paste --no-newline --primary",
+    },
+    cache_enabled = 0,
+  }
+end
+
 if vim.fn.executable("rg") == 1 then
   vim.opt.grepformat = "%f:%l:%c:%m,%f:%l:%m"
   vim.opt.grepprg = "rg --vimgrep --hidden --pcre2 --no-heading --smart-case"

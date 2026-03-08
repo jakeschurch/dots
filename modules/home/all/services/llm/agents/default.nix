@@ -1,8 +1,9 @@
-{ lib
-, tools
-, models
-, mcpServers
-, ...
+{
+  lib,
+  tools,
+  models,
+  mcpServers,
+  ...
 }:
 let
   allAvailableTools = lib.attrNames tools ++ lib.attrNames mcpServers;
@@ -11,20 +12,16 @@ let
     enabledTools:
     let
       enabledAttrs = builtins.listToAttrs (
-        map
-          (tool: {
-            name = tool;
-            value = true;
-          })
-          enabledTools
+        map (tool: {
+          name = tool;
+          value = true;
+        }) enabledTools
       );
       disabledAttrs = builtins.listToAttrs (
-        map
-          (tool: {
-            name = tool;
-            value = false;
-          })
-          (builtins.filter (t: !(builtins.elem t enabledTools)) allAvailableTools)
+        map (tool: {
+          name = tool;
+          value = false;
+        }) (builtins.filter (t: !(builtins.elem t enabledTools)) allAvailableTools)
       );
     in
     enabledAttrs // disabledAttrs;
@@ -602,46 +599,42 @@ let
     lib.concatStringsSep "\n" (lib.mapAttrsToList formatAgent subAgents);
 
   # Build final agents with prompts applied
-  agents = lib.mapAttrs
-    (
-      name: agent:
-        let
-          promptText = if name == "orchestrator" then agent.prompt subAgentDetails else agent.prompt null;
-        in
-        {
-          inherit (agent)
-            model
-            mode
-            description
-            temperature
-            maxSteps
-            tools
-            ;
-          num_ctx = toString agent.num_ctx;
-          prompt = promptText;
-        }
-    )
-    agentDefinitions;
+  agents = lib.mapAttrs (
+    name: agent:
+    let
+      promptText = if name == "orchestrator" then agent.prompt subAgentDetails else agent.prompt null;
+    in
+    {
+      inherit (agent)
+        model
+        mode
+        description
+        temperature
+        maxSteps
+        tools
+        ;
+      num_ctx = toString agent.num_ctx;
+      prompt = promptText;
+    }
+  ) agentDefinitions;
 
   # Generate markdown files for each agent
   mkAgentMarkdown =
     agentName: agent:
     let
       frontMatter = lib.concatStringsSep "\n" (
-        lib.mapAttrsToList
-          (
-            k: v:
-              if k == "tools" then
-                let
-                  toolLines = lib.mapAttrsToList (name: val: "  ${name}: ${lib.boolToString val}") v;
-                in
-                "tools:\n${lib.concatStringsSep "\n" toolLines}"
-              else if k == "prompt" then
-                ""
-              else
-                "${k}: ${toString v}"
-          )
-          (lib.filterAttrs (k: _: k != "prompt") agent)
+        lib.mapAttrsToList (
+          k: v:
+          if k == "tools" then
+            let
+              toolLines = lib.mapAttrsToList (name: val: "  ${name}: ${lib.boolToString val}") v;
+            in
+            "tools:\n${lib.concatStringsSep "\n" toolLines}"
+          else if k == "prompt" then
+            ""
+          else
+            "${k}: ${toString v}"
+        ) (lib.filterAttrs (k: _: k != "prompt") agent)
       );
     in
     {
@@ -658,16 +651,14 @@ let
   agentFiles = lib.foldl' lib.recursiveUpdate { } (lib.mapAttrsToList mkAgentMarkdown agents);
 in
 agentFiles
-  // {
+// {
   assertions =
     let
       getModelId = agent: lib.splitString "/" agent.model |> lib.last;
       contains = model: lib.findFirst (m: m.id == model) models != null;
     in
-    lib.mapAttrsToList
-      (_: agent: {
-        assertion = contains (getModelId agent);
-        message = "Model '${agent.model}' for agent is not defined in models.nix";
-      })
-      agentDefinitions;
+    lib.mapAttrsToList (_: agent: {
+      assertion = contains (getModelId agent);
+      message = "Model '${agent.model}' for agent is not defined in models.nix";
+    }) agentDefinitions;
 }

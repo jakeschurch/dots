@@ -1,70 +1,98 @@
 _: [
-  # ===== PRIMARY MODEL =====
-  # Qwen 2.5 14B - best balance of quality and speed for dual GPU
+  # ===== PRIMARY / GENERAL PURPOSE =====
   {
-    id = "qwen2.5-coder-14b";
-    name = "Qwen 2.5 Coder 14B";
-    repo = "Qwen/Qwen2.5-Coder-14B-Instruct-GGUF";
-    filename = "qwen2.5-coder-14b-instruct-q4_k_m.gguf";
+    id = "qwen2.5:latest";
+    name = "Qwen 2.5 (Latest)";
     primary = true;
   }
-
-  # ===== HEAVY TIER (14B+) - Complex Tasks =====
   {
-    id = "qwen2.5-14b";
-    name = "Qwen 2.5 14B Instruct";
-    repo = "Qwen/Qwen2.5-14B-Instruct-GGUF";
-    filename = "qwen2.5-14b-instruct-q4_k_m.gguf";
+    id = "qwen3:14b";
+    name = "Qwen 3 14B";
     primary = false;
   }
-
   {
-    id = "deepseek-coder-v2-16b";
-    name = "DeepSeek Coder V2 16B";
-    repo = "TheBloke/deepseek-coder-16b-instruct-v1.5-GGUF";
-    filename = "deepseek-coder-16b-instruct-v1.5.Q4_K_M.gguf";
-    primary = false;
-  }
-
-  # ===== MEDIUM TIER (7B) - Standard Tasks =====
-  {
-    id = "glm-4-9b";
-    name = "GLM-4 9B";
-    repo = "THUDM/glm-4-9b-chat-GGUF";
-    filename = "glm-4-9b-chat-Q4_K_M.gguf";
-    primary = false;
-  }
-
-  {
-    id = "qwen2.5-coder-7b";
-    name = "Qwen 2.5 Coder 7B";
-    repo = "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF";
-    filename = "qwen2.5-coder-7b-instruct-q4_k_m.gguf";
-    primary = false;
-  }
-
-  {
-    id = "llama3.1-8b";
+    id = "llama3.1:8b";
     name = "Llama 3.1 8B";
-    repo = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF";
-    filename = "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf";
     primary = false;
   }
 
-  # ===== LIGHT TIER (3B) - Fast Tasks =====
+  # ===== HEAVY TIER (14B) =====
   {
-    id = "qwen2.5-coder-3b";
+    id = "qwen2.5:14b";
+    name = "Qwen 2.5 14B";
+    primary = false;
+  }
+  {
+    id = "phi3:14b";
+    name = "Phi 3 14B";
+    primary = false;
+  }
+  {
+    id = "glm-4.7-flash";
+    name = "GLM-4.7 Flash";
+    primary = false;
+  }
+
+  # ===== CODING MODELS =====
+  {
+    id = "qwen2.5-coder:32b";
+    name = "Qwen 2.5 Coder 32B";
+    primary = false;
+  }
+  {
+    id = "qwen2.5-coder:14b";
+    name = "Qwen 2.5 Coder 14B";
+    primary = false;
+  }
+  {
+    id = "qwen2.5-coder:7b";
+    name = "Qwen 2.5 Coder 7B";
+    primary = false;
+  }
+  {
+    id = "qwen2.5-coder:3b";
     name = "Qwen 2.5 Coder 3B";
-    repo = "Qwen/Qwen2.5-Coder-3B-Instruct-GGUF";
-    filename = "qwen2.5-coder-3b-instruct-q4_k_m.gguf";
     primary = false;
   }
 
+  # ===== MEDIUM & GENERAL PURPOSE (7B) =====
   {
-    id = "phi3-mini";
-    name = "Phi-3 Mini 3.8B";
-    repo = "microsoft/Phi-3-mini-4k-instruct-gguf";
-    filename = "Phi-3-mini-4k-instruct-q4.gguf";
+    id = "qwen2.5:7b";
+    name = "Qwen 2.5 7B";
+    primary = false;
+  }
+  {
+    id = "mistral:7b";
+    name = "Mistral 7B";
+    primary = false;
+  }
+
+  # ===== LIGHT / SMALL (≤ 3B) =====
+  {
+    id = "qwen2.5:3b";
+    name = "Qwen 2.5 3B";
+    primary = false;
+  }
+  {
+    id = "phi3:mini";
+    name = "Phi 3 Mini (~3.8B)";
+    primary = false;
+  }
+  {
+    id = "gemma3:1b";
+    name = "Gemma 3 1B";
+    primary = false;
+  }
+  {
+    id = "gemma3:270m";
+    name = "Gemma 3 270M";
+    primary = false;
+  }
+
+  # ===== ULTRA LIGHT / EMBEDDINGS =====
+  {
+    id = "all-minilm:latest";
+    name = "All-MiniLM (Embedding)";
     primary = false;
   }
 ]

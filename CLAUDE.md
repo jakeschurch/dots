@@ -74,7 +74,7 @@ configurations/
 ## Code Quality
 
 Pre-commit hooks are enabled via `modules/flake/pre-commit-hooks.nix`:
-- `nixfmt-rfc-style` - Nix formatting
+- `nixfmt` - Nix formatting
 - `statix`, `deadnix` - Nix linting
 - `shellcheck` - Shell script linting
 - `treefmt` - Multi-language formatting

@@ -53,24 +53,21 @@
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
     walker.url = "github:abenz1267/walker";
-    walker.inputs.nixpkgs.follows = "nixpkgs";
 
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
-    hyprland.url = "github:hyprwm/Hyprland?ref=v0.53.0";
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-colors.url = "github:misterio77/nix-colors";
 
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins?ref=v0.53.0";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
 
     hypr-dynamic-cursors = {
-      # Pinned to commit compatible with Hyprland v0.53.0
-      url = "github:VirtCode/hypr-dynamic-cursors/7e9b7bc";
+      url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -89,6 +86,11 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    expert.url = "github:elixir-lang/expert";
+
+    vmetal.url = "path:/home/jake/Projects/homelab/vmetal";
+    vmetal.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -100,9 +102,9 @@
 
   nixConfig = {
     download-attempts = 3;
-    http-connections = 0;
+    http-connections = 25;
     download-buffer-size = 904857600; # 900 MiB
-    fallback = false;
+    fallback = true;
 
     extra-experimental-features = [
       "nix-command"
@@ -114,16 +116,7 @@
     sandbox-fallback = true;
     cores = 0;
     max-jobs = "auto";
-    max-substitution-jobs = 40;
-
-    substituters = [
-      "https://nix-community.cachix.org"
-      "https://cache.nixos.org/"
-    ];
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
+    max-substitution-jobs = 16;
 
     builders = [ ];
 

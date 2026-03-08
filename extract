@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+
+# Universal extraction script for Unix compressed files
+# Usage: extract <file> [destination]
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: extract <file> [destination]"
+    echo ""
+    echo "Supported formats:"
+    echo "  .tar.bz2, .tbz2, .tb2     - tar + bzip2"
+    echo "  .tar.gz, .tgz             - tar + gzip"
+    echo "  .tar.xz, .txz             - tar + xz"
+    echo "  .tar.zst, .tzst           - tar + zstd"
+    echo "  .tar.lz, .tlz             - tar + lzip"
+    echo "  .tar.lzma                 - tar + lzma"
+    echo "  .tar.Z, .tZ               - tar + compress"
+    echo "  .tar                      - tar (uncompressed)"
+    echo "  .zip, .jar, .war, .ear    - zip"
+    echo "  .gz                       - gzip"
+    echo "  .bz2                      - bzip2"
+    echo "  .xz                       - xz"
+    echo "  .lzma                     - lzma"
+    echo "  .Z                        - compress"
+    echo "  .zst                      - zstd"
+    echo "  .lz                       - lzip"
+    echo "  .7z                       - 7zip"
+    echo "  .rar                      - rar"
+    echo "  .cab                      - cabinet"
+    echo "  .arj                      - arj"
+    echo "  .cpio                     - cpio"
+    echo "  .rpm                      - rpm"
+    echo "  .deb                      - debian package"
+    echo "  .iso                      - iso image"
+    exit 1
+fi
+
+FILE="$1"
+DEST="${2:-.}"
+
+# Check if file exists
+if [[ ! -f "$FILE" ]]; then
+    echo "Error: File '$FILE' not found"
+    exit 1
+fi
+
+# Create destination if it doesn't exist
+mkdir -p "$DEST"
+
+# Get absolute path of file and destination
+FILE_ABS="$(readlink -f "$FILE")"
+DEST_ABS="$(readlink -f "$DEST")"
+
+# Function to check if command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Detect file type and extract
+case "${FILE,,}" in
+    *.tar.bz2|*.tbz2|*.tb2)
+        echo "Extracting tar.bz2 archive..."
+        tar -xvjf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.tar.gz|*.tgz)
+        echo "Extracting tar.gz archive..."
+        tar -xvzf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.tar.xz|*.txz)
+        echo "Extracting tar.xz archive..."
+        tar -xvJf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.tar.zst|*.tzst)
+        echo "Extracting tar.zst archive..."
+        if command_exists zstd; then
+            tar -I zstd -xvf "$FILE_ABS" -C "$DEST_ABS"
+        else
+            echo "Error: zstd not installed"
+            exit 1
+        fi
+        ;;
+    *.tar.lz|*.tlz)
+        echo "Extracting tar.lz archive..."
+        if command_exists lzip; then
+            tar --lzip -xvf "$FILE_ABS" -C "$DEST_ABS"
+        else
+            echo "Error: lzip not installed"
+            exit 1
+        fi
+        ;;
+    *.tar.lzma)
+        echo "Extracting tar.lzma archive..."
+        tar --lzma -xvf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.tar.z|*.tz)
+        echo "Extracting tar.Z archive..."
+        tar -xvZf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.tar)
+        echo "Extracting tar archive..."
+        tar -xvf "$FILE_ABS" -C "$DEST_ABS"
+        ;;
+    *.zip|*.jar|*.war|*.ear)
+        echo "Extracting zip archive..."
+        if command_exists unzip; then
+            unzip -o "$FILE_ABS" -d "$DEST_ABS"
+        else
+            echo "Error: unzip not installed"
+            exit 1
+        fi
+        ;;
+    *.gz)
+        echo "Extracting gzip file..."
+        gunzip -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.gz}")"
+        ;;
+    *.bz2)
+        echo "Extracting bzip2 file..."
+        bunzip2 -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.bz2}")"
+        ;;
+    *.xz)
+        echo "Extracting xz file..."
+        unxz -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.xz}")"
+        ;;
+    *.lzma)
+        echo "Extracting lzma file..."
+        unlzma -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.lzma}")"
+        ;;
+    *.z)
+        echo "Extracting compress file..."
+        uncompress -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.Z}")"
+        ;;
+    *.zst)
+        echo "Extracting zstd file..."
+        if command_exists zstd; then
+            zstd -d "$FILE_ABS" -o "$DEST_ABS/$(basename "${FILE%.zst}")"
+        else
+            echo "Error: zstd not installed"
+            exit 1
+        fi
+        ;;
+    *.lz)
+        echo "Extracting lzip file..."
+        if command_exists lzip; then
+            lzip -d -c "$FILE_ABS" > "$DEST_ABS/$(basename "${FILE%.lz}")"
+        else
+            echo "Error: lzip not installed"
+            exit 1
+        fi
+        ;;
+    *.7z)
+        echo "Extracting 7z archive..."
+        if command_exists 7z; then
+            7z x "$FILE_ABS" -o"$DEST_ABS"
+        else
+            echo "Error: 7z not installed"
+            exit 1
+        fi
+        ;;
+    *.rar)
+        echo "Extracting rar archive..."
+        if command_exists unrar; then
+            unrar x "$FILE_ABS" "$DEST_ABS/"
+        else
+            echo "Error: unrar not installed"
+            exit 1
+        fi
+        ;;
+    *.cab)
+        echo "Extracting cabinet archive..."
+        if command_exists cabextract; then
+            cabextract -d "$DEST_ABS" "$FILE_ABS"
+        else
+            echo "Error: cabextract not installed"
+            exit 1
+        fi
+        ;;
+    *.arj)
+        echo "Extracting arj archive..."
+        if command_exists arj; then
+            arj x "$FILE_ABS" "$DEST_ABS/"
+        else
+            echo "Error: arj not installed"
+            exit 1
+        fi
+        ;;
+    *.cpio)
+        echo "Extracting cpio archive..."
+        cd "$DEST_ABS" && cpio -idv < "$FILE_ABS"
+        ;;
+    *.rpm)
+        echo "Extracting rpm package..."
+        if command_exists rpm2cpio; then
+            cd "$DEST_ABS" && rpm2cpio "$FILE_ABS" | cpio -idmv
+        else
+            echo "Error: rpm2cpio not installed"
+            exit 1
+        fi
+        ;;
+    *.deb)
+        echo "Extracting deb package..."
+        if command_exists ar; then
+            mkdir -p "$DEST_ABS/deb_extract"
+            cd "$DEST_ABS/deb_extract"
+            ar x "$FILE_ABS"
+            tar -xf data.tar.* -C "$DEST_ABS"
+            cd - > /dev/null
+            rm -rf "$DEST_ABS/deb_extract"
+        else
+            echo "Error: ar not installed"
+            exit 1
+        fi
+        ;;
+    *.iso)
+        echo "Extracting iso image..."
+        if command_exists 7z; then
+            7z x "$FILE_ABS" -o"$DEST_ABS"
+        else
+            echo "Error: 7z not installed (needed for ISO extraction)"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Error: Unknown archive format for '$FILE'"
+        echo "Try 'extract' with no arguments to see supported formats"
+        exit 1
+        ;;
+esac
+
+echo ""
+echo "Extraction complete! Files extracted to: $DEST_ABS"

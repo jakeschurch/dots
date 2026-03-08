@@ -28,6 +28,7 @@ in
     ./shared
     ./steam.nix
     ./ssh.nix
+    # ./ollama-intel.nix
 
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index

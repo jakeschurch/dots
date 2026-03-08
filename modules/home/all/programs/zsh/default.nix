@@ -49,13 +49,163 @@ in
       ];
     };
     autosuggestion.enable = true;
-    initExtraBeforeCompInit = ''
-      export ZSH_COMPDUMP=~/.zcompdump
-      fpath+=(
-        ~/.cache/zsh/completions
-        "${config.home.profileDirectory}/share/zsh/site-functions"
-      )
-    '';
+    dotDir = config.home.homeDirectory;
+
+    initContent = lib.mkMerge [
+      (lib.mkOrder 550 ''
+        export ZSH_COMPDUMP=~/.zcompdump
+        fpath+=(
+          ~/.cache/zsh/completions
+          "${config.home.profileDirectory}/share/zsh/site-functions"
+        )
+      '')
+      ''
+        autoload -Uz bracketed-paste-magic
+        zle -N bracketed-paste bracketed-paste-magic
+
+        function calc() {
+          python3 -c "print(eval('$*'))"
+        }
+
+        # AWS Profile Switcher with fzf
+        function awsp() {
+          local profile
+          sso_profiles=$(grep -E '^\[profile ' ~/.aws/config | sed 's/^\[profile \(.*\)\]/\1/')
+          cred_profiles=$(grep -E '^\[profile ' ~/.aws/credentials | sed 's/^\[profile \(.*\)\]/\1/')
+
+          profile_selections=$({
+            echo "$sso_profiles"
+            echo "$cred_profiles"
+          } | uniq)
+
+          profile=$(echo $profile_selections | fzf --height 40% --prompt="AWS Profile> ")
+
+          if [[ -n "$profile" ]]; then
+            export AWS_PROFILE="$profile"
+            echo "✓ AWS_PROFILE set to: $profile"
+          fi
+        }
+
+        function kctx() {
+          local context
+          context=$(kubectl config get-contexts -o name | fzf --height 40% --reverse --prompt="K8s Context> ")
+
+          if [[ -n "$context" ]]; then
+            kubectl config use-context "$context"
+            echo "✓ Kubernetes context set to: $context"
+          fi
+        };
+
+        # Custom cd function
+        function cd() {
+          # Handle "cd" (no args)
+          if [[ $# -eq 0 ]]; then
+            builtin cd ~ || return
+            return
+          fi
+
+          # Handle "cd -" (previous directory)
+          if [[ "$1" == "-" ]]; then
+            builtin cd - || return
+            return
+          fi
+
+          # Handle normal case or path to file
+          if [[ -d "$1" ]]; then
+            builtin cd "$@" || return
+          else
+            local dir
+            dir="$(dirname "$1")"
+            builtin cd "$dir" || return
+          fi
+        }
+
+        function ripvim() {
+          rg --hidden --pcre2 --vimgrep "$@" | nvim -q - -c copen
+        }
+
+        __wezterm_set_user_var() {
+          printf "\033]1337;SetUserVar=%s=%s\007" "$1" "$(echo -n "$2" | base64)"
+        }
+
+        precmd() {
+          __wezterm_set_user_var WEZTERM_LAST_EXIT_STATUS $?
+        }
+
+        if [[ -n "$ZSH_DEBUGRC" ]]; then
+          zmodload zsh/zprof
+          zprof
+        fi
+
+        # Keybindings
+        autoload -U up-line-or-beginning-search
+        autoload -U down-line-or-beginning-search
+
+        # Autopair from zplug
+        autopair-init
+
+        function nix-shell () {
+          nix-your-shell zsh nix-shell -- "$@"
+        }
+
+        function nix () {
+          nix-your-shell zsh nix -- "$@"
+        }
+
+        # Lazy-load Oh-My-Zsh plugins (if not already loaded)
+        if [[ -z "$OMZ_LOADED" ]]; then
+          source $ZSH/oh-my-zsh.sh
+          export OMZ_LOADED=1
+        fi
+
+        # Lazy-load zplug plugins
+        if [[ -z "$ZPLUG_LOADED" ]]; then
+          # source ~/.zplug/init.zsh
+          zplug load
+          export ZPLUG_LOADED=1
+        fi
+
+        set -o vi
+
+        # Bind Ctrl+R to fzf history AFTER vi mode is set (vi mode clobbers it)
+        bindkey -M viins '^R' fzf-history-widget
+        bindkey -M vicmd '^R' fzf-history-widget
+
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+
+        bindkey "^[[A" up-line-or-search     # Up arrow
+        bindkey '^I' expand-or-complete      # Tab completion
+
+        # Vicmd edit line with 'v'
+        autoload -z edit-command-line
+        zle -N edit-command-line
+        bindkey -M vicmd v edit-command-line
+
+        bindkey -M vicmd 'k' history-substring-search-up
+        bindkey -M vicmd 'j' history-substring-search-down
+
+
+        kctx-widget() {
+            kctx
+            sleep 0.5
+            zle reset-prompt
+        }
+
+        zle -N kctx-widget
+        bindkey '^K' kctx-widget
+
+        awsp-widget() {
+            awsp
+            sleep 0.5
+            zle reset-prompt
+        }
+        zle -N awsp-widget
+        bindkey '^P' awsp-widget
+
+        motd
+      ''
+    ];
     autocd = true;
     history = {
       size = 100000;
@@ -73,152 +223,6 @@ in
       else
         compinit -i
       fi
-    '';
-    initExtra = ''
-      autoload -Uz bracketed-paste-magic
-      zle -N bracketed-paste bracketed-paste-magic
-
-      function calc() {
-        python3 -c "print(eval('$*'))"
-      }
-
-      # AWS Profile Switcher with fzf
-      function awsp() {
-        local profile
-        sso_profiles=$(grep -E '^\[profile ' ~/.aws/config | sed 's/^\[profile \(.*\)\]/\1/')
-        cred_profiles=$(grep -E '^\[profile ' ~/.aws/credentials | sed 's/^\[profile \(.*\)\]/\1/')
-
-        profile_selections=$({
-          echo "$sso_profiles"
-          echo "$cred_profiles"
-        } | uniq)
-
-        profile=$(echo $profile_selections | fzf --height 40% --prompt="AWS Profile> ")
-
-        if [[ -n "$profile" ]]; then
-          export AWS_PROFILE="$profile"
-          echo "✓ AWS_PROFILE set to: $profile"
-        fi
-      }
-
-      function kctx() {
-        local context
-        context=$(kubectl config get-contexts -o name | fzf --height 40% --reverse --prompt="K8s Context> ")
-
-        if [[ -n "$context" ]]; then
-          kubectl config use-context "$context"
-          echo "✓ Kubernetes context set to: $context"
-        fi
-      };
-
-      # Custom cd function
-      function cd() {
-        # Handle "cd" (no args)
-        if [[ $# -eq 0 ]]; then
-          builtin cd ~ || return
-          return
-        fi
-
-        # Handle "cd -" (previous directory)
-        if [[ "$1" == "-" ]]; then
-          builtin cd - || return
-          return
-        fi
-
-        # Handle normal case or path to file
-        if [[ -d "$1" ]]; then
-          builtin cd "$@" || return
-        else
-          local dir
-          dir="$(dirname "$1")"
-          builtin cd "$dir" || return
-        fi
-      }
-
-      function ripvim() {
-        rg --hidden --pcre2 --vimgrep "$@" | nvim -q - -c copen
-      }
-
-      __wezterm_set_user_var() {
-        printf "\033]1337;SetUserVar=%s=%s\007" "$1" "$(echo -n "$2" | base64)"
-      }
-
-      precmd() {
-        __wezterm_set_user_var WEZTERM_LAST_EXIT_STATUS $?
-      }
-
-      if [[ -n "$ZSH_DEBUGRC" ]]; then
-        zmodload zsh/zprof
-        zprof
-      fi
-
-      # Keybindings
-      autoload -U up-line-or-beginning-search
-      autoload -U down-line-or-beginning-search
-
-      # Autopair from zplug
-      autopair-init
-
-      function nix-shell () {
-        nix-your-shell zsh nix-shell -- "$@"
-      }
-
-      function nix () {
-        nix-your-shell zsh nix -- "$@"
-      }
-
-      # Lazy-load Oh-My-Zsh plugins (if not already loaded)
-      if [[ -z "$OMZ_LOADED" ]]; then
-        source $ZSH/oh-my-zsh.sh
-        export OMZ_LOADED=1
-      fi
-
-      # Lazy-load zplug plugins
-      if [[ -z "$ZPLUG_LOADED" ]]; then
-        # source ~/.zplug/init.zsh
-        zplug load
-        export ZPLUG_LOADED=1
-      fi
-
-      set -o vi
-
-      # Bind Ctrl+R to fzf history AFTER vi mode is set (vi mode clobbers it)
-      bindkey -M viins '^R' fzf-history-widget
-      bindkey -M vicmd '^R' fzf-history-widget
-
-      zle -N up-line-or-beginning-search
-      zle -N down-line-or-beginning-search
-
-      bindkey "^[[A" up-line-or-search     # Up arrow
-      bindkey '^I' expand-or-complete      # Tab completion
-
-      # Vicmd edit line with 'v'
-      autoload -z edit-command-line
-      zle -N edit-command-line
-      bindkey -M vicmd v edit-command-line
-
-      bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down
-
-
-      kctx-widget() {
-          kctx
-          sleep 0.5
-          zle reset-prompt
-      }
-
-      zle -N kctx-widget
-      bindkey '^K' kctx-widget
-
-      awsp-widget() {
-          awsp
-          sleep 0.5
-          zle reset-prompt
-      }
-      zle -N awsp-widget
-      bindkey '^P' awsp-widget
-
-      motd
     '';
     zplug = {
       enable = true;

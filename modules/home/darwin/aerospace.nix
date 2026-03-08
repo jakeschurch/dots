@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ lib, ... }:
 let
   workspaceNames = (map toString (lib.lists.range 1 9)) ++ [ "s" ];
   WithBindingFallthrough =

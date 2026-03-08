@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -30,6 +31,7 @@
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
+      "amd_iommu=pt"
     ];
     loader = {
       # Use the systemd-boot EFI boot loader.
@@ -101,7 +103,7 @@
     hostName = "apollo"; # Define your hostname.
     # Pick only one of the below networking options.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-    networkmanager.enable = true;
+    networkmanager.enable = false;
 
     # Open ports in the firewall.
     # networking.firewall.allowedTCPPorts = [ ... ];
@@ -142,23 +144,6 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       wireplumber.enable = true;
-    };
-
-    # Qdrant vector database for AI memory
-    qdrant = {
-      enable = true;
-      settings = {
-        storage = {
-          storage_path = "/var/lib/qdrant/storage";
-          snapshots_path = "/var/lib/qdrant/snapshots";
-        };
-        service = {
-          host = "0.0.0.0";
-          http_port = 6333;
-          grpc_port = 6334;
-        };
-        telemetry_disabled = true;
-      };
     };
   };
 
@@ -204,9 +189,40 @@
     };
   };
 
-  nix.settings.trusted-users = [
-    "root"
-    "jake"
+  # Local pull-through Nix binary cache proxy
+  services.ncps = {
+    enable = true;
+    cache = {
+      hostName = "apollo";
+      maxSize = "50G";
+      lru.schedule = "0 2 * * *";
+    };
+    server.addr = "127.0.0.1:8501";
+    upstream = {
+      caches = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+        "https://hyprland.cachix.org"
+      ];
+      publicKeys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      ];
+    };
+  };
+
+  # Override substituters to use local ncps pull-through cache
+  nix.settings.substituters = lib.mkForce [
+    "http://localhost:8501"
+  ];
+
+  nix.settings.trusted-substituters = lib.mkForce [
+    "http://localhost:8501"
+  ];
+
+  nix.settings.trusted-public-keys = lib.mkForce [
+    "apollo:i756C7FtllWIbgQipbcvBE3plUXT3ojFhSWcZOuDyHs="
   ];
 
   virtualisation.libvirtd.enable = true;
@@ -241,4 +257,40 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
+
+  # More aggressive fsync/flush to prevent corruption
+  boot.kernel.sysctl = {
+    "vm.dirty_expire_centisecs" = 300; # Expire dirty pages faster
+    "vm.dirty_ratio" = 10; # Reduce dirty page buffer
+"vm.dirty_background_ratio" = 5;
+  };
+
+swapDevices = [
+{ device = "/dev/disk/by-partlabel/disk-swap";}
+];
+
+  # Enable automatic BTRFS scrubbing to detect corruption early
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
+    fileSystems = [ "/" ];
+  };
+
+  services.btrbk = {
+    instances.btrbk = {
+      onCalendar = "hourly";
+      settings = {
+        snapshot_preserve_min = "1d";
+        snapshot_preserve = "7d 4w";
+        volume."/" = {
+          snapshot_dir = "/.snapshots";
+          subvolume = {
+            "/" = { };
+            "/home" = { };
+            "/home/jake" = { };
+          };
+        };
+      };
+    };
+  };
 }

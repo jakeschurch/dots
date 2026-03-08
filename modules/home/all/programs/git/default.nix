@@ -42,51 +42,52 @@ in
     git = {
       enable = true;
       package = pkgs.git;
-      userName = "Jake Schurch";
-      userEmail = "jakeschurch@gmail.com";
-
       signing = {
         key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGXkQmmWeoRqR2jdPRH7PJN8QSpdofdf6hVxXtyMo1Vs";
         format = "ssh";
         signByDefault = true;
       };
 
-      aliases = {
-        cleanenv = "clean -xfd -e .envrc";
-        ai = "add --interactive";
-        select-branch = "! f() { ${gitBin} checkout $(${gitBin} branch --all | ${fzfBin}); }; f";
-        branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainline)..$(${gitBin} head) ;}; f";
-        delete = "branch -d";
-        sc = "switch -c";
-        c = "commit";
-        ca = "commit --amend";
-        co = "checkout";
-        empty = "commit --allow-empty";
-        fixup = "commit --fixup";
-        noedit = "commit --amend --no-edit";
-        lastupdated = "log -1 --format='%ad' --";
-        file-branches = "!f() { git log --all --branches --oneline --decorate -- \"$1\" | head -n 20; }; f";
-        file-stashes = "!f() { git stash list --format=\"%gd %s\" | awk '{print $1}' | xargs -I{} sh -c 'git show --name-only {} | grep -q \"$1\" && echo {}'; }; f";
-        fp = "push --force-with-lease";
-        grep = "grep --break --heading";
-        hard = "reset --hard HEAD";
-        mixed = "reset --mixed HEAD^";
-        ignore = "! curl -sL https://www.gitignore.io/api/$@ >> .gitignore";
-        lg = "log --abbrev-commit --date=short";
-        lgo = "log  --abbrev-commit --date=short --oneline --graph";
-        ls = "status -suno";
-        r = "! f() { ~/bin/git/abbrevs.sh git-rebase $@; }; f ";
-        ra = "rebase --abort";
-        rc = "rebase --continue";
-        ri = "rebase --interactive";
-        rs = "rebase --skip";
-        who = "shortlog -s -e -";
-        revs = "! f() { ~/bin/git/abbrevs.sh git-revs $@ ;}; f";
-        top = "rev-parse --show-toplevel";
-        mainline = "! git branch | grep -Eo 'main|master'";
-      };
-
       settings = {
+        user = {
+          name = "Jake Schurch";
+          email = "jakeschurch@gmail.com";
+        };
+
+        alias = {
+          cleanenv = "clean -xfd -e .envrc";
+          ai = "add --interactive";
+          select-branch = "! f() { ${gitBin} checkout $(${gitBin} branch --all | ${fzfBin}); }; f";
+          branchchanges = "! f() { ${gitBin} log --pretty=format:'%h %s' $(${gitBin} mainline)..$(${gitBin} head) ;}; f";
+          delete = "branch -d";
+          sc = "switch -c";
+          c = "commit";
+          ca = "commit --amend";
+          co = "checkout";
+          empty = "commit --allow-empty";
+          fixup = "commit --fixup";
+          noedit = "commit --amend --no-edit";
+          lastupdated = "log -1 --format='%ad' --";
+          file-branches = "!f() { git log --all --branches --oneline --decorate -- \"$1\" | head -n 20; }; f";
+          file-stashes = "!f() { git stash list --format=\"%gd %s\" | awk '{print $1}' | xargs -I{} sh -c 'git show --name-only {} | grep -q \"$1\" && echo {}'; }; f";
+          fp = "push --force-with-lease";
+          grep = "grep --break --heading";
+          hard = "reset --hard HEAD";
+          mixed = "reset --mixed HEAD^";
+          ignore = "! curl -sL https://www.gitignore.io/api/$@ >> .gitignore";
+          lg = "log --abbrev-commit --date=short";
+          lgo = "log  --abbrev-commit --date=short --oneline --graph";
+          ls = "status -suno";
+          r = "! f() { ~/bin/git/abbrevs.sh git-rebase $@; }; f ";
+          ra = "rebase --abort";
+          rc = "rebase --continue";
+          ri = "rebase --interactive";
+          rs = "rebase --skip";
+          who = "shortlog -s -e -";
+          revs = "! f() { ~/bin/git/abbrevs.sh git-revs $@ ;}; f";
+          top = "rev-parse --show-toplevel";
+          mainline = "! git branch | grep -Eo 'main|master'";
+        };
         gc.auto = 200;
 
         gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowedSigners";

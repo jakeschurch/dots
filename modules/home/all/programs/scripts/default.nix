@@ -15,6 +15,15 @@ let
     coreutils
     mosh
     coreutils-prefixed
+    gnutar
+    gzip
+    bzip2
+    xz
+    unzip
+    p7zip
+    unrar
+    zstd
+    wtype
     ;
 
   # spell-check-env-vars = lib.mkScript {
@@ -98,6 +107,55 @@ let
     description = "neovim wrapper";
     propagatedBuildInputs = [ coreutils-prefixed ];
   };
+
+  extract = mkScript {
+    pname = "extract";
+    src = ./extract.sh;
+    propagatedBuildInputs = [
+      gnutar
+      gzip
+      bzip2
+      xz
+      unzip
+      p7zip
+      unrar
+      zstd
+    ];
+    description = "Extract any archive format";
+  };
+
+  clipboard-key = mkScript {
+    pname = "clipboard-key";
+    src = ./clipboard-key.sh;
+    propagatedBuildInputs = [
+      jq
+      wtype
+      pkgs.cliphist
+    ];
+    description = "Route Super+C/V to the right clipboard shortcut per app";
+  };
+
+  cliphist-pick = mkScript {
+    pname = "cliphist-pick";
+    src = ./cliphist-pick.sh;
+    propagatedBuildInputs = [
+      jq
+      wtype
+      pkgs.cliphist
+    ];
+    description = "Open cliphist picker in floating wezterm and paste selection";
+  };
+
+  cliphist-pic = mkScript {
+    pname = "cliphist-pic";
+    src = ./cliphist-pic.sh;
+    propagatedBuildInputs = [
+      jq
+      wtype
+      pkgs.cliphist
+    ];
+    description = "Open cliphist image picker in floating wezterm and paste selection";
+  };
 in
 {
   home.packages = [
@@ -109,6 +167,10 @@ in
     nvim-wrapper
     gif2mp4
     record-gif
+    extract
+    clipboard-key
+    cliphist-pick
+    cliphist-pic
     # spell-check-env-vars
   ];
 

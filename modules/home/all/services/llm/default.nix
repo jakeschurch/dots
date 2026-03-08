@@ -19,6 +19,14 @@ let
       ;
   };
 
+  oh-my-opencode = import ./oh-my-opencode.nix {
+    inherit
+      pkgs
+      lib
+      models
+      ;
+  };
+
   llama-cpp = import ./llama-cpp {
     inherit
       pkgs
@@ -31,6 +39,7 @@ in
 {
   imports = [
     opencode
+    oh-my-opencode
     llama-cpp
     (import ./agents {
       inherit

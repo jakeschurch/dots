@@ -3,7 +3,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0Y613885L_1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0Y613885L_1";
         content = {
           type = "gpt";
           partitions = {
@@ -21,44 +21,82 @@
                 ];
               };
             };
+            swap = {
+              size = "125G";
+              content = {
+                type = "swap";
+              };
+            };
             root = {
               size = "100%";
               content = {
                 mountpoint = "/partition-root";
                 type = "btrfs";
-                extraArgs = [ "-f" ];
-                swap = {
-                  swapfile = {
-                    size = "125G";
-                    path = "swap/swapfile";
-                  };
-                };
+                extraArgs = [
+                  "-f"
+                  # Add metadata duplication for better corruption resistance
+                  "-m"
+                  "dup"
+                  "-d"
+                  "single"
+                ];
                 subvolumes = {
                   "/" = {
                     mountpoint = "/";
+                    mountOptions = [
+                      # Add these global safety options
+                      "noatime"
+                      "space_cache=v2"
+                      "commit=30" # Commit every 30s instead of default 5s (safer)
+                    ];
                   };
                   "/var/log" = {
                     mountpoint = "/var/log";
                     mountOptions = [
                       "noatime"
-                      "nodiscard"
+                      "discard=async"
+                      "space_cache=v2"
+
+                    ];
+                  };
+                  "/vms" = {
+                    mountpoint = "/var/lib/microvms";
+                    mountOptions = [
+                      "nodatacow"
+                      "noatime"
                     ];
                   };
                   "/home" = {
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
+                      "space_cache=v2"
                     ];
                     mountpoint = "/home";
                   };
-                  "/home/jake" = { };
+                  "/home/jake" = {
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                      "space_cache=v2"
+                    ];
+                  };
                   "/nix" = {
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
-                      "nodiscard"
+                      "discard=async"
+                      "space_cache=v2"
                     ];
                     mountpoint = "/nix";
+                  };
+                  # ADD SNAPSHOTS SUBVOLUME
+                  "/.snapshots" = {
+                    mountpoint = "/.snapshots";
+                    mountOptions = [
+                      "noatime"
+                      "space_cache=v2"
+                    ];
                   };
                 };
               };

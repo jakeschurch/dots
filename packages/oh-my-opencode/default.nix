@@ -4,13 +4,13 @@
 }:
 bun2nix.mkDerivation {
   pname = "oh-my-opencode";
-  version = "2.12.4";
+  version = "3.1.1";
 
   src = pkgs.fetchFromGitHub {
     owner = "code-yeongyu";
     repo = "oh-my-opencode";
-    rev = "b8b8d14b1ce836ad4b9b6217e713f4efd4bd5df2";
-    hash = "sha256-VK1UXFcKHPTMoKPAXSCeo+EJ5xH600xo7NRJiI+Uuo0=";
+    rev = "cd23f7ab7d3a245c48990166d676b981de7f1e2a";
+    hash = "sha256-kKDmaNcA+7nMt/m1S3oQwQDSx5n97nCPj3mx/KsnnQc=";
   };
 
   bunDeps = bun2nix.fetchBunDeps {
@@ -23,7 +23,7 @@ bun2nix.mkDerivation {
   buildPhase = ''
     runHook preBuild
     bun build src/cli/index.ts --outdir dist/cli --target bun --format esm --external @ast-grep/napi
-    bun build src/index.ts src/google-auth.ts --outdir dist --target bun --format esm --external @ast-grep/napi
+    bun build src/index.ts --outdir dist --target bun --format esm --external @ast-grep/napi
     runHook postBuild
   '';
 

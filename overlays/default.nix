@@ -60,6 +60,7 @@ in
     };
   };
 
+  expert = inputs.expert.packages.${super.system}.default;
   mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${super.system}.default;
   bun2nix = inputs.bun2nix.packages.${super.system}.default;

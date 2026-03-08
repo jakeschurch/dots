@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -euo pipefail
 
 TMP_IMG="$(mktemp --suffix=.png)"
@@ -7,9 +8,9 @@ grim -g "$(slurp)" "$TMP_IMG"
 
 # OCR
 tesseract "$TMP_IMG" "$TMP_TXT" \
-  -l eng \
-  --psm 6 \
-  --oem 1 >/dev/null 2>&1
+	-l eng \
+	--psm 6 \
+	--oem 1 >/dev/null 2>&1
 
 wl-copy <"${TMP_TXT}.txt"
 notify-send "OCR Complete" "Text copied to clipboard"
