@@ -31,7 +31,8 @@
       "boot.shell_on_fail"
       "udev.log_priority=3"
       "rd.systemd.show_status=auto"
-      "amd_iommu=pt"
+      "amd_iommu=on"
+      "vfio-pci.ids=8086:e211"
     ];
     loader = {
       # Use the systemd-boot EFI boot loader.
@@ -45,7 +46,12 @@
       timeout = 3;
     };
 
-    initrd.kernelModules = [ "nvidia" ];
+    initrd.kernelModules = [
+      "nvidia"
+      "vfio_pci"
+      "vfio"
+      "vfio_iommu_type1"
+    ];
     kernelPackages = pkgs.linuxPackages_zen;
   };
 
@@ -53,12 +59,6 @@
     enable = true;
     enable32Bit = true;
     extraPackages = with pkgs; [
-      # Intel Arc B580 compute support for LLM inference
-      intel-compute-runtime # OpenCL
-      intel-media-driver # VA-API
-      level-zero # oneAPI Level Zero (for SYCL/llama.cpp)
-      vpl-gpu-rt # Intel Video Processing Library
-
       # NVIDIA Vulkan support
       vulkan-loader
       vulkan-validation-layers

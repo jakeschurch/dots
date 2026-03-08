@@ -210,7 +210,7 @@ in
         ];
 
         env = [
-          # Force Hyprland to only use NVIDIA GPU (card1), Intel B60 (card2) reserved for compute
+          # Force Hyprland to only use NVIDIA GPU (card1), Intel B60 (card2) passed through to k3s-worker-4
           "AQ_DRM_DEVICES,/dev/dri/card1"
 
           "HYPRCURSOR_THEME,rose-pine-hyprcursor"
