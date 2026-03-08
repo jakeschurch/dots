@@ -57,7 +57,7 @@
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
     hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
+    # hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-colors.url = "github:misterio77/nix-colors";
 

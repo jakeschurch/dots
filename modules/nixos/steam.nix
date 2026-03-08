@@ -10,14 +10,11 @@
     extraCompatPackages = with pkgs; [
       proton-ge-bin
     ];
+  };
 
-    # Force games to use NVIDIA GPU (not Intel B580)
-    extraPackages = with pkgs; [
-      gamescope
-      mangohud
-      libva
-      libvdpau-va-gl
-    ];
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
   };
 
   # Global environment for games to prefer NVIDIA
@@ -25,11 +22,6 @@
     # Force DXVK/VKD3D to use NVIDIA only
     DXVK_FILTER_DEVICE_NAME = "NVIDIA";
     VKD3D_FILTER_DEVICE_NAME = "NVIDIA";
-
-    # PRIME render offload to NVIDIA
-    __NV_PRIME_RENDER_OFFLOAD = "1";
-    __VK_LAYER_NV_optimus = "NVIDIA_only";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
   environment.systemPackages = with pkgs; [
