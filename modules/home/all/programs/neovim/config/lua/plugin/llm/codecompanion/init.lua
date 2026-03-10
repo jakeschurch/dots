@@ -1,6 +1,14 @@
 vim.g.codecompanion_auto_tool_mode = true
 
-local slash_commands = require("plugin.llm.codecompanion.slash_commands")
+local tools = {
+  -- ["lsp_files"] = require("plugin.llm.codecompanion.tools.lsp_files"),
+  ["file"] = {
+    opts = {
+      provider = "fzf_lua", -- Other options include 'default', 'mini_pick', 'fzf_lua', snacks
+      contains_code = true,
+    },
+  },
+}
 
 local keys = {
   {
@@ -19,9 +27,41 @@ local keys = {
   {
     "<leader>ac",
     function()
+      require("codecompanion").prompt("def")
+    end,
+    desc = "[a]i ch[a]t",
+    mode = { "n", "v" },
+  },
+  {
+    desc = "[a]i [q]uick chat",
+    "<leader>aq",
+    function()
+      require("codecompanion").prompt("inline")
+    end,
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>ac",
+    function()
       require("codecompanion").actions({})
     end,
     desc = "[a]i [c]ommands",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>ad",
+    function()
+      require("codecompanion").prompt("dynamic")
+    end,
+    desc = "[a]i [d]ynamic prompt",
+    mode = { "n", "v" },
+  },
+  {
+    "<leader>at",
+    function()
+      require("codecompanion").toggle()
+    end,
+    desc = "[a]i [t]oggle chat",
     mode = { "n", "v" },
   },
   {
@@ -36,42 +76,41 @@ local keys = {
 
 require("which-key").add(keys)
 
+--- treesitter for chat buffers
+--- NOTE remove when this PR is merged #1547
+vim.api.nvim_create_autocmd("User", {
+  pattern = "CodeCompanionChatCreated",
+  group = vim.api.nvim_create_augroup(
+    "my-codecompanion-chat",
+    { clear = true }
+  ),
+  callback = function(event)
+    vim.treesitter.start(event.data.bufnr, "markdown")
+  end,
+})
+
 require("codecompanion").setup({
   interactions = {
     chat = {
-      adapter = "opencode",
       opts = {
-        completion_provider = "blink",
+        completion_provider = "blink"
       },
       variables = {
         ["buffer"] = {
           opts = {
             -- Always sync the buffer by sharing its "diff"
             -- Or choose "all" to share the entire buffer
-            default_params = "all",
+            default_params = "diff",
           },
         },
       },
-    },
-    inline = {
-      adapter = "opencode",
-      opts = {
-        completion_provider = "blink",
-      },
-    },
-    cmd = {
-      adapter = "opencode",
-      opts = {
-        completion_provider = "blink",
-      },
-    },
+    }
   },
 
   strategies = {
     chat = {
-      adapter = "opencode",
-      -- slash_commands = slash_commands,
-      -- tools = tools,
+      variables = {},
+      tools = tools,
       keymaps = {
         close = {
           modes = { n = { "q", "<C-c>" }, i = "<C-c>" },
@@ -79,9 +118,7 @@ require("codecompanion").setup({
       },
     },
     inline = {
-      adapter = "opencode",
-      -- slash_commands = slash_commands,
-      -- tools = {},
+      tools = {},
       keymaps = {
         accept_change = {
           modes = { n = "ca" },
@@ -104,7 +141,7 @@ require("codecompanion").setup({
         pinned_buffer = "📌 ",
         watched_buffer = "👀 ",
       },
-      show_settings = false,
+      show_settings = true,
       window = {
         position = "right",
       },
@@ -124,20 +161,14 @@ require("codecompanion").setup({
     },
   },
 
-  opts = {
-    log_level = "DEBUG",
-    send_code = true,
-  },
-
   extensions = {
-
     mcphub = {
       enabled = true,
       auto_approve = true,
       callback = "mcphub.extensions.codecompanion",
       opts = {
         show_result_in_chat = true, -- Show mcp tool results in chat
-        make_vars = true, -- Convert resources to #variables
+        make_vars = true,           -- Convert resources to #variables
         make_slash_commands = true, -- Add prompts as /slash commands
       },
     },
@@ -150,9 +181,9 @@ require("codecompanion").setup({
         picker = "fzf-lua",
         auto_generate_title = true,
         title_generation_opts = {
-          adapter = "copilot", -- "copilot"
+          adapter = nil,               -- "copilot"
           ---Model for generating titles (defaults to current chat model)
-          -- model = nil,                 -- "gpt-4o"
+          model = nil,                 -- "gpt-4o"
           refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
           max_refreshes = 3,
         },

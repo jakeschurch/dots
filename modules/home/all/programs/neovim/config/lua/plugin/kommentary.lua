@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 require("ts_context_commentstring").setup({
-  enable_autocmd = false,
+  enable_autocmd = true,
 })
 
 local lang_configs = {
