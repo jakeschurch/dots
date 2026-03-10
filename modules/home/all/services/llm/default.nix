@@ -40,7 +40,6 @@ in
   imports = [
     opencode
     oh-my-opencode
-    llama-cpp
     (import ./agents {
       inherit
         lib
