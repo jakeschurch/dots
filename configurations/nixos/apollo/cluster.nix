@@ -1,13 +1,18 @@
 { ... }:
 {
-  environment.variables.VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
-
   services.microvm-host = {
     enable = true;
     network = {
       gateway = "192.168.100.1";
       subnet = "192.168.100.0/24";
       externalInterface = "enp5s0";
+      # vxlan = {
+      #   enable = true;
+      #   local = "<apollo-LAN-IP>";   # e.g. the IP enp5s0 gets — fill in before deploying
+      #   remotes = [
+      #     "<new-host-LAN-IP>"        # add one entry per additional host
+      #   ];
+      # };
     };
   };
 
@@ -45,51 +50,49 @@
       mac = "02:00:00:00:00:10";
       initial = true;
       vsockCid = 10;
+      vcpu = 4;
+      mem = 8192;
     };
 
     servers.k3s-server-2 = {
       ip = "192.168.100.11";
       mac = "02:00:00:00:00:11";
       vsockCid = 11;
+      vcpu = 4;
+      mem = 8192;
     };
 
     servers.k3s-server-3 = {
       ip = "192.168.100.12";
       mac = "02:00:00:00:00:12";
       vsockCid = 12;
+      vcpu = 4;
+      mem = 8192;
     };
 
     workers.k3s-worker-1 = {
       ip = "192.168.100.20";
       mac = "02:00:00:00:00:20";
       vsockCid = 20;
-      mem = 16384;
+      vcpu = 8;
+      mem = 24000;
+      disk = 100;
       dataDisk = 250;
+      # Storage node: Garage + Longhorn prefer this node (soft affinity, no taint so general workloads also land here)
+      extraLabels = [ "workload=storage" ];
     };
 
     workers.k3s-worker-2 = {
       ip = "192.168.100.21";
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
-      mem = 16384;
+      vcpu = 16;
+      mem = 60000;
+      disk = 100;
       dataDisk = 250;
-    };
-
-    workers.k3s-worker-3 = {
-      ip = "192.168.100.22";
-      mac = "02:00:00:00:00:22";
-      vsockCid = 22;
-      mem = 16384;
-      dataDisk = 250;
-    };
-
-    workers.k3s-worker-4 = {
-      ip = "192.168.100.23";
-      mac = "02:00:00:00:00:24";
-      vsockCid = 23;
-      mem = 20000;
-      disk = 60;
-      dataDisk = 250;
+      # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
+      extraLabels = [ "workload=inference" ];
+      extraTaints = [ "workload=inference:NoSchedule" ];
       passthroughDevices = [
         {
           bus = "pci";

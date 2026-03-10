@@ -90,7 +90,7 @@ in
         smart_split = false;
         smart_resizing = false;
         preserve_split = true;
-        single_window_aspect_ratio = "4 3";
+        # single_window_aspect_ratio = "4 3";
       };
 
       decoration = {

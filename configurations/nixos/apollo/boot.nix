@@ -49,6 +49,10 @@
       "vm.dirty_expire_centisecs" = 300; # Expire dirty pages faster
       "vm.dirty_ratio" = 10; # Reduce dirty page buffer
       "vm.dirty_background_ratio" = 5;
+
+      # Required for EasyAntiCheat Linux module (EAC uses perf_event_open
+      # to monitor game processes; paranoid=2 blocks it entirely).
+      "kernel.perf_event_paranoid" = 1;
     };
   };
 
