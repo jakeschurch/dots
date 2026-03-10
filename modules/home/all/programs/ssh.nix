@@ -49,4 +49,11 @@
        export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"
      fi
   '';
+
+  programs.fish.shellInit = ''
+    if test -z "$SSH_CONNECTION"
+      set -gx SSH_AUTH_SOCK "$HOME/.bitwarden-ssh-agent.sock"
+    end
+  '';
+
 }

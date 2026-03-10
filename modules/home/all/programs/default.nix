@@ -15,6 +15,7 @@ in
     ./browser.nix
     ./eww
     ./fd.nix
+    ./fish
     ./git
     ./hammerspoon
     ./i3
@@ -26,10 +27,9 @@ in
     ./scripts
     ./slack.nix
     ./ssh.nix
+    ./ssh.nix
     ./terragrunt.nix
     ./wezterm
-    ./fish
     ./zsh
-    ./ssh.nix
   ];
 }

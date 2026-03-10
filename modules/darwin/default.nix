@@ -14,7 +14,8 @@ in
     {
       users.users.${config.me.username} = {
         home = "/Users/${config.me.username}";
-        shell = pkgs.zsh;
+        shell = pkgs.fish;
+        ignoreShellProgramCheck = true;
       };
 
       nixpkgs = {
