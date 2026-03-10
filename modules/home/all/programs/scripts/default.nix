@@ -23,7 +23,6 @@ let
     p7zip
     unrar
     zstd
-    wtype
     ;
 
   # spell-check-env-vars = lib.mkScript {
@@ -92,6 +91,7 @@ let
     pname = "motd";
     src = ./motd/motd.sh;
     description = "Message of the day";
+    propagatedBuildInputs = with pkgs; [ yq-go ];
   };
 
   ssh-wrapper = mkScript {
@@ -129,33 +129,38 @@ let
     src = ./clipboard-key.sh;
     propagatedBuildInputs = [
       jq
-      wtype
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
       pkgs.cliphist
+      pkgs.wtype
     ];
     description = "Route Super+C/V to the right clipboard shortcut per app";
   };
-
   cliphist-pick = mkScript {
     pname = "cliphist-pick";
     src = ./cliphist-pick.sh;
     propagatedBuildInputs = [
       jq
-      wtype
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
       pkgs.cliphist
+      pkgs.wtype
     ];
     description = "Open cliphist picker in floating wezterm and paste selection";
   };
-
   cliphist-pic = mkScript {
     pname = "cliphist-pic";
     src = ./cliphist-pic.sh;
     propagatedBuildInputs = [
       jq
-      wtype
+    ]
+    ++ lib.optionals pkgs.stdenv.isLinux [
       pkgs.cliphist
+      pkgs.wtype
     ];
     description = "Open cliphist image picker in floating wezterm and paste selection";
   };
+
 in
 {
   home.packages = [
@@ -168,11 +173,13 @@ in
     gif2mp4
     record-gif
     extract
+    # spell-check-env-vars
+  ]
+  ++ lib.optionals pkgs.stdenv.isLinux [
     clipboard-key
     cliphist-pick
     cliphist-pic
-    # spell-check-env-vars
   ];
 
-  home.file.".config/motd/quotes.json".source = ./motd/quotes.json;
+  home.file.".config/motd/quotes.yaml".source = ./motd/quotes.yaml;
 }

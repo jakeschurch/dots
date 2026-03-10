@@ -13,7 +13,6 @@ in
   imports = [
     scripts
     ./browser.nix
-    ./eww
     ./fd.nix
     ./fish
     ./git
@@ -23,7 +22,6 @@ in
     ./neovim
     ./psql.nix
     ./ripgrep.nix
-    ./rofi
     ./scripts
     ./slack.nix
     ./ssh.nix

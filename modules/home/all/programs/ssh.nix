@@ -32,6 +32,10 @@
       Host *
         StrictHostKeyChecking no
         UserKnownHostsFile /dev/null
+
+      Host 10.*.*.*
+        UserKnownHostsFile /dev/null
+        ForwardAgent Yes
     '';
   };
 

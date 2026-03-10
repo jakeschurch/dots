@@ -6,9 +6,9 @@ require("image").setup({
       enabled = true,
       clear_in_insert_mode = false,
       download_remote_images = true,
-      only_render_image_at_cursor = false,
+      only_render_image_at_cursor = true,
       only_render_image_at_cursor_mode = "popup",
-      floating_windows = true,
+      floating_windows = false,
       filetypes = { "markdown", "vimwiki" },
     },
     neorg = {
@@ -39,7 +39,7 @@ require("image").setup({
     "scrollview",
     "scrollview_sign",
   },
-  editor_only_render_when_focused = false,
+  editor_only_render_when_focused = true,
   tmux_show_only_in_active_window = false,
   hijack_file_patterns = {
     "*.png",

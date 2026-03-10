@@ -69,6 +69,7 @@ in
     shellInit = ''
       ${colors}
 
+      set -g fzf_history_time_format "%Y-%m-%d %H:%M"
       set -gx AWS_PROFILE "fg-sso-staging-administrator-access"
       set -gx PG_VERSION "15"
       set -g fish_key_bindings fish_vi_key_bindings

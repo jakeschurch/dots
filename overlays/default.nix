@@ -60,6 +60,8 @@ in
     };
   };
 
+  ast-grep = inputs.nixpkgs-stable.legacyPackages.${super.system}.ast-grep;
+
   expert = inputs.expert.packages.${super.system}.default;
   mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
   neovim-nightly = inputs.neovim-nightly-overlay.packages.${super.system}.default;

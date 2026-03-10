@@ -12,11 +12,15 @@ in
   imports = [
     inputs.home-manager.darwinModules.home-manager
     {
+      users.knownUsers = [ config.me.username ];
+
       users.users.${config.me.username} = {
+        uid = 501;
         home = "/Users/${config.me.username}";
         shell = pkgs.fish;
-        ignoreShellProgramCheck = true;
       };
+
+      programs.fish.enable = true;
 
       nixpkgs = {
         overlays = lib.attrValues self.overlays;
