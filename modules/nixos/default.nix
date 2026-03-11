@@ -12,6 +12,10 @@ in
     inputs.home-manager.nixosModules.home-manager
 
     {
+      programs.fish.enable = true;
+
+      users.users.${config.me.username}.shell = pkgs.fish;
+
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;

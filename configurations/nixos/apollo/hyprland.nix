@@ -236,7 +236,7 @@ in
 
           # "$mod,space, exec, noctalia-shell ipc call launcher toggle"
 
-          "$mod+SHIFT, v, exec, cliphist-pick"
+          "$mod, v, exec, cliphist-pick"
           "$mod+ALT, v, exec, cliphist-pick"
 
           # quit - minimize Steam/Bitwarden to tray, kill everything else

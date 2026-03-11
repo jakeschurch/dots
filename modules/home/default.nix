@@ -1,7 +1,11 @@
 {
   flake,
+  pkgs,
   ...
 }:
+let
+  inherit (flake) config;
+in
 {
   imports = [
     ./all
