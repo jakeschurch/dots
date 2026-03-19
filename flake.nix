@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "nixpkgs/nixos-25.11";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nur.url = "github:nix-community/NUR";
 
@@ -58,7 +58,7 @@
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
     hyprland.url = "github:hyprwm/Hyprland";
-    # hyprland.inputs.nixpkgs.follows = "nixpkgs";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-colors.url = "github:misterio77/nix-colors";
 
@@ -90,8 +90,8 @@
 
     expert.url = "github:elixir-lang/expert";
 
-    # vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
-    # vmetal.inputs.nixpkgs.follows = "nixpkgs";
+    vmetal.url = "path:/home/jake/Projects/homelab/vmetal";
+    vmetal.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -126,24 +126,6 @@
       "flakes"
       "pipe-operators"
       "auto-allocate-uids"
-    ];
-
-    substituters = [
-      "https://cache.nixos.org"
-      "https://nix-community.cachix.org"
-      "https://hyprland.cachix.org"
-    ];
-
-    trusted-substituters = [
-      "https://cache.nixos.org"
-      "https://nix-community.cachix.org"
-      "https://hyprland.cachix.org"
-    ];
-
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];
 
     allowed-impure-host-deps = [

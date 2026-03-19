@@ -29,7 +29,6 @@
       ];
     };
 
-    cilium.enable = true;
     argocd = {
       enable = true;
       targetRevision = "v1";
@@ -45,7 +44,8 @@
 
     sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];
 
-    servers.k3s-server-1 = {
+    vms.k3s-server-1 = {
+      role = "server";
       ip = "192.168.100.10";
       mac = "02:00:00:00:00:10";
       initial = true;
@@ -54,7 +54,8 @@
       mem = 8192;
     };
 
-    servers.k3s-server-2 = {
+    vms.k3s-server-2 = {
+      role = "server";
       ip = "192.168.100.11";
       mac = "02:00:00:00:00:11";
       vsockCid = 11;
@@ -62,7 +63,8 @@
       mem = 8192;
     };
 
-    servers.k3s-server-3 = {
+    vms.k3s-server-3 = {
+      role = "server";
       ip = "192.168.100.12";
       mac = "02:00:00:00:00:12";
       vsockCid = 12;
@@ -70,7 +72,8 @@
       mem = 8192;
     };
 
-    workers.k3s-worker-1 = {
+    vms.k3s-worker-1 = {
+      role = "agent";
       ip = "192.168.100.20";
       mac = "02:00:00:00:00:20";
       vsockCid = 20;
@@ -82,7 +85,8 @@
       extraLabels = [ "workload=storage" ];
     };
 
-    workers.k3s-worker-2 = {
+    vms.k3s-worker-2 = {
+      role = "agent";
       ip = "192.168.100.21";
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
