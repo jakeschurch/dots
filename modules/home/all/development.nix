@@ -5,9 +5,6 @@
 {
   home = {
     packages = with pkgs; [
-      claude-code
-      opencode
-
       pipx
       nix-update
       ssm-session-manager-plugin
@@ -287,6 +284,10 @@
         rust = {
           symbol = "🦀 ";
         };
+        directory = {
+          truncation_length = 3;
+          truncate_to_repo = true; # truncates to git root instead of home
+        };
         hostname = {
           ssh_only = true;
           format = "on [$hostname](bold red) ";
@@ -297,6 +298,7 @@
         aws = {
           disabled = false;
           symbol = "☁️ ";
+          format = "on [$symbol$profile]($style) ";
         };
         kubernetes = {
           disabled = false;

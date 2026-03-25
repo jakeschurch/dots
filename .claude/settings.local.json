@@ -21,7 +21,13 @@
       "Bash(hyprctl binds:*)",
       "Bash(nix-shell:*)",
       "Bash(hyprctl monitors:*)",
-      "Bash(glxinfo:*)"
+      "Bash(glxinfo:*)",
+      "Bash(head:*)",
+      "WebFetch(domain:nix-community.cachix.org)",
+      "WebFetch(domain:hyprland.cachix.org)",
+      "WebFetch(domain:app.cachix.org)",
+      "WebFetch(domain:nix-community.org)",
+      "WebFetch(domain:wiki.hypr.land)"
     ]
   }
 }
