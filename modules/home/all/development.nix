@@ -31,7 +31,6 @@
           pylama
           black
           isort
-          pip
           flake8
           neovim
           mypy

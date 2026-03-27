@@ -88,16 +88,8 @@ local function get_git_root_or_cwd()
     return buf_path
   end
 
-  local dir = vim.fn.fnamemodify(buf_path, ":p:h")
-  -- Try to get git root from the buffer's directory
-  local git_root =
-    vim.fn.systemlist({ "git", "-C", dir, "rev-parse", "--show-toplevel" })[1]
-
-  if git_root and git_root ~= "" and not git_root:match("^fatal") then
-    return git_root
-  else
-    return dir
-  end
+  local git_root = vim.fs.root(vim.api.nvim_get_current_buf(), ".git")
+  return git_root or vim.fn.fnamemodify(buf_path, ":p:h")
 end
 
 -- Create wrapped versions of commonly used fzf commands

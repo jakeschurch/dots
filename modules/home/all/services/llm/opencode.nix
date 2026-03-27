@@ -47,6 +47,7 @@ let
           acc: model: acc // { "${model.id}" = { inherit (model) name; }; }
         ) { } models;
       };
+
     };
 
     mcp =

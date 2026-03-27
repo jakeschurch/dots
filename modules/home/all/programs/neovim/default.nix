@@ -28,7 +28,7 @@ let
 
 in
 {
-  home.packages = extraPkgs ++ lib.singleton plugman;
+  home.packages = extraPkgs ++ [ plugman ];
 
   imports = [
     ./mcphub
@@ -55,10 +55,9 @@ in
     viAlias = true;
     vimAlias = true;
     withNodeJs = false;
-    withRuby = true;
+    withRuby = false;
     withPython3 = true;
     vimdiffAlias = true;
-    coc.enable = false;
     plugins = nvimPlugins;
   };
 
@@ -77,8 +76,6 @@ in
         };
       };
 
-      mapPairsToAttrs = fn: pairs: lib.mapAttrs' fn pairs;
-
       bindings = {
         "nvim/after" = ./config/after;
         "nvim/lua" = ./config/lua;
@@ -91,7 +88,7 @@ in
       mkOutOfStoreNeovimSymlink =
         path: mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/home/all/programs/neovim/${path}";
     in
-    (mapPairsToAttrs mapToXdgConfigFile bindings)
+    (lib.mapAttrs' mapToXdgConfigFile bindings)
     // {
       "nvim/spell/en.utf-8.add".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add";
       "nvim/spell/en.utf-8.add.spl".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add.spl";

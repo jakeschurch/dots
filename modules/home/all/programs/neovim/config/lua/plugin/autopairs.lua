@@ -16,7 +16,7 @@ local function is_inside_nix_block(opts)
     return false
   end
 
-  local tree = parser:parse()[1]
+  local tree = parser:parse(false)[1]
   local root = tree:root()
   local node =
     root:descendant_for_range(cursor_row, cursor_col, cursor_row, cursor_col)
@@ -121,7 +121,9 @@ npairs.add_rules({
   end),
 
   -- Add semicolon after =
-  Rule("=", ";", { "nix" }):with_move(function(opts)
+  Rule("=", ";", { "nix" }):with_pair(function(opts)
+    return is_inside_nix_block(opts)
+  end):with_move(function(opts)
     return false -- Don't move over the semicolon
   end),
 
@@ -141,7 +143,9 @@ npairs.add_rules({
   end),
 
   -- Add semicolon after inherit keyword
-  Rule("inherit", ";", { "nix" }):with_move(function(opts)
+  Rule("inherit", ";", { "nix" }):with_pair(function(opts)
+    return is_inside_nix_block(opts)
+  end):with_move(function(opts)
     return false -- Don't move over the semicolon
   end),
 

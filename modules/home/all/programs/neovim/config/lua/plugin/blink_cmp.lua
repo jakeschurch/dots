@@ -29,9 +29,9 @@ local config = {
 
   sources = {
     default = {
-      "buffer",
-      "lsp",
       "copilot",
+      "lsp",
+      "buffer",
       "path",
       "snippets",
       "emoji",
@@ -62,7 +62,7 @@ local config = {
     min_keyword_length = 1,
     providers = {
       snippets = {
-        score_offset = 20,
+        score_offset = 5,
       },
 
       copilot = {
@@ -143,8 +143,7 @@ local config = {
   fuzzy = {
     implementation = "rust",
     max_typos = function(keyword)
-      local lower_typo_bound = 3
-      return math.max(lower_typo_bound, math.floor(#keyword / 4))
+      return math.floor(#keyword / 4)
     end,
     use_proximity = true,
   },
@@ -189,14 +188,14 @@ local config = {
       },
     },
     ghost_text = {
-      enabled = false,
+      enabled = true,
     },
     documentation = {
       auto_show = true,
       auto_show_delay_ms = 250,
       window = {
         max_width = 50,
-        border = nil,
+        border = "rounded",
         scrollbar = false,
         direction_priority = {
           menu_north = { "n", "s", "e", "w" },
@@ -208,7 +207,7 @@ local config = {
 
   signature = {
     enabled = true,
-    window = { border = nil, max_width = 60 },
+    window = { border = "rounded", max_width = 60 },
   },
   keymap = {
     ["enter"] = nil,

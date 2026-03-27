@@ -28,3 +28,7 @@ colorscheme gruvbox
 
 highlight clear SignColumn
 ]])
+
+vim.api.nvim_set_hl(0, "SpellBad", {
+  undercurl = true, sp = "#fb4934"
+})

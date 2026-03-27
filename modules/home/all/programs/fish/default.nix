@@ -73,7 +73,6 @@ in
       set -gx AWS_PROFILE "fg-sso-staging-administrator-access"
       set -gx PG_VERSION "15"
       set -g fish_key_bindings fish_vi_key_bindings
-      set -g fish_escape_delay_ms 100
       bind vv edit_command_buffer
 
       set fish_greeting

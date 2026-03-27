@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 require("ts_context_commentstring").setup({
-  enable_autocmd = true,
+  enable_autocmd = false,
 })
 
 local lang_configs = {
@@ -22,7 +22,10 @@ local lang_configs = {
 }
 
 local function setup_nvim_commentstring()
-  require("ts_context_commentstring").update_commentstring()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.treesitter.highlighter.active[bufnr] then
+    require("ts_context_commentstring").update_commentstring()
+  end
 end
 
 for lang, config in pairs(lang_configs) do

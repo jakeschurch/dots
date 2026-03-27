@@ -1,19 +1,20 @@
--- Helper to create root_dir functions compatible with vim.lsp.config
-local function root_pattern(...)
-  local patterns = { ... }
-  return function(bufnr, on_dir)
-    local root = vim.fs.root(bufnr, patterns)
-    if root then
-      on_dir(root)
-    end
-  end
-end
-
 vim.filetype.add({
   pattern = {
     [".*/%.github[%w/]+workflows[%w/]+.*%.ya?ml"] = "yaml.github",
   },
 })
+
+local default_publish_diagnostics = vim.lsp.handlers["textDocument/publishDiagnostics"]
+local handlers = {
+  ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
+    result.diagnostics = vim.tbl_filter(function(d)
+      return not (
+        d.message:match("line too long") or d.message:match("line length")
+      )
+    end, result.diagnostics)
+    default_publish_diagnostics(_, result, ctx, config)
+  end,
+}
 
 return {
   vale_ls = {},
@@ -21,7 +22,6 @@ return {
   regols = {
     cmd = { "regols" },
     filetypes = { "rego" },
-    root_dir = root_pattern(".git"),
   },
   digestif = {}, -- latex
   yamlls = {
@@ -29,35 +29,24 @@ return {
       yaml = {
         format = {
           enable = true,
-          printWidth = 0, -- Disable line length formatting
+          printWidth = 0,
         },
         validate = true,
         hover = true,
         completion = true,
-        -- Disable line length warnings
         customTags = {},
         schemaStore = {
           enable = true,
           url = "https://www.schemastore.org/api/json/catalog.json",
         },
       },
-      -- Disable actionlint line length warnings
       redhat = {
         telemetry = {
           enabled = false,
         },
       },
     },
-    handlers = {
-      ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-        result.diagnostics = vim.tbl_filter(function(d)
-          return not (
-            d.message:match("line too long") or d.message:match("line length")
-          )
-        end, result.diagnostics)
-        vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
-      end,
-    },
+    handlers = handlers,
   },
   helm_ls = {
     settings = {
@@ -118,24 +107,11 @@ return {
       },
     },
   },
-  elixirls = {
-    cmd = { "elixir-ls" },
-    settings = {
-      elixirLS = {
-        dialyzerEnabled = true,
-        enableTestLenses = true,
-        suggestSpecs = true,
-        signatureAfterComplete = true,
-        mcpEnabled = false,
-      },
-    },
-  },
   expert = {
     cmd = { "expert", "--stdio" },
     filetypes = { "elixir", "eelixir", "heex" },
-    root_dir = root_pattern("mix.exs", ".git"),
+    root_markers = { "mix.exs", ".git" },
   },
-  -- REVIEW tailwindcss = {},
   hls = {},
   dockerls = {},
   bashls = {},
@@ -150,7 +126,7 @@ return {
   terragruntls = {
     cmd = { "terragrunt-ls" },
     filetypes = { "hcl" },
-    root_dir = root_pattern(".git", "terragrunt.hcl"),
+    root_markers = { ".git", "terragrunt.hcl" },
   },
   gopls = {
     settings = {
@@ -209,20 +185,6 @@ return {
   eslint = {},
   jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
   lua_ls = {
-    on_init = function(client)
-      if client.workspace_folders then
-        local path = client.workspace_folders[1].name
-        if
-          path ~= vim.fn.stdpath("config")
-          and (
-            vim.loop.fs_stat(path .. "/.luarc.json")
-            or vim.loop.fs_stat(path .. "/.luarc.jsonc")
-          )
-        then
-          return
-        end
-      end
-    end,
     settings = {
       Lua = {
         runtime = {

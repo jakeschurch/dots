@@ -9,12 +9,6 @@ function table.contains(table, element)
   return false
 end
 
-local shell = nil
-local ft_shell_map = {
-  python = "python3",
-  toggleterm = shell,
-}
-
 toggleterm.setup({
   close_on_exit = false,
   direction = "float",
@@ -38,17 +32,8 @@ toggleterm.setup({
       background = "Normal",
     },
   },
-  -- for filetype repl mapping based on current filetype
-  shell = function()
-    local ft = vim.bo.filetype
-    -- check if ft exists in ft_shell_map
-    if table.contains(ft_shell_map, ft) then
-      shell = ft_shell_map[ft]
-    else
-      shell = vim.o.shell
-    end
-    return shell
-  end,
+  shell = "fish",
+  shell_command = { fish = { "-c" } },
 })
 
 vim.api.nvim_create_augroup("disable_folding_toggleterm", { clear = true })
@@ -87,7 +72,7 @@ local original_ttimeoutlen = vim.o.ttimeoutlen
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
-    vim.o.ttimeoutlen = 500
+    vim.o.ttimeoutlen = 50
   end,
 })
 
@@ -103,7 +88,7 @@ vim.api.nvim_create_autocmd("TermClose", {
 vim.api.nvim_create_autocmd("TermEnter", {
   pattern = "*",
   callback = function()
-    vim.o.ttimeoutlen = 500
+    vim.o.ttimeoutlen = 50
   end,
 })
 

@@ -2,7 +2,7 @@ pkgs: {
   python = with pkgs; [
     pipenv
     pyright
-    # pylint
+    pylint
   ];
 
   elixir = with pkgs; [
@@ -16,11 +16,11 @@ pkgs: {
     statix
     alejandra
     deadnix
-    nil
   ];
 
   typescript = with pkgs; [
     typescript
+    prettier
     prettier-d-slim
     nodePackages.eslint
     nodePackages.typescript
@@ -119,11 +119,15 @@ pkgs: {
 
   html = with pkgs; [
     emmet-ls
+    html-tidy
+    nodePackages.stylelint
   ];
 
   misc = with pkgs; [
     ast-grep
     tree-sitter
+    lazygit
+    ghostscript
     codespell
     nodePackages.yaml-language-server
     # actionlint

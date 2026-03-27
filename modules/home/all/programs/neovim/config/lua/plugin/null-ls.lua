@@ -116,9 +116,6 @@ null_ls.setup({
 
     -- docker
     null_ls.builtins.diagnostics.hadolint,
-
-    -- vim
-    null_ls.builtins.diagnostics.vint,
   },
   debug = false,
 })

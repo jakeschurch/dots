@@ -32,7 +32,7 @@
     argocd = {
       enable = true;
       targetRevision = "v1";
-      path = "vmetal/manifests";
+      path = "vmetal/apps";
     };
 
     network = {

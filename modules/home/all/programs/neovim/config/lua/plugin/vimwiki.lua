@@ -45,21 +45,7 @@ g.vimwiki_list = {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "vimwiki", "markdown" },
   callback = function()
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "<Tab>",
-      "codeium#Accept",
-      { noremap = true, silent = true }
-    )
-
-    vim.api.nvim_buf_set_keymap(
-      0,
-      "n",
-      "-",
-      "<CMD>Oil<CR>",
-      { noremap = true, silent = true }
-    )
+    vim.keymap.set("n", "-", "<CMD>Oil<CR>", { buffer = true, noremap = true, silent = true })
   end,
 })
 
@@ -67,8 +53,8 @@ local fzf = require("fzf-lua")
 
 local function relative_path(target, buf_dir)
   -- Make absolute path
-  local abs_target = vim.loop.fs_realpath(target)
-  local abs_buf = vim.loop.fs_realpath(buf_dir)
+  local abs_target = vim.uv.fs_realpath(target)
+  local abs_buf = vim.uv.fs_realpath(buf_dir)
 
   -- Split paths into components
   local function split_path(p)
@@ -125,7 +111,7 @@ local function insert_md_link()
   local buf_dir = buf_path ~= "" and vim.fn.fnamemodify(buf_path, ":h") or nil
 
   -- Git root (to get absolute paths of fzf results)
-  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  local git_root = vim.fs.root(0, ".git")
 
   fzf.git_files({
     prompt = "Select file> ",

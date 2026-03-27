@@ -93,7 +93,7 @@ require("codecompanion").setup({
   interactions = {
     chat = {
       opts = {
-        completion_provider = "blink"
+        completion_provider = "blink",
       },
       variables = {
         ["buffer"] = {
@@ -104,7 +104,7 @@ require("codecompanion").setup({
           },
         },
       },
-    }
+    },
   },
 
   strategies = {
@@ -168,7 +168,7 @@ require("codecompanion").setup({
       callback = "mcphub.extensions.codecompanion",
       opts = {
         show_result_in_chat = true, -- Show mcp tool results in chat
-        make_vars = true,           -- Convert resources to #variables
+        make_vars = true, -- Convert resources to #variables
         make_slash_commands = true, -- Add prompts as /slash commands
       },
     },
@@ -181,9 +181,9 @@ require("codecompanion").setup({
         picker = "fzf-lua",
         auto_generate_title = true,
         title_generation_opts = {
-          adapter = nil,               -- "copilot"
+          adapter = nil, -- "copilot"
           ---Model for generating titles (defaults to current chat model)
-          model = nil,                 -- "gpt-4o"
+          model = nil, -- "gpt-4o"
           refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
           max_refreshes = 3,
         },

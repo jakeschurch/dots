@@ -2,33 +2,22 @@ vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 local oil = require("oil")
 
--- Function to toggle the oil preview window
+local _preview_winid = nil
+
 function ToggleOilPreview()
-  local is_preview_open = false
-
-  -- Check if there are any windows with the 'oil' preview
-  local buffer_count = #vim.fn.getwininfo()
-  if buffer_count > 1 then
-    is_preview_open = true
+  if _preview_winid and vim.api.nvim_win_is_valid(_preview_winid) then
+    vim.api.nvim_win_close(_preview_winid, true)
+    _preview_winid = nil
+    return
   end
-
-  -- Open or close the oil preview based on its current state
-  if is_preview_open then
-    -- Close the oil preview window
-
-    -- Check if there are any windows with the 'oil' preview
-    for _, win in ipairs(vim.fn.getwininfo()) do
-      local bufname = vim.fn.bufname(win.bufnr)
-      if bufname and not bufname:match("oil") then
-        is_preview_open = true
-        vim.cmd("bd! " .. win.bufnr)
-        break
-      end
+  local before = vim.api.nvim_list_wins()
+  require("oil").open_preview({ split = "belowright" })
+  vim.cmd("wincmd h")
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if not vim.tbl_contains(before, win) then
+      _preview_winid = win
+      break
     end
-  else
-    -- Open the oil preview window below the current window
-    require("oil").open_preview({ split = "belowright" })
-    vim.cmd("wincmd h")
   end
 end
 

@@ -222,8 +222,8 @@ in
           ",XF86AudioPrev, exec, playerctl previous"
 
           "$mod, S, exec, hyprshot -m region"
-          "$mod, mouse:272, exec, hyprshot -m region --clipboard-only"
-          "$mod+SHIFT, mouse:272, exec, ocr-shot"
+          "$ctrl, mouse:272, exec, hyprshot -m region --clipboard-only"
+          "$ctrl+SHIFT, mouse:272, exec, ocr-shot"
 
           # NOTE: use ctrl due to keyd re-mappings
           "ctrl, left, workspace, e-1"

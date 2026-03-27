@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   dataDir = "/var/lib/ncps";
   addr = "127.0.0.1:8501";
@@ -54,6 +59,8 @@ in
   nix.settings.trusted-substituters = lib.mkForce [ "http://localhost:8501" ];
   # Keep upstream keys since we're not re-signing narinfos
   nix.settings.trusted-public-keys = lib.mkForce [
+    "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
+
     "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="

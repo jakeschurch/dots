@@ -2,6 +2,8 @@ vim.loader.enable()
 
 local g = vim.g
 
+g.codeium_enabled = false
+
 --disable_distribution_plugins
 g.loaded_gzip = 1
 g.loaded_tar = 1
@@ -28,7 +30,6 @@ local options = {
   breakindentopt = "min:4,shift:4",
   clipboard = "unnamedplus",
   cmdheight = 0,
-  lazyredraw = false,
   cursorline = true,
   expandtab = true,
   hidden = true,
@@ -69,6 +70,7 @@ local options = {
   whichwrap = "b,s",
   wildmode = "full",
   wrap = true,
+  smoothscroll = true,
   writebackup = false,
   fillchars = {
     diff = "╱",
@@ -107,3 +109,5 @@ end
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
+
+vim.opt.shortmess:append("c")

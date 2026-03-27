@@ -26,15 +26,6 @@ let
       models
       ;
   };
-
-  llama-cpp = import ./llama-cpp {
-    inherit
-      pkgs
-      models
-      lib
-      config
-      ;
-  };
 in
 {
   imports = [

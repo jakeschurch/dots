@@ -9,11 +9,10 @@ require("noice").setup({
       search_up = {
         view = "cmdline",
       },
-      -- execute shell command (!command)
       filter = { pattern = "^:%s*!", icon = "$", ft = "sh" },
       substitute = {
         pattern = "^:%%?s/",
-        icon = " ",
+        icon = "󰏘 ",
         ft = "regex",
         opts = { border = { text = { top = " sub (old/new/) " } } },
       },
@@ -28,6 +27,13 @@ require("noice").setup({
   lsp = {
     hover = { enabled = true },
     signature = { enabled = true },
+    progress = {
+      enabled = true,
+      format = "lsp_progress",
+      format_done = "lsp_progress_done",
+      throttle = 1000 / 30,
+      view = "mini",
+    },
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       ["vim.lsp.util.stylize_markdown"] = true,
@@ -35,22 +41,67 @@ require("noice").setup({
     },
   },
   presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
-    command_palette = false, -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false, -- add a border to hover docs and signature help
+    bottom_search = true,
+    command_palette = false,
+    long_message_to_split = true,
+    inc_rename = false,
+    lsp_doc_border = false,
   },
   routes = {
-    { filter = { event = "msg_show", find = "written" } },
-    { filter = { event = "msg_show", find = "yanked" } },
-    { filter = { event = "msg_show", find = "%d+L, %d+B" } },
-    { filter = { event = "msg_show", find = "; after #%d+" } },
-    { filter = { event = "msg_show", find = "; before #%d+" } },
-    { filter = { event = "msg_show", find = "%d fewer lines" } },
-    { filter = { event = "msg_show", find = "%d more lines" } },
-    { filter = { event = "msg_show", find = "<ed" } },
-    { filter = { event = "msg_show", find = ">ed" } },
-    { filter = { event = "msg_show", find = "Hop" } },
+    {
+      filter = { event = "msg_show", find = "written" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "yanked" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "%d+L, %d+B" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "; after #%d+" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "; before #%d+" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "%d fewer lines" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "%d more lines" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "<ed" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = ">ed" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "msg_show", find = "Hop" },
+      opts = { skip = true },
+    },
+    {
+      filter = { event = "lsp", kind = "progress" },
+      view = "mini",
+    },
+    {
+      filter = {
+        event = "lsp",
+        kind = "progress",
+        cond = function(msg)
+          local client = vim.tbl_get(msg.opts, "progress", "client")
+          return client == "rust-analyzer" or client == "gopls"
+        end,
+      },
+      opts = { skip = true },
+    },
   },
 })

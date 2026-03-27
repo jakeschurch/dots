@@ -18,5 +18,3 @@ setlocal formatoptions = "tqclnjaw"
 noremap <buffer> <leader>l :VimwikiToggleListItem<cr>
 vmap <buffer> <leader>l :VimwikiToggleListItem<cr>
 
-let g:limelight_priority = -1
-let g:limelight_paragraph_span = 3

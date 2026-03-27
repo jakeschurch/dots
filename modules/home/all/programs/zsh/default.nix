@@ -74,15 +74,15 @@ in
       compinit -i -C
     '';
 
-    initExtraBeforeCompInit = ''
-      export ZSH_COMPDUMP=~/.zcompdump
-      fpath+=(
-        ~/.cache/zsh/completions
-        "${config.home.profileDirectory}/share/zsh/site-functions"
-      )
-    '';
-
-    initExtra = ''
+    initContent = lib.mkMerge [
+      (lib.mkOrder 550 ''
+        export ZSH_COMPDUMP=~/.zcompdump
+        fpath+=(
+          ~/.cache/zsh/completions
+          "${config.home.profileDirectory}/share/zsh/site-functions"
+        )
+      '')
+      ''
       autoload -Uz bracketed-paste-magic
       zle -N bracketed-paste bracketed-paste-magic
 
@@ -206,7 +206,8 @@ in
       bindkey '^P' awsp-widget
 
       motd
-    '';
+    ''
+    ];
 
     plugins = [
       {

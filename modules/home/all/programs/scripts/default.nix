@@ -108,6 +108,13 @@ let
     propagatedBuildInputs = [ coreutils-prefixed ];
   };
 
+  notify-when = mkScript {
+    pname = "notify-when";
+    src = ./notify-when.sh;
+    description = "Run command and notify on success";
+    propagatedBuildInputs = [ pkgs.libnotify ];
+  };
+
   extract = mkScript {
     pname = "extract";
     src = ./extract.sh;
@@ -173,6 +180,7 @@ in
     gif2mp4
     record-gif
     extract
+    notify-when
     # spell-check-env-vars
   ]
   ++ lib.optionals pkgs.stdenv.isLinux [
