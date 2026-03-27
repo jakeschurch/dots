@@ -31,7 +31,10 @@ in
       nixpkgs.flake = flake.inputs.nixpkgs; # Make `nix shell` etc use pinned nixpkgs
     };
 
-    gc.automatic = true;
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 7d";
+    };
 
     settings = {
       fallback = true;
