@@ -21,6 +21,7 @@
     token = "my-cluster-token-12345";
     vip = "192.168.100.100";
 
+    # registryMirror.enable = true;
     embeddedRegistry = {
       enable = true;
       mirrors = [
@@ -50,7 +51,7 @@
       mac = "02:00:00:00:00:10";
       initial = true;
       vsockCid = 10;
-      vcpu = 4;
+      vcpu = 2;
       mem = 8192;
     };
 
@@ -59,7 +60,7 @@
       ip = "192.168.100.11";
       mac = "02:00:00:00:00:11";
       vsockCid = 11;
-      vcpu = 4;
+      vcpu = 2;
       mem = 8192;
     };
 
@@ -68,7 +69,7 @@
       ip = "192.168.100.12";
       mac = "02:00:00:00:00:12";
       vsockCid = 12;
-      vcpu = 4;
+      vcpu = 2;
       mem = 8192;
     };
 
@@ -80,7 +81,7 @@
       vcpu = 8;
       mem = 24000;
       disk = 100;
-      dataDisk = 250;
+      dataDisk = 1200;
       # Storage node: Garage + Longhorn prefer this node (soft affinity, no taint so general workloads also land here)
       extraLabels = [ "workload=storage" ];
     };
@@ -90,8 +91,8 @@
       ip = "192.168.100.21";
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
-      vcpu = 16;
-      mem = 60000;
+      vcpu = 4;
+      mem = 16000;
       disk = 100;
       dataDisk = 250;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
@@ -103,6 +104,19 @@
           path = "0000:0c:00.0";
         }
       ];
+    };
+
+    vms.k3s-worker-3 = {
+      role = "agent";
+      ip = "192.168.100.22";
+      mac = "02:00:00:00:00:22";
+      vsockCid = 22;
+      vcpu = 8;
+      mem = 24000;
+      disk = 100;
+      dataDisk = 1200;
+      # Storage node: Garage + Longhorn prefer this node (soft affinity, no taint so general workloads also land here)
+      extraLabels = [ "workload=storage" ];
     };
   };
 
