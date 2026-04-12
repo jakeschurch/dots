@@ -82,8 +82,14 @@
       mem = 24000;
       disk = 100;
       dataDisk = 1200;
-      # Storage node: Garage + Longhorn prefer this node (soft affinity, no taint so general workloads also land here)
+      # Storage node: Garage + Mayastor prefer this node
       extraLabels = [ "workload=storage" ];
+      extraModules = [
+        {
+          # Mayastor io-engine requires 2GiB of 2MiB hugepages
+          boot.kernelParams = [ "hugepages=1024" ];
+        }
+      ];
     };
 
     vms.k3s-worker-2 = {
@@ -97,7 +103,7 @@
       dataDisk = 250;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
       extraLabels = [ "workload=inference" ];
-      extraTaints = [ "workload=inference:NoSchedule" ];
+      extraTaints = [ "workload=inference:PreferNoSchedule" ];
       passthroughDevices = [
         {
           bus = "pci";
@@ -111,12 +117,18 @@
       ip = "192.168.100.22";
       mac = "02:00:00:00:00:22";
       vsockCid = 22;
-      vcpu = 8;
+      vcpu = 6;
       mem = 24000;
       disk = 100;
       dataDisk = 1200;
-      # Storage node: Garage + Longhorn prefer this node (soft affinity, no taint so general workloads also land here)
+      # Storage node: Garage + Mayastor prefer this node
       extraLabels = [ "workload=storage" ];
+      extraModules = [
+        {
+          # Mayastor io-engine requires 2GiB of 2MiB hugepages
+          boot.kernelParams = [ "hugepages=1024" ];
+        }
+      ];
     };
   };
 
