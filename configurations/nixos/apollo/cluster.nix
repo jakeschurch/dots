@@ -6,6 +6,13 @@
       gateway = "192.168.100.1";
       subnet = "192.168.100.0/24";
       externalInterface = "enp5s0";
+      vip = "192.168.100.100";
+      bgp = {
+        enable = true;
+        asn = 64512;
+        peerAsn = 64513;
+        peerSubnet = "192.168.100.0/24";
+      };
       # vxlan = {
       #   enable = true;
       #   local = "<apollo-LAN-IP>";   # e.g. the IP enp5s0 gets — fill in before deploying
@@ -20,6 +27,11 @@
     enable = true;
     token = "my-cluster-token-12345";
     vip = "192.168.100.100";
+    bgp = {
+      enable = true;
+      asn = 64512;
+      peerAsn = 64513;
+    };
 
     # registryMirror.enable = true;
     embeddedRegistry = {
@@ -78,18 +90,13 @@
       ip = "192.168.100.20";
       mac = "02:00:00:00:00:20";
       vsockCid = 20;
-      vcpu = 8;
+      vcpu = 9;
       mem = 24000;
       disk = 100;
-      dataDisk = 1200;
-      # Storage node: Garage + Mayastor prefer this node
-      extraLabels = [ "workload=storage" ];
-      extraModules = [
-        {
-          # Mayastor io-engine requires 2GiB of 2MiB hugepages
-          boot.kernelParams = [ "hugepages=1024" ];
-        }
-      ];
+      # Storage node: dedicated raw volume for Mayastor io-engine
+      extraLabels = [ "workload=storage" "openebs.io/engine=mayastor" ];
+      mayastorPoolGiB = 800;
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
     vms.k3s-worker-2 = {
@@ -98,12 +105,12 @@
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
       vcpu = 4;
-      mem = 16000;
+      mem = 28000;
       disk = 100;
       dataDisk = 250;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
       extraLabels = [ "workload=inference" ];
-      extraTaints = [ "workload=inference:PreferNoSchedule" ];
+      extraTaints = [ "workload=inference:NoSchedule" ];
       passthroughDevices = [
         {
           bus = "pci";
@@ -117,18 +124,13 @@
       ip = "192.168.100.22";
       mac = "02:00:00:00:00:22";
       vsockCid = 22;
-      vcpu = 6;
+      vcpu = 8;
       mem = 24000;
       disk = 100;
-      dataDisk = 1200;
-      # Storage node: Garage + Mayastor prefer this node
-      extraLabels = [ "workload=storage" ];
-      extraModules = [
-        {
-          # Mayastor io-engine requires 2GiB of 2MiB hugepages
-          boot.kernelParams = [ "hugepages=1024" ];
-        }
-      ];
+      # Storage node: dedicated raw volume for Mayastor io-engine
+      extraLabels = [ "workload=storage" "openebs.io/engine=mayastor" ];
+      mayastorPoolGiB = 800;
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
   };
 
