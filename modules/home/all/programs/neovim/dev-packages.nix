@@ -22,8 +22,8 @@ pkgs: {
     typescript
     prettier
     prettier-d-slim
-    nodePackages.eslint
-    nodePackages.typescript
+    eslint
+    typescript
     vtsls
     vscode-langservers-extracted
     vscode-js-debug
@@ -120,7 +120,7 @@ pkgs: {
   html = with pkgs; [
     emmet-ls
     html-tidy
-    nodePackages.stylelint
+    stylelint
   ];
 
   misc = with pkgs; [
@@ -129,7 +129,7 @@ pkgs: {
     lazygit
     ghostscript
     codespell
-    nodePackages.yaml-language-server
+    yaml-language-server
     # actionlint
     yamllint
     # semgrep

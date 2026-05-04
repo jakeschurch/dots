@@ -3,7 +3,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7KGNU0Y613885L_1";
+        device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7K6NU0Y613BB5L_1";
         content = {
           type = "gpt";
           partitions = {
@@ -22,7 +22,7 @@
               };
             };
             swap = {
-              size = "125G";
+              size = "128G";
               content = {
                 type = "swap";
               };
@@ -56,7 +56,6 @@
                       "noatime"
                       "discard=async"
                       "space_cache=v2"
-
                     ];
                   };
                   "/vms" = {
@@ -75,9 +74,11 @@
                     mountpoint = "/home";
                   };
                   "/home/jake" = {
+                    mountpoint = "/home/jake";
                     mountOptions = [
                       "compress=zstd"
                       "noatime"
+                      "discard=async"
                       "space_cache=v2"
                     ];
                   };
@@ -99,6 +100,26 @@
                     ];
                   };
                 };
+              };
+            };
+          };
+        };
+      };
+      sdb = {
+        type = "disk";
+        device = "/dev/sdb";
+        content = {
+          type = "gpt";
+          partitions = {
+            snapshots-metadata = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "btrfs";
+                extraArgs = [
+                  "-L"
+                  "snapshots-metadata"
+                ];
               };
             };
           };

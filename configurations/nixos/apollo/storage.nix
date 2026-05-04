@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   # Local pull-through Nix binary cache proxy
   services.ncps = {
@@ -52,17 +52,39 @@
     instances.btrbk = {
       onCalendar = "hourly";
       settings = {
-        snapshot_preserve_min = "1d";
-        snapshot_preserve = "7d 4w";
+        snapshot_preserve_min = "2h";
+        snapshot_preserve = "24h 7d 4w 3m";
         volume."/" = {
           snapshot_dir = "/.snapshots";
           subvolume = {
-            "/" = { };
             "/home" = { };
             "/home/jake" = { };
           };
         };
       };
+    };
+  };
+
+  # Monthly balance to consolidate sparse chunks; idle I/O so it doesn't interfere
+  systemd.services.btrfs-balance = {
+    description = "Btrfs balance";
+    after = [ "local-fs.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.btrfs-progs}/bin/btrfs balance start -dusage=85 -musage=85 /";
+      IOSchedulingClass = "idle";
+      CPUSchedulingPolicy = "idle";
+      Nice = 19;
+    };
+  };
+
+  systemd.timers.btrfs-balance = {
+    description = "Monthly Btrfs balance";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "monthly";
+      Persistent = true;
+      RandomizedDelaySec = "1h";
     };
   };
 }

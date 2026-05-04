@@ -76,6 +76,10 @@ in
         force_zero_scaling = true;
       };
 
+      layout = {
+        single_window_aspect_ratio = "4 3";
+      };
+
       general = {
         layout = "dwindle";
         gaps_in = 3;
@@ -90,7 +94,6 @@ in
         smart_split = false;
         smart_resizing = false;
         preserve_split = true;
-        # single_window_aspect_ratio = "4 3";
       };
 
       decoration = {
@@ -247,7 +250,7 @@ in
           "$mod+shift, minus, movetoworkspace, +0"
 
           # Fullscreen
-          "$mod, F, fullscreen, 0"
+          "$mod, F, fullscreen, 1"
           "$mod+SHIFT, F, fullscreen, 3"
         ];
 

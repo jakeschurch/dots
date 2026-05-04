@@ -44,10 +44,6 @@
     bitwarden-desktop
   ];
 
-  home.sessionVariables = {
-    SSH_AUTH_SOCK = "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock";
-  };
-
   programs.zsh.initContent = ''
     if [ -z "$SSH_CONNECTION" ]; then
        export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"

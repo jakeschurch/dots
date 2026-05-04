@@ -22,8 +22,10 @@ let
 
   mkStringInjection = lang: ''
     (
-      (string_expression
-        (string_fragment) @injection.content)
+      [
+        (string_expression (string_fragment) @injection.content)
+        (indented_string_expression (string_fragment) @injection.content)
+      ]
       (#match? @injection.content "(^|\\n)[ \\t]*#\\s*language=${lang}")
       (#set! injection.language "${lang}")
       (#set! injection.include-children)

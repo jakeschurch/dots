@@ -34,11 +34,13 @@
     };
 
     # registryMirror.enable = true;
+    registryMirror.localRegistries = [ "registry.jakeschurch.com" ];
     embeddedRegistry = {
       enable = true;
       mirrors = [
         "docker.io"
         "registry.k8s.io"
+        "registry.jakeschurch.com"
       ];
     };
 

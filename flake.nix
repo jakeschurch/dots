@@ -59,7 +59,7 @@
 
     wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.54.0";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-colors.url = "github:misterio77/nix-colors";
@@ -122,6 +122,16 @@
     max-substitution-jobs = 16;
 
     builders = [ ];
+
+ extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
 
     experimental-features = [
       "nix-command"

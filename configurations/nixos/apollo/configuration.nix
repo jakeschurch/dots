@@ -5,7 +5,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nixos/tablet.nix
   ];
 
   tablet.enable = true;

@@ -41,6 +41,7 @@ in
 
     ./all
     ./homebrew.nix
+    ./disable-nix-spotlight.nix
   ];
 
 }

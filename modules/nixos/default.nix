@@ -30,6 +30,8 @@ in
     }
 
     ./shared
+    ./docker.nix
+    ./printing.nix
     ./steam.nix
     ./ssh.nix
     # ./ollama-intel.nix

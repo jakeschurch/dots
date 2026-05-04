@@ -16,6 +16,7 @@ in
     ./cluster.nix
     ./hyprland.nix
     ./greetd.nix
+    (self + "/modules/nixos/tablet.nix")
     self.nixosModules.default
     inputs.disko.nixosModules.disko
     inputs.hyprland.nixosModules.default

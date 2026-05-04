@@ -17,16 +17,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    hardware.wacom.enable = true;
-
     services.udev.packages = with pkgs; [
       libwacom
-      wacom-tools
     ];
 
     environment.systemPackages = with pkgs; [
       libwacom
-      xournalpp
     ];
   };
 }

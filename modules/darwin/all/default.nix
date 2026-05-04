@@ -11,7 +11,6 @@
     channel.enable = false;
 
     settings = {
-
       auto-optimise-store = false;
       build-users-group = "nixbld";
       cores = 0;
