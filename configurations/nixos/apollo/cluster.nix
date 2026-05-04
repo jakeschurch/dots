@@ -110,7 +110,7 @@
       dataDisk = 250;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
       extraLabels = [ "workload=inference" ];
-      extraTaints = [ "workload=inference:NoSchedule" ];
+      extraTaints = [ "workload=inference:PreferNoSchedule" ];
       passthroughDevices = [
         {
           bus = "pci";

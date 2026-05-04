@@ -5,7 +5,10 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../../modules/nixos/tablet.nix
   ];
+
+  tablet.enable = true;
 
   networking = {
     hostName = "apollo";
@@ -56,6 +59,7 @@
       "wheel"
       "video"
       "kvm"
+      "docker"
     ];
     hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
     home = "/home/jake";
@@ -85,6 +89,8 @@
   ];
 
   security.rtkit.enable = true;
+
+  documentation.nixos.enable = false;
 
   # This value defines the first NixOS version you installed on this machine.
   # Do NOT change this value unless you have manually inspected all changes it would make.

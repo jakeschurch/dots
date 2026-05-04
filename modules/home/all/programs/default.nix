@@ -17,15 +17,19 @@ in
     ./fish
     ./git
     ./hammerspoon
+    ./hyprland
     ./i3
     ./k9s
+    ./krita.nix
     ./neovim
+    ./obsidian.nix
     ./psql.nix
     ./ripgrep.nix
     ./scripts
     ./slack.nix
     ./ssh.nix
     ./ssh.nix
+    ./tablet-calibration.nix
     ./terragrunt.nix
     ./wezterm
     ./zsh

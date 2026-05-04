@@ -26,6 +26,8 @@ let
     ];
   };
 
+  ts-injections = import ./treesitter-injections.nix { inherit pkgs lib; };
+
 in
 {
   home.packages = extraPkgs ++ [ plugman ];
