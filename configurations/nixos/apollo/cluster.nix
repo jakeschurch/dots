@@ -63,7 +63,8 @@
       mac = "02:00:00:00:00:10";
       initial = true;
       vsockCid = 10;
-      vcpu = 2;
+      readinessVsockPort = 9010;
+      vcpu = 4; # bumped from 2: etcd raft consensus was hitting CPU scheduling jitter at 2 vCPU (2026-05-04)
       mem = 8192;
     };
 
@@ -72,7 +73,8 @@
       ip = "192.168.100.11";
       mac = "02:00:00:00:00:11";
       vsockCid = 11;
-      vcpu = 2;
+      readinessVsockPort = 9011;
+      vcpu = 4; # bumped from 2 (2026-05-04)
       mem = 8192;
     };
 
@@ -81,7 +83,8 @@
       ip = "192.168.100.12";
       mac = "02:00:00:00:00:12";
       vsockCid = 12;
-      vcpu = 2;
+      readinessVsockPort = 9012;
+      vcpu = 4; # bumped from 2 (2026-05-04)
       mem = 8192;
     };
 
@@ -90,7 +93,8 @@
       ip = "192.168.100.20";
       mac = "02:00:00:00:00:20";
       vsockCid = 20;
-      vcpu = 9;
+      readinessVsockPort = 9020;
+      vcpu = 6; # reduced from 9: freed vCPUs reallocated to server nodes (2026-05-04)
       mem = 24000;
       disk = 100;
       # Storage node: dedicated raw volume for Mayastor io-engine
@@ -104,6 +108,7 @@
       ip = "192.168.100.21";
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
+      readinessVsockPort = 9021;
       vcpu = 4;
       mem = 28000;
       disk = 100;
@@ -124,7 +129,8 @@
       ip = "192.168.100.22";
       mac = "02:00:00:00:00:22";
       vsockCid = 22;
-      vcpu = 8;
+      readinessVsockPort = 9022;
+      vcpu = 6; # reduced from 8: freed vCPUs reallocated to server nodes (2026-05-04)
       mem = 24000;
       disk = 100;
       # Storage node: dedicated raw volume for Mayastor io-engine
@@ -132,6 +138,20 @@
       mayastorPoolGiB = 800;
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
+  };
+
+  # Tier-based rolling restarts enforced via systemd dependencies.
+  # Workers restart first (drain workloads), non-initial servers next,
+  # initial server (etcd bootstrap) last. Readiness gate is the guest's
+  # microvm-readiness-signal.service connecting via vsock (port auto-wired
+  # from services.k3s-cluster.vms.<name>.readinessVsockPort).
+  microvm.vms = {
+    k3s-worker-1.restartPriority = 0;
+    k3s-worker-2.restartPriority = 0;
+    k3s-worker-3.restartPriority = 0;
+    k3s-server-2 = { restartPriority = 1; restartTimeout = 300; };
+    k3s-server-3 = { restartPriority = 1; restartTimeout = 300; };
+    k3s-server-1 = { restartPriority = 2; restartTimeout = 300; };
   };
 
   # NAT for microVM external network access
