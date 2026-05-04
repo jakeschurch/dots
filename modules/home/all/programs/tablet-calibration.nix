@@ -43,7 +43,6 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       xf86-input-wacom
-      wacomtablet
     ];
 
     home.activation.wacomCalibration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

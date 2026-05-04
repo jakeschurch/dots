@@ -33,8 +33,6 @@
       peerAsn = 64513;
     };
 
-    # registryMirror.enable = true;
-    registryMirror.localRegistries = [ "registry.jakeschurch.com" ];
     embeddedRegistry = {
       enable = true;
       mirrors = [
