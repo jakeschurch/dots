@@ -48,6 +48,11 @@
       path = "vmetal/apps";
     };
 
+    cilium.hubble = {
+      enable = false;
+      ui = false;
+    };
+
     network = {
       prefix = "192.168.100";
       firstServerIp = "192.168.100.10";
