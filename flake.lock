@@ -2307,8 +2307,8 @@
         "sops-nix": "sops-nix"
       },
       "locked": {
-        "lastModified": 1777916005,
-        "narHash": "sha256-aJlC8TPn8jiX2HwjAkoLGx2u23UKRHaNTpozVDuOe9M=",
+        "lastModified": 1778465364,
+        "narHash": "sha256-Alan0gTPsr6u6I7IHRHQ8POSTOdf62+7ebucIeicL/w=",
         "path": "/home/jake/Projects/homelab/vmetal",
         "type": "path"
       },

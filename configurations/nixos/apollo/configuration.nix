@@ -25,6 +25,9 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
+  programs.xwayland.enable = true;
+
+
   services = {
     xserver = {
       # Configure keymap in X11
@@ -85,6 +88,7 @@
     wget
     pavucontrol
     pamixer
+    xauth
   ];
 
   security.rtkit.enable = true;
