@@ -118,9 +118,12 @@
       mem = 28000;
       disk = 100;
       dataDisk = 250;
+      # Third mayastor pool — completes replication.factor=3 quorum for garage PVCs.
+      mayastorPoolGiB = 400;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
-      extraLabels = [ "workload=inference" ];
+      extraLabels = [ "workload=inference" "openebs.io/engine=mayastor" ];
       extraTaints = [ "workload=inference:PreferNoSchedule" ];
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
       passthroughDevices = [
         {
           bus = "pci";
