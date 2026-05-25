@@ -17,6 +17,7 @@
       mtr
       conftest
       libressl
+      beads
 
       nodejs
       (python313.withPackages (
@@ -121,6 +122,8 @@
       bc
       gotop
       ccache
+      waypipe
+      xauth
     ];
 
     file."Documents/Templates" = {

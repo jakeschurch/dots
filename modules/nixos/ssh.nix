@@ -23,6 +23,7 @@ in
       ports = [ 22222 ];
       settings = {
         AllowAgentForwarding = true;
+        X11Forwarding = true;
         PasswordAuthentication = false;
         UseDns = true;
         KbdInteractiveAuthentication = false;

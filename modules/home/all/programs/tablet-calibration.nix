@@ -7,62 +7,85 @@
 with lib;
 let
   cfg = config.programs.tablet-calibration;
+
+  toggleScript = pkgs.writeShellApplication {
+    name = "wacom-toggle-mode";
+    runtimeInputs = [ pkgs.libnotify ];
+    text = ''
+      DEVICE="${cfg.hyprDeviceName}"
+      STATE_FILE="''${XDG_STATE_HOME:-$HOME/.local/state}/wacom-mode"
+      mkdir -p "$(dirname "$STATE_FILE")"
+      CURRENT=$(cat "$STATE_FILE" 2>/dev/null || echo "normal")
+
+      if [ "$CURRENT" = "normal" ]; then
+        echo "pro" > "$STATE_FILE"
+        hyprctl keyword "device[$DEVICE]:accel_profile" flat
+        hyprctl keyword "device[$DEVICE]:sensitivity" "${toString cfg.proDrawingMode.sensitivity}"
+        notify-send -t 1500 "Wacom" "Pro mode"
+      else
+        echo "normal" > "$STATE_FILE"
+        hyprctl keyword "device[$DEVICE]:accel_profile" adaptive
+        hyprctl keyword "device[$DEVICE]:sensitivity" "0"
+        notify-send -t 1500 "Wacom" "Normal mode"
+      fi
+    '';
+  };
 in
 {
   options.programs.tablet-calibration = {
-    enable = mkEnableOption "Tablet calibration and xsetwacom config";
+    enable = mkEnableOption "Wacom tablet config for Hyprland/Wayland";
 
-    deviceName = mkOption {
+    hyprDeviceName = mkOption {
       type = types.str;
-      default = "Wacom Intuos S Pen stylus";
-      description = "Tablet device name from 'xsetwacom list devices'";
-    };
-
-    pressureCurve = mkOption {
-      type = types.listOf types.int;
-      default = [ 5 10 90 95 ];
-      description = "Pressure curve [start-low, start-high, end-high, end-low]";
+      default = "wacom-intuos-s-pen";
+      description = "Device name from 'hyprctl devices'";
     };
 
     mapToOutput = mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = "Map tablet to specific output (e.g. HDMI-1)";
+      description = "Map tablet to output (e.g. DP-1)";
     };
 
-    buttonMappings = mkOption {
-      type = types.attrsOf types.str;
-      default = {
-        button2 = "key ctrl z"; # Undo
-        button3 = "key shift";  # Modifier
+    proDrawingMode = {
+      enable = mkEnableOption "Pro drawing mode (flat accel, minimal smoothing)";
+
+      sensitivity = mkOption {
+        type = types.float;
+        default = 0.0;
+        description = "Pointer sensitivity in pro mode (-1.0 to 1.0)";
       };
-      description = "Pen button mappings";
+    };
+
+    toggleKeybind = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      example = ''
+        "$mod, T"
+      '';
+      description = "Hyprland keybind to toggle pro drawing mode";
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      xf86-input-wacom
+    home.packages = optionals cfg.proDrawingMode.enable [ toggleScript ];
+
+    wayland.windowManager.hyprland.settings = mkMerge [
+      (mkIf (cfg.mapToOutput != null) {
+        input.tablet.output = cfg.mapToOutput;
+      })
+      (mkIf cfg.proDrawingMode.enable {
+        device = [
+          {
+            name = cfg.hyprDeviceName;
+            accel_profile = "adaptive";
+            sensitivity = 0;
+          }
+        ];
+      })
+      (mkIf (cfg.proDrawingMode.enable && cfg.toggleKeybind != null) {
+        bind = [ "${cfg.toggleKeybind}, exec, wacom-toggle-mode" ];
+      })
     ];
-
-    home.activation.wacomCalibration = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Only run on Linux with xsetwacom available
-      if command -v xsetwacom &>/dev/null; then
-        DEVICE="${cfg.deviceName}"
-
-        # Set pressure curve
-        xsetwacom set "$DEVICE" PressureCurve ${lib.concatStringsSep " " (map toString cfg.pressureCurve)} 2>/dev/null || true
-
-        ${lib.optionalString (cfg.mapToOutput != null) ''
-        # Map to specific output
-        xsetwacom set "$DEVICE" MapToOutput ${cfg.mapToOutput} 2>/dev/null || true
-        ''}
-
-        # Apply button mappings
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (button: action: ''
-          xsetwacom set "$DEVICE" Button ${lib.removePrefix "button" button} "${action}" 2>/dev/null || true
-        '') cfg.buttonMappings)}
-      fi
-    '';
   };
 }

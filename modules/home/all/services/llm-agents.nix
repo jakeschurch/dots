@@ -7,7 +7,6 @@ in
     claude-code
     opencode
     oh-my-opencode
-    claude-code-acp
     claude-plugins
     agent-deck
   ];

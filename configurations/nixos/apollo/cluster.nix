@@ -103,9 +103,12 @@
       mem = 24000;
       disk = 100;
       # Storage node: dedicated raw volume for Mayastor io-engine
-      extraLabels = [ "workload=storage" "openebs.io/engine=mayastor" ];
+      extraLabels = [
+        "workload=storage"
+        "openebs.io/engine=mayastor"
+      ];
       mayastorPoolGiB = 800;
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
 
     vms.k3s-worker-2 = {
@@ -121,15 +124,18 @@
       # Third mayastor pool — completes replication.factor=3 quorum for garage PVCs.
       mayastorPoolGiB = 400;
       # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
-      extraLabels = [ "workload=inference" "openebs.io/engine=mayastor" ];
-      extraTaints = [ "workload=inference:PreferNoSchedule" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
-      passthroughDevices = [
-        {
-          bus = "pci";
-          path = "0000:0c:00.0";
-        }
+      extraLabels = [
+        # "workload=inference"
+        "openebs.io/engine=mayastor"
       ];
+      # extraTaints = [ "workload=inference:PreferNoSchedule" ];
+      # extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      # passthroughDevices = [
+      #   {
+      #     bus = "pci";
+      #     path = "0000:0c:00.0";
+      #   }
+      # ];
     };
 
     vms.k3s-worker-3 = {
@@ -142,9 +148,12 @@
       mem = 24000;
       disk = 100;
       # Storage node: dedicated raw volume for Mayastor io-engine
-      extraLabels = [ "workload=storage" "openebs.io/engine=mayastor" ];
+      extraLabels = [
+        "workload=storage"
+        "openebs.io/engine=mayastor"
+      ];
       mayastorPoolGiB = 800;
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
   };
 
@@ -157,9 +166,18 @@
     k3s-worker-1.restartPriority = 0;
     k3s-worker-2.restartPriority = 0;
     k3s-worker-3.restartPriority = 0;
-    k3s-server-2 = { restartPriority = 1; restartTimeout = 300; };
-    k3s-server-3 = { restartPriority = 1; restartTimeout = 300; };
-    k3s-server-1 = { restartPriority = 2; restartTimeout = 300; };
+    k3s-server-2 = {
+      restartPriority = 1;
+      restartTimeout = 300;
+    };
+    k3s-server-3 = {
+      restartPriority = 1;
+      restartTimeout = 300;
+    };
+    k3s-server-1 = {
+      restartPriority = 2;
+      restartTimeout = 300;
+    };
   };
 
   # NAT for microVM external network access

@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   ...
@@ -10,19 +9,10 @@ let
 in
 {
   options.tablet = {
-    enable = mkEnableOption "Wacom tablet support";
-    pressureSensitivity = mkEnableOption "Pressure sensitivity (Wayland)" // {
-      default = true;
-    };
+    enable = mkEnableOption "Wacom tablet support via OpenTabletDriver";
   };
 
   config = mkIf cfg.enable {
-    services.udev.packages = with pkgs; [
-      libwacom
-    ];
-
-    environment.systemPackages = with pkgs; [
-      libwacom
-    ];
+    hardware.opentabletdriver.enable = true;
   };
 }

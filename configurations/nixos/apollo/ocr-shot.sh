@@ -15,4 +15,4 @@ tesseract "$TMP_IMG" "$TMP_TXT" \
 wl-copy <"${TMP_TXT}.txt"
 notify-send "OCR Complete" "Text copied to clipboard"
 
-rm -f "$TMP_IMG" "$TMP_TXT.txt"
+rm -f "$TMP_IMG" "$TMP_TXT" "$TMP_TXT.txt"

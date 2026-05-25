@@ -14,11 +14,12 @@ in
     self.homeModules.default
   ];
 
-  # Tablet calibration (Linux with xsetwacom)
   programs.tablet-calibration = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
-    deviceName = "Wacom Intuos S Pen stylus";
+    hyprDeviceName = "wacom-intuos-s-pen";
     mapToOutput = "HDMI-A-1";
+    proDrawingMode.enable = true;
+    toggleKeybind = "$mod, T";
   };
 
   # Only add this attribute on Linux
