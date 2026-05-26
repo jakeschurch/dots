@@ -28,7 +28,6 @@ in
     ./scripts
     ./slack.nix
     ./ssh.nix
-    ./ssh.nix
     ./tablet-calibration.nix
     ./terragrunt.nix
     ./wezterm

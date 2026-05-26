@@ -7,3 +7,5 @@ result/*
 .git/*
 
 .pre-commit-config.yaml
+.claude/worktrees/
+wallpapers/*.mp4

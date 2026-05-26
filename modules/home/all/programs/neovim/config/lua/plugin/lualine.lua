@@ -35,27 +35,33 @@ lualine.setup({
         end,
       },
       { "diff", source = diff_source },
-      {
-        "diagnostics",
-        -- require("lsp-status").diagnostics,
-      },
+      { "diagnostics" },
     },
     lualine_c = {
-      "filename",
+      { "filename", path = 1 }, -- relative path
     },
-    lualine_x = { "filetype" },
-    lualine_y = { "os.date('%d-%b %r')", "progress" },
+    lualine_x = {
+      {
+        function()
+          local clients = vim.lsp.get_clients({ bufnr = 0 })
+          if #clients == 0 then
+            return ""
+          end
+          return "󰿘 " .. clients[1].name
+        end,
+      },
+      "searchcount",
+      "filetype",
+    },
+    lualine_y = { "os.date('%d-%b %H:%M')", "progress" },
     lualine_z = { "location" },
   },
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = { "filename" },
+    lualine_c = { { "filename", path = 1 } },
     lualine_x = { "location" },
-    lualine_y = {
-      "searchcount",
-      "selectioncount",
-    },
+    lualine_y = { "selectioncount" },
     lualine_z = {},
   },
 })

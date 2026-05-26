@@ -27,7 +27,6 @@
 
   programs.xwayland.enable = true;
 
-
   services = {
     xserver = {
       # Configure keymap in X11

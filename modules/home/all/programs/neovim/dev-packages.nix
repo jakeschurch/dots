@@ -8,6 +8,7 @@ pkgs: {
   elixir = with pkgs; [
     elixir_1_19
     expert
+    elixir-ls
   ];
 
   nix = with pkgs; [

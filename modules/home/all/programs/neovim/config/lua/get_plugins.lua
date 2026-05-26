@@ -1,10 +1,12 @@
 for _, filepath in
-  ipairs(vim.fn.globpath(
-    vim.fn.stdpath("config") .. "/lua/plugin",
-    "**/*.lua",
-    true,
-    true
-  ))
+  ipairs(
+    vim.fn.globpath(
+      vim.fn.stdpath("config") .. "/lua/plugin",
+      "**/*.lua",
+      true,
+      true
+    )
+  )
 do
   local module_path = filepath:match("lua/(.*)%.lua$"):gsub("/", ".")
   local ok, err = pcall(require, module_path)

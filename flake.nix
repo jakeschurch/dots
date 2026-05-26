@@ -2,13 +2,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-25.11";
-    flake-parts.url = "github:hercules-ci/flake-parts";
     nur.url = "github:nix-community/NUR";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly-overlay.inputs.nixpkgs.follows = "nixpkgs";
-
-    tfenv.url = "github:cjlarose/tfenv-nix";
 
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
@@ -38,9 +35,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lexical-lsp.url = "github:lexical-lsp/lexical";
-    lexical-lsp.inputs.nixpkgs.follows = "nixpkgs";
-
     treefmt-nix.url = "github:numtide/treefmt-nix";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -49,20 +43,13 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixd.url = "github:nix-community/nixd";
-    nixd.inputs.nixpkgs.follows = "nixpkgs";
-
     mcp-hub.url = "github:ravitemer/mcp-hub";
     mcp-hub.inputs.nixpkgs.follows = "nixpkgs";
     nixos-unified.url = "github:srid/nixos-unified";
-    walker.url = "github:abenz1267/walker";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
-    wl-starfield.url = "github:jakeschurch/wl-starfield/bugfix/limit-fps-render";
-
-    hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.54.0";
+    hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.55.2";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-colors.url = "github:misterio77/nix-colors";
 
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -80,8 +67,13 @@
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
 
-    awww = {
-      url = "git+https://codeberg.org/LGFae/awww";
+    phonto = {
+      url = "github:museslabs/phonto";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    xremap-flake = {
+      url = "github:xremap/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -123,7 +115,7 @@
 
     builders = [ ];
 
- extra-substituters = [
+    extra-substituters = [
       "https://nix-community.cachix.org"
       "https://cache.nixos.org"
     ];

@@ -17,7 +17,7 @@ gitlinker.setup({
   },
 })
 
-vim.keymap.set({"n", "v"}, "<leader>gy", function()
+vim.keymap.set({ "n", "v" }, "<leader>gy", function()
   gitlinker.get_buf_range_url(
     "n",
     { action_callback = require("gitlinker.actions").copy_to_clipboard }

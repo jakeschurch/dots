@@ -21,7 +21,6 @@ in
     };
     overlays = lib.attrValues self.overlays ++ [
       inputs.nixGL.overlay
-      inputs.tfenv.overlays.default
     ];
   };
 

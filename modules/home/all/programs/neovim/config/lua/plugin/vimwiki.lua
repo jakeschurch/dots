@@ -45,7 +45,12 @@ g.vimwiki_list = {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "vimwiki", "markdown" },
   callback = function()
-    vim.keymap.set("n", "-", "<CMD>Oil<CR>", { buffer = true, noremap = true, silent = true })
+    vim.keymap.set(
+      "n",
+      "-",
+      "<CMD>Oil<CR>",
+      { buffer = true, noremap = true, silent = true }
+    )
   end,
 })
 

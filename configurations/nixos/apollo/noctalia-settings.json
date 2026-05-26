@@ -521,7 +521,7 @@
     "wallpaper": {
         "directory": "/home/jake/Pictures/Wallpapers",
         "enableMultiMonitorDirectories": false,
-        "enabled": true,
+        "enabled": false,
         "fillColor": "#000000",
         "fillMode": "crop",
         "hideWallpaperFilenames": false,

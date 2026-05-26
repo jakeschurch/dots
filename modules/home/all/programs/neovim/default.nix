@@ -26,15 +26,9 @@ let
     ];
   };
 
-  ts-injections = import ./treesitter-injections.nix { inherit pkgs lib; };
-
 in
 {
   home.packages = extraPkgs ++ [ plugman ];
-
-  imports = [
-    ./mcphub
-  ];
 
   programs.neovim = {
     package = pkgs.neovim-nightly;
@@ -45,6 +39,7 @@ in
       ];
     extraPackages = with pkgs; [
       imagemagick
+      vscode-langservers-extracted
     ];
     defaultEditor = true;
     extraConfig = ''

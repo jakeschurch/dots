@@ -54,6 +54,7 @@ let
       x:
       x.overrideAttrs {
         doCheck = false;
+        postInstall = "rm -rf $out/test $out/tests $out/spec";
       }
     ) plugins;
 
@@ -157,7 +158,6 @@ let
 
       toggleterm-nvim
 
-      luasnip
       nvim-ts-context-commentstring
 
       img-clip-nvim

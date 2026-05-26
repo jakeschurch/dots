@@ -8,23 +8,21 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "linux-builder" = {
-        hostname = "localhost";
-        port = 31022;
-        user = "builder";
-        identityFile = "/etc/nix/builder_ed25519";
-        identitiesOnly = true;
-        extraOptions = {
-          StrictHostKeyChecking = "accept-new";
-        };
+        Hostname = "localhost";
+        Port = 31022;
+        User = "builder";
+        IdentityFile = "/etc/nix/builder_ed25519";
+        IdentitiesOnly = true;
+        StrictHostKeyChecking = "accept-new";
       };
 
       "*" = {
-        forwardAgent = true;
-        compression = true;
-        hashKnownHosts = false;
-        controlMaster = "no";
+        ForwardAgent = true;
+        Compression = true;
+        HashKnownHosts = false;
+        ControlMaster = "no";
       };
     };
 

@@ -5,6 +5,7 @@ snacks.setup({
   bigfile = { enabled = true },
   bufdelete = { enabled = true },
   quickfile = { enabled = true },
+  notifier = { enabled = true },
   input = { enabled = true },
   indent = {
     enabled = true,

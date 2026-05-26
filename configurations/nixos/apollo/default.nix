@@ -21,6 +21,7 @@ in
     inputs.disko.nixosModules.disko
     inputs.hyprland.nixosModules.default
     inputs.noctalia.nixosModules.default
+    inputs.xremap-flake.nixosModules.default
     inputs.vmetal.nixosModules.microvm-host
     inputs.vmetal.nixosModules.k3s-cluster
   ];

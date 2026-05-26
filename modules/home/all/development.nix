@@ -5,7 +5,9 @@
 {
   home = {
     packages = with pkgs; [
-      pipx
+      (pipx.overridePythonAttrs (_: {
+        doCheck = false;
+      }))
       nix-update
       ssm-session-manager-plugin
       kind

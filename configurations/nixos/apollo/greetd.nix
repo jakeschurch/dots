@@ -7,36 +7,47 @@ in
 {
   environment.systemPackages = [ restart-session ];
 
-  services.keyd = {
+  services.xremap = {
     enable = true;
-    keyboards = {
-      default = {
-        ids = [ "*" ];
-        settings = {
-          alt = {
-            left = "C-left";
-            right = "C-right";
-            backspace = "C-backspace";
+    withWlroots = true; # enables app-specific remapping on Hyprland
+    serviceMode = "user"; # run as user service so it can detect focused Wayland window
+    userName = "jake";
+    config = {
+      keymap = [
+        # Wezterm: Cmd+C/V → Ctrl+Shift+C/V (avoid SIGINT)
+        # M-t passthrough: prevent global M-t→C-t from intercepting Alt+T in wezterm
+        {
+          name = "Wezterm Mac-style";
+          application.only = [ "wezterm" ];
+          remap = {
+            "M-c" = "C-S-c";
+            "M-v" = "C-S-v";
+            "M-t" = "M-t";
           };
-
-          meta = {
-            backspace = "C-backspace";
-            v = "C-v";
-            c = "C-c";
-
-            x = "C-x";
-            a = "C-a";
-            s = "C-s";
-            z = "C-z";
-            t = "C-t";
-            w = "C-w";
-            up = "C-home";
-            down = "C-end";
-            left = "home";
-            right = "end";
+        }
+        # Global Mac-style bindings
+        {
+          name = "Global Mac-style";
+          remap = {
+            "A-left" = "C-left";
+            "A-right" = "C-right";
+            "A-BackSpace" = "C-BackSpace";
+            "M-c" = "C-c";
+            "M-v" = "C-v";
+            "M-x" = "C-x";
+            "M-a" = "C-a";
+            "M-s" = "C-s";
+            "M-z" = "C-z";
+            "M-t" = "C-t";
+            "M-w" = "C-w";
+            "M-BackSpace" = "C-BackSpace";
+            "M-up" = "C-Home";
+            "M-down" = "C-End";
+            "M-left" = "Home";
+            "M-right" = "End";
           };
-        };
-      };
+        }
+      ];
     };
   };
 

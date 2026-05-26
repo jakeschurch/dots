@@ -178,4 +178,3 @@ end
 vim.keymap.set("n", "<leader>L", function()
   ToggleLocationList()
 end, { noremap = true, silent = true, desc = "Toggle location list" })
-
