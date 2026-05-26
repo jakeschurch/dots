@@ -14,10 +14,17 @@ blink_copilot.setup({
 
 local config = {
   cmdline = {
+    enabled = function()
+      -- disable in search (/ and ?) -- no maps should fire there
+      return vim.fn.getcmdtype() ~= "/" and vim.fn.getcmdtype() ~= "?"
+    end,
     keymap = {
       ["<Tab>"] = { "accept" },
     },
     completion = { menu = { auto_show = true } },
+    sources = function()
+      return { "cmdline" } -- no copilot/lsp/buffer in command line
+    end,
   },
 
   snippets = {

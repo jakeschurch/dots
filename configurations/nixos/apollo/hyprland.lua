@@ -189,7 +189,7 @@ hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen(1))
 
 -- Special workspace (scratchpad / magic)
 hl.bind(mod .. " + minus", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mod .. " + SHIFT + minus", hl.dsp.window.move({ workspace = "+0" }))
+hl.bind(mod .. " + SHIFT + minus", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Reload + cycle wallpaper
 hl.bind(
@@ -258,26 +258,11 @@ hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 -- ---- RESIZE SUBMAP ----
 hl.bind(mod .. " + R", hl.dsp.submap("resize"))
 hl.define_submap("resize", "reset", function()
-  hl.bind(
-    "h",
-    hl.dsp.window.resize({ x = -85, y = 0, relative = true }),
-    { repeating = true }
-  )
-  hl.bind(
-    "j",
-    hl.dsp.window.resize({ x = 0, y = 85, relative = true }),
-    { repeating = true }
-  )
-  hl.bind(
-    "k",
-    hl.dsp.window.resize({ x = 0, y = -85, relative = true }),
-    { repeating = true }
-  )
-  hl.bind(
-    "l",
-    hl.dsp.window.resize({ x = 85, y = 0, relative = true }),
-    { repeating = true }
-  )
+  hl.bind("h", hl.dsp.window.resize({ x = -85, y = 0, relative = true }), { repeating = true })
+  hl.bind("j", hl.dsp.window.resize({ x = 0, y = 85, relative = true }), { repeating = true })
+  hl.bind("k", hl.dsp.window.resize({ x = 0, y = -85, relative = true }), { repeating = true })
+  hl.bind("l", hl.dsp.window.resize({ x = 85, y = 0, relative = true }), { repeating = true })
+
   hl.bind("return", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))
 end)

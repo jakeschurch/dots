@@ -68,7 +68,8 @@ in
           OTHERS=$($HYPRCTL clients -j | $JQ -r --arg ws "$ACTIVE_WS" --arg addr "$ACTIVE_ADDR" \
             '[.[] | select(.workspace.id == ($ws | tonumber) and .address != $addr and .mapped == true)] | .[].address')
           for ADDR in $OTHERS; do
-            $HYPRCTL dispatch movetoworkspacesilent "special:focusstash,address:$ADDR"
+            # Use movetospecialworkspace to avoid Lua colon-parsing bug with "special:name" syntax
+            $HYPRCTL dispatch movetospecialworkspace "focusstash,address:$ADDR"
           done
         fi
       '')

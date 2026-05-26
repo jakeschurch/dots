@@ -52,6 +52,8 @@
   };
 
   # Define a user account. Don't forget to set a password with 'passwd'.
+  hardware.i2c.enable = true; # DDC/CI for monitor brightness (noctalia)
+
   users.users.jake = {
     isNormalUser = true;
     extraGroups = [
@@ -61,6 +63,7 @@
       "video"
       "kvm"
       "docker"
+      "i2c"
     ];
     hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
     home = "/home/jake";
@@ -88,6 +91,7 @@
     pavucontrol
     pamixer
     xauth
+    ddcutil
   ];
 
   security.rtkit.enable = true;
