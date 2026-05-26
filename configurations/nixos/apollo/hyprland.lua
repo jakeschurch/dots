@@ -182,9 +182,10 @@ hl.bind(
 -- OCR screenshot
 hl.bind(mod .. " + O", hl.dsp.exec_cmd("ocr-shot"))
 
+-- Focus toggle (stash other windows → single window gets 4:3 aspect)
+hl.bind(mod .. " + F", hl.dsp.exec_cmd("hypr-focus-toggle"))
 -- Fullscreen
-hl.bind(mod .. " + F", hl.dsp.window.fullscreen(1))
-hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen(3))
+hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen(1))
 
 -- Special workspace (scratchpad / magic)
 hl.bind(mod .. " + minus", hl.dsp.workspace.toggle_special("magic"))
