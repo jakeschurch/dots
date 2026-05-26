@@ -72,6 +72,7 @@ hl.config({
     kb_layout = "us",
     numlock_by_default = true,
     repeat_delay = 300,
+    repeat_rate = 30,
     follow_mouse = true,
     float_switch_override_focus = 0,
     mouse_refocus = 0,
@@ -161,8 +162,7 @@ hl.bind(
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus"))
 hl.bind(mod .. " + return", hl.dsp.exec_cmd("wezterm"))
 hl.bind(mod .. " + Q", hl.dsp.window.close())
-hl.bind(mod .. " + V", hl.dsp.exec_cmd("cliphist-pick"))
-hl.bind(mod .. " + ALT + V", hl.dsp.exec_cmd("cliphist-pick"))
+hl.bind(mod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist-pick"))
 
 -- Screenshots
 hl.bind(mod .. " + S", hl.dsp.exec_cmd("hyprshot -m region"))
