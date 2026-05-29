@@ -103,8 +103,9 @@
       "right": [
         {
           "blacklist": [],
-          "colorizeIcons": true,
-          "drawerEnabled": true,
+          "chevronColor": "none",
+          "colorizeIcons": false,
+          "drawerEnabled": false,
           "hidePassive": false,
           "id": "Tray",
           "pinned": []
@@ -197,28 +198,13 @@
     "lockScreenBlur": 0,
     "lockScreenTint": 0,
     "keybinds": {
-      "keyUp": [
-        "Up"
-      ],
-      "keyDown": [
-        "Down"
-      ],
-      "keyLeft": [
-        "Left"
-      ],
-      "keyRight": [
-        "Right"
-      ],
-      "keyEnter": [
-        "Return",
-        "Enter"
-      ],
-      "keyEscape": [
-        "Esc"
-      ],
-      "keyRemove": [
-        "Del"
-      ]
+      "keyUp": ["Up"],
+      "keyDown": ["Down"],
+      "keyLeft": ["Left"],
+      "keyRight": ["Right"],
+      "keyEnter": ["Return", "Enter"],
+      "keyEscape": ["Esc"],
+      "keyRemove": ["Del"]
     },
     "reverseScroll": false,
     "smoothScrollEnabled": true
@@ -287,9 +273,7 @@
     "wallpaperChangeMode": "random",
     "randomIntervalSec": 300,
     "transitionDuration": 1500,
-    "transitionType": [
-      "random"
-    ],
+    "transitionType": ["random"],
     "skipStartupTransition": false,
     "transitionEdgeSmoothness": 0.05,
     "panelPosition": "follow_bar",
@@ -567,12 +551,7 @@
     "autoHideMs": 2000,
     "overlayLayer": true,
     "backgroundOpacity": 1,
-    "enabledTypes": [
-      0,
-      1,
-      2,
-      null
-    ],
+    "enabledTypes": [0, 1, 2, null],
     "monitors": []
   },
   "audio": {

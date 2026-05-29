@@ -66,8 +66,8 @@
     settings = {
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
-        before_sleep_cmd = "hyprctl dispatch dpms off && loginctl lock-session";
-        after_sleep_cmd = "hyprctl dispatch dpms on";
+        before_sleep_cmd = ''hyprctl dispatch "dpms off" && loginctl lock-session'';
+        after_sleep_cmd = ''hyprctl dispatch "dpms on"'';
       };
 
       listener = [
@@ -84,7 +84,7 @@
         {
           timeout = 600; # 10m
           on-timeout = "systemctl suspend-then-hibernate";
-          on-resume = "hyprctl dispatch dpms on";
+          on-resume = ''hyprctl dispatch "dpms on"'';
         }
       ];
     };

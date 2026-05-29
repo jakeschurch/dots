@@ -15,7 +15,7 @@ in
 
     plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
       hyprbars
-      inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+      # inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
     ];
   };
 
@@ -44,33 +44,37 @@ in
       (pkgs.writeShellScriptBin "hypr-focus-toggle" ''
         HYPRCTL="${pkgs.hyprland}/bin/hyprctl"
         JQ="${pkgs.jq}/bin/jq"
-        STASH_FILE="/tmp/hypr-focus-stash"
 
         ACTIVE=$($HYPRCTL activewindow -j)
         ACTIVE_ADDR=$(echo "$ACTIVE" | $JQ -r '.address')
         ACTIVE_WS=$(echo "$ACTIVE" | $JQ -r '.workspace.id')
-        ACTIVE_WS_NAME=$(echo "$ACTIVE" | $JQ -r '.workspace.name')
 
-        if [ "$ACTIVE_WS_NAME" = "special:focusstash" ]; then
-          # Exit focus mode: move active window back, then restore stashed windows
-          PREV_WS=$(cat "$STASH_FILE" 2>/dev/null | $JQ -r '.workspace')
-          $HYPRCTL dispatch movetoworkspace "$PREV_WS,address:$ACTIVE_ADDR"
-          # Move all remaining stash windows back
+        # Per-workspace stash: special:focusstash-N isolates stashes per workspace
+        # Hyprland 0.55+ IPC uses Lua dispatch: hyprctl dispatch '<lua expr>'
+        # Old hyprlang syntax (e.g. "movetoworkspace 1,address:0x...") fails with Lua parser
+        STASH_WS="focusstash-$ACTIVE_WS"
+        STASH_FILE="/tmp/hypr-focus-stash-$ACTIVE_WS"
+
+        if [ -f "$STASH_FILE" ]; then
+          # Exit focus mode: restore all windows stashed from this workspace
           while true; do
-            STASH_WIN=$($HYPRCTL clients -j | $JQ -r '[.[] | select(.workspace.name == "special:focusstash")] | first | .address // empty')
+            STASH_WIN=$($HYPRCTL clients -j | $JQ -r --arg s "special:$STASH_WS" \
+              '[.[] | select(.workspace.name == $s)] | first | .address // empty')
             [ -z "$STASH_WIN" ] && break
-            $HYPRCTL dispatch movetoworkspacesilent "$PREV_WS,address:$STASH_WIN"
+            $HYPRCTL dispatch "hl.dsp.window.move({workspace = $ACTIVE_WS, window = 'address:$STASH_WIN'})"
           done
           rm -f "$STASH_FILE"
         else
           # Enter focus mode: stash all other windows in active workspace
-          echo "{\"workspace\": $ACTIVE_WS}" > "$STASH_FILE"
+          touch "$STASH_FILE"
           OTHERS=$($HYPRCTL clients -j | $JQ -r --arg ws "$ACTIVE_WS" --arg addr "$ACTIVE_ADDR" \
             '[.[] | select(.workspace.id == ($ws | tonumber) and .address != $addr and .mapped == true)] | .[].address')
           for ADDR in $OTHERS; do
-            # Use movetospecialworkspace to avoid Lua colon-parsing bug with "special:name" syntax
-            $HYPRCTL dispatch movetospecialworkspace "focusstash,address:$ADDR"
+            $HYPRCTL dispatch "hl.dsp.window.move({workspace = 'special:$STASH_WS', window = 'address:$ADDR'})"
           done
+          # Re-focus kept window: stash opens the special workspace, shifting focus there.
+          # Without this, the stashed window follows workspace switches.
+          $HYPRCTL dispatch "hl.dsp.focus({window = 'address:$ACTIVE_ADDR'})"
         fi
       '')
 

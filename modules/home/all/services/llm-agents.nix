@@ -5,8 +5,6 @@ in
 {
   home.packages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     claude-code
-    opencode
-    oh-my-opencode
     claude-plugins
     agent-deck
   ];

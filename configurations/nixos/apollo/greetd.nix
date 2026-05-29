@@ -18,7 +18,7 @@ in
         # M-t passthrough: prevent global M-t→C-t from intercepting Alt+T in wezterm
         {
           name = "Wezterm Mac-style";
-          application.only = [ "wezterm" ];
+          application.only = [ "org.wezfurlong.wezterm" ];
           remap = {
             "M-c" = "C-S-c";
             "M-v" = "C-S-v";

@@ -17,12 +17,19 @@ hl.monitor({
 --------------------
 
 hl.on("hyprland.start", function()
+  hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
   hl.exec_cmd("uwsm app -- hyprsunset")
   hl.exec_cmd("uwsm app -- phonto --rand")
   hl.exec_cmd("uwsm app -- noctalia-shell")
   hl.exec_cmd("uwsm app -- wl-clip-persist --clipboard both") -- keep clipboard alive on focus switch
   hl.exec_cmd("wl-paste --type text --watch cliphist store")
   hl.exec_cmd("wl-paste --type image --watch cliphist store")
+end)
+
+-- After rebuild+reload, noctalia-shell store path changes → IPC mismatch.
+-- Kill old quickshell and relaunch so SUPER+space works without rebooting.
+hl.on("config.reloaded", function()
+  hl.exec_cmd("pkill -x quickshell; uwsm app -- noctalia-shell")
 end)
 
 -------------------------------
@@ -130,21 +137,22 @@ hl.config({
     --     fallback   = "clientside",
     -- },
     -- hyprbars = {
-    --     bar_height            = 30,
-    --     bar_title_enabled     = false,
-    --     bar_buttons_alignment = "right",
-    --     bar_part_of_window    = true,
-    --     bar_blur              = true,
-    --     bar_padding           = 12,
-    --     bar_button_padding    = 10,
-    --     on_double_click       = "hyprctl dispatch fullscreen 1",
+    --   bar_height        = 30,
+    --   on_double_click   = "hyprctl dispatch fullscreen 1",
+    --   bar_title_enabled = false,
+    --   --     bar_buttons_alignment = "right",
+    --   --     bar_part_of_window    = true,
+    --   --     bar_blur              = true,
+    --   --     bar_padding           = 12,
+    --   --     bar_button_padding    = 10,
     -- },
   },
 })
 
 -- hyprbars buttons (R → L order) — disabled pending investigation
 -- hl.plugin.hyprbars.add_button({ bg_color = "rgb(ff5f56)", size = 15, icon = "", action = "smart-kill" })
--- hl.plugin.hyprbars.add_button({ bg_color = "rgb(ffbd2e)", size = 15, icon = "", action = "hyprctl dispatch movetoworkspacesilent special" })
+-- hl.plugin.hyprbars.add_button({ bg_color = "rgb(ffbd2e)", size = 15, icon = "", action =
+-- "hyprctl dispatch movetoworkspacesilent special" })
 -- hl.plugin.hyprbars.add_button({ bg_color = "rgb(27c93f)", size = 15, icon = "", action = "hyprctl dispatch fullscreen 1" })
 
 ---------------------
@@ -186,6 +194,8 @@ hl.bind(mod .. " + O", hl.dsp.exec_cmd("ocr-shot"))
 hl.bind(mod .. " + F", hl.dsp.exec_cmd("hypr-focus-toggle"))
 -- Fullscreen
 hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen(1))
+-- Toggle floating
+hl.bind(mod .. " + SHIFT + space", hl.dsp.window.float({ action = "toggle" }))
 
 -- Special workspace (scratchpad / magic)
 hl.bind(mod .. " + minus", hl.dsp.workspace.toggle_special("magic"))
@@ -219,15 +229,18 @@ end
 -- Audio
 hl.bind(
   "XF86AudioRaiseVolume",
-  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+")
+  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"),
+  { locked = true, repeating = true }
 )
+
 hl.bind(
   "XF86AudioLowerVolume",
-  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-")
+  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+  { locked = true, repeating = true }
 )
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 -- Hyprsunset: temperature + gamma (repeating on hold)
 hl.bind(
@@ -238,17 +251,17 @@ hl.bind(
 hl.bind(
   mod .. " + XF86MonBrightnessUp",
   hl.dsp.exec_cmd("hyprctl hyprsunset temperature +250"),
-  { repeating = true }
+  { repeating = true, locked = true }
 )
 hl.bind(
   "XF86MonBrightnessDown",
   hl.dsp.exec_cmd("hyprctl hyprsunset gamma -10"),
-  { repeating = true }
+  { repeating = true, locked = true }
 )
 hl.bind(
   "XF86MonBrightnessUp",
   hl.dsp.exec_cmd("hyprctl hyprsunset gamma +10"),
-  { repeating = true }
+  { repeating = true, locked = true }
 )
 
 -- Drag / resize with mouse
@@ -277,9 +290,9 @@ hl.define_submap("powermenu", "reset", function()
       hl.dispatch(hl.dsp.submap("reset"))
     end
   end
-  hl.bind("l", pm("hyprlock --immediate")) -- lock
-  hl.bind("p", pm("systemctl poweroff")) -- power off
-  hl.bind("r", pm("systemctl reboot")) -- reboot
+  hl.bind("l", pm("hyprlock --immediate"))             -- lock
+  hl.bind("p", pm("systemctl poweroff"))               -- power off
+  hl.bind("r", pm("systemctl reboot"))                 -- reboot
   hl.bind("s", pm("systemctl suspend-then-hibernate")) -- suspend
   hl.bind("return", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))

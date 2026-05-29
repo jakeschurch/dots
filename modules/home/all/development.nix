@@ -171,7 +171,10 @@
   programs = {
     zathura.enable = true;
 
-    nix-index.enable = true;
+    nix-index = {
+      enable = true;
+      enableFishIntegration = true;
+    };
     command-not-found.enable = false;
 
     info.enable = true;
@@ -246,10 +249,8 @@
     bash = {
       enable = true;
       enableCompletion = true;
-      bashrcExtra = ''
+      initExtra = ''
         set -o vi
-
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh &
       '';
     };
 
