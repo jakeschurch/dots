@@ -6,20 +6,20 @@ in
 {
   flake.deploy.nodes = {
     apollo = {
-      hostname = "apollo"; # TODO: set to apollo's LAN IP or DNS name
+      hostname = "10.10.10.7";
       profiles.system = {
         user = "root";
         path = activateNixos "apollo";
       };
     };
 
-    artemis = {
-      hostname = "TODO_ARTEMIS_LAN_IP"; # TODO: set to artemis's LAN IP or DNS name
-      profiles.system = {
-        user = "root";
-        path = activateNixos "artemis";
-      };
-    };
+    # artemis = {
+    #   hostname = "TODO_ARTEMIS_LAN_IP";
+    #   profiles.system = {
+    #     user = "root";
+    #     path = activateNixos "artemis";
+    #   };
+    # };
   };
 
   # Catch deploy-rs schema errors at `nix flake check`
