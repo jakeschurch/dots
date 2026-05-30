@@ -7,6 +7,8 @@ in
   flake.deploy.nodes = {
     apollo = {
       hostname = "10.10.10.7";
+      sshUser = "jake";
+      sshOpts = [ "-p" "22222" ];
       profiles.system = {
         user = "root";
         path = activateNixos "apollo";
