@@ -86,6 +86,11 @@
 
     vmetal.url = "path:/home/jake/Projects/homelab/vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

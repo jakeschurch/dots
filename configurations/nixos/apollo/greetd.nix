@@ -7,6 +7,11 @@ in
 {
   environment.systemPackages = [ restart-session ];
 
+  systemd.user.services.xremap = {
+    after = [ "graphical-session.target" ];
+    wants = [ "graphical-session.target" ];
+  };
+
   services.xremap = {
     enable = true;
     withWlroots = true; # enables app-specific remapping on Hyprland
