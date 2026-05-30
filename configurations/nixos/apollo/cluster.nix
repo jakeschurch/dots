@@ -13,13 +13,13 @@
         peerAsn = 64513;
         peerSubnet = "192.168.100.0/24";
       };
-      # vxlan = {
-      #   enable = true;
-      #   local = "<apollo-LAN-IP>";   # e.g. the IP enp5s0 gets — fill in before deploying
-      #   remotes = [
-      #     "<new-host-LAN-IP>"        # add one entry per additional host
-      #   ];
-      # };
+      vxlan = {
+        enable = true;
+        local = "TODO_APOLLO_LAN_IP"; # e.g. the IP enp5s0 gets — `ip addr show enp5s0`
+        remotes = [
+          "TODO_ARTEMIS_LAN_IP" # artemis's LAN IP
+        ];
+      };
     };
   };
 
@@ -129,7 +129,7 @@
         "openebs.io/engine=mayastor"
       ];
       # extraTaints = [ "workload=inference:PreferNoSchedule" ];
-      # extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
       # passthroughDevices = [
       #   {
       #     bus = "pci";
