@@ -75,7 +75,7 @@
       IPv6PrivacyExtensions = "kernel";
       Address = "10.10.5.110/24";
     };
-    routes = [ { routeConfig.Gateway = "10.10.5.1"; } ];
+    routes = [ { Gateway = "10.10.5.1"; } ];
   };
 
   documentation.nixos.enable = false;
