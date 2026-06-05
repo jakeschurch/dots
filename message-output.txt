@@ -1,6 +1,0 @@
-Failed to load plugin.trouble: /home/jake/.config/nvim/lua/plugin/trouble.lua:1: attempt to call field 'keymap' (a nil value)
-Error in /home/jake/.config/nvim/init.lua:
-E5113: Lua chunk: /home/jake/.config/nvim/init.lua:5: /home/jake/.config/nvim/init.lua../nix/store/d8llrw37dlqdmcd0g2qfyq0sd2k8dk73-init.vim, line 100: Vim(lua):Failed to load plugin.trouble: /home/jake/.config/nvim/lua/plugin/trouble.lua:1: attempt to call field 'keymap' (a nil value)
-stack traceback:
-	[C]: in function 'source'
-	/home/jake/.config/nvim/init.lua:5: in main chunk
