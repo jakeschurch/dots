@@ -14,7 +14,7 @@ in
     self.homeModules.default
   ];
 
-  programs.tablet-calibration = lib.mkIf pkgs.stdenv.isLinux {
+  programs.tablet-calibration = lib.mkIf (pkgs.stdenv.isLinux && config.osConfig.profiles.desktop.enable) {
     enable = true;
     hyprDeviceName = "wacom-intuos-s-pen";
     mapToOutput = "HDMI-A-1";
