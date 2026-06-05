@@ -1,7 +1,7 @@
 { ... }:
 let
   artemisLanIp = "10.10.5.110";
-  apolloLanIp = "10.10.10.7";
+  apolloLanIp = "10.10.5.7";
   artemisNic = "bond0";
 in
 {

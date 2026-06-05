@@ -24,9 +24,9 @@
     networkConfig = {
       DHCP = "no";
       IPv6PrivacyExtensions = "kernel";
-      Address = "10.10.10.7/28";
+      Address = "10.10.5.7/24";
     };
-    routes = [ { Gateway = "10.10.10.1"; } ];
+    routes = [ { Gateway = "10.10.5.1"; } ];
   };
 
   # Set your time zone.

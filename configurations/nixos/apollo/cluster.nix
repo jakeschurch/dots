@@ -21,7 +21,7 @@
       };
       vxlan = {
         enable = false;
-        local = "10.10.10.7";
+        local = "10.10.5.7";
         remotes = [
           "10.10.5.110"
         ];
