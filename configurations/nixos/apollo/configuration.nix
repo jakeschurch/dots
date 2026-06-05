@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -15,6 +16,17 @@
     hostName = "apollo";
     networkmanager.enable = false;
     firewall.enable = false;
+  };
+
+  # vmetal generates 01-external.network with DHCP — override with static IP
+  systemd.network.networks."01-external" = lib.mkForce {
+    matchConfig.Name = "enp5s0";
+    networkConfig = {
+      DHCP = "no";
+      IPv6PrivacyExtensions = "kernel";
+      Address = "10.10.10.7/28";
+    };
+    routes = [ { Gateway = "10.10.10.1"; } ];
   };
 
   # Set your time zone.
