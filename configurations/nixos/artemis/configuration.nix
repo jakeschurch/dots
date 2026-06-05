@@ -29,20 +29,6 @@
       };
     };
 
-    interfaces.bond0 = {
-      useDHCP = false;
-      ipv4.addresses = [
-        {
-          address = "10.10.5.110";
-          prefixLength = 24;
-        }
-      ];
-    };
-
-    defaultGateway = {
-      address = "10.10.5.1";
-      interface = "bond0";
-    };
   };
 
   time.timeZone = "America/New_York";
@@ -79,6 +65,18 @@
     vim
     wget
   ];
+
+  # vmetal's microvm-host generates 01-external.network with DHCP on externalInterface.
+  # Override to static IP — 01-prefix ensures this still wins over NixOS-generated 40-bond0.network.
+  systemd.network.networks."01-external" = lib.mkForce {
+    matchConfig.Name = "bond0";
+    networkConfig = {
+      DHCP = "no";
+      IPv6PrivacyExtensions = "kernel";
+      Address = "10.10.5.110/24";
+    };
+    routes = [ { routeConfig.Gateway = "10.10.5.1"; } ];
+  };
 
   documentation.nixos.enable = false;
 
