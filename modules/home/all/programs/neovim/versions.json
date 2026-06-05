@@ -1,24 +1,17 @@
 [
   {
+    "owner": "jmbuhr",
+    "repo": "otter.nvim",
+    "rev": "d781eda3bc18dbc8677f9a24abdc705fb74e4428",
+    "ref": "main",
+    "sha256": "0zspiqnm7x94xnrizahwkf1c0dk6wq780m8lrazxmys9dsc12rqp"
+  },
+  {
     "owner": "moyiz",
     "repo": "blink-emoji.nvim",
     "rev": "dff709139ad5389fb55ebab026e75278a12b325a",
     "ref": "master",
     "sha256": "14239ay6yk7p0nd87m8dw73ql87l4vmk4wx59dx1d5qa177p84m8"
-  },
-  {
-    "owner": "jmbuhr",
-    "repo": "otter.nvim",
-    "rev": "a455e68a99d395889ab30a25ac3846a135e93c46",
-    "ref": "main",
-    "sha256": "1b2widwmy0fm7lxsmhcf3s8das7r488l5yld03c1savywz7cac4i"
-  },
-  {
-    "owner": "olimorris",
-    "repo": "codecompanion.nvim",
-    "rev": "b1cbe52ecd71e7b0ed43ac1dc6eb3aab4099db00",
-    "ref": "main",
-    "sha256": "1094zyjp12kq3va2zk3fd5z5i0ik74008k4plfjxsahp40crgfxv"
   },
   {
     "owner": "JezerM",
@@ -28,11 +21,18 @@
     "sha256": "0w9j9mgg5p8qg43n9aq2gq53fknw64m7504bh25sl8y2fs24gb90"
   },
   {
+    "owner": "olimorris",
+    "repo": "codecompanion.nvim",
+    "rev": "6cbbcb4503430644f04ea5f087c8e2ea4cdc6f6e",
+    "ref": "main",
+    "sha256": "0w71wwmrq715552avdsjm4fldq2y1c57md01fbmyzyp3w34rgcsy"
+  },
+  {
     "owner": "junegunn",
     "repo": "fzf",
-    "rev": "845752f3055a5c10b65adc1d4c7c7734b7c2dd56",
+    "rev": "abee152255387a5e0ee0543f275b792265e0ef5e",
     "ref": "master",
-    "sha256": "1ssq74hzf3k99jnqpiligcz16ddi88m4wg230f8vnvbmpzsb55x9"
+    "sha256": "1apyh28xzhcmar5ds3hcih21rc0xwq79pn8kvm04nf3x52ff235m"
   },
   {
     "owner": "daliusd",
@@ -44,9 +44,9 @@
   {
     "owner": "aymericbeaumet",
     "repo": "vim-symlink",
-    "rev": "afabc0f77e0aac5010fea45b09df62d5681c9682",
-    "ref": "master",
-    "sha256": "15j1l912n76gwknps8adc9vv37sk5in09ncgpyjjrjyanxxgwqm6"
+    "rev": "bb468cdb4a6de3df81477e441ec8736446f83674",
+    "ref": "main",
+    "sha256": "0g6pz708fgl1qzh79jn74pk6b5bc13cnp5vrcj9858g1zq1jyvsr"
   },
   {
     "owner": "nvimtools",
@@ -88,6 +88,6 @@
     "repo": "LuaSnip",
     "rev": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24",
     "ref": "master",
-    "sha256": "sha256-5Dm5maKjGcduew/cUZTWeyyVEgpZ0OpoVdMRYEw8Li0="
+    "sha256": "0b9f7i6604fkamlfml2r1899ab3vssa53p0ggdpcf6d3lacvjfg4"
   }
 ]
