@@ -2084,14 +2084,20 @@
         "sops-nix": "sops-nix_2"
       },
       "locked": {
-        "lastModified": 1780166269,
-        "narHash": "sha256-MoadoO6vB+UMR+3NDKl9oYCeiYde7chr4j1nIA69+nM=",
-        "path": "/home/jake/Projects/homelab/vmetal",
-        "type": "path"
+        "dir": "vmetal",
+        "lastModified": 1780166767,
+        "narHash": "sha256-Wpo6JUxt81IJw8o7ylWp1w7mzIqdtT5hOvvNg1565mY=",
+        "owner": "jakeschurch",
+        "repo": "homelab",
+        "rev": "7cddb6e240a4d72eddae47b276e67887ce803318",
+        "type": "github"
       },
       "original": {
-        "path": "/home/jake/Projects/homelab/vmetal",
-        "type": "path"
+        "dir": "vmetal",
+        "owner": "jakeschurch",
+        "ref": "v1",
+        "repo": "homelab",
+        "type": "github"
       }
     },
     "xdph": {

@@ -84,7 +84,7 @@
 
     expert.url = "github:elixir-lang/expert";
 
-    vmetal.url = "path:/home/jake/Projects/homelab/vmetal";
+    vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
 
     deploy-rs = {

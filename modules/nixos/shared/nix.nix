@@ -18,7 +18,24 @@ in
     path = "/etc/nix/netrc";
   };
 
+  sops.secrets.github-token = {
+    sopsFile = self + "/secrets/netrc.yaml";
+    key = "github-token";
+    owner = "root";
+    mode = "0400";
+  };
+
+  system.activationScripts.nix-access-tokens = {
+    deps = [ "setupSecrets" ];
+    text = ''
+      echo "access-tokens = github.com=$(cat ${config.sops.secrets.github-token.path})" > /etc/nix/access-tokens.conf
+      chmod 444 /etc/nix/access-tokens.conf
+    '';
+  };
+
   nix.settings.netrc-file = config.sops.secrets.netrc.path;
+  nix.extraOptions = "!include /etc/nix/access-tokens.conf";
+
   nixpkgs = {
     config = {
       allowUnfree = true;

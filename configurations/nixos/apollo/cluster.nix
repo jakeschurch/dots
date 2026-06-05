@@ -129,7 +129,7 @@
         "openebs.io/engine=mayastor"
       ];
       # extraTaints = [ "workload=inference:PreferNoSchedule" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
       # passthroughDevices = [
       #   {
       #     bus = "pci";
@@ -190,14 +190,17 @@
 
   services.resolved = {
     enable = true;
-    settings.Resolve = {
-      DNSSEC = "allow-downgrade";
-      Domains = [ "~." ];
-      FallbackDNS = [
-        "1.1.1.1#one.one.one.one"
-        "1.0.0.1#one.one.one.one"
-      ];
-      DNSOverTLS = "opportunistic";
+    settings = {
+      Resolve = {
+        MulticastDNS = "no"; # because of avahi
+        DNSSEC = "allow-downgrade";
+        Domains = [ "~." ];
+        FallbackDNS = [
+          "1.1.1.1#one.one.one.one"
+          "1.0.0.1#one.one.one.one"
+        ];
+        DNSOverTLS = "opportunistic";
+      };
     };
   };
 }
