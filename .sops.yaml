@@ -1,5 +1,6 @@
 keys:
   - &jake_pgp E21838ED2B9D48C64D4FFB26A4A11F543715299A
+  - &apollo_age age183h8kvk6v465h0f9ja5m7zhv4tvajmuntqx0tuszkg35x4p3fq0qtyhr3n
   - &artemis_age age1yrh6qrp65pxa95jt0exx2cthud4zl2ydy0077zraxsjk4zaqc94q2vn3k7
 
 creation_rules:
@@ -9,4 +10,5 @@ creation_rules:
       - pgp:
           - *jake_pgp
         age:
+          - *apollo_age
           - *artemis_age

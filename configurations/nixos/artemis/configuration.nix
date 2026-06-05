@@ -6,6 +6,9 @@
 
   profiles.desktop.enable = false;
 
+  # sops-nix derives age key from existing SSH host key — no separate key file needed
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
   networking = {
     hostName = "artemis";
     networkmanager.enable = false;
