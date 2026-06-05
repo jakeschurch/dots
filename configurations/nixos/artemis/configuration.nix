@@ -7,7 +7,8 @@
   profiles.desktop.enable = false;
 
   # sops-nix derives age key from existing SSH host key — no separate key file needed
-  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  # jake@artemis SSH key — must be placed at this path before first nixos-switch
+  sops.age.sshKeyPaths = [ "/home/jake/.ssh/id_ed25519_artemis" ];
 
   networking = {
     hostName = "artemis";

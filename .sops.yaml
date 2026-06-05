@@ -1,11 +1,12 @@
 keys:
-  - &apollo_age age183h8kvk6v465h0f9ja5m7zhv4tvajmuntqx0tuszkg35x4p3fq0qtyhr3n
-  - &artemis_age age1yrh6qrp65pxa95jt0exx2cthud4zl2ydy0077zraxsjk4zaqc94q2vn3k7
+  - &admin age1ryhgpwaqdxlkjne2m4dsw5amc4s3n29sk23z99tk6hd6stsftd6s2sphzj
+  - &apollo_age age129spkvchy7duqjw2vtqnqx0gglcz0c9ly0gzzusgdec6zdgrmdms07aly2
+  - &artemis_age age1jzgjcnmcrm7cz9vtkqyanv5hyauc7nlgfhvppxy2mx70mx8mrussc28ern
 
 creation_rules:
-  - encrypted_regex: "((?i)(pass|secret($|[^N])|key|token|^data$|^stringData))"
-    path_regex: .*.yaml
+  - path_regex: secrets/.*.yaml
     key_groups:
       - age:
+          - *admin
           - *apollo_age
           - *artemis_age

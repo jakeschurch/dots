@@ -9,7 +9,7 @@
 
   tablet.enable = true;
 
-  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  sops.age.sshKeyPaths = [ "/home/jake/.ssh/id_ed25519" ];
 
   networking = {
     hostName = "apollo";
