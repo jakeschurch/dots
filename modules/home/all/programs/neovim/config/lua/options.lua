@@ -87,18 +87,34 @@ local options = {
 vim.opt.mouse:append("a")
 
 if vim.fn.has("mac") == 0 then
-  vim.g.clipboard = {
-    name = "wl-clipboard",
-    copy = {
-      ["+"] = "wl-copy",
-      ["*"] = "wl-copy --primary",
-    },
-    paste = {
-      ["+"] = "wl-paste --no-newline",
-      ["*"] = "wl-paste --no-newline --primary",
-    },
-    cache_enabled = 0,
-  }
+  if os.getenv("WAYLAND_DISPLAY") then
+    vim.g.clipboard = {
+      name = "wl-clipboard",
+      copy = {
+        ["+"] = "wl-copy",
+        ["*"] = "wl-copy --primary",
+      },
+      paste = {
+        ["+"] = "wl-paste --no-newline",
+        ["*"] = "wl-paste --no-newline --primary",
+      },
+      cache_enabled = 0,
+    }
+  else
+    -- OSC 52: works through SSH, tmux, any depth
+    local osc52 = require("vim.ui.clipboard.osc52")
+    vim.g.clipboard = {
+      name = "OSC 52",
+      copy = {
+        ["+"] = osc52.copy("+"),
+        ["*"] = osc52.copy("*"),
+      },
+      paste = {
+        ["+"] = osc52.paste("+"),
+        ["*"] = osc52.paste("*"),
+      },
+    }
+  end
 end
 
 if vim.fn.executable("rg") == 1 then
