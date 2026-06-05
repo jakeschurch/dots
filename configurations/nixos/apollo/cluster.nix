@@ -10,11 +10,17 @@
       bgp = {
         enable = true;
         asn = 64512;
+        localAsn = 64512;
         peerAsn = 64513;
         peerSubnet = "192.168.100.0/24";
+        ciliumPeerAsn = 64514;
+        ciliumPeerSubnet = "192.168.100.0/24";
+        peers = [ { lanIp = "10.10.5.110"; asn = 64520; } ];
+        lanInterface = "enp5s0";
+        noMasqueradeCidrs = [ "192.168.101.0/24" "10.42.0.0/16" ];
       };
       vxlan = {
-        enable = true;
+        enable = false;
         local = "10.10.10.7";
         remotes = [
           "10.10.5.110"
@@ -25,6 +31,7 @@
 
   services.k3s-cluster = {
     enable = true;
+    primary = true;
     token = "my-cluster-token-12345";
     vip = "192.168.100.100";
     bgp = {
@@ -53,11 +60,16 @@
       ui = false;
     };
 
+    cilium.bgp.enable = true;
+
     network = {
       prefix = "192.168.100";
       firstServerIp = "192.168.100.10";
       gateway = "192.168.100.1";
       dns = "192.168.100.1";
+      nodeCidr = "192.168.100.0/24";
+      clusterNodeCidrs = [ "192.168.100.0/24" "192.168.101.0/24" ];
+      hostId = "apollo";
     };
 
     sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];

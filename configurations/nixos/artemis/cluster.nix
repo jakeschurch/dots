@@ -8,18 +8,24 @@ in
   services.microvm-host = {
     enable = true;
     network = {
-      gateway = "192.168.100.1";
-      subnet = "192.168.100.0/24";
+      gateway = "192.168.101.1";
+      subnet = "192.168.101.0/24";
       externalInterface = artemisNic;
       vip = "192.168.100.100";
       bgp = {
         enable = true;
-        asn = 64512;
+        asn = 64520;
+        localAsn = 64520;
         peerAsn = 64513;
-        peerSubnet = "192.168.100.0/24";
+        peerSubnet = "192.168.101.0/24";
+        ciliumPeerAsn = 64514;
+        ciliumPeerSubnet = "192.168.101.0/24";
+        peers = [ { lanIp = apolloLanIp; asn = 64512; } ];
+        lanInterface = artemisNic;
+        noMasqueradeCidrs = [ "192.168.100.0/24" "10.42.0.0/16" ];
       };
       vxlan = {
-        enable = true;
+        enable = false;
         local = artemisLanIp;
         remotes = [ apolloLanIp ];
       };
@@ -34,7 +40,7 @@ in
     vip = "192.168.100.100";
     bgp = {
       enable = true;
-      asn = 64512;
+      asn = 64520;
       peerAsn = 64513;
     };
 
@@ -58,11 +64,16 @@ in
       ui = false;
     };
 
+    cilium.bgp.enable = true;
+
     network = {
-      prefix = "192.168.100";
+      prefix = "192.168.101";
       firstServerIp = "192.168.100.10"; # apollo's initial server — unchanged
-      gateway = "192.168.100.1";
-      dns = "192.168.100.1";
+      gateway = "192.168.101.1";
+      dns = "192.168.101.1";
+      nodeCidr = "192.168.101.0/24";
+      clusterNodeCidrs = [ "192.168.100.0/24" "192.168.101.0/24" ];
+      hostId = "artemis";
     };
 
     sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];
@@ -70,7 +81,7 @@ in
     # Non-initial server — expands etcd quorum from 3 → 5
     vms.k3s-server-4 = {
       role = "server";
-      ip = "192.168.100.13";
+      ip = "192.168.101.13";
       mac = "02:00:00:00:00:13";
       vsockCid = 13;
       readinessVsockPort = 9013;
@@ -80,7 +91,7 @@ in
 
     vms.k3s-server-5 = {
       role = "server";
-      ip = "192.168.100.14";
+      ip = "192.168.101.14";
       mac = "02:00:00:00:00:14";
       vsockCid = 14;
       readinessVsockPort = 9014;
@@ -90,7 +101,7 @@ in
 
     vms.k3s-worker-4 = {
       role = "agent";
-      ip = "192.168.100.23";
+      ip = "192.168.101.23";
       mac = "02:00:00:00:00:23";
       vsockCid = 23;
       readinessVsockPort = 9023;
@@ -101,7 +112,7 @@ in
 
     vms.k3s-worker-5 = {
       role = "agent";
-      ip = "192.168.100.24";
+      ip = "192.168.101.24";
       mac = "02:00:00:00:00:24";
       vsockCid = 24;
       readinessVsockPort = 9024;
