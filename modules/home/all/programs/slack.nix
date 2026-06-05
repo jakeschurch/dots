@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, osConfig, lib, ... }:
 {
-  home.packages = with pkgs; [ slack ];
+  home.packages = lib.optionals osConfig.profiles.desktop.enable (with pkgs; [ slack ]);
 }
