@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -81,6 +81,17 @@
   ];
 
   documentation.nixos.enable = false;
+
+  # Derive age key from SSH key and place at /etc/sops/age/keys.txt
+  # Required by vmetal microvm-host to share age keys with VMs via virtiofsd
+  system.activationScripts.deriveAgeKey = {
+    deps = [ "users" "groups" ];
+    text = ''
+      mkdir -p /etc/sops/age
+      ${lib.getExe pkgs.ssh-to-age} -private-key -i /home/jake/.ssh/id_ed25519_artemis > /etc/sops/age/keys.txt
+      chmod 600 /etc/sops/age/keys.txt
+    '';
+  };
 
   system.stateVersion = "25.05";
 }
