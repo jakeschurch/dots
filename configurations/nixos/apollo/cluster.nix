@@ -15,9 +15,9 @@
       };
       vxlan = {
         enable = true;
-        local = "TODO_APOLLO_LAN_IP"; # e.g. the IP enp5s0 gets — `ip addr show enp5s0`
+        local = "10.10.10.7";
         remotes = [
-          "TODO_ARTEMIS_LAN_IP" # artemis's LAN IP
+          "10.10.5.110"
         ];
       };
     };
