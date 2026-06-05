@@ -3,6 +3,7 @@
   pkgs,
   config,
   lib,
+  osConfig ? { profiles.desktop.enable = true; },
   ...
 }:
 let
@@ -14,7 +15,7 @@ in
     self.homeModules.default
   ];
 
-  programs.tablet-calibration = lib.mkIf (pkgs.stdenv.isLinux && config.osConfig.profiles.desktop.enable) {
+  programs.tablet-calibration = lib.mkIf (pkgs.stdenv.isLinux && osConfig.profiles.desktop.enable) {
     enable = true;
     hyprDeviceName = "wacom-intuos-s-pen";
     mapToOutput = "HDMI-A-1";
