@@ -86,6 +86,7 @@
 
     vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
+    vmetal.inputs.sops-nix.follows = "sops-nix";
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
