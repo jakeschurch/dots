@@ -1,10 +1,13 @@
 {
   flake,
   pkgs,
+  lib,
+  config,
   ...
 }:
 let
-  inherit (flake) inputs config;
+  inherit (flake) inputs;
+  flakeConfig = flake.config;
   inherit (inputs) self;
 in
 {
@@ -14,15 +17,15 @@ in
     {
       programs.fish.enable = true;
 
-      users.users.${config.me.username}.shell = pkgs.fish;
+      users.users.${flakeConfig.me.username}.shell = pkgs.fish;
 
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
         backupFileExtension = "nix-bak";
-        users.${config.me.username} = { };
+        users.${flakeConfig.me.username} = { };
         sharedModules = [
-          (self + "/configurations/home/${config.me.username}.nix")
+          (self + "/configurations/home/${flakeConfig.me.username}.nix")
           self.homeModules.default
           self.homeModules.linux-only
         ];
@@ -40,10 +43,10 @@ in
     inputs.nix-index-database.nixosModules.nix-index
   ];
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = lib.optionals config.profiles.desktop.enable (with pkgs; [
     google-chrome
     pcmanfm
-  ];
+  ]);
 
   programs.nix-ld.enable = true;
   virtualisation.libvirtd = {

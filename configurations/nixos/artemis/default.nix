@@ -13,6 +13,7 @@ in
     ./hardware.nix
     ./boot.nix
     ./cluster.nix
+    ./storage.nix
     self.nixosModules.default
     inputs.disko.nixosModules.disko
     inputs.vmetal.nixosModules.microvm-host

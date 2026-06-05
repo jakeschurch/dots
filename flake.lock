@@ -1669,6 +1669,7 @@
         "nur": "nur",
         "phonto": "phonto",
         "rose-pine-hyprcursor": "rose-pine-hyprcursor",
+        "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_4",
         "vmetal": "vmetal",
         "xremap-flake": "xremap-flake"
@@ -1738,6 +1739,26 @@
       }
     },
     "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780547341,
+        "narHash": "sha256-Gq8KNx5A7hBB3uGJaj6eQfLDIz5YdLu92gqBcvHvoUo=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "9ed65852b6257fbeae4355bc24ecfea307ca759a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "sops-nix_2": {
       "inputs": {
         "nixpkgs": [
           "vmetal",
@@ -2060,7 +2081,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix_2"
       },
       "locked": {
         "lastModified": 1780166269,

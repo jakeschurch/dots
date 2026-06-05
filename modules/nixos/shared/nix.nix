@@ -2,6 +2,7 @@
   flake,
   pkgs,
   lib,
+  config,
   ...
 }:
 
@@ -10,6 +11,14 @@ let
   inherit (inputs) self;
 in
 {
+  sops.secrets.netrc = {
+    sopsFile = self + "/secrets/netrc.yaml";
+    owner = "root";
+    mode = "0400";
+    path = "/etc/nix/netrc";
+  };
+
+  nix.settings.netrc-file = config.sops.secrets.netrc.path;
   nixpkgs = {
     config = {
       allowUnfree = true;

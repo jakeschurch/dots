@@ -4,10 +4,41 @@
     ./hardware-configuration.nix
   ];
 
+  profiles.desktop.enable = false;
+
   networking = {
     hostName = "artemis";
     networkmanager.enable = false;
     firewall.enable = false;
+
+    # LACP 802.3ad bond over both 10GbE NICs (Broadcom BCM57416, Cat6, CSS326-24G-2S+)
+    bonds.bond0 = {
+      interfaces = [
+        "eno1np0"
+        "eno2np1"
+      ];
+      driverOptions = {
+        mode = "802.3ad";
+        lacp_rate = "fast";
+        miimon = "100";
+        xmit_hash_policy = "layer3+4";
+      };
+    };
+
+    interfaces.bond0 = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = "10.10.5.110";
+          prefixLength = 24;
+        }
+      ];
+    };
+
+    defaultGateway = {
+      address = "10.10.5.1";
+      interface = "bond0";
+    };
   };
 
   time.timeZone = "America/New_York";

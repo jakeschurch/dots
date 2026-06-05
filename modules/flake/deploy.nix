@@ -15,13 +15,15 @@ in
       };
     };
 
-    # artemis = {
-    #   hostname = "TODO_ARTEMIS_LAN_IP";
-    #   profiles.system = {
-    #     user = "root";
-    #     path = activateNixos "artemis";
-    #   };
-    # };
+    artemis = {
+      hostname = "10.10.5.110";
+      sshUser = "jake";
+      sshOpts = [ "-p" "22222" ];
+      profiles.system = {
+        user = "root";
+        path = activateNixos "artemis";
+      };
+    };
   };
 
   # Catch deploy-rs schema errors at `nix flake check`

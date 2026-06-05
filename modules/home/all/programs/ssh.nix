@@ -1,6 +1,8 @@
 {
   pkgs,
   config,
+  osConfig,
+  lib,
   ...
 }:
 {
@@ -37,21 +39,22 @@
     '';
   };
 
-  home.packages = with pkgs; [
-    bitwarden-cli
-    bitwarden-desktop
-  ];
+  home.packages =
+    with pkgs;
+    [ bitwarden-cli ]
+    ++ lib.optionals osConfig.profiles.desktop.enable [
+      bitwarden-desktop
+    ];
 
-  programs.zsh.initContent = ''
+  programs.zsh.initContent = lib.optionalString osConfig.profiles.desktop.enable ''
     if [ -z "$SSH_CONNECTION" ]; then
        export SSH_AUTH_SOCK="${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"
      fi
   '';
 
-  programs.fish.shellInit = ''
+  programs.fish.shellInit = lib.optionalString osConfig.profiles.desktop.enable ''
     if test -z "$SSH_CONNECTION"
       set -gx SSH_AUTH_SOCK "$HOME/.bitwarden-ssh-agent.sock"
     end
   '';
-
 }

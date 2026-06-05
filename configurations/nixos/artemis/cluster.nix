@@ -1,9 +1,8 @@
 { ... }:
 let
-  # TODO: fill in real IPs once artemis hardware is provisioned
-  artemisLanIp = "TODO_ARTEMIS_LAN_IP"; # e.g. "10.20.0.6"
-  apolloLanIp = "TODO_APOLLO_LAN_IP"; # e.g. "10.20.0.5"
-  artemisNic = "TODO_NIC"; # e.g. "enp3s0" — check with `ip link`
+  artemisLanIp = "10.10.5.110";
+  apolloLanIp = "10.10.10.7";
+  artemisNic = "bond0";
 in
 {
   services.microvm-host = {
@@ -89,16 +88,15 @@ in
       mem = 8192;
     };
 
-    # TODO: size workers to actual artemis hardware
     vms.k3s-worker-4 = {
       role = "agent";
       ip = "192.168.100.23";
       mac = "02:00:00:00:00:23";
       vsockCid = 23;
       readinessVsockPort = 9023;
-      vcpu = 6;
-      mem = 24000;
-      disk = 100;
+      vcpu = 12;
+      mem = 32768;
+      disk = 200;
     };
 
     vms.k3s-worker-5 = {
@@ -107,9 +105,9 @@ in
       mac = "02:00:00:00:00:24";
       vsockCid = 24;
       readinessVsockPort = 9024;
-      vcpu = 6;
-      mem = 24000;
-      disk = 100;
+      vcpu = 12;
+      mem = 32768;
+      disk = 200;
     };
   };
 
