@@ -68,6 +68,17 @@ in
 
     cilium.bgp.enable = true;
 
+    cilium.lbVip = {
+      enable = true;
+      serverIps = [
+        "192.168.100.10"
+        "192.168.100.11"
+        "192.168.100.12"
+        "192.168.101.13"
+        "192.168.101.14"
+      ];
+    };
+
     network = {
       prefix = "192.168.101";
       firstServerIp = "192.168.100.10"; # apollo's initial server — unchanged
