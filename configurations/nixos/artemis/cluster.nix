@@ -23,6 +23,7 @@ in
         peers = [ { lanIp = apolloLanIp; asn = 64512; } ];
         lanInterface = artemisNic;
         noMasqueradeCidrs = [ "192.168.100.0/24" "10.42.0.0/16" ];
+        extraPeerSubnets = [ "192.168.100.0/24" ];
       };
       vxlan = {
         enable = false;
@@ -42,6 +43,7 @@ in
       enable = true;
       asn = 64520;
       peerAsn = 64513;
+      extraHostPeers = [ { address = "192.168.100.1"; asn = 64512; } ];
     };
 
     embeddedRegistry = {

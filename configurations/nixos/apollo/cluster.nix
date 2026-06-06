@@ -18,6 +18,7 @@
         peers = [ { lanIp = "10.10.5.110"; asn = 64520; } ];
         lanInterface = "enp5s0";
         noMasqueradeCidrs = [ "192.168.101.0/24" "10.42.0.0/16" ];
+        extraPeerSubnets = [ "192.168.101.0/24" ];
       };
       vxlan = {
         enable = false;
@@ -38,6 +39,7 @@
       enable = true;
       asn = 64512;
       peerAsn = 64513;
+      extraHostPeers = [ { address = "192.168.101.1"; asn = 64520; } ];
     };
 
     embeddedRegistry = {
