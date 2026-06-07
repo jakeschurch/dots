@@ -121,6 +121,8 @@ in
       vcpu = 12;
       mem = 32768;
       disk = 200;
+      extraLabels = [ "openebs.io/engine=mayastor" ];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
 
     vms.k3s-worker-5 = {
@@ -132,6 +134,8 @@ in
       vcpu = 12;
       mem = 32768;
       disk = 200;
+      extraLabels = [ "openebs.io/engine=mayastor" ];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
   };
 
