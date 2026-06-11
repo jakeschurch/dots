@@ -66,12 +66,14 @@
 
     cilium.lbVip = {
       enable = true;
-      serverIps = [
-        "192.168.100.10"
-        "192.168.100.11"
-        "192.168.100.12"
-        "192.168.101.13"
-        "192.168.101.14"
+      # {ip, name} per server: name is emitted as the Endpoints nodeName so the
+      # eTP=Local VIP Service can resolve endpoint locality (see k3s-node.nix).
+      servers = [
+        { ip = "192.168.100.10"; name = "k3s-server-1"; }
+        { ip = "192.168.100.11"; name = "k3s-server-2"; }
+        { ip = "192.168.100.12"; name = "k3s-server-3"; }
+        { ip = "192.168.101.13"; name = "k3s-server-4"; }
+        { ip = "192.168.101.14"; name = "k3s-server-5"; }
       ];
     };
 
