@@ -14,7 +14,7 @@ in
     withUWSM = true;
 
     plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
-      hyprbars
+      # hyprbars
       # inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
     ];
   };
@@ -39,6 +39,25 @@ in
         else
           ${pkgs.hyprland}/bin/hyprctl dispatch killactive ""
         fi
+      '')
+
+      (pkgs.writeShellScriptBin "claude-workspaces" ''
+        FOUNDRYBOX="$HOME/Projects/foundrybox"
+        VMETAL="$HOME/Projects/homelab/vmetal"
+        DOTS="$HOME/.dots"
+
+        uwsm app -- ${pkgs.wezterm}/bin/wezterm start --cwd "$FOUNDRYBOX" -- claude --dangerously-skip-permissions /remote-control &
+
+        for i in $(seq 1 30); do
+          WINDOW_ID=$(${pkgs.wezterm}/bin/wezterm cli list --format json 2>/dev/null | ${pkgs.jq}/bin/jq -r 'map(.window_id) | max // empty')
+          [ -n "$WINDOW_ID" ] && [ "$WINDOW_ID" != "null" ] && break
+          sleep 0.5
+        done
+
+        [ -z "$WINDOW_ID" ] && exit 1
+
+        ${pkgs.wezterm}/bin/wezterm cli spawn --window-id "$WINDOW_ID" --cwd "$VMETAL" -- claude --dangerously-skip-permissions /remote-control
+        ${pkgs.wezterm}/bin/wezterm cli spawn --window-id "$WINDOW_ID" --cwd "$DOTS" -- claude --dangerously-skip-permissions /remote-control
       '')
 
       (pkgs.writeShellScriptBin "hypr-focus-toggle" ''

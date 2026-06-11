@@ -24,6 +24,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("uwsm app -- wl-clip-persist --clipboard both") -- keep clipboard alive on focus switch
   hl.exec_cmd("wl-paste --type text --watch cliphist store")
   hl.exec_cmd("wl-paste --type image --watch cliphist store")
+  hl.exec_cmd("claude-workspaces")
 end)
 
 -- After rebuild+reload, noctalia-shell store path changes → IPC mismatch.
