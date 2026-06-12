@@ -120,8 +120,8 @@ in
       mac = "02:00:00:00:00:23";
       vsockCid = 23;
       readinessVsockPort = 9023;
-      vcpu = 12;
-      mem = 32768;
+      vcpu = 28;
+      mem = 49152;
       disk = 200;
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
@@ -133,8 +133,8 @@ in
       mac = "02:00:00:00:00:24";
       vsockCid = 24;
       readinessVsockPort = 9024;
-      vcpu = 12;
-      mem = 32768;
+      vcpu = 28;
+      mem = 49152;
       disk = 200;
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
