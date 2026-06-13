@@ -100,7 +100,9 @@ in
       mac = "02:00:00:00:00:13";
       vsockCid = 13;
       readinessVsockPort = 9013;
-      vcpu = 4;
+      # 6 vCPU: 4 ran load ~9.5 (>2x oversubscribed) post-12G bump; host
+      # has 128 cores, plenty of headroom.
+      vcpu = 6;
       # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
@@ -112,7 +114,9 @@ in
       mac = "02:00:00:00:00:14";
       vsockCid = 14;
       readinessVsockPort = 9014;
-      vcpu = 4;
+      # 6 vCPU: 4 ran load ~9.5 (>2x oversubscribed) post-12G bump; host
+      # has 128 cores, plenty of headroom.
+      vcpu = 6;
       # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
