@@ -101,7 +101,9 @@ in
       vsockCid = 13;
       readinessVsockPort = 9013;
       vcpu = 4;
-      mem = 8192;
+      # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
+      # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
+      mem = 12288;
     };
 
     vms.k3s-server-5 = {
@@ -111,7 +113,9 @@ in
       vsockCid = 14;
       readinessVsockPort = 9014;
       vcpu = 4;
-      mem = 8192;
+      # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
+      # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
+      mem = 12288;
     };
 
     vms.k3s-worker-4 = {
