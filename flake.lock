@@ -1308,11 +1308,11 @@
         "spectrum": "spectrum_2"
       },
       "locked": {
-        "lastModified": 1780686659,
-        "narHash": "sha256-g9wYtr1zu2eKH/KUHEXVLEI0e+WJDPVuVVFTVRNOqdk=",
+        "lastModified": 1781731752,
+        "narHash": "sha256-hu3iNk97VLrfLxnectCztZAa9b+bfwrMMPMcDO0zmsU=",
         "owner": "jakeschurch",
         "repo": "microvm.nix",
-        "rev": "dd5a3ffc24e9eedec03800204847b21c7c37bd0d",
+        "rev": "97c974e1112c3fe9dc881779283630daacfda95e",
         "type": "github"
       },
       "original": {
@@ -1984,11 +1984,11 @@
     "spectrum_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1772189877,
-        "narHash": "sha256-i1p90Rgssb//aNiTDFq46ZG/fk3LmyRLChtp/9lddyA=",
+        "lastModified": 1778940603,
+        "narHash": "sha256-voSM8dZNlaOWN3kbYFky+FNY6fFQOEw0xF+ZMpZKkCQ=",
         "ref": "refs/heads/main",
-        "rev": "fe39e122d898f66e89ffa17d4f4209989ccb5358",
-        "revCount": 1255,
+        "rev": "367dd227f539267eae2b62770b4c17b88ac8c1f1",
+        "revCount": 1265,
         "type": "git",
         "url": "https://spectrum-os.org/git/spectrum"
       },
@@ -2328,11 +2328,11 @@
       },
       "locked": {
         "dir": "vmetal",
-        "lastModified": 1781261904,
-        "narHash": "sha256-sCEolZoQPKefr6iedCTzK7FBDYSdT1T5ra0cdwiFhgg=",
+        "lastModified": 1781733801,
+        "narHash": "sha256-AZ6BboM5OJ/1I/n2gVSozWXTuHRxEgwNp/6H36/LjuA=",
         "owner": "jakeschurch",
         "repo": "homelab",
-        "rev": "ba152e6a14ed8922a041db78ab64d33b1dea034e",
+        "rev": "79612690d8e7841bc6b40e428af610bfd43b88b4",
         "type": "github"
       },
       "original": {

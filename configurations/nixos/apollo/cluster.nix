@@ -15,7 +15,7 @@
         peerSubnet = "192.168.100.0/24";
         ciliumPeerAsn = 64514;
         ciliumPeerSubnet = "192.168.100.0/24";
-        peers = [ { lanIp = "10.10.5.110"; asn = 64520; } ];
+        peers = [{ lanIp = "10.10.5.110"; asn = 64520; }];
         lanInterface = "enp5s0";
         noMasqueradeCidrs = [ "192.168.101.0/24" "10.42.0.0/16" ];
         extraPeerSubnets = [ "192.168.101.0/24" ];
@@ -39,7 +39,7 @@
       enable = true;
       asn = 64512;
       peerAsn = 64513;
-      extraHostPeers = [ { address = "192.168.101.1"; asn = 64520; } ];
+      extraHostPeers = [{ address = "192.168.101.1"; asn = 64520; }];
     };
 
     embeddedRegistry = {
@@ -135,7 +135,7 @@
         "openebs.io/engine=mayastor"
       ];
       mayastorPoolGiB = 800;
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
     vms.k3s-worker-2 = {
@@ -156,7 +156,7 @@
         "openebs.io/engine=mayastor"
       ];
       # extraTaints = [ "workload=inference:PreferNoSchedule" ];
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
       # passthroughDevices = [
       #   {
       #     bus = "pci";
@@ -180,7 +180,7 @@
         "openebs.io/engine=mayastor"
       ];
       mayastorPoolGiB = 800;
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
   };
 
@@ -190,19 +190,35 @@
   # microvm-readiness-signal.service connecting via vsock (port auto-wired
   # from services.k3s-cluster.vms.<name>.readinessVsockPort).
   microvm.vms = {
-    k3s-worker-1.restartPriority = 0;
-    k3s-worker-2.restartPriority = 0;
-    k3s-worker-3.restartPriority = 0;
-    k3s-server-2 = {
+    # Rolling restart: DISTINCT priorities so a host rebuild restarts VMs one
+    # tier at a time, each gated on the prior tier's vsock readiness
+    # (microvm-readiness-signal → kubelet healthz). Same priority = parallel,
+    # which bounced all workers at once (kyverno admission outage 2026-06-17),
+    # and previously had server-2/server-3 sharing priority 1 — restarting two
+    # etcd members simultaneously. Workers first, then etcd servers strictly
+    # sequentially so the 5-member quorum never loses two at once.
+    k3s-worker-1 = {
+      restartPriority = 0;
+      restartTimeout = 300;
+    };
+    k3s-worker-2 = {
       restartPriority = 1;
+      restartTimeout = 300;
+    };
+    k3s-worker-3 = {
+      restartPriority = 2;
+      restartTimeout = 300;
+    };
+    k3s-server-2 = {
+      restartPriority = 3;
       restartTimeout = 300;
     };
     k3s-server-3 = {
-      restartPriority = 1;
+      restartPriority = 4;
       restartTimeout = 300;
     };
     k3s-server-1 = {
-      restartPriority = 2;
+      restartPriority = 5;
       restartTimeout = 300;
     };
   };
