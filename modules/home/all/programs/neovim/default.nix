@@ -5,8 +5,6 @@
 }:
 with pkgs;
 let
-  inherit (pkgs.lib) mkScript;
-
   extraPkgs =
     let
       getPkgs = pkgs': lib.flatten (lib.attrValues pkgs');
@@ -16,19 +14,9 @@ let
 
   nvimPlugins = import ./nvim-plugins.nix { inherit pkgs; };
   nvimPkgSrc = lib.concatLines (map (x: "vim.opt.runtimepath:append(\"${x.src}\")") nvimPlugins);
-
-  plugman = mkScript {
-    pname = "nvim-plugman";
-    src = ./plug.sh;
-    propagatedBuildInputs = [
-      jq
-      gh
-    ];
-  };
-
 in
 {
-  home.packages = extraPkgs ++ [ plugman ];
+  home.packages = extraPkgs;
 
   programs.neovim = {
     package = pkgs.neovim-nightly;

@@ -12,56 +12,47 @@ let
     };
   };
 
-  presenting-nvim = pkgs.vimUtils.buildVimPlugin {
-    pname = "presenting-nvim";
-    version = "0.1.0";
+  # PR review, fugitive-style. gh's store path is baked into gh_cmd so the plugin
+  # carries its own gh (gh auth still comes from the user env).
+  gitgood-lua = pkgs.vimUtils.buildVimPlugin {
+    pname = "gitgood-lua";
+    version = "9147d0a";
     src = pkgs.fetchFromGitHub {
-      owner = "sotte";
-      repo = "presenting.nvim";
-      rev = "main";
-      sha256 = "sha256-Q/SNFkMSREVEeDiikdMXQCVxrt3iThQUh08YMcN9qSk=";
+      owner = "jakeschurch";
+      repo = "gitgood.lua";
+      rev = "9147d0a960599dea02bd3b0615008b0e2c03c961";
+      sha256 = "sha256-WtBzoRS/1xNbSQWNeOJTiQnI4KmBqeUTSevhPukZUl8=";
     };
+    postPatch = ''
+      substituteInPlace lua/gitgood/config.lua \
+        --replace-fail 'gh_cmd = "gh"' 'gh_cmd = "${pkgs.lib.getExe pkgs.gh}"'
+    '';
+    doCheck = false;
   };
 
-  custom-sourced-nvim-plugins =
-    let
-      pluginGit =
-        {
-          rev,
-          owner,
-          repo,
-          sha256,
-          ...
-        }:
-        pkgs.vimUtils.buildVimPlugin {
-          pname = pkgs.lib.strings.sanitizeDerivationName repo;
-          version = rev;
-          src = pkgs.fetchFromGitHub {
-            inherit
-              owner
-              repo
-              rev
-              sha256
-              ;
-          };
-        };
-
-      readJsonFile = with builtins; file: fromJSON (readFile file);
-      vimPluginsToFetch = readJsonFile ./versions.json;
-      plugins = map pluginGit vimPluginsToFetch;
-    in
-    map (
-      x:
-      x.overrideAttrs {
-        doCheck = false;
-        postInstall = "rm -rf $out/test $out/tests $out/spec";
-      }
-    ) plugins;
+  # Plugins not in nixpkgs vimPlugins. Each is a flake package under packages/
+  # with a nix-update updateScript (run `nix-update --flake <name>`).
+  custom-sourced-nvim-plugins = with pkgs; [
+    ghlite-nvim
+    vim-symlink
+    none-ls-extras-nvim
+    none-ls-shellcheck-nvim
+    vim-venter
+    presenting-nvim
+  ];
 
   nix-nvim-plugins =
     with pkgs.vimPlugins;
     [
-      presenting-nvim
+      # Migrated from versions.json/plug.sh — now tracked by nixpkgs
+      otter-nvim
+      blink-emoji-nvim
+      oil-lsp-diagnostics-nvim
+      codecompanion-nvim
+      fzf-wrapper
+      blink-copilot
+      colorful-menu-nvim
+      luasnip
 
       fzf-lua
       rainbow-delimiters-nvim
@@ -108,6 +99,7 @@ let
       friendly-snippets
 
       octo-nvim
+      gitgood-lua
 
       hop-nvim
 

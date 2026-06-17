@@ -2,18 +2,18 @@
   pkgs ? import <nixpkgs> { },
 }:
 
-pkgs.buildGoModule {
+pkgs.buildGoModule rec {
   pname = "terragrunt-ls";
-  name = "terragrunt-ls";
+  version = "0.0.5-unstable-2026-06-03";
 
   src = pkgs.fetchFromGitHub {
     owner = "gruntwork-io";
     repo = "terragrunt-ls";
-    rev = "a82e24338bae87e5a3d1e8cf81179ce8a848ae3e";
-    sha256 = "sha256-Ni9TccTLbixtczJvKDUJqgGwFCj9TRNX0zp6421BaYY=";
+    rev = "a4433593928116d6a743c72c0dfe2dd8a0870184";
+    sha256 = "sha256-G40XYqgDF6XP1S5rRejuFtyXMr5mxLQjJ5eItQcjrGA=";
   };
 
-  vendorHash = "sha256-U9IEV0RQbqqLIw+DUeCT1pbHubJ0nEC/ySZmFZAHBb0=";
+  vendorHash = "sha256-wqQPMVP2822N55m5A0/EiCzgVPITJkfrKlHwQWvSte0=";
 
   subPackages = [ "." ];
 
@@ -25,11 +25,16 @@ pkgs.buildGoModule {
   # Optional: add a check phase later once tests exist
   doCheck = false;
 
+  passthru.updateScript = pkgs.nix-update-script {
+    # No upstream releases yet; track default-branch commits.
+    extraArgs = [ "--version=branch" ];
+  };
+
   meta = with pkgs.lib; {
     description = "A language server for Terragrunt configuration files";
     homepage = "https://github.com/gruntwork-io/terragrunt-ls";
     license = licenses.mit;
-    maintainers = [ maintainers.yourname ];
+    maintainers = [ ];
     platforms = platforms.unix;
   };
 }
