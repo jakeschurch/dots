@@ -32,6 +32,21 @@ in
 
       (pkgs.writeScriptBin "ocr-shot" (builtins.readFile ./ocr-shot.sh))
 
+      # Refresh noctalia-shell after a rebuild WITHOUT restarting the Wayland
+      # session. A new noctalia store path changes QS_CONFIG_PATH, which moves
+      # quickshell's IPC socket — so the running instance must be replaced. Only
+      # the shell process is touched; the compositor/session is left alone.
+      (pkgs.writeShellScriptBin "reload-noctalia" ''
+        ${pkgs.procps}/bin/pkill -x quickshell
+        # wait for the IPC socket to drain so the relaunch isn't seen as a dup
+        for _ in $(seq 1 20); do
+          ${pkgs.procps}/bin/pgrep -x quickshell >/dev/null || break
+          sleep 0.1
+        done
+        ${pkgs.uwsm}/bin/uwsm app -- noctalia-shell
+        ${pkgs.libnotify}/bin/notify-send 'noctalia reloaded 👍'
+      '')
+
       (pkgs.writeShellScriptBin "smart-kill" ''
         class=$(${pkgs.hyprland}/bin/hyprctl activewindow -j | ${pkgs.jq}/bin/jq -r ".class")
         if [ "$class" = "Steam" ] || [ "$class" = "Bitwarden" ]; then
@@ -58,6 +73,16 @@ in
 
         ${pkgs.wezterm}/bin/wezterm cli spawn --window-id "$WINDOW_ID" --cwd "$VMETAL" -- claude --dangerously-skip-permissions /remote-control
         ${pkgs.wezterm}/bin/wezterm cli spawn --window-id "$WINDOW_ID" --cwd "$DOTS" -- claude --dangerously-skip-permissions /remote-control
+      '')
+
+      (pkgs.writeShellScriptBin "claude-box" ''
+        # New tmux session (random name) running claude /remote-control in $PWD.
+        session="claude-$RANDOM"
+        ${pkgs.tmux}/bin/tmux new-session -d -s "$session" -c "$PWD" \
+          'claude --dangerously-skip-permissions /remote-control'
+        echo "started $session"
+        # attach when run from a terminal; stay detached otherwise
+        [ -t 1 ] && exec ${pkgs.tmux}/bin/tmux attach -t "$session"
       '')
 
       (pkgs.writeShellScriptBin "hypr-focus-toggle" ''

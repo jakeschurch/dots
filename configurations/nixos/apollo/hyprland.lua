@@ -27,11 +27,10 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("claude-workspaces")
 end)
 
--- After rebuild+reload, noctalia-shell store path changes → IPC mismatch.
--- Kill old quickshell and relaunch so SUPER+space works without rebooting.
-hl.on("config.reloaded", function()
-  hl.exec_cmd("pkill -x quickshell; uwsm app -- noctalia-shell")
-end)
+-- NOTE: noctalia restart is intentionally NOT wired to "config.reloaded".
+-- SUPER+SHIFT+R reloads on every wallpaper cycle; restarting the shell there
+-- tears down the bar each time. Refresh noctalia explicitly via SUPER+SHIFT+N
+-- (reload-noctalia) after loading a new version. Never touches the session.
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -209,6 +208,9 @@ hl.bind(
     "hyprctl reload && pkill phonto; phonto --rand & notify-send 'hyprland reloaded 👍'"
   )
 )
+
+-- Refresh noctalia after loading a new version (scoped — no session restart)
+hl.bind(mod .. " + SHIFT + N", hl.dsp.exec_cmd("reload-noctalia"))
 
 -- Workspace navigation (ctrl due to keyd remappings)
 hl.bind(ctrl .. " + left", hl.dsp.focus({ workspace = "e-1" }))
