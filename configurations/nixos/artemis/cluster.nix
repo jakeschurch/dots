@@ -191,6 +191,20 @@ in
     };
   };
 
+  # CPU affinity pinning (foundrybox-oh4q.4). Confine each guest's
+  # cloud-hypervisor process to a DISJOINT set of WHOLE physical cores so the
+  # host scheduler stops migrating vCPU threads across guests and no two guests
+  # share an SMT pair. artemis has 64 physical cores; the SMT sibling of core N
+  # is thread N+64. Sets are NPS2-boundary-aware (node0=cores 0-31,
+  # node1=cores 32-63) so they upgrade cleanly if NPS2 is ever enabled.
+  systemd.services = {
+    "microvm@k3s-worker-4".serviceConfig.CPUAffinity = "0-13 64-77";
+    "microvm@k3s-worker-5".serviceConfig.CPUAffinity = "14-27 78-91";
+    "microvm@k3s-worker-6".serviceConfig.CPUAffinity = "32-45 96-109";
+    "microvm@k3s-server-4".serviceConfig.CPUAffinity = "28-30 92-94";
+    "microvm@k3s-server-5".serviceConfig.CPUAffinity = "46-48 110-112";
+  };
+
   networking.nat.externalInterface = artemisNic;
 
   networking.nameservers = [

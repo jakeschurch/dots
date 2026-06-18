@@ -223,6 +223,20 @@
     };
   };
 
+  # CPU affinity pinning (foundrybox-oh4q.4). Confine each guest's
+  # cloud-hypervisor process to a DISJOINT set of WHOLE physical cores so the
+  # host scheduler stops migrating vCPU threads across guests and no two guests
+  # share an SMT pair. apollo has 16 physical cores; the SMT sibling of core N
+  # is thread N+16.
+  systemd.services = {
+    "microvm@k3s-worker-1".serviceConfig.CPUAffinity = "0-2 16-18";
+    "microvm@k3s-worker-2".serviceConfig.CPUAffinity = "3-4 19-20";
+    "microvm@k3s-worker-3".serviceConfig.CPUAffinity = "5-7 21-23";
+    "microvm@k3s-server-1".serviceConfig.CPUAffinity = "8-9 24-25";
+    "microvm@k3s-server-2".serviceConfig.CPUAffinity = "10-11 26-27";
+    "microvm@k3s-server-3".serviceConfig.CPUAffinity = "12-13 28-29";
+  };
+
   # NAT for microVM external network access
   networking.nat.externalInterface = "enp5s0";
 
