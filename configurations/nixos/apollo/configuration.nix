@@ -87,7 +87,8 @@
   };
 
   programs = {
-    firefox.enable = true;
+    # firefox is managed by home-manager (modules/home/all/programs/browser.nix),
+    # which installs the binary and owns the profile. No system-level dup needed.
     zsh.enable = true;
     git.enable = true;
     bash.enable = true;

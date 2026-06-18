@@ -10,6 +10,11 @@
         onepassword-password-manager
         bitwarden
       ];
+      # Dark, matching the system theme (see ../theme.nix).
+      settings = {
+        "ui.systemUsesDarkTheme" = 1; # dark browser chrome
+        "layout.css.prefers-color-scheme.content-override" = 0; # 0 = dark for sites
+      };
     };
   };
 }

@@ -220,7 +220,9 @@ hl.bind(ctrl .. " + right", hl.dsp.focus({ workspace = "e+1" }))
 local directions = { h = "left", j = "down", k = "up", l = "right" }
 for key, dir in pairs(directions) do
   hl.bind(mod .. " + " .. key, hl.dsp.focus({ direction = dir }))
-  hl.bind(mod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = dir }))
+  -- swap (not move): exchanges window positions without re-inserting into the
+  -- dwindle tree, so neighbours keep their sizes instead of resizing.
+  hl.bind(mod .. " + SHIFT + " .. key, hl.dsp.window.swap({ direction = dir }))
 end
 
 -- Switch workspaces / move windows 1–9
@@ -273,7 +275,10 @@ hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- ---- RESIZE SUBMAP ----
 hl.bind(mod .. " + R", hl.dsp.submap("resize"))
-hl.define_submap("resize", "reset", function()
+-- NOTE: no "reset" 2nd arg — that stamps every bind to auto-exit the submap
+-- after one fire (KeybindManager: setSubmap(submap.reset) post-dispatch).
+-- Omitting it keeps the submap sticky so h/j/k/l repeat until escape/return.
+hl.define_submap("resize", function()
   hl.bind("h", hl.dsp.window.resize({ x = -85, y = 0, relative = true }), { repeating = true })
   hl.bind("j", hl.dsp.window.resize({ x = 0, y = 85, relative = true }), { repeating = true })
   hl.bind("k", hl.dsp.window.resize({ x = 0, y = -85, relative = true }), { repeating = true })
