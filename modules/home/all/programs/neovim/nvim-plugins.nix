@@ -16,12 +16,12 @@ let
   # carries its own gh (gh auth still comes from the user env).
   gitgood-lua = pkgs.vimUtils.buildVimPlugin {
     pname = "gitgood-lua";
-    version = "9147d0a";
+    version = "49922bc";
     src = pkgs.fetchFromGitHub {
       owner = "jakeschurch";
       repo = "gitgood.lua";
-      rev = "9147d0a960599dea02bd3b0615008b0e2c03c961";
-      sha256 = "sha256-WtBzoRS/1xNbSQWNeOJTiQnI4KmBqeUTSevhPukZUl8=";
+      rev = "49922bc30d6f9bd3da74b99800f60c85dc5504cc";
+      sha256 = "sha256-MLTsbf1laBgY9KgC27wgk0Dogr+CsS8MMWzHQy9iqdI=";
     };
     postPatch = ''
       substituteInPlace lua/gitgood/config.lua \
