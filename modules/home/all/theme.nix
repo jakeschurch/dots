@@ -5,13 +5,14 @@
 {
   pkgs,
   lib,
+  osConfig,
   ...
 }:
 let
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 in
 lib.mkMerge [
-  (lib.mkIf isLinux {
+  (lib.mkIf (isLinux && osConfig.profiles.desktop.enable) {
     gtk = {
       enable = true;
       theme = {

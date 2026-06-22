@@ -53,7 +53,6 @@
 
       moreutils
       cloudflared
-      tmux
       mosh
 
       bat

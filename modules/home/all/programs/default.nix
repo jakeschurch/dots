@@ -30,6 +30,7 @@ in
     ./ssh.nix
     ./tablet-calibration.nix
     ./terragrunt.nix
+    ./tmux.nix
     ./wezterm
     ./zsh
   ];
