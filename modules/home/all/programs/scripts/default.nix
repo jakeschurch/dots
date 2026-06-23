@@ -155,6 +155,26 @@ let
     ];
     description = "Open cliphist picker in floating wezterm and paste selection";
   };
+  termcopy = mkScript {
+    pname = "termcopy";
+    src = ./termcopy.sh;
+    propagatedBuildInputs = lib.optionals pkgs.stdenv.isLinux [
+      pkgs.wl-clipboard
+      pkgs.xclip
+      pkgs.xsel
+    ];
+    description = "Copy stdin to clipboard, dispatching by OS/display server";
+  };
+  termpaste = mkScript {
+    pname = "termpaste";
+    src = ./termpaste.sh;
+    propagatedBuildInputs = lib.optionals pkgs.stdenv.isLinux [
+      pkgs.wl-clipboard
+      pkgs.xclip
+      pkgs.xsel
+    ];
+    description = "Write clipboard to stdout, dispatching by OS/display server";
+  };
   cliphist-pic = mkScript {
     pname = "cliphist-pic";
     src = ./cliphist-pic.sh;
@@ -181,6 +201,8 @@ in
     record-gif
     extract
     notify-when
+    termcopy
+    termpaste
     # spell-check-env-vars
   ]
   ++ lib.optionals pkgs.stdenv.isLinux [
