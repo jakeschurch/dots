@@ -5,13 +5,25 @@ views:
       - NAME
       - READY
       - STATUS
-      - RESTARTS
       - CPU
       - MEM
       - "%CPU/R"
-      - "%CPU/L"
       - "%MEM/R"
-      - "%MEM/L"
+      - NAMESPACE
+      - IP
+      - NODE
+  v1/nodes:
+    columns:
+      - NAME
+      - STATUS
+      - ROLES
+      - TAINTS
+      - VERSION
+      - PODS
+      - CPU
+      - MEM
+      - "%CPU"
+      - "%MEM"
       - AGE
   v1/services:
     columns:
