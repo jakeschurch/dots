@@ -6,6 +6,8 @@
 {
   home.packages = with pkgs; [
     k9s
+    stern
+    kubectl-neat
   ];
 
   home.sessionVariables."K9S_CONFIG_DIR" = "${config.xdg.configHome}/k9s";

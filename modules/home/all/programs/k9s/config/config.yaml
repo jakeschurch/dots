@@ -22,10 +22,10 @@ k9s:
   logger:
     tail: 1000
     buffer: 50000
-    sinceSeconds: 30
-    fullScreenLogs: false
+    sinceSeconds: 300
+    fullScreenLogs: true
     textWrap: false
-    showTime: false
+    showTime: true
   thresholds:
     cpu:
       critical: 90

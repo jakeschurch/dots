@@ -25,6 +25,54 @@ views:
       - "%CPU"
       - "%MEM"
       - AGE
+  v1/namespaces:
+    columns:
+      - NAME
+      - STATUS
+      - AGE
+  v1/persistentvolumeclaims:
+    columns:
+      - NAME
+      - STATUS
+      - VOLUME
+      - CAPACITY
+      - ACCESS MODES
+      - STORAGECLASS
+      - AGE
+      - NAMESPACE
+  apps/v1/deployments:
+    columns:
+      - NAME
+      - READY
+      - UP-TO-DATE
+      - AVAILABLE
+      - AGE
+      - NAMESPACE
+  apps/v1/daemonsets:
+    columns:
+      - NAME
+      - DESIRED
+      - CURRENT
+      - READY
+      - AGE
+      - NAMESPACE
+  batch/v1/jobs:
+    columns:
+      - NAME
+      - STATUS
+      - COMPLETIONS
+      - DURATION
+      - AGE
+      - NAMESPACE
+  argoproj.io/v1alpha1/applications:
+    columns:
+      - NAME
+      - SYNC-STATUS
+      - HEALTH-STATUS
+      - PROJECT
+      - DESTINATION-SERVER
+      - NAMESPACE
+      - AGE
   v1/services:
     columns:
       - NAME

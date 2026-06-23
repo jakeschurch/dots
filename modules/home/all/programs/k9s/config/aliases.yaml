@@ -1,0 +1,5 @@
+aliases:
+  app: applications.argoproj.io
+  apps: applications.argoproj.io
+  sm: servicemonitors.monitoring.coreos.com
+  pm: podmonitors.monitoring.coreos.com
