@@ -68,7 +68,6 @@
       asciinema
       asciinema-agg
 
-      k9s
       kubectl
       kubectx
       kubernetes-helm
