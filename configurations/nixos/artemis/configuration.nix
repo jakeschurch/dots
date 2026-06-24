@@ -27,6 +27,7 @@
         miimon = "100";
         xmit_hash_policy = "layer3+4";
       };
+      mtu = 9000;
     };
 
   };
@@ -76,6 +77,7 @@
       Address = "10.10.5.110/24";
     };
     routes = [ { Gateway = "10.10.5.1"; } ];
+    linkConfig.MTUBytes = 9000;
   };
 
   documentation.nixos.enable = false;
