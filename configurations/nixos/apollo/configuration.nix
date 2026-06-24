@@ -27,6 +27,10 @@
       Address = "10.10.5.7/24";
     };
     routes = [ { Gateway = "10.10.5.1"; } ];
+    # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
+    # Enables 9000 MTU end-to-end for cross-host pod + Mayastor NVMf traffic.
+    # microvm-br + TAP + VM eth0 already set to 9000 in vmetal. (2026-06-24)
+    linkConfig.MTUBytes = 9000;
   };
 
   # Set your time zone.
