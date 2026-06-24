@@ -24,6 +24,9 @@ in
         lanInterface = artemisNic;
         noMasqueradeCidrs = [ "192.168.100.0/24" "10.42.0.0/16" ];
         extraPeerSubnets = [ "192.168.100.0/24" ];
+        # Advertise the API VIP /32 to the UDM (AS64511) so external clients get
+        # ECMP/failover across hosts instead of a static pin to apollo. (2026-06-24)
+        upstreamPeers = [{ address = "10.10.5.1"; asn = 64511; }];
       };
       vxlan = {
         enable = false;
