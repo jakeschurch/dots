@@ -113,6 +113,31 @@
 
   documentation.nixos.enable = false;
 
+  # Reduce enp5s0 to 1 combined queue (from 2) to eliminate TX multi-queue
+  # interleaving. With 2 queues under the mq qdisc, different softirq CPUs
+  # route forwarded VM packets to different TX sub-queues, causing out-of-order
+  # delivery for the same TCP flow on the artemis side (observed: 34.8M fast
+  # retransmits / 26h, 85K rcv_ooopack on a single harbor→worker connection).
+  # Also bump RX ring 256→4096 to stop rx_missed_errors under burst load.
+  # (2026-06-23)
+  systemd.services.enp5s0-nic-tuning = {
+    description = "NIC queue and ring-buffer tuning for enp5s0";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      ${pkgs.ethtool}/bin/ethtool -L enp5s0 combined 1 || true
+      ${pkgs.ethtool}/bin/ethtool -G enp5s0 rx 4096    || true
+    '';
+  };
+
+  # MTU blackhole detection — switches to MTU-capped segments when a path
+  # silently drops oversized packets. Safe on cluster networks. (2026-06-23)
+  boot.kernel.sysctl."net.ipv4.tcp_mtu_probing" = 2;
+
   # This value defines the first NixOS version you installed on this machine.
   # Do NOT change this value unless you have manually inspected all changes it would make.
   system.stateVersion = "25.05"; # Did you read the comment?
