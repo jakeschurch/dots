@@ -2328,11 +2328,11 @@
       },
       "locked": {
         "dir": "vmetal",
-        "lastModified": 1782311578,
-        "narHash": "sha256-bIxRTO6qeytDyxmrKOMpw/oXIGSAtQ7w7VNqFUKhfGU=",
+        "lastModified": 1782321390,
+        "narHash": "sha256-BuYlE/FjhlNzvPXEmy+WdEo0CFRLIij51tTRGkBjZLI=",
         "owner": "jakeschurch",
         "repo": "homelab",
-        "rev": "b107c7152c5fb626952ca71b4983ad67c4068887",
+        "rev": "3438786cc4ea6e7428bb0e90876b000569b4ab3f",
         "type": "github"
       },
       "original": {
