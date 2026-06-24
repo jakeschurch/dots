@@ -27,7 +27,6 @@
         miimon = "100";
         xmit_hash_policy = "layer3+4";
       };
-      mtu = 9000;
     };
 
   };
