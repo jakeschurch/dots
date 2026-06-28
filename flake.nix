@@ -48,7 +48,7 @@
     nixos-unified.url = "github:srid/nixos-unified";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.55.2";
+    hyprland.url = "github:hyprwm/Hyprland";
     # hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprland-plugins = {

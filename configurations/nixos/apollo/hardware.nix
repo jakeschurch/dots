@@ -2,6 +2,8 @@
 {
   boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
+  powerManagement.cpuFreqGovernor = "performance";
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -41,4 +43,15 @@
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
+
+  systemd.services.nvidia-power-limit = {
+    description = "Set NVIDIA RTX 4080 power limit to 385W";
+    after = [ "multi-user.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${config.boot.kernelPackages.nvidia_x11.bin}/bin/nvidia-smi -pl 385";
+    };
+  };
 }
