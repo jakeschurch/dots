@@ -109,7 +109,7 @@
       mac = "02:00:00:00:00:11";
       vsockCid = 11;
       readinessVsockPort = 9011;
-      vcpu = 4; # bumped from 2 (2026-05-04)
+      vcpu = 3; # 4→3 (2026-06-28): 1 core freed for host; etcd floor is 2, 3 has headroom
       mem = 8192;
     };
 
@@ -119,7 +119,7 @@
       mac = "02:00:00:00:00:12";
       vsockCid = 12;
       readinessVsockPort = 9012;
-      vcpu = 4; # bumped from 2 (2026-05-04)
+      vcpu = 3; # 4→3 (2026-06-28): 1 core freed for host; etcd floor is 2, 3 has headroom
       mem = 8192;
     };
 
