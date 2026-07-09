@@ -125,6 +125,21 @@ in
       mem = 12288;
     };
 
+    # =========================================================================
+    # MOCK (foundrybox-6j1j): worker-4/5/6 become Garage storage nodes.
+    #   - coldStorageDevice: LVM LV on the 8TB HDD (VG coldvg, one LV per worker)
+    #     passed through as virtio-blk -> guest mounts /var/lib/rancher/openebs-cold ->
+    #     openebs cold-hdd localpv-hostpath -> Garage cold DATA tier.
+    #   - mayastorPoolGiB: small NVMe pool for the WARM metadata tier (Garage
+    #     LMDB metadata must stay fast/reliable — worker-6 LMDB corruption
+    #     2026-06-23 when it landed on the wrong disk). DiskPool CR per node
+    #     added in vmetal openebs.nix (pool-worker-4/5/6).
+    #   - workload=storage LABEL only (soft affinity), NOT a NoSchedule taint:
+    #     these are ALSO the kata microVM session hosts (foundrybox-51kk); a
+    #     hard storage taint would evict kata/harness pods. Garage stays here
+    #     via nodeAffinity preference + light requests. TODO: if kata sessions
+    #     starve Garage, dedicate one worker to storage or move kata to apollo.
+    # =========================================================================
     vms.k3s-worker-4 = {
       role = "agent";
       ip = "192.168.101.23";
@@ -134,7 +149,9 @@ in
       vcpu = 28;
       mem = 32768;
       disk = 200;
-      extraLabels = [ "openebs.io/engine=mayastor" ];
+      mayastorPoolGiB = 16; # warm metadata pool (NVMe)
+      coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
+      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
@@ -147,7 +164,9 @@ in
       vcpu = 28;
       mem = 32768;
       disk = 200;
-      extraLabels = [ "openebs.io/engine=mayastor" ];
+      mayastorPoolGiB = 16; # warm metadata pool (NVMe)
+      coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
+      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
@@ -160,7 +179,9 @@ in
       vcpu = 28;
       mem = 32768;
       disk = 200;
-      extraLabels = [ "openebs.io/engine=mayastor" ];
+      mayastorPoolGiB = 16; # warm metadata pool (NVMe)
+      coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
+      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
   };
