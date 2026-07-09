@@ -40,7 +40,13 @@
       sandbox = "relaxed";
       sandbox-fallback = true;
 
+      # localhost:8501 = port-forward to the in-cluster foundry nix-cache.
+      # Listed FIRST so dev builds substitute the pushed Elixir compile-layer
+      # intermediates (foundry-platform-deps-compiled etc.) instead of
+      # recompiling from scratch. When the port-forward is down nix logs a
+      # connection warning and falls through to the public caches.
       substituters = [
+        "http://localhost:8501"
         "https://cache.nixos.org"
         "https://cache.garnix.io"
         "https://nix-community.cachix.org"
@@ -48,6 +54,7 @@
       ];
 
       trusted-substituters = [
+        "http://localhost:8501"
         "https://cache.nixos.org"
         "https://cache.garnix.io"
         "https://nix-community.cachix.org"
@@ -55,6 +62,9 @@
       ];
 
       trusted-public-keys = [
+        # apollo = signing keys for the in-cluster foundry nix-cache.
+        "apollo:i756C7FtllWIbgQipbcvBE3plUXT3ojFhSWcZOuDyHs="
+        "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="

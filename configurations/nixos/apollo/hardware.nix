@@ -51,7 +51,30 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${config.boot.kernelPackages.nvidia_x11.bin}/bin/nvidia-smi -pl 385";
     };
+    script = ''
+      ${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pl 385
+      ${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pm 1
+    '';
+  };
+
+  # Lock GPU to max clocks to prevent ramp-up jitter when CPU-bound.
+  # Queries supported clocks at runtime so it works across driver updates.
+  systemd.services.nvidia-lock-clocks = {
+    description = "Lock NVIDIA GPU to max clocks for gaming";
+    after = [
+      "multi-user.target"
+      "nvidia-power-limit.service"
+    ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      smi="${config.hardware.nvidia.package.bin}/bin/nvidia-smi"
+      MAX_GFX=$($smi --query-supported-clocks=graphics --format=csv,noheader | head -1 | tr -d ' MHz')
+      $smi -lgc "$MAX_GFX"
+    '';
   };
 }

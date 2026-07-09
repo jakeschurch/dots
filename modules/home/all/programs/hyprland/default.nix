@@ -17,11 +17,6 @@ in
       depth = 1
     '';
 
-    # Kill animated wallpaper + shell when gaming (frees ~900MiB VRAM), restore on exit
-    xdg.configFile."gamemode.ini".text = ''
-      [custom]
-      start=pkill -x phonto; pkill -x quickshell
-      end=uwsm app -- phonto --rand; uwsm app -- noctalia-shell
-    '';
+
   };
 }

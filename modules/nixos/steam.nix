@@ -43,6 +43,12 @@
     ];
 
     hardware.steam-hardware.enable = true;
-    programs.gamemode.enable = true;
+    programs.gamemode = {
+      enable = true;
+      settings.custom = {
+        start = "/run/current-system/sw/bin/pkill -x phonto; /run/current-system/sw/bin/pkill -x quickshell";
+        end = "/run/current-system/sw/bin/uwsm app -- phonto --rand; /run/current-system/sw/bin/uwsm app -- noctalia-shell";
+      };
+    };
   };
 }
