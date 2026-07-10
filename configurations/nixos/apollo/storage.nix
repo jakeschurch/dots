@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 {
   # Local pull-through Nix binary cache proxy
   services.ncps = {
@@ -48,6 +48,8 @@
     fileSystems = [ "/" ];
   };
 
+  # btrbk = fast LOCAL rollback snapshots on nvme only.
+  # Cross-disk backup is handled by restic → /mnt/snapshots-backup (see below).
   services.btrbk = {
     instances.btrbk = {
       onCalendar = "hourly";
@@ -57,12 +59,53 @@
         volume."/" = {
           snapshot_dir = "/.snapshots";
           subvolume = {
-            "/home" = { };
             "/home/jake" = { };
           };
         };
       };
     };
+  };
+
+  # Cross-disk backup: file-level, deduplicated, compressed, encrypted.
+  # Backs up /home/jake to sdb, excluding regenerable/large caches so the
+  # precious set (~40-60 GiB) fits the 112 GiB disk with room to spare.
+  sops.secrets."restic-home-password" = {
+    sopsFile = ../../../secrets/restic.yaml;
+    owner = "root";
+    mode = "0400";
+  };
+
+  services.restic.backups.home = {
+    repository = "/mnt/snapshots-backup/restic";
+    passwordFile = config.sops.secrets."restic-home-password".path;
+    initialize = true;
+    paths = [ "/home/jake" ];
+    exclude = [
+      "/home/jake/.cache"
+      "/home/jake/.local/share/Steam"
+      "/home/jake/.local/share/comfyui"
+      "/home/jake/.npm"
+      "/home/jake/.local/share/pnpm"
+      "/home/jake/go/pkg"
+      "/home/jake/.config/google-chrome*"
+      "**/node_modules"
+      "**/_build"
+      "**/target"
+      "**/.direnv"
+      "**/result"
+      "**/result-*"
+    ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+      RandomizedDelaySec = "10m";
+    };
+    pruneOpts = [
+      "--keep-hourly 24"
+      "--keep-daily 14"
+      "--keep-weekly 8"
+      "--keep-monthly 6"
+    ];
   };
 
   # Monthly balance to consolidate sparse chunks; idle I/O so it doesn't interfere

@@ -116,6 +116,13 @@
               content = {
                 type = "filesystem";
                 format = "btrfs";
+                mountpoint = "/mnt/snapshots-backup";
+                mountOptions = [
+                  "noatime"
+                  "compress=zstd"
+                  "space_cache=v2"
+                  "nofail"
+                ];
                 extraArgs = [
                   "-L"
                   "snapshots-metadata"
