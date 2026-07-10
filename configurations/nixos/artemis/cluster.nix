@@ -149,7 +149,11 @@ in
       vsockCid = 23;
       readinessVsockPort = 9023;
       vcpu = 28;
-      mem = 32768;
+      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
+      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
+      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
+      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
+      mem = 28672;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
@@ -164,7 +168,11 @@ in
       vsockCid = 24;
       readinessVsockPort = 9024;
       vcpu = 28;
-      mem = 32768;
+      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
+      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
+      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
+      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
+      mem = 28672;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
@@ -179,7 +187,11 @@ in
       vsockCid = 25;
       readinessVsockPort = 9025;
       vcpu = 28;
-      mem = 32768;
+      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
+      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
+      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
+      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
+      mem = 28672;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
