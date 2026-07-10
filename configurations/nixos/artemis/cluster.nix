@@ -134,11 +134,13 @@ in
     #     LMDB metadata must stay fast/reliable — worker-6 LMDB corruption
     #     2026-06-23 when it landed on the wrong disk). DiskPool CR per node
     #     added in vmetal openebs.nix (pool-worker-4/5/6).
-    #   - workload=storage LABEL only (soft affinity), NOT a NoSchedule taint:
-    #     these are ALSO the kata microVM session hosts (foundrybox-51kk); a
-    #     hard storage taint would evict kata/harness pods. Garage stays here
-    #     via nodeAffinity preference + light requests. TODO: if kata sessions
-    #     starve Garage, dedicate one worker to storage or move kata to apollo.
+    #   - NO workload=storage label: the nix-csi-go builder nodeAffinity requires
+    #     `workload DoesNotExist` (builders run on mayastor nodes that are NOT
+    #     storage-workload). Labeling these workers workload=storage left ZERO
+    #     builder-eligible nodes -> builders Pending -> NixMounts unresolved ->
+    #     cluster-wide ContainerCreating cascade (2026-07-10). Garage runs here
+    #     fine without the label (mayastor engine label is enough). No taint
+    #     either (these are also kata session hosts, foundrybox-51kk).
     # =========================================================================
     vms.k3s-worker-4 = {
       role = "agent";
@@ -151,7 +153,7 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
-      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
+      extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
@@ -166,7 +168,7 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
-      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
+      extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
@@ -181,7 +183,7 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
-      extraLabels = [ "openebs.io/engine=mayastor" "workload=storage" ];
+      extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
   };
