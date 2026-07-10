@@ -138,6 +138,12 @@
         "openebs.io/engine=mayastor"
       ];
       mayastorPoolGiB = 800;
+      # MOCK (foundrybox-6j1j): SECOND mayastor pool on the reclaimed 860 EVO,
+      # passed through as a raw block LV (not an img on nvme). Adds ~931G warm
+      # capacity on a separate spindle — doesn't touch the 88%-full nvme, and
+      # lets replicas later drain off the nvme img-pool. DiskPool
+      # pool-worker-1-sda (serial mayastor-sda) added in vmetal openebs.nix.
+      mayastorBlockDevice = "/dev/apollovg/mayastor-w1";
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
