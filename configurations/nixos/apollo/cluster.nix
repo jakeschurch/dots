@@ -100,7 +100,7 @@
       vsockCid = 10;
       readinessVsockPort = 9010;
       vcpu = 4; # bumped from 2: etcd raft consensus was hitting CPU scheduling jitter at 2 vCPU (2026-05-04)
-      mem = 8192;
+      mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
     };
 
     vms.k3s-server-2 = {
@@ -110,7 +110,7 @@
       vsockCid = 11;
       readinessVsockPort = 9011;
       vcpu = 3; # 4→3 (2026-06-28): 1 core freed for host; etcd floor is 2, 3 has headroom
-      mem = 8192;
+      mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
     };
 
     vms.k3s-server-3 = {
@@ -120,7 +120,7 @@
       vsockCid = 12;
       readinessVsockPort = 9012;
       vcpu = 3; # 4→3 (2026-06-28): 1 core freed for host; etcd floor is 2, 3 has headroom
-      mem = 8192;
+      mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
     };
 
     vms.k3s-worker-1 = {
