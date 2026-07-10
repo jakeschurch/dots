@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 {
   # Local pull-through Nix binary cache proxy
   services.ncps = {
@@ -48,29 +48,64 @@
     fileSystems = [ "/" ];
   };
 
-  # btrbk requires the target directory to exist before send/receive
-  systemd.tmpfiles.rules = [
-    "d /mnt/snapshots-backup/btrbk 0700 root root -"
-  ];
-
+  # btrbk = fast LOCAL rollback snapshots on nvme only.
+  # Cross-disk backup is handled by restic → /mnt/snapshots-backup (see below).
   services.btrbk = {
     instances.btrbk = {
       onCalendar = "hourly";
       settings = {
         snapshot_preserve_min = "2h";
         snapshot_preserve = "24h 7d 4w 3m";
-        target_preserve_min = "no";
-        target_preserve = "24h 14d 8w 6m";
         volume."/" = {
           snapshot_dir = "/.snapshots";
-          target = "/mnt/snapshots-backup/btrbk";
           subvolume = {
-            "/home" = { };
             "/home/jake" = { };
           };
         };
       };
     };
+  };
+
+  # Cross-disk backup: file-level, deduplicated, compressed, encrypted.
+  # Backs up /home/jake to sdb, excluding regenerable/large caches so the
+  # precious set (~40-60 GiB) fits the 112 GiB disk with room to spare.
+  sops.secrets."restic-home-password" = {
+    sopsFile = ../../../secrets/restic.yaml;
+    owner = "root";
+    mode = "0400";
+  };
+
+  services.restic.backups.home = {
+    repository = "/mnt/snapshots-backup/restic";
+    passwordFile = config.sops.secrets."restic-home-password".path;
+    initialize = true;
+    paths = [ "/home/jake" ];
+    exclude = [
+      "/home/jake/.cache"
+      "/home/jake/.local/share/Steam"
+      "/home/jake/.local/share/comfyui"
+      "/home/jake/.npm"
+      "/home/jake/.local/share/pnpm"
+      "/home/jake/go/pkg"
+      "/home/jake/.config/google-chrome*"
+      "**/node_modules"
+      "**/_build"
+      "**/target"
+      "**/.direnv"
+      "**/result"
+      "**/result-*"
+    ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+      RandomizedDelaySec = "10m";
+    };
+    pruneOpts = [
+      "--keep-hourly 24"
+      "--keep-daily 14"
+      "--keep-weekly 8"
+      "--keep-monthly 6"
+    ];
   };
 
   # Monthly balance to consolidate sparse chunks; idle I/O so it doesn't interfere
