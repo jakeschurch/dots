@@ -48,14 +48,22 @@
     fileSystems = [ "/" ];
   };
 
+  # btrbk requires the target directory to exist before send/receive
+  systemd.tmpfiles.rules = [
+    "d /mnt/snapshots-backup/btrbk 0700 root root -"
+  ];
+
   services.btrbk = {
     instances.btrbk = {
       onCalendar = "hourly";
       settings = {
         snapshot_preserve_min = "2h";
         snapshot_preserve = "24h 7d 4w 3m";
+        target_preserve_min = "no";
+        target_preserve = "24h 14d 8w 6m";
         volume."/" = {
           snapshot_dir = "/.snapshots";
+          target = "/mnt/snapshots-backup/btrbk";
           subvolume = {
             "/home" = { };
             "/home/jake" = { };
