@@ -56,7 +56,8 @@
     };
   };
 
-  swapDevices = [
-    { device = "/dev/disk/by-partlabel/disk-swap"; }
-  ];
+  # NOTE: the active swap (disk-main-swap, nvme0n1p2/128G) is declared by
+  # disko-config.nix. The old second swap on `disk-swap` (the reclaimed 860 EVO)
+  # is gone — that disk is now the apollovg LVM mayastor PV — so the stale
+  # swapDevices entry left a dead dependency-failed .swap unit at every boot.
 }

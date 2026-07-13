@@ -49,19 +49,6 @@ in
 
   VimPlugins.blink-pairs = inputs.blink-pairs;
 
-  VimPlugins.none-ls-nvim = super.vimUtils.buildVimPlugin {
-    pname = "none-ls-nvim";
-    version = "git-HEAD";
-    src = super.fetchFromGitHub {
-      owner = "ulisses-cruz";
-      repo = "none-ls.nvim";
-      rev = "main"; # Or a specific commit SHA
-      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Replace with actual
-    };
-  };
-
-  ast-grep = inputs.nixpkgs-stable.legacyPackages.${super.system}.ast-grep;
-
   expert = inputs.expert.packages.${super.system}.default;
   mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
   neovim-nightly =
@@ -73,12 +60,6 @@ in
         '';
       });
   bun2nix = inputs.bun2nix.packages.${super.system}.default;
-
-  # llama.cpp with CUDA support (NVIDIA only)
-  llama-cpp-cuda = super.llama-cpp.override {
-    cudaSupport = true;
-    openclSupport = false;
-  };
 
   nur = import inputs.nur {
     nurpkgs = super;
