@@ -27,7 +27,6 @@
           requests
           pip
           debugpy
-          setuptools # Required by pylama for some reason
           proselint
           poetry-core
           toolz

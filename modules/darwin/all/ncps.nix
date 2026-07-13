@@ -54,9 +54,20 @@ in
     };
   };
 
-  # Override substituters to use local ncps pull-through cache
-  nix.settings.substituters = lib.mkForce [ "http://localhost:8501" ];
-  nix.settings.trusted-substituters = lib.mkForce [ "http://localhost:8501" ];
+  # Prefer local ncps pull-through cache, keep upstreams as fallback so a flaky
+  # or down ncps can't wedge builds — nix disables 8501 60s and falls through.
+  nix.settings.substituters = lib.mkForce [
+    "http://localhost:8501"
+    "https://cache.nixos.org"
+    "https://nix-community.cachix.org"
+    "https://hyprland.cachix.org"
+  ];
+  nix.settings.trusted-substituters = lib.mkForce [
+    "http://localhost:8501"
+    "https://cache.nixos.org"
+    "https://nix-community.cachix.org"
+    "https://hyprland.cachix.org"
+  ];
   # Keep upstream keys since we're not re-signing narinfos
   nix.settings.trusted-public-keys = lib.mkForce [
     "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="

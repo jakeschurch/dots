@@ -103,7 +103,13 @@ in
         "neovim-nightly.cachix.org-1:feIoInHRevVEplgdZvQDjhp11kYASYCE2NGY9hNryx4="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       ];
-      extra-platforms = lib.mkIf pkgs.stdenv.isDarwin "aarch64-darwin x86_64-darwin";
+      extra-platforms =
+        if pkgs.stdenv.isDarwin then
+          "aarch64-darwin x86_64-darwin"
+        else if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
+          "i686-linux" # build true-i686 derivations (steam 32-bit, perl IO-Tty) natively
+        else
+          "";
     };
   };
 }
