@@ -27,18 +27,35 @@
     server.addr = "127.0.0.1:8501";
   };
 
-  # Override substituters to use local ncps pull-through cache
+  # Prefer local ncps pull-through cache, but keep upstreams as fallback so a
+  # flaky/corrupt/down ncps (invalid nar hash, pod restart, dropped port-forward)
+  # can't wedge the whole machine — nix disables 8501 60s and falls through.
   nix.settings.substituters = lib.mkForce [
     "http://localhost:8501"
+    "https://cache.nixos.org"
+    "https://cache.garnix.io"
+    "https://nix-community.cachix.org"
+    "https://hyprland.cachix.org"
+    "https://cache.numtide.com"
   ];
 
   nix.settings.trusted-substituters = lib.mkForce [
     "http://localhost:8501"
+    "https://cache.nixos.org"
+    "https://cache.garnix.io"
+    "https://nix-community.cachix.org"
+    "https://hyprland.cachix.org"
+    "https://cache.numtide.com"
   ];
 
   nix.settings.trusted-public-keys = lib.mkForce [
     "apollo:i756C7FtllWIbgQipbcvBE3plUXT3ojFhSWcZOuDyHs="
     "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
   ];
 
   # Weekly batch TRIM of host btrfs subvols (/, /nix, /home) so freed SSD
@@ -153,7 +170,10 @@
       ExecStart = pkgs.writeShellScript "iocost-nvme" ''
         set -eu
         dev=259:0
-        echo "$dev enable=1 ctrl=user model=linear \
+        # NB: io.cost.model has no `enable` token (that lives in io.cost.qos);
+        # newer kernels (7.x) EINVAL on it. `enable=1` in the qos write below
+        # is what actually turns iocost on.
+        echo "$dev ctrl=user model=linear \
           rbps=6000000000 rseqiops=900000 rrandiops=750000 \
           wbps=5500000000 wseqiops=850000 wrandiops=700000" \
           > /sys/fs/cgroup/io.cost.model
