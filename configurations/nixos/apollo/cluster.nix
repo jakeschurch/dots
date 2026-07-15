@@ -123,26 +123,27 @@
       mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
     };
 
+    # 2026-07-14 rebuild: 3 workers → 2 BEEFY workers, mayastor on RAW BLOCK
+    # only. img-on-btrfs pools are gone — the shared btrfs transaction between
+    # mayastor writes and desktop fsyncs was the typing-freeze root cause. Each
+    # worker passes ONE raw device through (virtio serial mayastor-sda,
+    # autoCreate=false, SPDK owns/formats it): w1 = whole 860 EVO
+    # (apollovg/mayastor-w1), w2 = nvme tail LV (nvmevg/mayastor-w2, see
+    # disko-config.nix). repl=2 spans exactly these two nodes. VM system imgs
+    # live on the dedicated xfs partition, also off btrfs.
     vms.k3s-worker-1 = {
       role = "agent";
       ip = "192.168.100.20";
       mac = "02:00:00:00:00:20";
       vsockCid = 20;
       readinessVsockPort = 9020;
-      vcpu = 6; # reduced from 9: freed vCPUs reallocated to server nodes (2026-05-04)
-      mem = 24000;
+      vcpu = 8; # 2-worker layout: 8 vcpu each (was 6/4/6 across 3 workers)
+      mem = 28000;
       disk = 100;
-      # Storage node: dedicated raw volume for Mayastor io-engine
       extraLabels = [
         "workload=storage"
         "openebs.io/engine=mayastor"
       ];
-      mayastorPoolGiB = 800;
-      # MOCK (foundrybox-6j1j): SECOND mayastor pool on the reclaimed 860 EVO,
-      # passed through as a raw block LV (not an img on nvme). Adds ~931G warm
-      # capacity on a separate spindle — doesn't touch the 88%-full nvme, and
-      # lets replicas later drain off the nvme img-pool. DiskPool
-      # pool-worker-1-sda (serial mayastor-sda) added in vmetal openebs.nix.
       mayastorBlockDevice = "/dev/apollovg/mayastor-w1";
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
@@ -153,43 +154,18 @@
       mac = "02:00:00:00:00:21";
       vsockCid = 21;
       readinessVsockPort = 9021;
-      vcpu = 4;
+      vcpu = 8; # 2-worker layout: 8 vcpu each (was 6/4/6 across 3 workers)
       mem = 28000;
       disk = 100;
       dataDisk = 250;
-      # Third mayastor pool — completes replication.factor=3 quorum for garage PVCs.
-      mayastorPoolGiB = 400;
-      # Inference node: GPU passthrough, hard-isolated via taint (vLLM requires this label)
-      extraLabels = [
-        # "workload=inference"
-        "openebs.io/engine=mayastor"
-      ];
-      # extraTaints = [ "workload=inference:PreferNoSchedule" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
-      # passthroughDevices = [
-      #   {
-      #     bus = "pci";
-      #     path = "0000:0c:00.0";
-      #   }
-      # ];
-    };
-
-    vms.k3s-worker-3 = {
-      role = "agent";
-      ip = "192.168.100.22";
-      mac = "02:00:00:00:00:22";
-      vsockCid = 22;
-      readinessVsockPort = 9022;
-      vcpu = 6; # reduced from 8: freed vCPUs reallocated to server nodes (2026-05-04)
-      mem = 24000;
-      disk = 100;
-      # Storage node: dedicated raw volume for Mayastor io-engine
       extraLabels = [
         "workload=storage"
         "openebs.io/engine=mayastor"
       ];
-      mayastorPoolGiB = 800;
+      mayastorBlockDevice = "/dev/nvmevg/mayastor-w2";
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      # GPU passthrough (vLLM) parked during 2-worker rebuild; re-add via
+      # passthroughDevices = [{ bus = "pci"; path = "0000:0c:00.0"; }];
     };
   };
 
@@ -214,20 +190,16 @@
       restartPriority = 1;
       restartTimeout = 300;
     };
-    k3s-worker-3 = {
+    k3s-server-2 = {
       restartPriority = 2;
       restartTimeout = 300;
     };
-    k3s-server-2 = {
+    k3s-server-3 = {
       restartPriority = 3;
       restartTimeout = 300;
     };
-    k3s-server-3 = {
-      restartPriority = 4;
-      restartTimeout = 300;
-    };
     k3s-server-1 = {
-      restartPriority = 5;
+      restartPriority = 4;
       restartTimeout = 300;
     };
   };
@@ -244,15 +216,11 @@
   # stay in the default slice — etcd fsync latency must not be throttled.
   systemd.services = {
     "microvm@k3s-worker-1".serviceConfig = {
-      CPUAffinity = "0-2 16-18";
+      CPUAffinity = "0-3 16-19";
       Slice = "microvm-storage.slice";
     };
     "microvm@k3s-worker-2".serviceConfig = {
-      CPUAffinity = "3-4 19-20";
-      Slice = "microvm-storage.slice";
-    };
-    "microvm@k3s-worker-3".serviceConfig = {
-      CPUAffinity = "5-7 21-23";
+      CPUAffinity = "4-7 20-23";
       Slice = "microvm-storage.slice";
     };
     "microvm@k3s-server-1".serviceConfig.CPUAffinity = "8-9 24-25";

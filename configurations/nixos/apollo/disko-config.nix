@@ -27,8 +27,15 @@
                 type = "swap";
               };
             };
+            # 2026-07-14 re-layout (typing-freeze root fix): btrfs shrunk from
+            # 100% → 2000G to carve the tail into p4 (xfs, VM system images)
+            # and p5 (LVM PV, raw mayastor pool). ALL cluster IO now lives off
+            # the desktop btrfs — no more shared transaction commits between
+            # mayastor/etcd writes and /home fsyncs. GPT was edited manually
+            # (disko is create-once); this config mirrors the on-disk layout.
+            # p3 start sector 272631808 + PARTUUID preserved.
             root = {
-              size = "100%";
+              size = "2000G";
               content = {
                 mountpoint = "/partition-root";
                 type = "btrfs";
@@ -56,13 +63,6 @@
                       "noatime"
                       "discard=async"
                       "space_cache=v2"
-                    ];
-                  };
-                  "/vms" = {
-                    mountpoint = "/var/lib/microvms";
-                    mountOptions = [
-                      "nodatacow"
-                      "noatime"
                     ];
                   };
                   "/home" = {
@@ -100,6 +100,28 @@
                     ];
                   };
                 };
+              };
+            };
+            # VM system images (root overlays, rancher/data disks). xfs: no
+            # CoW, no shared-FS commit coupling with the desktop, classic VM
+            # image filesystem. microvm.nix auto-creates imgs as plain files.
+            vms = {
+              size = "750G";
+              content = {
+                type = "filesystem";
+                format = "xfs";
+                mountpoint = "/var/lib/microvms";
+                mountOptions = [ "noatime" ];
+                extraArgs = [ "-L" "microvms" ];
+              };
+            };
+            # Raw mayastor pool for k3s-worker-2 (SPDK owns it, no host fs) —
+            # nvme sibling of the 860 EVO apollovg/mayastor-w1 pattern below.
+            pool = {
+              size = "846G";
+              content = {
+                type = "lvm_pv";
+                vg = "nvmevg";
               };
             };
           };
@@ -162,6 +184,14 @@
     lvm_vg.apollovg = {
       type = "lvm_vg";
       lvs.mayastor-w1 = {
+        size = "100%FREE";
+      };
+    };
+    # Raw mayastor pool for k3s-worker-2 on the nvme tail (p5). Same pattern:
+    # no content/filesystem — passed through as virtio-blk, SPDK formats it.
+    lvm_vg.nvmevg = {
+      type = "lvm_vg";
+      lvs.mayastor-w2 = {
         size = "100%FREE";
       };
     };
