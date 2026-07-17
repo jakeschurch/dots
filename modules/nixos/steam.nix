@@ -8,6 +8,12 @@
 
     programs.steam = {
       enable = true;
+      # gamemode's libgamemodeauto RUNPATH lacks its own lib dir; gamemoderun's
+      # LD_LIBRARY_PATH is scrubbed inside pressure-vessel, so dlopen of
+      # libgamemode.so.0 fails unless the lib is in the Steam FHS env.
+      package = pkgs.steam.override {
+        extraLibraries = fhsPkgs: [ fhsPkgs.gamemode.lib ];
+      };
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
@@ -40,6 +46,7 @@
       pkgsi686Linux.mesa-demos # For glxinfo32
       gamescope # Helps with fullscreen/resolution issues
       vulkan-tools # vulkaninfo
+      pulseaudio # pactl CLI only (server is pipewire-pulse)
     ];
 
     hardware.steam-hardware.enable = true;
