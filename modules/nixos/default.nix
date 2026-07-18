@@ -41,12 +41,16 @@ in
 
     self.nixosModules.common
     inputs.nix-index-database.nixosModules.nix-index
+    inputs.sops-nix.nixosModules.sops
   ];
 
-  environment.systemPackages = lib.optionals config.profiles.desktop.enable (with pkgs; [
-    google-chrome
-    pcmanfm
-  ]);
+  environment.systemPackages = lib.optionals config.profiles.desktop.enable (
+    with pkgs;
+    [
+      google-chrome
+      pcmanfm
+    ]
+  );
 
   programs.nix-ld.enable = true;
   virtualisation.libvirtd = {

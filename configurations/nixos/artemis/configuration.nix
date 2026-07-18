@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
   ];
 
-  profiles.desktop.enable = false;
+  # profiles.desktop.enable defaults to false — headless server, no override needed.
 
   # sops-nix derives age key from existing SSH host key — no separate key file needed
   # jake@artemis SSH key — must be placed at this path before first nixos-switch
@@ -84,7 +84,10 @@
   # Derive age key from SSH key and place at /etc/sops/age/keys.txt
   # Required by vmetal microvm-host to share age keys with VMs via virtiofsd
   system.activationScripts.deriveAgeKey = {
-    deps = [ "users" "groups" ];
+    deps = [
+      "users"
+      "groups"
+    ];
     text = ''
       mkdir -p /etc/sops/age
       ${lib.getExe pkgs.ssh-to-age} -private-key -i /home/jake/.ssh/id_ed25519_artemis > /etc/sops/age/keys.txt

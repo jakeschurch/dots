@@ -8,6 +8,13 @@ let
   dataDir = "/var/lib/ncps";
   addr = "127.0.0.1:8501";
 
+  cachesData = import ../../data/caches.nix;
+  darwinCaches = [
+    "nixos"
+    "nix-community"
+    "hyprland"
+  ];
+
   configFile = pkgs.writeText "ncps-config.json" (
     builtins.toJSON {
       log.level = "info";
@@ -20,16 +27,8 @@ let
         storage.local = dataDir;
         lru.schedule = "0 2 * * *";
         upstream = {
-          urls = [
-            "https://cache.nixos.org"
-            "https://nix-community.cachix.org"
-            "https://hyprland.cachix.org"
-          ];
-          "public-keys" = [
-            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-          ];
+          urls = cachesData.urls darwinCaches;
+          "public-keys" = cachesData.keys darwinCaches;
         };
       };
     }
@@ -56,24 +55,14 @@ in
 
   # Prefer local ncps pull-through cache, keep upstreams as fallback so a flaky
   # or down ncps can't wedge builds — nix disables 8501 60s and falls through.
-  nix.settings.substituters = lib.mkForce [
-    "http://localhost:8501"
-    "https://cache.nixos.org"
-    "https://nix-community.cachix.org"
-    "https://hyprland.cachix.org"
-  ];
-  nix.settings.trusted-substituters = lib.mkForce [
-    "http://localhost:8501"
-    "https://cache.nixos.org"
-    "https://nix-community.cachix.org"
-    "https://hyprland.cachix.org"
-  ];
+  nix.settings.substituters = lib.mkForce (
+    [ "http://localhost:8501" ] ++ cachesData.urls darwinCaches
+  );
+  nix.settings.trusted-substituters = lib.mkForce (
+    [ "http://localhost:8501" ] ++ cachesData.urls darwinCaches
+  );
   # Keep upstream keys since we're not re-signing narinfos
-  nix.settings.trusted-public-keys = lib.mkForce [
-    "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
-
-    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-  ];
+  nix.settings.trusted-public-keys = lib.mkForce (
+    [ "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA=" ] ++ cachesData.keys darwinCaches
+  );
 }

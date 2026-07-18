@@ -9,6 +9,17 @@
 let
   inherit (flake) inputs;
   inherit (inputs) self;
+
+  cachesData = import ../../data/caches.nix;
+  # Base cache set every host trusts; hosts running a local ncps pull-through
+  # (apollo/darwin) mkForce-override substituters to prepend localhost:8501.
+  baseCaches = [
+    "nix-community"
+    "nixos"
+    "hyprland"
+    "neovim-nightly"
+    "nix-gaming"
+  ];
 in
 {
   sops.secrets.netrc = {
@@ -43,7 +54,10 @@ in
       allowBroken = true;
 
       allowUnfreePredicate = pkg: builtins.elem (inputs.nixpkgs.lib.getName pkg) [ "terraform-1.9.6" ];
-      permittedInsecurePackages = [ "electron-19.1.9" "electron-39.8.10" ];
+      permittedInsecurePackages = [
+        "electron-19.1.9"
+        "electron-39.8.10"
+      ];
     };
     overlays = lib.attrValues self.overlays ++ [
       inputs.nixGL.overlay
@@ -81,28 +95,9 @@ in
         "flakes"
         "auto-allocate-uids"
       ];
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://cache.nixos.org/"
-        "https://hyprland.cachix.org"
-        "https://neovim-nightly.cachix.org"
-        "https://nix-gaming.cachix.org"
-      ];
-
-      trusted-substituters = [
-        "https://nix-community.cachix.org"
-        "https://cache.nixos.org/"
-        "https://hyprland.cachix.org"
-        "https://neovim-nightly.cachix.org"
-        "https://nix-gaming.cachix.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-        "neovim-nightly.cachix.org-1:feIoInHRevVEplgdZvQDjhp11kYASYCE2NGY9hNryx4="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-      ];
+      substituters = cachesData.urls baseCaches;
+      trusted-substituters = cachesData.urls baseCaches;
+      trusted-public-keys = cachesData.keys baseCaches;
       extra-platforms =
         if pkgs.stdenv.isDarwin then
           "aarch64-darwin x86_64-darwin"

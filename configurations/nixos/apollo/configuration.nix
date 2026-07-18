@@ -10,6 +10,7 @@
   ];
 
   tablet.enable = true;
+  profiles.desktop.enable = true;
 
   sops.age.sshKeyPaths = [ "/home/jake/.ssh/id_apollo" ];
 

@@ -16,7 +16,6 @@ in
     ./storage.nix
     self.nixosModules.default
     inputs.disko.nixosModules.disko
-    inputs.sops-nix.nixosModules.sops
     inputs.vmetal.nixosModules.microvm-host
     inputs.vmetal.nixosModules.k3s-cluster
   ];

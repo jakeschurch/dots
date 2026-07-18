@@ -1,4 +1,26 @@
-{ lib, pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+let
+  cachesData = import ../../../modules/data/caches.nix;
+  # apollo's ncps upstream + fallback set (differs from the base set: adds
+  # garnix/numtide, drops neovim-nightly/nix-gaming which apollo builds itself).
+  apolloCaches = [
+    "nixos"
+    "garnix"
+    "nix-community"
+    "hyprland"
+    "numtide"
+  ];
+  # apollo's own narinfo signing keys (host-specific, not a public cache).
+  apolloSelfKeys = [
+    "apollo:i756C7FtllWIbgQipbcvBE3plUXT3ojFhSWcZOuDyHs="
+    "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
+  ];
+in
 {
   # Local pull-through Nix binary cache proxy
   services.ncps = {
@@ -8,20 +30,8 @@
       maxSize = "50G";
       lru.schedule = "0 2 * * *";
       upstream = {
-        urls = [
-          "https://cache.nixos.org"
-          "https://cache.garnix.io"
-          "https://nix-community.cachix.org"
-          "https://hyprland.cachix.org"
-          "https://cache.numtide.com"
-        ];
-        publicKeys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-          "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-        ];
+        urls = cachesData.urls apolloCaches;
+        publicKeys = cachesData.keys apolloCaches;
       };
     };
     server.addr = "127.0.0.1:8501";
@@ -30,33 +40,15 @@
   # Prefer local ncps pull-through cache, but keep upstreams as fallback so a
   # flaky/corrupt/down ncps (invalid nar hash, pod restart, dropped port-forward)
   # can't wedge the whole machine — nix disables 8501 60s and falls through.
-  nix.settings.substituters = lib.mkForce [
-    "http://localhost:8501"
-    "https://cache.nixos.org"
-    "https://cache.garnix.io"
-    "https://nix-community.cachix.org"
-    "https://hyprland.cachix.org"
-    "https://cache.numtide.com"
-  ];
+  nix.settings.substituters = lib.mkForce (
+    [ "http://localhost:8501" ] ++ cachesData.urls apolloCaches
+  );
 
-  nix.settings.trusted-substituters = lib.mkForce [
-    "http://localhost:8501"
-    "https://cache.nixos.org"
-    "https://cache.garnix.io"
-    "https://nix-community.cachix.org"
-    "https://hyprland.cachix.org"
-    "https://cache.numtide.com"
-  ];
+  nix.settings.trusted-substituters = lib.mkForce (
+    [ "http://localhost:8501" ] ++ cachesData.urls apolloCaches
+  );
 
-  nix.settings.trusted-public-keys = lib.mkForce [
-    "apollo:i756C7FtllWIbgQipbcvBE3plUXT3ojFhSWcZOuDyHs="
-    "apollo:Sm6SbXlzRtoqALHOJHeuMubOwemP5i2r6XvbmRbGWTA="
-    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-    "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-  ];
+  nix.settings.trusted-public-keys = lib.mkForce (apolloSelfKeys ++ cachesData.keys apolloCaches);
 
   # Weekly batch TRIM of host btrfs subvols (/, /nix, /home) so freed SSD
   # blocks return to the FTL. This is now the SOLE TRIM path: the continuous
