@@ -119,6 +119,7 @@
     pamixer
     xauth
     ddcutil
+    gdb # so `coredumpctl gdb <exe>` can walk crash cores (e.g. fish reader panics)
   ];
 
   security.rtkit.enable = true;

@@ -59,12 +59,25 @@
   ];
 
   # Weekly batch TRIM of host btrfs subvols (/, /nix, /home) so freed SSD
-  # blocks return to the FTL. Complements the continuous `discard=async` mount
-  # option on the data subvols. NOTE: this does NOT shrink the microvm raw
-  # images (/var/lib/microvms/*.img) — those only reclaim when the *guest*
-  # issues discard through virtio-blk, which is configured in the vmetal
+  # blocks return to the FTL. This is now the SOLE TRIM path: the continuous
+  # `discard=async` mount option was dropped from disko-config.nix because it
+  # fed freed extents into the btrfs commit path and, under nix-gc + snapshot
+  # churn, stretched commits to 250s+ (blocking journald past its watchdog).
+  # Batch fstrim keeps trims off the commit critical path. NOTE: this does NOT
+  # shrink the microvm raw images (/var/lib/microvms/*.img) — those only reclaim
+  # when the *guest* issues discard through virtio-blk, configured in the vmetal
   # k3s-cluster module (guest-side fstrim), not here.
   services.fstrim.enable = true;
+
+  # Backstop for btrfs commit stalls: if a transaction commit ever overruns
+  # again, journald's fsync/ftruncate can block for minutes. The default 3min
+  # service watchdog then SIGABRTs journald, dumping a core and losing the log
+  # window — the collateral damage that produced 138 coredumps here. Raising the
+  # watchdog to 6min lets journald ride out a slow commit instead of aborting.
+  # This does NOT fix commit latency (the discard=async removal above does) —
+  # it only stops the crash-on-stall feedback loop. Watch `max_commit_ms` in
+  # /sys/fs/btrfs/<uuid>/commit_stats to confirm commits stay low.
+  systemd.services.systemd-journald.serviceConfig.WatchdogSec = "6min";
 
   # Enable automatic BTRFS scrubbing to detect corruption early
   services.btrfs.autoScrub = {

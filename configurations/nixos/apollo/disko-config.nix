@@ -40,16 +40,23 @@
                   "-d"
                   "single"
                 ];
-                # One option set for every subvolume: compress/discard/commit
-                # are filesystem-wide on btrfs (first mount wins), so per-subvol
+                # One option set for every subvolume: compress/commit are
+                # filesystem-wide on btrfs (first mount wins), so per-subvol
                 # variation was cosmetic and misleading. space_cache=v2 dropped
                 # (kernel default since 5.15).
+                #
+                # discard=async removed: it queued freed extents into the commit
+                # path, and under this box's delete-heavy load (nix-gc mass store
+                # deletes, hourly btrbk snapshot rotation) that inflated btrfs
+                # transaction commits to 250s+ — long enough to block journald's
+                # fsync/ftruncate past its 3min watchdog (138 coredumps). TRIM is
+                # now handled solely by the weekly services.fstrim batch (see
+                # storage.nix), which keeps trims out of the commit critical path.
                 subvolumes =
                   let
                     btrfsMountOptions = [
                       "compress=zstd"
                       "noatime"
-                      "discard=async"
                       "commit=30"
                     ];
                   in
