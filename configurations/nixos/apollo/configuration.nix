@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 {
@@ -11,6 +12,13 @@
   tablet.enable = true;
 
   sops.age.sshKeyPaths = [ "/home/jake/.ssh/id_apollo" ];
+
+  # Shared login hash for root + jake, decrypted at activation.
+  # neededForUsers makes it available before user creation.
+  sops.secrets."user-password" = {
+    sopsFile = ../../../secrets/system.yaml;
+    neededForUsers = true;
+  };
 
   networking = {
     hostName = "apollo";
@@ -65,7 +73,7 @@
   };
 
   users.users.root = {
-    hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
+    hashedPasswordFile = config.sops.secrets."user-password".path;
     home = "/root";
   };
 
@@ -83,7 +91,7 @@
       "docker"
       "i2c"
     ];
-    hashedPassword = "$6$6tPOnj6huVpiv72E$gJhLDPpWIo3X52aU6FXW81CGbwBBSh4chwuq7k/AcWafC5oKdzfW4XGy.yp6G92uzuJxUsFp4qt2LO9D28.D6/";
+    hashedPasswordFile = config.sops.secrets."user-password".path;
     home = "/home/jake";
     packages = with pkgs; [
       tree

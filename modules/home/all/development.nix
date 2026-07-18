@@ -258,12 +258,12 @@
         "--extended"
         "--cycle"
       ];
-      historyWidgetOptions = [
+      historyWidget.options = [
         "--sort"
         "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
       ];
-      fileWidgetCommand = "fd --type f --ignore --hidden";
-      fileWidgetOptions = [
+      fileWidget.command = "fd --type f --ignore --hidden";
+      fileWidget.options = [
         "--preview 'bat --color=always --style=numbers --line-range=:200 {}'"
       ];
       enableBashIntegration = true;

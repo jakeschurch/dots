@@ -18,7 +18,6 @@
 
     nixGL = {
       url = "github:guibou/nixGL";
-      flake = true;
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -32,7 +31,6 @@
 
     disko = {
       url = "github:nix-community/disko/latest";
-      flake = true;
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -51,7 +49,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     hyprland.url = "github:hyprwm/Hyprland";
-    # hyprland.inputs.nixpkgs.follows = "nixpkgs";
 
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -61,6 +58,7 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     rose-pine-hyprcursor = {
@@ -86,6 +84,7 @@
     };
 
     expert.url = "github:elixir-lang/expert";
+    expert.inputs.nixpkgs.follows = "nixpkgs";
 
     vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
@@ -114,12 +113,6 @@
     http-connections = 25;
     download-buffer-size = 904857600; # 900 MiB
     fallback = true;
-
-    extra-experimental-features = [
-      "nix-command"
-      "flakes"
-      "pipe-operators"
-    ];
 
     sandbox = "relaxed";
     sandbox-fallback = true;

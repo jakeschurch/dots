@@ -1,24 +1,14 @@
 {
-  pkgs,
-  lib,
   ...
 }:
-let
-  scripts = import ./scripts {
-    inherit pkgs lib;
-    inherit (pkgs.lib) mkScript;
-  };
-in
 {
   imports = [
-    scripts
     ./browser.nix
     ./fd.nix
     ./fish
     ./git
     ./hammerspoon
     ./hyprland
-    ./i3
     ./k9s
     ./krita.nix
     ./neovim
