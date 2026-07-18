@@ -157,6 +157,8 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
+      podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
+      nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
@@ -176,6 +178,8 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
+      podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
+      nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
@@ -195,6 +199,8 @@ in
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
+      podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
+      nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };

@@ -36,6 +36,8 @@
   services.k3s-cluster = {
     enable = true;
     primary = true;
+    # TODO(secrets): move to SOPS once vmetal services.k3s-cluster gains a
+    # tokenFile option — current module only accepts an inline string.
     token = "my-cluster-token-12345";
     vip = "192.168.100.100";
     bgp = {
@@ -145,6 +147,8 @@
         "openebs.io/engine=mayastor"
       ];
       mayastorBlockDevice = "/dev/apollovg/mayastor-w1";
+      podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
+      nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
     };
 
@@ -163,6 +167,8 @@
         "openebs.io/engine=mayastor"
       ];
       mayastorBlockDevice = "/dev/nvmevg/mayastor-w2";
+      podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
+      nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
       # GPU passthrough (vLLM) parked during 2-worker rebuild; re-add via
       # passthroughDevices = [{ bus = "pci"; path = "0000:0c:00.0"; }];
