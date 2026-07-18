@@ -1,8 +1,16 @@
 {
+  flake,
   pkgs,
   ...
 }:
 {
+  # Ships the prebuilt nix-index database: swaps in the db-bearing nix-index
+  # package AND symlinks the db into ~/.cache/nix-index (symlinkToCacheHome
+  # defaults to programs.nix-index.enable). Without this the plain home-manager
+  # nix-index module leaves an empty cache and nix-locate errors "database
+  # corrupt". Set below in programs.nix-index.
+  imports = [ flake.inputs.nix-index-database.homeModules.nix-index ];
+
   home = {
     packages = with pkgs; [
       (pipx.overridePythonAttrs (_: {
