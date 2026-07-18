@@ -92,6 +92,15 @@ in
         ACTIVE=$($HYPRCTL activewindow -j)
         ACTIVE_ADDR=$(echo "$ACTIVE" | $JQ -r '.address')
         ACTIVE_WS=$(echo "$ACTIVE" | $JQ -r '.workspace.id')
+        ACTIVE_FS=$(echo "$ACTIVE" | $JQ -r '.fullscreen')
+
+        # If the active window is fullscreen/maximized (e.g. from SUPER+SHIFT+F),
+        # SUPER+F just exits that — re-dispatch the current mode to toggle it off,
+        # and leave focus mode untouched.
+        if [ "$ACTIVE_FS" != "0" ] && [ "$ACTIVE_FS" != "null" ]; then
+          $HYPRCTL dispatch "hl.dsp.window.fullscreen($ACTIVE_FS)"
+          exit 0
+        fi
 
         # Per-workspace stash: special:focusstash-N isolates stashes per workspace
         # Hyprland 0.55+ IPC uses Lua dispatch: hyprctl dispatch '<lua expr>'
