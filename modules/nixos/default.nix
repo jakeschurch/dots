@@ -33,6 +33,7 @@ in
     }
 
     ./shared
+    ./boot.nix
     ./docker.nix
     ./printing.nix
     ./steam.nix

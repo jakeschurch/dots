@@ -11,7 +11,6 @@ in
     ./configuration.nix
     ./disko-config.nix
     ./hardware.nix
-    ./boot.nix
     ./cluster.nix
     ./storage.nix
     self.nixosModules.default
