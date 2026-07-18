@@ -39,6 +39,9 @@
 
     initrd.kernelModules = [
       "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"
       "vfio_pci"
       "vfio"
       "vfio_iommu_type1"
