@@ -10,7 +10,6 @@
     extraPackages = with pkgs; [
       # NVIDIA Vulkan support
       vulkan-loader
-      vulkan-validation-layers
       vulkan-tools
     ];
 

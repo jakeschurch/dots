@@ -133,56 +133,6 @@
     ];
   };
 
-  # ── Desktop-interactivity I/O fairness ────────────────────────────────────
-  # Symptom: typing in the Hyprland session froze for seconds when the storage
-  # microVMs (mayastor io-engine, worker-1/2/3) hammered the shared 990 PRO.
-  # Root cause is btrfs commit stalls under near-full metadata; this stops the
-  # *fairness* half — the bulk writers no longer starve desktop fsyncs.
-  #
-  # blk-iocost (NOT bfq): bfq would collapse the 990 PRO's blk-mq parallelism
-  # (16 hw queues, ~1M IOPS) and cripple mayastor rebuild bandwidth. iocost
-  # keeps mq + does proportional io.weight fairness. Weights: user.slice (500)
-  # ≫ system.slice default (100) ≫ microvm-storage.slice (20, workers only).
-  # k3s-server-* stay at default weight — etcd fsync latency must not be
-  # throttled (see the leader-election-storm history in cluster.nix).
-  systemd.slices.microvm-storage = {
-    description = "Bulk-storage microVMs (mayastor io-engine) — deprioritised host I/O";
-    sliceConfig = {
-      IOWeight = 20;
-      StartupIOWeight = 20;
-    };
-  };
-
-  systemd.slices.user.sliceConfig.IOWeight = 500;
-
-  # Enable blk-iocost on nvme0n1 (259:0). Fixed linear cost model seeded with
-  # CONSERVATIVE sustained figures for the 990 PRO 4TB (deliberately below the
-  # marketing QD32 peaks so iocost doesn't under-throttle), plus auto vrate
-  # control targeting p95 latency. Refine the model under real load with
-  # `iocost_monitor.py` if fairness is too loose/tight.
-  systemd.services.iocost-nvme = {
-    description = "Enable blk-iocost QoS on nvme0n1";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "local-fs.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "iocost-nvme" ''
-        set -eu
-        dev=259:0
-        # NB: io.cost.model has no `enable` token (that lives in io.cost.qos);
-        # newer kernels (7.x) EINVAL on it. `enable=1` in the qos write below
-        # is what actually turns iocost on.
-        echo "$dev ctrl=user model=linear \
-          rbps=6000000000 rseqiops=900000 rrandiops=750000 \
-          wbps=5500000000 wseqiops=850000 wrandiops=700000" \
-          > /sys/fs/cgroup/io.cost.model
-        echo "$dev enable=1 ctrl=auto rpct=95.00 rlat=2500 wpct=95.00 wlat=2500 min=1.00 max=10000.00" \
-          > /sys/fs/cgroup/io.cost.qos
-      '';
-    };
-  };
-
   # Monthly balance to consolidate sparse chunks; idle I/O so it doesn't interfere
   systemd.services.btrfs-balance = {
     description = "Btrfs balance";

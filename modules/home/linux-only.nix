@@ -13,7 +13,6 @@
         obs-studio
         nixgl.nixVulkanIntel
         vulkan-tools
-        vulkan-validation-layers
         rofi
         spotify
         docker

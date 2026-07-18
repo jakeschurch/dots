@@ -27,13 +27,6 @@
                 type = "swap";
               };
             };
-            # 2026-07-14 re-layout (typing-freeze root fix): btrfs shrunk from
-            # 100% → 2000G to carve the tail into p4 (xfs, VM system images)
-            # and p5 (LVM PV, raw mayastor pool). ALL cluster IO now lives off
-            # the desktop btrfs — no more shared transaction commits between
-            # mayastor/etcd writes and /home fsyncs. GPT was edited manually
-            # (disko is create-once); this config mirrors the on-disk layout.
-            # p3 start sector 272631808 + PARTUUID preserved.
             root = {
               size = "2000G";
               content = {
@@ -47,59 +40,45 @@
                   "-d"
                   "single"
                 ];
-                subvolumes = {
-                  "/" = {
-                    mountpoint = "/";
-                    mountOptions = [
-                      # Add these global safety options
-                      "noatime"
-                      "space_cache=v2"
-                      "commit=30" # Commit every 30s instead of default 5s (safer)
-                    ];
-                  };
-                  "/var/log" = {
-                    mountpoint = "/var/log";
-                    mountOptions = [
-                      "noatime"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
-                  };
-                  "/home" = {
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                    mountpoint = "/home";
-                  };
-                  "/home/jake" = {
-                    mountpoint = "/home/jake";
-                    mountOptions = [
+                # One option set for every subvolume: compress/discard/commit
+                # are filesystem-wide on btrfs (first mount wins), so per-subvol
+                # variation was cosmetic and misleading. space_cache=v2 dropped
+                # (kernel default since 5.15).
+                subvolumes =
+                  let
+                    btrfsMountOptions = [
                       "compress=zstd"
                       "noatime"
                       "discard=async"
-                      "space_cache=v2"
+                      "commit=30"
                     ];
+                  in
+                  {
+                    "/" = {
+                      mountpoint = "/";
+                      mountOptions = btrfsMountOptions;
+                    };
+                    "/var/log" = {
+                      mountpoint = "/var/log";
+                      mountOptions = btrfsMountOptions;
+                    };
+                    "/home" = {
+                      mountpoint = "/home";
+                      mountOptions = btrfsMountOptions;
+                    };
+                    "/home/jake" = {
+                      mountpoint = "/home/jake";
+                      mountOptions = btrfsMountOptions;
+                    };
+                    "/nix" = {
+                      mountpoint = "/nix";
+                      mountOptions = btrfsMountOptions;
+                    };
+                    "/.snapshots" = {
+                      mountpoint = "/.snapshots";
+                      mountOptions = btrfsMountOptions;
+                    };
                   };
-                  "/nix" = {
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
-                    mountpoint = "/nix";
-                  };
-                  # ADD SNAPSHOTS SUBVOLUME
-                  "/.snapshots" = {
-                    mountpoint = "/.snapshots";
-                    mountOptions = [
-                      "noatime"
-                      "space_cache=v2"
-                    ];
-                  };
-                };
               };
             };
             # VM system images (root overlays, rancher/data disks). xfs: no

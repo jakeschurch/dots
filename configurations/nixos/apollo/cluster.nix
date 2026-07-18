@@ -209,20 +209,9 @@
   # host scheduler stops migrating vCPU threads across guests and no two guests
   # share an SMT pair. apollo has 16 physical cores; the SMT sibling of core N
   # is thread N+16.
-  #
-  # Storage workers (mayastor io-engine) are additionally placed in
-  # microvm-storage.slice so blk-iocost deprioritises their host I/O vs the
-  # desktop under contention (IOWeight=20, defined in storage.nix). Servers
-  # stay in the default slice — etcd fsync latency must not be throttled.
   systemd.services = {
-    "microvm@k3s-worker-1".serviceConfig = {
-      CPUAffinity = "0-3 16-19";
-      Slice = "microvm-storage.slice";
-    };
-    "microvm@k3s-worker-2".serviceConfig = {
-      CPUAffinity = "4-7 20-23";
-      Slice = "microvm-storage.slice";
-    };
+    "microvm@k3s-worker-1".serviceConfig.CPUAffinity = "0-3 16-19";
+    "microvm@k3s-worker-2".serviceConfig.CPUAffinity = "4-7 20-23";
     "microvm@k3s-server-1".serviceConfig.CPUAffinity = "8-9 24-25";
     "microvm@k3s-server-2".serviceConfig.CPUAffinity = "10-11 26-27";
     "microvm@k3s-server-3".serviceConfig.CPUAffinity = "12-13 28-29";

@@ -12,14 +12,16 @@
       ];
     };
 
-    # Enable "Silent boot"
-    consoleLogLevel = 3;
-    initrd.verbose = false;
+    # Splash by default; Esc during boot toggles the plymouth details view,
+    # which streams full kernel + systemd unit status (verbose settings below).
+    consoleLogLevel = 4;
+    initrd.verbose = true;
     kernelParams = [
       "splash"
       "boot.shell_on_fail"
       "udev.log_priority=3"
-      "rd.systemd.show_status=auto"
+      "systemd.show_status=true"
+      "rd.systemd.show_status=true"
       "amd_iommu=on"
       "vfio-pci.ids=8086:e211"
     ];
@@ -55,9 +57,4 @@
       "kernel.perf_event_paranoid" = 1;
     };
   };
-
-  # NOTE: the active swap (disk-main-swap, nvme0n1p2/128G) is declared by
-  # disko-config.nix. The old second swap on `disk-swap` (the reclaimed 860 EVO)
-  # is gone — that disk is now the apollovg LVM mayastor PV — so the stale
-  # swapDevices entry left a dead dependency-failed .swap unit at every boot.
 }
