@@ -1,34 +1,45 @@
 { ... }:
+let
+  clusterData = import ../../../modules/data/cluster.nix;
+  self = clusterData.hosts.apollo;
+  peer = clusterData.hosts.artemis;
+in
 {
   services.microvm-host = {
     enable = true;
     network = {
-      gateway = "192.168.100.1";
-      subnet = "192.168.100.0/24";
-      externalInterface = "enp5s0";
-      vip = "192.168.100.100";
+      gateway = self.gateway;
+      subnet = self.subnet;
+      externalInterface = self.nic;
+      vip = clusterData.vip;
       bgp = {
         enable = true;
-        asn = 64512;
-        localAsn = 64512;
-        peerAsn = 64513;
-        peerSubnet = "192.168.100.0/24";
-        ciliumPeerAsn = 64514;
-        ciliumPeerSubnet = "192.168.100.0/24";
-        peers = [{ lanIp = "10.10.5.110"; asn = 64520; }];
-        lanInterface = "enp5s0";
-        noMasqueradeCidrs = [ "192.168.101.0/24" "10.42.0.0/16" ];
-        extraPeerSubnets = [ "192.168.101.0/24" ];
+        asn = self.asn;
+        localAsn = self.asn;
+        peerAsn = clusterData.bgp.peerAsn;
+        peerSubnet = self.subnet;
+        ciliumPeerAsn = clusterData.bgp.ciliumPeerAsn;
+        ciliumPeerSubnet = self.subnet;
+        peers = [
+          {
+            lanIp = peer.lanIp;
+            asn = peer.asn;
+          }
+        ];
+        lanInterface = self.nic;
+        noMasqueradeCidrs = [
+          peer.subnet
+          "10.42.0.0/16"
+        ];
+        extraPeerSubnets = [ peer.subnet ];
         # Advertise the API VIP /32 to the UDM (AS64511) so external clients get
         # ECMP/failover across hosts instead of a static pin to apollo. (2026-06-24)
-        upstreamPeers = [{ address = "10.10.5.1"; asn = 64511; }];
+        upstreamPeers = clusterData.bgp.upstreamPeers;
       };
       vxlan = {
         enable = false;
-        local = "10.10.5.7";
-        remotes = [
-          "10.10.5.110"
-        ];
+        local = self.lanIp;
+        remotes = [ peer.lanIp ];
       };
     };
   };
@@ -39,21 +50,22 @@
     # TODO(secrets): move to SOPS once vmetal services.k3s-cluster gains a
     # tokenFile option — current module only accepts an inline string.
     token = "my-cluster-token-12345";
-    vip = "192.168.100.100";
+    vip = clusterData.vip;
     bgp = {
       enable = true;
-      asn = 64512;
-      peerAsn = 64513;
-      extraHostPeers = [{ address = "192.168.101.1"; asn = 64520; }];
+      asn = self.asn;
+      peerAsn = clusterData.bgp.peerAsn;
+      extraHostPeers = [
+        {
+          address = peer.gateway;
+          asn = peer.asn;
+        }
+      ];
     };
 
     embeddedRegistry = {
       enable = true;
-      mirrors = [
-        "docker.io"
-        "registry.k8s.io"
-        "registry.jakeschurch.com"
-      ];
+      mirrors = clusterData.registryMirrors;
     };
 
     argocd = {
@@ -73,26 +85,20 @@
       enable = true;
       # {ip, name} per server: name is emitted as the Endpoints nodeName so the
       # eTP=Local VIP Service can resolve endpoint locality (see k3s-node.nix).
-      servers = [
-        { ip = "192.168.100.10"; name = "k3s-server-1"; }
-        { ip = "192.168.100.11"; name = "k3s-server-2"; }
-        { ip = "192.168.100.12"; name = "k3s-server-3"; }
-        { ip = "192.168.101.13"; name = "k3s-server-4"; }
-        { ip = "192.168.101.14"; name = "k3s-server-5"; }
-      ];
+      servers = clusterData.lbVipServers;
     };
 
     network = {
-      prefix = "192.168.100";
-      firstServerIp = "192.168.100.10";
-      gateway = "192.168.100.1";
-      dns = "192.168.100.1";
-      nodeCidr = "192.168.100.0/24";
-      clusterNodeCidrs = [ "192.168.100.0/24" "192.168.101.0/24" ];
+      prefix = self.prefix;
+      firstServerIp = clusterData.firstServerIp;
+      gateway = self.gateway;
+      dns = self.dns;
+      nodeCidr = self.subnet;
+      clusterNodeCidrs = clusterData.clusterNodeCidrs;
       hostId = "apollo";
     };
 
-    sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];
+    sshKeys = clusterData.sshKeys;
 
     vms.k3s-server-1 = {
       role = "server";
@@ -149,7 +155,7 @@
       mayastorBlockDevice = "/dev/apollovg/mayastor-w1";
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
 
     vms.k3s-worker-2 = {
@@ -169,7 +175,7 @@
       mayastorBlockDevice = "/dev/nvmevg/mayastor-w2";
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
       # GPU passthrough (vLLM) parked during 2-worker rebuild; re-add via
       # passthroughDevices = [{ bus = "pci"; path = "0000:0c:00.0"; }];
     };
@@ -224,7 +230,7 @@
   };
 
   # NAT for microVM external network access
-  networking.nat.externalInterface = "enp5s0";
+  networking.nat.externalInterface = self.nic;
 
   networking.nameservers = [
     "1.1.1.1#one.one.one.one"

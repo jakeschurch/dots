@@ -1,37 +1,45 @@
 { ... }:
 let
-  artemisLanIp = "10.10.5.110";
-  apolloLanIp = "10.10.5.7";
-  artemisNic = "bond0";
+  clusterData = import ../../../modules/data/cluster.nix;
+  self = clusterData.hosts.artemis;
+  peer = clusterData.hosts.apollo;
 in
 {
   services.microvm-host = {
     enable = true;
     network = {
-      gateway = "192.168.101.1";
-      subnet = "192.168.101.0/24";
-      externalInterface = artemisNic;
-      vip = "192.168.100.100";
+      gateway = self.gateway;
+      subnet = self.subnet;
+      externalInterface = self.nic;
+      vip = clusterData.vip;
       bgp = {
         enable = true;
-        asn = 64520;
-        localAsn = 64520;
-        peerAsn = 64513;
-        peerSubnet = "192.168.101.0/24";
-        ciliumPeerAsn = 64514;
-        ciliumPeerSubnet = "192.168.101.0/24";
-        peers = [{ lanIp = apolloLanIp; asn = 64512; }];
-        lanInterface = artemisNic;
-        noMasqueradeCidrs = [ "192.168.100.0/24" "10.42.0.0/16" ];
-        extraPeerSubnets = [ "192.168.100.0/24" ];
+        asn = self.asn;
+        localAsn = self.asn;
+        peerAsn = clusterData.bgp.peerAsn;
+        peerSubnet = self.subnet;
+        ciliumPeerAsn = clusterData.bgp.ciliumPeerAsn;
+        ciliumPeerSubnet = self.subnet;
+        peers = [
+          {
+            lanIp = peer.lanIp;
+            asn = peer.asn;
+          }
+        ];
+        lanInterface = self.nic;
+        noMasqueradeCidrs = [
+          peer.subnet
+          "10.42.0.0/16"
+        ];
+        extraPeerSubnets = [ peer.subnet ];
         # Advertise the API VIP /32 to the UDM (AS64511) so external clients get
         # ECMP/failover across hosts instead of a static pin to apollo. (2026-06-24)
-        upstreamPeers = [{ address = "10.10.5.1"; asn = 64511; }];
+        upstreamPeers = clusterData.bgp.upstreamPeers;
       };
       vxlan = {
         enable = false;
-        local = artemisLanIp;
-        remotes = [ apolloLanIp ];
+        local = self.lanIp;
+        remotes = [ peer.lanIp ];
       };
     };
   };
@@ -41,21 +49,22 @@ in
     # Not the bootstrap host — no cluster-init, no gateway/dns assertions
     primary = false;
     token = "my-cluster-token-12345";
-    vip = "192.168.100.100";
+    vip = clusterData.vip;
     bgp = {
       enable = true;
-      asn = 64520;
-      peerAsn = 64513;
-      extraHostPeers = [{ address = "192.168.100.1"; asn = 64512; }];
+      asn = self.asn;
+      peerAsn = clusterData.bgp.peerAsn;
+      extraHostPeers = [
+        {
+          address = peer.gateway;
+          asn = peer.asn;
+        }
+      ];
     };
 
     embeddedRegistry = {
       enable = true;
-      mirrors = [
-        "docker.io"
-        "registry.k8s.io"
-        "registry.jakeschurch.com"
-      ];
+      mirrors = clusterData.registryMirrors;
     };
 
     argocd = {
@@ -75,26 +84,20 @@ in
       enable = true;
       # {ip, name} per server: name is emitted as the Endpoints nodeName so the
       # eTP=Local VIP Service can resolve endpoint locality (see k3s-node.nix).
-      servers = [
-        { ip = "192.168.100.10"; name = "k3s-server-1"; }
-        { ip = "192.168.100.11"; name = "k3s-server-2"; }
-        { ip = "192.168.100.12"; name = "k3s-server-3"; }
-        { ip = "192.168.101.13"; name = "k3s-server-4"; }
-        { ip = "192.168.101.14"; name = "k3s-server-5"; }
-      ];
+      servers = clusterData.lbVipServers;
     };
 
     network = {
-      prefix = "192.168.101";
-      firstServerIp = "192.168.100.10"; # apollo's initial server — unchanged
-      gateway = "192.168.101.1";
-      dns = "192.168.101.1";
-      nodeCidr = "192.168.101.0/24";
-      clusterNodeCidrs = [ "192.168.100.0/24" "192.168.101.0/24" ];
+      prefix = self.prefix;
+      firstServerIp = clusterData.firstServerIp; # apollo's initial server — unchanged
+      gateway = self.gateway;
+      dns = self.dns;
+      nodeCidr = self.subnet;
+      clusterNodeCidrs = clusterData.clusterNodeCidrs;
       hostId = "artemis";
     };
 
-    sshKeys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP1C4EE4sKPgzsmkDUwA3YojcAC0cL6HdFabWryqHlIZ" ];
+    sshKeys = clusterData.sshKeys;
 
     # Non-initial server — expands etcd quorum from 3 → 5
     vms.k3s-server-4 = {
@@ -160,7 +163,7 @@ in
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
 
     vms.k3s-worker-5 = {
@@ -181,7 +184,7 @@ in
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
 
     vms.k3s-worker-6 = {
@@ -202,7 +205,7 @@ in
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [{ boot.kernelParams = [ "hugepages=1024" ]; }];
+      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
     };
   };
 
@@ -249,7 +252,7 @@ in
     "microvm@k3s-server-5".serviceConfig.CPUAffinity = "46-48 110-112";
   };
 
-  networking.nat.externalInterface = artemisNic;
+  networking.nat.externalInterface = self.nic;
 
   networking.nameservers = [
     "1.1.1.1#one.one.one.one"
