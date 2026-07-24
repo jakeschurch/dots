@@ -8,5 +8,6 @@ in
     claude-plugins
     agent-deck
     codex
+    pi
   ];
 }
