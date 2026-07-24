@@ -5,7 +5,7 @@
 # The k3s join token is a SECRET and is deliberately NOT here — it still lives
 # inline in each host's cluster.nix (blocked on vmetal gaining a `tokenFile`
 # option; see the TODO there).
-rec {
+{
   # API-server VIP, advertised as a /32 via BGP so external clients get
   # ECMP/failover across hosts instead of a static pin to one host.
   vip = "192.168.100.100";

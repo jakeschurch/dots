@@ -7,5 +7,6 @@ in
     claude-code
     claude-plugins
     agent-deck
+    codex
   ];
 }
