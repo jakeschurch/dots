@@ -11,8 +11,8 @@ let
   inherit (inputs) self;
 
   cachesData = import ../../data/caches.nix;
-  # Base cache set every host trusts; hosts running a local ncps pull-through
-  # (apollo/darwin) mkForce-override substituters to prepend localhost:8501.
+  # Base cache set every host trusts. Hosts can mkForce-override this when they
+  # need a different selection of upstream caches.
   baseCaches = [
     "nix-community"
     "nixos"

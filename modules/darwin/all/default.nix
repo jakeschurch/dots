@@ -5,7 +5,6 @@
   ...
 }:
 {
-  imports = [ ./ncps.nix ];
   nix = {
     distributedBuilds = true;
     channel.enable = false;
