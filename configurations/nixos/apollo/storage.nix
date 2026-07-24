@@ -53,10 +53,10 @@ in
   # Cross-disk backup is handled by restic → /mnt/snapshots-backup (see below).
   services.btrbk = {
     instances.btrbk = {
-      onCalendar = "hourly";
+      onCalendar = "0/5:00";
       settings = {
-        snapshot_preserve_min = "2h";
-        snapshot_preserve = "24h 7d 4w 3m";
+        snapshot_preserve_min = "5h";
+        snapshot_preserve = "48h 7d 4w 3m";
         volume."/" = {
           snapshot_dir = "/.snapshots";
           subvolume = {
