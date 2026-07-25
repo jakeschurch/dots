@@ -9,6 +9,7 @@
     ./all/nix.nix
     ./all/programs/git
     ./all/programs/fish
+    ./all/programs/ssh.nix
   ];
 
   home = {
@@ -43,12 +44,5 @@
 
     tmux.enable = true;
 
-    ssh = {
-      enable = true;
-      matchBlocks."*" = {
-        compression = true;
-        forwardAgent = true;
-      };
-    };
   };
 }

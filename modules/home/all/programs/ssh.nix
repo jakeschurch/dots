@@ -1,7 +1,7 @@
 {
   pkgs,
   config,
-  osConfig,
+  osConfig ? { profiles.desktop.enable = false; },
   lib,
   ...
 }:
@@ -20,23 +20,26 @@
         StrictHostKeyChecking = "accept-new";
       };
 
+      "git.jakeschurch.com" = {
+        User = "git";
+        ProxyCommand = "${lib.getExe pkgs.cloudflared} access ssh --hostname %h";
+        StrictHostKeyChecking = "accept-new";
+      };
+
+      "10.*.*.*" = {
+        ForwardAgent = true;
+        StrictHostKeyChecking = "no";
+        UserKnownHostsFile = "/dev/null";
+      };
+
       "*" = {
         ForwardAgent = true;
         Compression = true;
         HashKnownHosts = false;
         ControlMaster = "no";
+        StrictHostKeyChecking = "accept-new";
       };
     };
-
-    extraConfig = ''
-      Host *
-        StrictHostKeyChecking no
-        UserKnownHostsFile /dev/null
-
-      Host 10.*.*.*
-        UserKnownHostsFile /dev/null
-        ForwardAgent Yes
-    '';
   };
 
   home.packages =
