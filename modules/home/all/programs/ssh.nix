@@ -22,6 +22,8 @@
 
       "git.jakeschurch.com" = {
         User = "git";
+        IdentityFile = "${config.home.homeDirectory}/.ssh/id_apollo";
+        IdentitiesOnly = true;
         ProxyCommand = "${lib.getExe pkgs.cloudflared} access ssh --hostname %h";
         StrictHostKeyChecking = "accept-new";
       };
