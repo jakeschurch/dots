@@ -218,7 +218,7 @@ local config = {
     window = { border = "rounded", max_width = 60 },
   },
   keymap = {
-    ["enter"] = nil,
+    ["<CR>"] = {},
     ["<C-c>"] = { "cancel", "hide_documentation" },
     ["<C-space>"] = { "select_and_accept" },
     ["<C-k>"] = {

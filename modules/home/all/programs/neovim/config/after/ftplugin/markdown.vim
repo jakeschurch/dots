@@ -13,7 +13,8 @@ setlocal colorcolumn=0
 setlocal ts=2 sts=2 sw=2
 setlocal textwidth=80
 setlocal spell
-setlocal formatoptions = "tqclnjaw"
+setlocal formatoptions=tqclnjaw
+setlocal formatlistpat=^\\s*[-*+]\\s\\+\\\|^\\s*\\d\\+[.)]\\s\\+
 
 noremap <buffer> <leader>l :VimwikiToggleListItem<cr>
 vmap <buffer> <leader>l :VimwikiToggleListItem<cr>

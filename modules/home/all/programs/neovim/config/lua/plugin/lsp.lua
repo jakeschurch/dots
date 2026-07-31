@@ -32,12 +32,10 @@ end, { desc = "Toggle Inlay Hints" })
 
 local function diagnostic_jump_next(severity)
   vim.diagnostic.jump({ count = 1, severity = severity, buffer = 0 })
-  vim.cmd("Lspsaga code_action")
 end
 
 local function diagnostic_jump_prev(severity)
   vim.diagnostic.jump({ count = -1, severity = severity, buffer = 0 })
-  vim.cmd("Lspsaga code_action")
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -53,7 +51,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       )
     end
 
-    buf_map("i", "<C-k>", vim.lsp.buf.hover, "Hover (insert)")
+    buf_map("n", "K", vim.lsp.buf.hover, "Hover")
     buf_map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
     buf_map("n", "gk", vim.lsp.buf.signature_help, "Signature help")
     buf_map("n", "<leader>f", vim.lsp.buf.format, "Format buffer")
