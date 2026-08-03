@@ -4,16 +4,16 @@
 
 pkgs.buildGoModule rec {
   pname = "terragrunt-ls";
-  version = "0.0.5-unstable-2026-06-03";
+  version = "0.0.6-unstable-2026-07-13";
 
   src = pkgs.fetchFromGitHub {
     owner = "gruntwork-io";
     repo = "terragrunt-ls";
-    rev = "a4433593928116d6a743c72c0dfe2dd8a0870184";
-    sha256 = "sha256-G40XYqgDF6XP1S5rRejuFtyXMr5mxLQjJ5eItQcjrGA=";
+    rev = "2f11188deb09f526eec989e9e9b390ced9775575";
+    sha256 = "sha256-PIIpD6dicVdBcRRIi0x1QkrXsAlOVpV9VmRdlaTONrI=";
   };
 
-  vendorHash = "sha256-wqQPMVP2822N55m5A0/EiCzgVPITJkfrKlHwQWvSte0=";
+  vendorHash = "sha256-e/wkxm6phlbBB3fA4lgdI1hOgjaK6Uq5pB0zrHRgGAM=";
 
   subPackages = [ "." ];
 

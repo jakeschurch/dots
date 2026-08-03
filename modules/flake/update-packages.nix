@@ -44,6 +44,7 @@
         runtimeInputs = with pkgs; [
           nix-update
           nix
+          jq
           git
         ];
         text = ''
@@ -54,8 +55,19 @@
           # re-copies the current tree.
           export NIX_CONFIG="eval-cache = false"
 
+          # Each bump dirties the tree -> new flake snapshot. nix-update's eval
+          # does getFlake on that snapshot's store path, which needs a second
+          # store copy that nix won't materialize on its own -> "path ... is not
+          # valid". Materialize it up front before every invocation.
+          warm() {
+            local p
+            p=$(nix flake metadata --json | jq -r .path)
+            nix eval --impure --expr "builtins.getFlake \"$p\"" --apply 'f: f.narHash' > /dev/null
+          }
+
           fail=0
           ${lib.concatMapStringsSep "\n" (n: ''
+            warm
             echo ">>> ${invocation n}"
             ${invocation n} || { echo "!!! failed to update ${n}" >&2; fail=1; }
           '') updatable}
