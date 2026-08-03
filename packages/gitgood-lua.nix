@@ -10,7 +10,7 @@
 # carries its own gh (gh auth still comes from the user env).
 vimUtils.buildVimPlugin {
   pname = "gitgood-lua";
-  version = "0-unstable-2026-01-15";
+  version = "0-unstable-2026-06-17";
 
   src = fetchFromGitHub {
     owner = "jakeschurch";
