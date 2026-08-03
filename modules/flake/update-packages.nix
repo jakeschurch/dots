@@ -1,10 +1,44 @@
 {
   perSystem =
     { pkgs, ... }:
+    let
+      inherit (pkgs) lib;
+
+      # Custom packages live one-per-file under packages/; the overlay exposes
+      # each as pkgs.<basename>. Auto-discover them so no target list is kept by
+      # hand here.
+      names = map (lib.removeSuffix ".nix") (
+        builtins.attrNames (
+          lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".nix" n) (
+            builtins.readDir ../../packages
+          )
+        )
+      );
+
+      # Only packages that opt in via passthru.updateScript get bumped. Each
+      # package's own `nix-update-script { extraArgs = ... }` is the single
+      # source of truth for its args (--version=branch for branch-tracked
+      # plugins, nothing for release-tagged ones); we read those back out here
+      # instead of duplicating them.
+      updatable = builtins.filter (n: (pkgs.${n} or null) != null && pkgs.${n} ? updateScript) names;
+
+      # nix-update-script evals to [ <nix-update-bin> <arg>... ]; drop arg0 and
+      # retarget at the flake attr.
+      updateArgs =
+        n:
+        let
+          s = pkgs.${n}.updateScript;
+        in
+        builtins.tail (if builtins.isList s then s else s.command);
+
+      invocation = n: lib.escapeShellArgs ([ "nix-update" "--flake" n ] ++ updateArgs n);
+    in
     {
-      # `nix run .#update-packages` — bump every manually-pinned custom package
-      # (rev + hash, and vendorHash for Go modules) via nix-update. Run from the
-      # flake root; review the resulting diff before committing.
+      # `nix run .#update-packages` — bump every custom package under packages/
+      # (rev + hash, and vendorHash for Go modules) via nix-update. The targets
+      # and their args are derived from the package set at eval time, so adding a
+      # package under packages/ with a passthru.updateScript is all it takes.
+      # Run from the flake root; review the resulting diff before committing.
       packages.update-packages = pkgs.writeShellApplication {
         name = "update-packages";
         runtimeInputs = with pkgs; [
@@ -20,30 +54,11 @@
           # re-copies the current tree.
           export NIX_CONFIG="eval-cache = false"
 
-          # "attr:extra-args" — release-tagged packages take no extra args;
-          # the rest track their default branch (no upstream releases).
-          targets=(
-            "terragrunt-ls:--version=branch"
-            "kubectl-jq:"
-            "ghlite-nvim:--version=branch"
-            "vim-symlink:--version=branch"
-            "none-ls-extras-nvim:--version=branch"
-            "none-ls-shellcheck-nvim:--version=branch"
-            "vim-venter:--version=branch"
-            "presenting-nvim:--version=branch"
-          )
-
           fail=0
-          for entry in "''${targets[@]}"; do
-            attr="''${entry%%:*}"
-            args="''${entry#*:}"
-            echo ">>> nix-update --flake $attr $args"
-            # shellcheck disable=SC2086
-            if ! nix-update --flake "$attr" $args; then
-              echo "!!! failed to update $attr" >&2
-              fail=1
-            fi
-          done
+          ${lib.concatMapStringsSep "\n" (n: ''
+            echo ">>> ${invocation n}"
+            ${invocation n} || { echo "!!! failed to update ${n}" >&2; fail=1; }
+          '') updatable}
           exit "$fail"
         '';
       };

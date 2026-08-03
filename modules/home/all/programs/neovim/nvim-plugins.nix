@@ -1,37 +1,9 @@
 { pkgs, ... }:
 let
 
-  none-ls-nvim-patched = pkgs.vimUtils.buildVimPlugin {
-    pname = "none-ls-nvim";
-    version = "git-HEAD";
-    src = pkgs.fetchFromGitHub {
-      owner = "ulisses-cruz";
-      repo = "none-ls.nvim";
-      rev = "main"; # Or a specific commit SHA
-      sha256 = "sha256-nZvUWJpd/uTOwMQpy2ZGMHZ32z9M+IVB1ME4dvDFz8g=";
-    };
-  };
-
-  # PR review, fugitive-style. gh's store path is baked into gh_cmd so the plugin
-  # carries its own gh (gh auth still comes from the user env).
-  gitgood-lua = pkgs.vimUtils.buildVimPlugin {
-    pname = "gitgood-lua";
-    version = "49922bc";
-    src = pkgs.fetchFromGitHub {
-      owner = "jakeschurch";
-      repo = "gitgood.lua";
-      rev = "49922bc30d6f9bd3da74b99800f60c85dc5504cc";
-      sha256 = "sha256-MLTsbf1laBgY9KgC27wgk0Dogr+CsS8MMWzHQy9iqdI=";
-    };
-    postPatch = ''
-      substituteInPlace lua/gitgood/config.lua \
-        --replace-fail 'gh_cmd = "gh"' 'gh_cmd = "${pkgs.lib.getExe pkgs.gh}"'
-    '';
-    doCheck = false;
-  };
-
   # Plugins not in nixpkgs vimPlugins. Each is a flake package under packages/
-  # with a nix-update updateScript (run `nix-update --flake <name>`).
+  # with a nix-update updateScript (run `nix-update --flake <name>`, or bump all
+  # via `nix run .#update-packages`).
   custom-sourced-nvim-plugins = with pkgs; [
     ghlite-nvim
     vim-symlink
@@ -39,6 +11,8 @@ let
     none-ls-shellcheck-nvim
     vim-venter
     presenting-nvim
+    gitgood-lua
+    none-ls-nvim-patched
   ];
 
   nix-nvim-plugins =
@@ -99,7 +73,6 @@ let
       friendly-snippets
 
       octo-nvim
-      gitgood-lua
 
       hop-nvim
 
@@ -168,8 +141,7 @@ let
       vim-dadbod
       vim-dadbod-ui
       vim-dadbod-completion
-    ]
-    ++ pkgs.lib.singleton none-ls-nvim-patched;
+    ];
 
   treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
 
