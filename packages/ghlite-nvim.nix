@@ -6,13 +6,13 @@
 
 vimUtils.buildVimPlugin {
   pname = "ghlite-nvim";
-  version = "0-unstable-2026-01-15";
+  version = "0-unstable-2026-07-02";
 
   src = fetchFromGitHub {
     owner = "daliusd";
     repo = "ghlite.nvim";
-    rev = "43e12c921554be41a75fe1f7be512881f1bd0a5d";
-    sha256 = "15igdilmy5ffjkxbwki2pf0xs3xc5qkbq6vhcx548i8vd2lc57fi";
+    rev = "dc3af8cb7304dfe6959ede75a0bfc63a52cf704f";
+    sha256 = "sha256-SItDmKnUwwpoyx79yBtWXMFFhYTwoXIndGXJLhAtu6M=";
   };
 
   doCheck = false;
