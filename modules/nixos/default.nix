@@ -32,6 +32,7 @@ in
       };
     }
 
+    ../shared/options.nix
     ./shared
     ./boot.nix
     ./docker.nix

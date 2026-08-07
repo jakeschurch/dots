@@ -49,7 +49,8 @@
   home.packages =
     with pkgs;
     [ bitwarden-cli ]
-    ++ lib.optionals osConfig.profiles.desktop.enable [
+    # Linux only: the darwin build pulls an EOL electron. macOS gets the app from Homebrew.
+    ++ lib.optionals (pkgs.stdenv.hostPlatform.isLinux && osConfig.profiles.desktop.enable) [
       bitwarden-desktop
     ];
 

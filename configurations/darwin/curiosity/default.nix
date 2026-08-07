@@ -10,4 +10,6 @@ in
 
   system.primaryUser = "jake";
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";
+
+  profiles.desktop.enable = true;
 }

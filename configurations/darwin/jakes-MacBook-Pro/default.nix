@@ -16,6 +16,9 @@ in
   system.primaryUser = "jake";
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";
 
+  # GUI machine: home modules gated on this get their desktop apps (Slack, Bitwarden GUI).
+  profiles.desktop.enable = true;
+
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
 

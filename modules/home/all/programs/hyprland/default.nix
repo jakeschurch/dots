@@ -8,11 +8,12 @@
 }:
 let
   inherit (flake) inputs;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 {
   imports = [ ./tablet.nix ];
 
-  config = lib.mkIf (pkgs.stdenv.isLinux && osConfig.profiles.desktop.enable) {
+  config = lib.mkIf (isLinux && osConfig.profiles.desktop.enable) {
     # Lua config (Hyprland 0.55+) — takes precedence over any generated hyprland.conf
     xdg.configFile."hypr/hyprland.lua".source =
       "${inputs.self}/configurations/nixos/apollo/hyprland.lua";

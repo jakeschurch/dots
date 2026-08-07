@@ -1,3 +1,5 @@
+# Shared system options, imported by both NixOS and Darwin so home-manager modules
+# can read osConfig.profiles.* on either platform.
 { lib, ... }:
 {
   options.profiles.desktop.enable = lib.mkOption {

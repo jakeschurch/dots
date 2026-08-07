@@ -21,7 +21,7 @@
   # Make Firefox the default browser for url/http(s)/html handlers.
   home.sessionVariables.BROWSER = "firefox";
 
-  # Linux-only: darwin has no xdg mime database.
+  # Linux-only: darwin has no xdg mime database (macOS uses LaunchServices).
   xdg.mimeApps = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
     defaultApplications =

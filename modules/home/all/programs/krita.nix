@@ -4,7 +4,7 @@
   ...
 }:
 {
-  # Linux-only: krita is not packaged for darwin.
+  # nixpkgs krita is Linux-only; on macOS install the official build separately.
   home.packages = lib.optionals pkgs.stdenv.isLinux [ pkgs.krita ];
 
   # Pressure sensitivity auto-works via libinput/Wayland

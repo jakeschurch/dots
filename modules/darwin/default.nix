@@ -39,6 +39,7 @@ in
     }
     inputs.nix-index-database.darwinModules.nix-index
 
+    ../shared/options.nix
     ./all
     ./profiles.nix
     ./homebrew.nix

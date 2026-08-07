@@ -132,10 +132,12 @@
         bc
         gotop
         ccache
-        xauth
       ]
-      # Linux-only: waypipe (wayland) is not available on darwin.
-      ++ lib.optionals pkgs.stdenv.isLinux [ waypipe ];
+      # Wayland/X11 forwarding helpers — not available on darwin.
+      ++ lib.optionals pkgs.stdenv.isLinux [
+        waypipe
+        xauth
+      ];
 
     file."Documents/Templates" = {
       source = ../../../Templates;
