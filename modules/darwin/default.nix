@@ -41,7 +41,6 @@ in
 
     ../shared/options.nix
     ./all
-    ./profiles.nix
     ./homebrew.nix
     ./disable-nix-spotlight.nix
   ];
