@@ -7,10 +7,9 @@
 let
   cachesData = import ../../../modules/data/caches.nix;
   # Apollo's direct cache set (differs from the base set: adds
-  # garnix/numtide, drops neovim-nightly/nix-gaming which apollo builds itself).
+  # numtide, drops neovim-nightly/nix-gaming which apollo builds itself).
   apolloCaches = [
     "nixos"
-    "garnix"
     "nix-community"
     "hyprland"
     "numtide"

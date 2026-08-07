@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 {
   config = lib.mkIf config.profiles.desktop.enable {
     # bwrap 0.11.0 tests the sandbox by exec'ing `true`; NixOS only links /usr/bin/env by default

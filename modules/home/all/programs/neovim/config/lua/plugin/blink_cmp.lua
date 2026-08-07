@@ -21,7 +21,9 @@ local config = {
     completion = { menu = { auto_show = true } },
     sources = function()
       local type = vim.fn.getcmdtype()
-      if type == "/" or type == "?" then return {} end
+      if type == "/" or type == "?" then
+        return {}
+      end
       return { "cmdline" }
     end,
   },

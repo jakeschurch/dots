@@ -15,133 +15,131 @@ let
     none-ls-nvim-patched
   ];
 
-  nix-nvim-plugins =
-    with pkgs.vimPlugins;
-    [
-      # Migrated from versions.json/plug.sh — now tracked by nixpkgs
-      otter-nvim
-      blink-emoji-nvim
-      oil-lsp-diagnostics-nvim
-      codecompanion-nvim
-      fzf-wrapper
-      blink-copilot
-      colorful-menu-nvim
-      luasnip
+  nix-nvim-plugins = with pkgs.vimPlugins; [
+    # Migrated from versions.json/plug.sh — now tracked by nixpkgs
+    otter-nvim
+    blink-emoji-nvim
+    oil-lsp-diagnostics-nvim
+    codecompanion-nvim
+    fzf-wrapper
+    blink-copilot
+    colorful-menu-nvim
+    luasnip
 
-      fzf-lua
-      rainbow-delimiters-nvim
-      nvim-notify
+    fzf-lua
+    rainbow-delimiters-nvim
+    nvim-notify
 
-      guess-indent-nvim
+    guess-indent-nvim
 
-      blink-cmp
-      codecompanion-history-nvim
-      snacks-nvim
-      blink-pairs
+    blink-cmp
+    codecompanion-history-nvim
+    snacks-nvim
+    blink-pairs
 
-      noice-nvim
+    noice-nvim
 
-      nvim-dap-python
-      nvim-lspconfig
-      copilot-vim
-      copilot-lua
+    nvim-dap-python
+    nvim-lspconfig
+    copilot-vim
+    copilot-lua
 
-      img-clip-nvim
-      image-nvim
+    img-clip-nvim
+    image-nvim
 
-      nvim-autopairs
-      vimwiki
-      vim-git
-      vim-fugitive
-      vim-dispatch
+    nvim-autopairs
+    vimwiki
+    vim-git
+    vim-fugitive
+    vim-dispatch
 
-      oil-git-status-nvim
-      oil-nvim
+    oil-git-status-nvim
+    oil-nvim
 
-      nvim-dap-ui
+    nvim-dap-ui
 
-      vim-unimpaired
+    vim-unimpaired
 
-      vim-repeat
+    vim-repeat
 
-      nvim-dap-virtual-text
+    nvim-dap-virtual-text
 
-      gitlinker-nvim
+    gitlinker-nvim
 
-      nvim-dap-ui
+    nvim-dap-ui
 
-      friendly-snippets
+    friendly-snippets
 
-      octo-nvim
+    octo-nvim
 
-      hop-nvim
+    hop-nvim
 
-      lspkind-nvim
+    lspkind-nvim
 
-      lspsaga-nvim
+    lspsaga-nvim
 
-      telescope-nvim
-      telescope-dap-nvim
-      vim-matchup
-      grug-far-nvim
+    telescope-nvim
+    telescope-dap-nvim
+    vim-matchup
+    grug-far-nvim
 
-      nvim-nio
+    nvim-nio
 
-      lualine-nvim
+    lualine-nvim
 
-      popup-nvim
+    popup-nvim
 
-      plenary-nvim
+    plenary-nvim
 
-      lsp-status-nvim
+    lsp-status-nvim
 
-      nvim-lspconfig
+    nvim-lspconfig
 
-      nvim-dap
+    nvim-dap
 
-      indent-blankline-nvim
+    indent-blankline-nvim
 
-      gitsigns-nvim
+    gitsigns-nvim
 
-      nvim-surround
+    nvim-surround
 
-      nvim-web-devicons
+    nvim-web-devicons
 
-      vim-emoji
+    vim-emoji
 
-      virtual-types-nvim
+    virtual-types-nvim
 
-      alpha-nvim
+    alpha-nvim
 
-      which-key-nvim
+    which-key-nvim
 
-      gruvbox-nvim
+    gruvbox-nvim
 
-      yuck-vim
+    yuck-vim
 
-      kommentary
+    kommentary
 
-      toggleterm-nvim
+    toggleterm-nvim
 
-      nvim-ts-context-commentstring
+    nvim-ts-context-commentstring
 
-      img-clip-nvim
-      # nvim-treesitter-textobjects-patched
-      dressing-nvim
-      nui-nvim
+    img-clip-nvim
+    # nvim-treesitter-textobjects-patched
+    dressing-nvim
+    nui-nvim
 
-      plenary-nvim
-      trouble-nvim
-      render-markdown-nvim
+    plenary-nvim
+    trouble-nvim
+    render-markdown-nvim
 
-      diffview-nvim
+    diffview-nvim
 
-      nvim-colorizer-lua
+    nvim-colorizer-lua
 
-      vim-dadbod
-      vim-dadbod-ui
-      vim-dadbod-completion
-    ];
+    vim-dadbod
+    vim-dadbod-ui
+    vim-dadbod-completion
+  ];
 
   treesitter-plugins = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
 

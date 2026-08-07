@@ -40,6 +40,7 @@ in
     inputs.nix-index-database.darwinModules.nix-index
 
     ./all
+    ./profiles.nix
     ./homebrew.nix
     ./disable-nix-spotlight.nix
   ];

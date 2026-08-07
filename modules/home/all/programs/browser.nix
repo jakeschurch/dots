@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.firefox = {
@@ -21,7 +21,8 @@
   # Make Firefox the default browser for url/http(s)/html handlers.
   home.sessionVariables.BROWSER = "firefox";
 
-  xdg.mimeApps = {
+  # Linux-only: darwin has no xdg mime database.
+  xdg.mimeApps = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
     defaultApplications =
       let

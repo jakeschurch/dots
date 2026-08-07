@@ -17,7 +17,9 @@ hl.monitor({
 --------------------
 
 hl.on("hyprland.start", function()
-  hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+  hl.exec_cmd(
+    "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+  )
   hl.exec_cmd("uwsm app -- hyprsunset")
   hl.exec_cmd("uwsm app -- phonto --rand")
   hl.exec_cmd("uwsm app -- noctalia-shell")
@@ -199,7 +201,10 @@ hl.bind(mod .. " + SHIFT + space", hl.dsp.window.float({ action = "toggle" }))
 
 -- Special workspace (scratchpad / magic)
 hl.bind(mod .. " + minus", hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mod .. " + SHIFT + minus", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(
+  mod .. " + SHIFT + minus",
+  hl.dsp.window.move({ workspace = "special:magic" })
+)
 
 -- Reload + cycle wallpaper
 hl.bind(
@@ -243,9 +248,17 @@ hl.bind(
   hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
   { locked = true, repeating = true }
 )
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind(
+  "XF86AudioPlay",
+  hl.dsp.exec_cmd("playerctl play-pause"),
+  { locked = true }
+)
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+hl.bind(
+  "XF86AudioPrev",
+  hl.dsp.exec_cmd("playerctl previous"),
+  { locked = true }
+)
 
 -- Hyprsunset: temperature + gamma (repeating on hold)
 hl.bind(
@@ -279,10 +292,26 @@ hl.bind(mod .. " + R", hl.dsp.submap("resize"))
 -- after one fire (KeybindManager: setSubmap(submap.reset) post-dispatch).
 -- Omitting it keeps the submap sticky so h/j/k/l repeat until escape/return.
 hl.define_submap("resize", function()
-  hl.bind("h", hl.dsp.window.resize({ x = -85, y = 0, relative = true }), { repeating = true })
-  hl.bind("j", hl.dsp.window.resize({ x = 0, y = 85, relative = true }), { repeating = true })
-  hl.bind("k", hl.dsp.window.resize({ x = 0, y = -85, relative = true }), { repeating = true })
-  hl.bind("l", hl.dsp.window.resize({ x = 85, y = 0, relative = true }), { repeating = true })
+  hl.bind(
+    "h",
+    hl.dsp.window.resize({ x = -85, y = 0, relative = true }),
+    { repeating = true }
+  )
+  hl.bind(
+    "j",
+    hl.dsp.window.resize({ x = 0, y = 85, relative = true }),
+    { repeating = true }
+  )
+  hl.bind(
+    "k",
+    hl.dsp.window.resize({ x = 0, y = -85, relative = true }),
+    { repeating = true }
+  )
+  hl.bind(
+    "l",
+    hl.dsp.window.resize({ x = 85, y = 0, relative = true }),
+    { repeating = true }
+  )
 
   hl.bind("return", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))
@@ -298,9 +327,9 @@ hl.define_submap("powermenu", "reset", function()
       hl.dispatch(hl.dsp.submap("reset"))
     end
   end
-  hl.bind("l", pm("hyprlock --immediate"))             -- lock
-  hl.bind("p", pm("systemctl poweroff"))               -- power off
-  hl.bind("r", pm("systemctl reboot"))                 -- reboot
+  hl.bind("l", pm("hyprlock --immediate")) -- lock
+  hl.bind("p", pm("systemctl poweroff")) -- power off
+  hl.bind("r", pm("systemctl reboot")) -- reboot
   hl.bind("s", pm("systemctl suspend-then-hibernate")) -- suspend
   hl.bind("return", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))

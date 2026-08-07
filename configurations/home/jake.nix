@@ -3,7 +3,9 @@
   pkgs,
   config,
   lib,
-  osConfig ? { profiles.desktop.enable = true; },
+  osConfig ? {
+    profiles.desktop.enable = true;
+  },
   ...
 }:
 let
@@ -14,6 +16,13 @@ in
   imports = [
     self.homeModules.default
   ];
+
+  # home-manager now passes osConfig = mkDefault null to standalone configs,
+  # which bypasses the function-arg default above. Plain priority beats that
+  # mkDefault; under NixOS/nix-darwin osConfig arrives via specialArgs and wins.
+  _module.args.osConfig = {
+    profiles.desktop.enable = true;
+  };
 
   programs.tablet-calibration = lib.mkIf (pkgs.stdenv.isLinux && osConfig.profiles.desktop.enable) {
     enable = true;

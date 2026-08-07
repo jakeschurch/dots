@@ -9,9 +9,7 @@
       # hand here.
       names = map (lib.removeSuffix ".nix") (
         builtins.attrNames (
-          lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".nix" n) (
-            builtins.readDir ../../packages
-          )
+          lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".nix" n) (builtins.readDir ../../packages)
         )
       );
 
@@ -31,7 +29,16 @@
         in
         builtins.tail (if builtins.isList s then s else s.command);
 
-      invocation = n: lib.escapeShellArgs ([ "nix-update" "--flake" n ] ++ updateArgs n);
+      invocation =
+        n:
+        lib.escapeShellArgs (
+          [
+            "nix-update"
+            "--flake"
+            n
+          ]
+          ++ updateArgs n
+        );
     in
     {
       # `nix run .#update-packages` — bump every custom package under packages/

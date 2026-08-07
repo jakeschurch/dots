@@ -6,7 +6,7 @@ pkgs: {
   ];
 
   elixir = with pkgs; [
-    elixir_1_19
+    beamPackages.elixir_1_19
     expert
     elixir-ls
   ];

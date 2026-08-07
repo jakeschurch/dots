@@ -69,7 +69,7 @@ in
   # Pin claude-code ahead of nixpkgs (2.1.161 as of 2026-06-10).
   # Checksums from https://downloads.claude.ai/claude-code-releases/<version>/manifest.json
   claude-code = super.claude-code.overrideAttrs (
-    old:
+    _old:
     let
       version = "2.1.170";
       platformKey = "${super.stdenv.hostPlatform.node.platform}-${super.stdenv.hostPlatform.node.arch}";

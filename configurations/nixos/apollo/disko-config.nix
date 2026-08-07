@@ -98,7 +98,10 @@
                 format = "xfs";
                 mountpoint = "/var/lib/microvms";
                 mountOptions = [ "noatime" ];
-                extraArgs = [ "-L" "microvms" ];
+                extraArgs = [
+                  "-L"
+                  "microvms"
+                ];
               };
             };
             # Raw mayastor pool for k3s-worker-2 (SPDK owns it, no host fs) —

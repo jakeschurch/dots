@@ -42,21 +42,18 @@
 
       substituters = [
         "https://cache.nixos.org"
-        "https://cache.garnix.io"
         "https://nix-community.cachix.org"
         "https://hyprland.cachix.org"
       ];
 
       trusted-substituters = [
         "https://cache.nixos.org"
-        "https://cache.garnix.io"
         "https://nix-community.cachix.org"
         "https://hyprland.cachix.org"
       ];
 
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
@@ -90,8 +87,13 @@
       http-connections = 0
       require-sigs = false
 
-      ${pkgs.lib.optionalString (pkgs.system == "aarch64-darwin" || pkgs.system == "x86_64-linux") ''
+      ${pkgs.lib.optionalString (pkgs.system == "aarch64-darwin") ''
         extra-platforms = x86_64-darwin aarch64-darwin
+      ''}
+      ${pkgs.lib.optionalString (pkgs.system == "x86_64-linux") ''
+        # Keep i686 enabled client-side (matches system nix.conf); steam's
+        # 32-bit chain (perl IO-Tty etc) needs it on cache misses.
+        extra-platforms = i686-linux
       ''}
     '';
   };

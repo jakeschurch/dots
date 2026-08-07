@@ -1,6 +1,7 @@
 {
   flake,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -12,126 +13,129 @@
   imports = [ flake.inputs.nix-index-database.homeModules.nix-index ];
 
   home = {
-    packages = with pkgs; [
-      (pipx.overridePythonAttrs (_: {
-        doCheck = false;
-      }))
-      nix-update
-      ssm-session-manager-plugin
-      kind
-      # latex
-      texlive.combined.scheme-small
-      lynx
-      # _1password-cli
-      ffmpeg
-      mtr
-      conftest
-      libressl
-      beads
+    packages =
+      with pkgs;
+      [
+        (pipx.overridePythonAttrs (_: {
+          doCheck = false;
+        }))
+        nix-update
+        ssm-session-manager-plugin
+        kind
+        # latex
+        texlive.combined.scheme-small
+        lynx
+        # _1password-cli
+        ffmpeg
+        mtr
+        conftest
+        libressl
+        beads
 
-      nodejs
-      (python313.withPackages (
-        ps: with ps; [
-          requests
-          pip
-          debugpy
-          proselint
-          poetry-core
-          toolz
-          pylama
-          black
-          isort
-          flake8
-          neovim
-          mypy
-        ]
-      ))
+        nodejs
+        (python313.withPackages (
+          ps: with ps; [
+            requests
+            pip
+            debugpy
+            proselint
+            poetry-core
+            toolz
+            pylama
+            black
+            isort
+            flake8
+            neovim
+            mypy
+          ]
+        ))
 
-      mermaid-cli
+        mermaid-cli
 
-      sshuttle
+        sshuttle
 
-      chafa
-      act
+        chafa
+        act
 
-      procs
-      gnused
-      gnugrep
+        procs
+        gnused
+        gnugrep
 
-      moreutils
-      cloudflared
-      mosh
+        moreutils
+        cloudflared
+        mosh
 
-      bat
-      bat-extras.batdiff
-      bat-extras.batwatch
-      bat-extras.batman
-      bat-extras.prettybat
-      wget
-      lsd
-      dust
+        bat
+        bat-extras.batdiff
+        bat-extras.batwatch
+        bat-extras.batman
+        bat-extras.prettybat
+        wget
+        lsd
+        dust
 
-      terraform
-      asciinema
-      asciinema-agg
+        terraform
+        asciinema
+        asciinema-agg
 
-      kubectl
-      kubectx
-      kubernetes-helm
-      kubernetes-helmPlugins.helm-diff
-      kubelogin-oidc
+        kubectl
+        kubectx
+        kubernetes-helm
+        kubernetes-helmPlugins.helm-diff
+        kubelogin-oidc
 
-      lazydocker
-      docker-credential-helpers
-      pass
-      colima
-      dive
-      docker-compose
+        lazydocker
+        docker-credential-helpers
+        pass
+        colima
+        dive
+        docker-compose
 
-      jq
-      tealdeer
-      nix-tree
-      libiconv
+        jq
+        tealdeer
+        nix-tree
+        libiconv
 
-      sd
-      tokei
-      (aspellWithDicts (
-        ds: with ds; [
-          en
-          en-computers
-          en-science
-        ]
-      ))
-      coreutils
-      expect
-      difftastic
+        sd
+        tokei
+        (aspellWithDicts (
+          ds: with ds; [
+            en
+            en-computers
+            en-science
+          ]
+        ))
+        coreutils
+        expect
+        difftastic
 
-      arion
+        arion
 
-      sops
-      ssh-to-pgp
-      gnupg
+        sops
+        ssh-to-pgp
+        gnupg
 
-      ctags
-      bun2nix
+        ctags
+        bun2nix
 
-      pre-commit
+        pre-commit
 
-      yq-go
-      docker
+        yq-go
+        docker
 
-      awscli2
-      entr
-      watch
-      grex
-      nix-output-monitor
-      nvd
-      bc
-      gotop
-      ccache
-      waypipe
-      xauth
-    ];
+        awscli2
+        entr
+        watch
+        grex
+        nix-output-monitor
+        nvd
+        bc
+        gotop
+        ccache
+        xauth
+      ]
+      # Linux-only: waypipe (wayland) is not available on darwin.
+      ++ lib.optionals pkgs.stdenv.isLinux [ waypipe ];
 
     file."Documents/Templates" = {
       source = ../../../Templates;

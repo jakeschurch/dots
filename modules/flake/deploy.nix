@@ -8,7 +8,10 @@ in
     apollo = {
       hostname = "10.10.5.7";
       sshUser = "jake";
-      sshOpts = [ "-p" "22222" ];
+      sshOpts = [
+        "-p"
+        "22222"
+      ];
       profiles.system = {
         user = "root";
         path = activateNixos "apollo";
@@ -18,7 +21,10 @@ in
     artemis = {
       hostname = "10.10.5.110";
       sshUser = "jake";
-      sshOpts = [ "-p" "22222" ];
+      sshOpts = [
+        "-p"
+        "22222"
+      ];
       profiles.system = {
         user = "root";
         path = activateNixos "artemis";

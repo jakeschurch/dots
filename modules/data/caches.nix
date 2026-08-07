@@ -25,10 +25,6 @@ rec {
       url = "https://nix-gaming.cachix.org";
       key = "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4=";
     };
-    garnix = {
-      url = "https://cache.garnix.io";
-      key = "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=";
-    };
     numtide = {
       url = "https://cache.numtide.com";
       key = "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";

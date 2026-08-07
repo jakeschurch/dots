@@ -1,7 +1,9 @@
 {
   pkgs,
   config,
-  osConfig ? { profiles.desktop.enable = false; },
+  osConfig ? {
+    profiles.desktop.enable = false;
+  },
   lib,
   ...
 }:
