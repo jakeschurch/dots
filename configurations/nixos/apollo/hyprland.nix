@@ -36,11 +36,21 @@ in
       # session. A new noctalia store path changes QS_CONFIG_PATH, which moves
       # quickshell's IPC socket — so the running instance must be replaced. Only
       # the shell process is touched; the compositor/session is left alone.
+      #
+      # NOTE: do NOT use `pkill -x quickshell` here — the Nix wrapper's comm is
+      # ".quickshell-wrapped", so an exact-name match never fires and the old
+      # instance survives (a stale store path leaves the launcher IPC dead while
+      # a duplicate stacks on top). Kill by the real PIDs that `noctalia-shell
+      # list` reports; that works regardless of store path.
       (pkgs.writeShellScriptBin "reload-noctalia" ''
-        ${pkgs.procps}/bin/pkill -x quickshell
+        pids() {
+          noctalia-shell list 2>/dev/null \
+            | ${pkgs.gawk}/bin/awk '/Process ID:/ { print $NF }'
+        }
+        for pid in $(pids); do kill "$pid" 2>/dev/null || true; done
         # wait for the IPC socket to drain so the relaunch isn't seen as a dup
         for _ in $(seq 1 20); do
-          ${pkgs.procps}/bin/pgrep -x quickshell >/dev/null || break
+          [ -z "$(pids)" ] && break
           sleep 0.1
         done
         ${pkgs.uwsm}/bin/uwsm app -- noctalia-shell
