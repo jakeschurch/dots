@@ -14,8 +14,8 @@ in
     withUWSM = true;
 
     plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
-      # hyprbars
-      # inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+      hyprbars
+      inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
     ];
   };
 
