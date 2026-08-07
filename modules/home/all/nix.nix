@@ -32,7 +32,10 @@
       extra-experimental-features = [
         "nix-command flakes auto-allocate-uids"
       ];
-      fallback = false;
+      # Build locally when a substituter is unreachable. With this off, a cache
+      # outage (e.g. garnix 503) hard-fails paths nix could trivially build
+      # itself, like the firefox-addons .xpi fetchurl FODs.
+      fallback = true;
 
       cores = 0;
       max-jobs = "auto";
