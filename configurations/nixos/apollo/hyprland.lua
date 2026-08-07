@@ -38,8 +38,6 @@ end)
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
--- Force Hyprland to only use NVIDIA GPU (card1)
-hl.env("AQ_DRM_DEVICES", "/dev/dri/card1")
 hl.env("HYPRCURSOR_THEME", "rose-pine-hyprcursor")
 hl.env("WLR_NO_HARDWARE_CURSORS", "1")
 hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
@@ -111,26 +109,26 @@ hl.config({
   plugin = {
     -- dynamic_cursors: enabled on NVIDIA; revert if cursor flicker/crashes appear
     dynamic_cursors = {
+      enabled   = true,
+      mode      = "rotate",
+      threshold = 2,
+      rotate    = {
+        limit        = 4000,
+        ["function"] = "linear",
+        window       = 100,
+      },
+      shake     = {
         enabled   = true,
-        mode      = "rotate",
-        threshold = 2,
-        rotate = {
-            limit            = 4000,
-            ["function"]     = "linear",
-            window           = 100,
-        },
-        shake = {
-            enabled   = true,
-            nearest   = true,
-            threshold = 2.0,
-            base      = 1.5,
-            speed     = 3.0,
-            influence = 0.0,
-            limit     = 0.2,
-            timeout   = 100,
-            effects   = false,
-            ipc       = false,
-        },
+        nearest   = true,
+        threshold = 2.0,
+        base      = 1.5,
+        speed     = 3.0,
+        influence = 0.0,
+        limit     = 0.2,
+        timeout   = 100,
+        effects   = false,
+        ipc       = false,
+      },
     },
     hyprcursor = {
       nearest    = true,
@@ -139,14 +137,14 @@ hl.config({
       fallback   = "clientside",
     },
     hyprbars = {
-      bar_height        = 30,
-      on_double_click   = "hyprctl dispatch fullscreen 1",
-      bar_title_enabled = false,
-          bar_buttons_alignment = "right",
-          bar_part_of_window    = true,
-          bar_blur              = true,
-          bar_padding           = 12,
-          bar_button_padding    = 10,
+      bar_height            = 30,
+      on_double_click       = "hyprctl dispatch fullscreen 1",
+      bar_title_enabled     = false,
+      bar_buttons_alignment = "right",
+      bar_part_of_window    = true,
+      bar_blur              = true,
+      bar_padding           = 12,
+      bar_button_padding    = 10,
     },
   },
 })
@@ -155,8 +153,13 @@ hl.config({
 -- Minimize sends to special:MinimizedApps — peek it with SUPER+M, restore the
 -- focused window with SUPER+SHIFT+return (see keybindings below).
 hl.plugin.hyprbars.add_button({ bg_color = "rgb(ff5f56)", size = 15, icon = "", action = "smart-kill" })
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(ffbd2e)", size = 15, icon = "", action =
-"hyprctl dispatch movetoworkspacesilent special:MinimizedApps" })
+hl.plugin.hyprbars.add_button({
+  bg_color = "rgb(ffbd2e)",
+  size = 15,
+  icon = "",
+  action =
+  "hyprctl dispatch movetoworkspacesilent special:MinimizedApps"
+})
 hl.plugin.hyprbars.add_button({ bg_color = "rgb(27c93f)", size = 15, icon = "", action = "hyprctl dispatch fullscreen 1" })
 
 ---------------------
