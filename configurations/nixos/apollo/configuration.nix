@@ -70,6 +70,20 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       wireplumber.enable = true;
+      # Prefer HDMI (monitor) output; deprioritize S/PDIF so it stops
+      # grabbing the default sink on boot/replug.
+      wireplumber.extraConfig."51-default-sink" = {
+        "monitor.alsa.rules" = [
+          {
+            matches = [ { "node.name" = "alsa_output.pci-0000_09_00.1.hdmi-stereo"; } ];
+            actions.update-props."priority.session" = 2000;
+          }
+          {
+            matches = [ { "node.name" = "alsa_output.pci-0000_0b_00.4.iec958-stereo"; } ];
+            actions.update-props."priority.session" = 100;
+          }
+        ];
+      };
     };
   };
 
