@@ -16,11 +16,9 @@ let
   ];
 
   nix-nvim-plugins = with pkgs.vimPlugins; [
-    # Migrated from versions.json/plug.sh — now tracked by nixpkgs
     otter-nvim
     blink-emoji-nvim
     oil-lsp-diagnostics-nvim
-    codecompanion-nvim
     fzf-wrapper
     blink-copilot
     colorful-menu-nvim
