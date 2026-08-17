@@ -8,7 +8,10 @@ require("lspsaga").setup({
   ui = {
     enable = true,
     debounce = 250,
-    code_action = "☝️",
+    -- Nerd Font lightbulb (md-lightbulb), not the ☝️ emoji: that codepoint is
+    -- absent from JetBrainsMono Nerd Font, so it fell back to the emoji font
+    -- and rendered as a colour glyph in an otherwise monochrome gutter.
+    code_action = "󰌵",
     colors = {
       -- float window normal background color
       normal_bg = "#3c3836", -- Gruvbox Dark Soft background

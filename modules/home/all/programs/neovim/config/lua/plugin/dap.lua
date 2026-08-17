@@ -10,10 +10,14 @@ cnoreabbrev bq lua require'dap'.ui.close()<cr>
 
 local dap = require("dap")
 
-vim.fn.sign_define(
-  "DapBreakpoint",
-  { text = "🛑", texthl = "", linehl = "", numhl = "" }
-)
+-- A plain circle rather than the 🛑 emoji, which is absent from the terminal
+-- font and falls back to a colour emoji glyph. The colour comes from texthl.
+vim.fn.sign_define("DapBreakpoint", {
+  text = "●",
+  texthl = "DiagnosticError",
+  linehl = "",
+  numhl = "",
+})
 
 dap.configurations.typescript = {
   {
