@@ -1,4 +1,10 @@
 require("gitsigns").setup({
+  -- Use Neovim's built-in differ rather than shelling out to `git diff`.
+  -- Without this, gitsigns inherits the global `diff.external =
+  -- difftastic-inline`, whose output has no unified-diff hunk headers, so every
+  -- buffer reports zero hunks and no signs appear.
+  diff_opts = { internal = true },
+
   signs_staged_enable = true,
   signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
   numhl = false, -- Toggle with `:Gitsigns toggle_numhl`

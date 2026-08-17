@@ -10,6 +10,10 @@ vim.diagnostic.config({
     style = "minimal",
     border = "rounded",
   },
+  -- These stay defined even though the gutter does not draw them:
+  -- tiny-inline-diagnostic reads them via `use_icons_from_diagnostic` for the
+  -- inline pills, and falls back to bare letters ("W") without them.
+  -- plugin/signcol.lua is what keeps them out of the sign column.
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = "󱍷 ",

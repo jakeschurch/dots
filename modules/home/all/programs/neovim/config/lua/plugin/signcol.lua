@@ -54,7 +54,10 @@ function M.column()
   for _, s in ipairs(M.get_signs(win)) do
     if s.name:find("GitSign") then
       git_sign = s
-    else
+    elseif not s.name:find("Diagnostic") then
+      -- Diagnostics are shown as inline pills, so they are dropped here rather
+      -- than undefined in vim.diagnostic.config: tiny-inline-diagnostic still
+      -- needs their icons. Other signs (marks, dap breakpoints) are unaffected.
       sign = s
     end
   end

@@ -84,6 +84,8 @@ let
 
     lualine-nvim
 
+    tiny-inline-diagnostic-nvim
+
     popup-nvim
 
     plenary-nvim
