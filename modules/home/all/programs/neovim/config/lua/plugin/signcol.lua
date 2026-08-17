@@ -62,11 +62,13 @@ function M.column()
     end
   end
 
-  local folded = (vim.fn.foldclosed(vim.v.lnum) >= 0)
-    and vim.opt.fillchars:get().foldclose
-  local has_fold = (
-    vim.fn.foldlevel(vim.v.lnum) > vim.fn.foldlevel(vim.v.lnum - 1)
-  ) and vim.opt.fillchars:get().foldopen
+  -- Only closed folds get a marker. 'foldmethod' is treesitter's expression
+  -- with foldlevel=99, so nearly every block is an *open* fold — marking those
+  -- decorates most of the file without telling you anything.
+  local fold = " "
+  if vim.fn.foldclosed(vim.v.lnum) >= 0 then
+    fold = vim.opt.fillchars:get().foldclose or " "
+  end
 
   local nu = " "
   if vim.wo[win].number and vim.wo[win].relativenumber then
@@ -80,25 +82,46 @@ function M.column()
     end
   end
 
+  -- Exactly one cell per marker so the column keeps a fixed width whether or
+  -- not a sign is present; the old code mixed one-cell glyphs with two-space
+  -- blanks, which shifted the text by a column.
+  ---@param s table|nil
+  ---@return string
+  local function cell(s)
+    if not s then
+      return " "
+    end
+    local text = vim.trim(s.text or "")
+    if text == "" then
+      return " "
+    end
+    return "%#" .. (s.texthl or "Normal") .. "#" .. text .. "%*"
+  end
+
+  -- Signs and number keep their existing positions; only the fold marker moves,
+  -- from the far left to the far right where it sits beside the code it folds.
   local components = {
-    (
-      sign
-      and (
-        "%#"
-        .. (sign.texthl or "DiagnosticInfo")
-        .. "#"
-        .. sign.text
-        .. "%*"
-      )
-    )
-      or (folded and vim.opt.fillchars:get().foldclose .. " ")
-      or (has_fold and vim.opt.fillchars:get().foldopen .. " ")
-      or "  ",
+    cell(sign),
     nu,
-    (git_sign and ("%#" .. git_sign.texthl .. "#" .. git_sign.text .. "%*"))
-      or "  ",
+    cell(git_sign),
+    "%#StatusColumnFold#" .. fold .. "%*",
   }
   return table.concat(components, "")
 end
+
+-- FoldColumn carries a background of its own, which would paint a band down
+-- the whole gutter because the fold cell is drawn on every line. Borrow its
+-- foreground and drop the background so only the glyph is coloured.
+local function set_fold_highlight()
+  local fold_hl = vim.api.nvim_get_hl(0, { name = "FoldColumn", link = false })
+  vim.api.nvim_set_hl(0, "StatusColumnFold", { fg = fold_hl.fg, bg = "NONE" })
+end
+
+set_fold_highlight()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("statuscolumn-fold", { clear = true }),
+  callback = set_fold_highlight,
+  desc = "Keep the fold marker's background clear",
+})
 
 return M

@@ -5,6 +5,25 @@ require("gitsigns").setup({
   -- buffer reports zero hunks and no signs appear.
   diff_opts = { internal = true },
 
+  -- Block elements rather than Nerd Font glyphs: plain BMP codepoints, so they
+  -- render without a patched font and cannot fall back to an emoji font.
+  -- Staged hunks use a thinner bar than unstaged ones.
+  signs = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+    changedelete = { text = "▎" },
+    delete = { text = "▁" },
+    topdelete = { text = "▔" },
+    untracked = { text = "▏" },
+  },
+  signs_staged = {
+    add = { text = "▏" },
+    change = { text = "▏" },
+    changedelete = { text = "▏" },
+    delete = { text = "▁" },
+    topdelete = { text = "▔" },
+  },
+
   signs_staged_enable = true,
   signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
   numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
