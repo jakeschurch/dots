@@ -22,10 +22,9 @@ require("tiny-inline-diagnostic").setup({
       always_show = true,
     },
 
-    -- Show one message, not every diagnostic on the line: stacking them all
-    -- spills onto the following screen lines and buries the code. The count
-    -- pill still says how many there are.
-    show_all_diags_on_cursorline = false,
+    -- Expanding should show every diagnostic on the line, not just the one
+    -- directly under the cursor.
+    show_all_diags_on_cursorline = true,
     show_diags_only_under_cursor = false,
 
     use_icons_from_diagnostic = true,
