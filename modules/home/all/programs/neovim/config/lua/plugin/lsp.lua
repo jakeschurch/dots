@@ -10,10 +10,18 @@ vim.diagnostic.config({
     style = "minimal",
     border = "rounded",
   },
-  -- No gutter signs: severity and count are already carried by the inline
-  -- pills (plugin/tiny-inline-diagnostic.lua) and the statusline counts, so the
-  -- sign column is left to gitsigns alone.
-  signs = false,
+  -- These stay defined even though the gutter does not draw them:
+  -- tiny-inline-diagnostic reads them via `use_icons_from_diagnostic` for the
+  -- inline pills, and falls back to bare letters ("W") without them.
+  -- plugin/signcol.lua is what keeps them out of the sign column.
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "󱍷 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.INFO] = "󰋽 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    },
+  },
 })
 
 vim.api.nvim_create_user_command("Format", function()
