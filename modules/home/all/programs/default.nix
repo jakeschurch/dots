@@ -12,7 +12,6 @@
     ./k9s
     ./krita.nix
     ./neovim
-    ./obsidian.nix
     ./psql.nix
     ./ripgrep.nix
     ./scripts

@@ -22,8 +22,6 @@
         nix-update
         ssm-session-manager-plugin
         kind
-        # latex
-        texlive.combined.scheme-small
         lynx
         # _1password-cli
         ffmpeg

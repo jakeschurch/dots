@@ -66,18 +66,6 @@ in
     pkgs = super;
   };
 
-  # nixpkgs hardcodes sourceRoot = "Obsidian.app", but the darwin dmg unpacks to
-  # "Obsidian <version>-universal/Obsidian.app", so unpackPhase chmods a path
-  # that doesn't exist and the build dies. setSourceRoot wins over sourceRoot in
-  # stdenv's unpackPhase; glob for the app so a volume rename can't break it
-  # again. Drop once nixpkgs fixes the darwin branch of pkgs/by-name/ob/obsidian.
-  obsidian = super.obsidian.overrideAttrs (
-    _old:
-    super.lib.optionalAttrs super.stdenv.hostPlatform.isDarwin {
-      setSourceRoot = "sourceRoot=$(echo */Obsidian.app)";
-    }
-  );
-
   # Pin claude-code ahead of nixpkgs (2.1.161 as of 2026-06-10).
   # Checksums from https://downloads.claude.ai/claude-code-releases/<version>/manifest.json
   claude-code = super.claude-code.overrideAttrs (
