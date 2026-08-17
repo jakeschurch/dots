@@ -109,10 +109,6 @@ local function diagnostic_pill(name)
   }, severity.color)
 end
 
-local function has_lsp()
-  return #vim.lsp.get_clients({ bufnr = 0 }) > 0
-end
-
 lualine.setup({
   options = {
     theme = transparent,
@@ -163,12 +159,6 @@ lualine.setup({
       diagnostic_pill("hint"),
     }),
     lualine_x = spaced({
-      pill({
-        function()
-          return "󰿘 " .. vim.lsp.get_clients({ bufnr = 0 })[1].name
-        end,
-        cond = has_lsp,
-      }, c.bg2, c.fg1),
       pill({
         "searchcount",
         cond = function()

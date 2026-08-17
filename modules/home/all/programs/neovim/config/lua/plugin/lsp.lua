@@ -10,14 +10,10 @@ vim.diagnostic.config({
     style = "minimal",
     border = "rounded",
   },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󱍷 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.INFO] = "󰋽 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
-    },
-  },
+  -- No gutter signs: severity and count are already carried by the inline
+  -- pills (plugin/tiny-inline-diagnostic.lua) and the statusline counts, so the
+  -- sign column is left to gitsigns alone.
+  signs = false,
 })
 
 vim.api.nvim_create_user_command("Format", function()
