@@ -5,7 +5,6 @@ let
   # with a nix-update updateScript (run `nix-update --flake <name>`, or bump all
   # via `nix run .#update-packages`).
   custom-sourced-nvim-plugins = with pkgs; [
-    ghlite-nvim
     vim-symlink
     none-ls-extras-nvim
     none-ls-shellcheck-nvim
