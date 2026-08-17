@@ -15,9 +15,19 @@ local function diff_source()
   end
 end
 
--- Transparent bar: only the pills carry a background, the gaps show the buffer
--- through. Every section shares the same empty theme entry.
-local empty = { bg = "NONE", fg = c.fg4 }
+-- Only the pills carry a fill; the gaps take the buffer's own background so the
+-- capsules read as floating rather than sitting on a solid bar. `bg = "NONE"`
+-- would instead fall through to the theme's StatusLine highlight, which *is* a
+-- solid bar on an opaque terminal.
+local bar = pills.bar_bg()
+
+-- lualine only paints the regions it draws; the rest of the bar (and the `%=`
+-- fill) uses StatusLine, so that has to match too.
+for _, group in ipairs({ "StatusLine", "StatusLineNC", "WinBar", "WinBarNC" }) do
+  vim.api.nvim_set_hl(0, group, { bg = bar, fg = c.fg4 })
+end
+
+local empty = { bg = bar, fg = c.fg4 }
 local transparent = {}
 for _, mode in ipairs({
   "normal",
@@ -58,7 +68,7 @@ local function gap(cond)
     cond = cond,
     padding = 0,
     separator = "",
-    color = { bg = "NONE", fg = "NONE" },
+    color = { bg = bar, fg = bar },
   }
 end
 

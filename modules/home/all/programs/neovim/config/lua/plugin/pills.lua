@@ -24,7 +24,26 @@ M.colors = {
   orange = "#fe8019",
 }
 
-M.cap = { left = "", right = "" }
+-- Round powerline caps (U+E0B6 / U+E0B4). These live in the Powerline Extra
+-- Symbols range, so they need a Nerd Font. Without one they render as tofu
+-- boxes; set `rounded = false` to fall back to plain padded blocks, which still
+-- read as capsules because the fill colour does the work.
+M.rounded = true
+
+M.cap = M.rounded and { left = "", right = "" } or { left = " ", right = " " }
+
+--- The bar's own background. "NONE" does *not* mean transparent on an opaque
+--- terminal — it falls through to the theme's StatusLine highlight, which is a
+--- solid bar. Using the real Normal background is what makes pills look like
+--- they float over the buffer.
+---@return string
+function M.bar_bg()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+  if normal and normal.bg then
+    return string.format("#%06x", normal.bg)
+  end
+  return M.colors.bg0
+end
 
 --- Define a pill's highlight groups: the body, and the caps that fake the
 --- rounded ends by inverting fg/bg.
@@ -35,7 +54,7 @@ M.cap = { left = "", right = "" }
 function M.define(name, fill, fg, opts)
   local body = vim.tbl_extend("force", { bg = fill, fg = fg }, opts or {})
   vim.api.nvim_set_hl(0, name, body)
-  vim.api.nvim_set_hl(0, name .. "Cap", { fg = fill, bg = "NONE" })
+  vim.api.nvim_set_hl(0, name .. "Cap", { fg = fill, bg = M.bar_bg() })
 end
 
 --- Render a pill as a statusline/winbar expression string.
