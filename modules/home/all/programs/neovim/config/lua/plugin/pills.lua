@@ -30,7 +30,12 @@ M.colors = {
 -- read as capsules because the fill colour does the work.
 M.rounded = true
 
-M.cap = M.rounded and { left = "", right = "" } or { left = " ", right = " " }
+-- Built from codepoints rather than written literally: these live in the BMP
+-- Private Use Area and do not survive every editor/formatter round-trip, which
+-- silently leaves empty strings and no caps at all.
+M.cap = M.rounded
+    and { left = vim.fn.nr2char(0xE0B6), right = vim.fn.nr2char(0xE0B4) }
+  or { left = " ", right = " " }
 
 --- The bar's own background. "NONE" does *not* mean transparent on an opaque
 --- terminal — it falls through to the theme's StatusLine highlight, which is a
