@@ -26,12 +26,9 @@ require("lspsaga").setup({
       black = "#1d2021", -- Gruvbox black
     },
   },
+  -- The winbar is owned by plugin/winbar.lua (filename + directory pills).
   symbol_in_winbar = {
-    enable = true,
-    show_file = true,
-    folder_level = 1,
-    hide_keyword = true,
-    separator = " > ",
+    enable = false,
   },
   finder = {
     open = open_keys,
