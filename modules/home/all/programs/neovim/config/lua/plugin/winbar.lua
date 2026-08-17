@@ -7,10 +7,13 @@ local M = {}
 
 local c = pills.colors
 
+-- One capsule holding `dir/name`. The two halves differ only in foreground so
+-- the directory recedes without breaking the pill into separate shapes.
 local function set_highlights()
-  pills.define("WinbarFile", c.fg1, c.bg0, { bold = true })
+  pills.define("WinbarFile", c.bg2, c.fg1, { bold = true })
   pills.define("WinbarFileModified", c.orange, c.bg0, { bold = true })
-  pills.define("WinbarDir", c.bg2, c.fg4)
+  vim.api.nvim_set_hl(0, "WinbarFileDim", { bg = c.bg2, fg = c.fg4 })
+  vim.api.nvim_set_hl(0, "WinbarFileModifiedDim", { bg = c.orange, fg = c.bg0 })
 end
 
 --- Winbar is unwanted in floats, special buffers and anything that draws its
@@ -49,16 +52,24 @@ function M.render()
     ) or ""
   end
 
-  local file_hl = vim.bo[buf].modified and "WinbarFileModified" or "WinbarFile"
-  local segments = { pills.render(file_hl, icon .. " " .. name) }
+  local base = vim.bo[buf].modified and "WinbarFileModified" or "WinbarFile"
 
+  local lead = " " .. icon .. " "
   local dir = vim.fn.fnamemodify(path, ":p:h:t")
   if dir ~= "" and dir ~= "." then
-    table.insert(segments, pills.render("WinbarDir", "󰉋 " .. dir))
+    lead = lead .. dir .. "/"
   end
 
-  -- `%=` on both sides centres the group.
-  return "%=" .. table.concat(segments, " ") .. "%="
+  -- `%=` on both sides centres the capsule.
+  return "%="
+    .. table.concat({
+      "%#" .. base .. "Cap#" .. pills.cap.left,
+      "%#" .. base .. "Dim#" .. lead,
+      "%#" .. base .. "#" .. name .. " ",
+      "%#" .. base .. "Cap#" .. pills.cap.right,
+      "%*",
+    })
+    .. "%="
 end
 
 set_highlights()
