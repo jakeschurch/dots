@@ -1,8 +1,10 @@
 { pkgs, ... }:
-with pkgs.vimPlugins;
+with pkgs;
 [
+  national-parks-themes
+]
+++ (with pkgs.vimPlugins; [
   alpha-nvim
-  gruvbox-nvim
   lualine-nvim
   noice-nvim
   nui-nvim
@@ -12,4 +14,4 @@ with pkgs.vimPlugins;
   nvim-colorizer-lua
   rainbow-delimiters-nvim
   image-nvim
-]
+])

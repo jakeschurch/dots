@@ -5,24 +5,8 @@
 -- transparent bar, so the buffer shows through the gaps between pills.
 local M = {}
 
--- gruvbox soft dark. Hardcoded to match the active colorscheme; if the
--- colorscheme changes, update here (lualine bakes colours in at setup time).
-M.colors = {
-  bg0 = "#32302f",
-  bg1 = "#3c3836",
-  bg2 = "#504945",
-  bg3 = "#665c54",
-  fg1 = "#ebdbb2",
-  fg4 = "#a89984",
-  gray = "#928374",
-  red = "#fb4934",
-  green = "#b8bb26",
-  yellow = "#fabd2f",
-  blue = "#83a598",
-  purple = "#d3869b",
-  aqua = "#8ec07c",
-  orange = "#fe8019",
-}
+-- Read from the active colorscheme; see lib/palette.lua.
+M.colors = require("lib.palette")
 
 -- Round powerline caps (U+E0B6 / U+E0B4). These live in the Powerline Extra
 -- Symbols range, so they need a Nerd Font. Without one they render as tofu

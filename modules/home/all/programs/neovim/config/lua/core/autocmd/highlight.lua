@@ -14,11 +14,12 @@ local keywords = {
 }
 
 local function set_todo_highlight()
+  local palette = require("lib.palette")
   vim.api.nvim_set_hl(0, "myTodo", {
     bold = true,
     italic = true,
-    bg = "#32302f",
-    fg = "#fabd2f",
+    bg = palette.bg1,
+    fg = palette.yellow,
   })
 end
 

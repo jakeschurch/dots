@@ -12,7 +12,19 @@ local handlers = {
 }
 
 return {
-  vale_ls = {},
+  -- vale-ls exits 1 when there is no .vale.ini, so only attach where a project
+  -- actually configures vale. Run `vale sync` after writing one.
+  vale_ls = {
+    root_dir = function(bufnr, on_dir)
+      local ini = vim.fs.find(".vale.ini", {
+        path = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)),
+        upward = true,
+      })[1]
+      if ini then
+        on_dir(vim.fs.dirname(ini))
+      end
+    end,
+  },
   regal = {},
   regols = {
     cmd = { "regols" },

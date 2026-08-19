@@ -9,7 +9,21 @@ require("sidekick").setup({
   nes = { enabled = false },
   cli = {
     watch = true,
-    win = { layout = "right", split = { width = 90 } },
+    win = {
+      layout = "left",
+      -- A width <= 1 is read as a fraction of 'columns'.
+      split = { width = 0.33 },
+      keys = {
+        -- <c-q> already does this; <esc><esc> matches the toggleterm habit
+        -- without shadowing a bare <esc>, which Claude Code uses to interrupt.
+        stopinsert_esc = {
+          "<esc><esc>",
+          "stopinsert",
+          mode = "t",
+          desc = "enter normal mode",
+        },
+      },
+    },
     picker = "fzf-lua",
   },
 })
