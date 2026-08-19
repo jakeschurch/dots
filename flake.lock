@@ -597,6 +597,24 @@
         "type": "github"
       }
     },
+    "flake-utils_3": {
+      "inputs": {
+        "systems": "systems_11"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "foundrybox": {
       "inputs": {
         "beads": "beads",
@@ -1714,6 +1732,7 @@
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_4",
         "vmetal": "vmetal",
+        "wayland-vpets": "wayland-vpets",
         "xremap-flake": "xremap-flake"
       }
     },
@@ -1865,6 +1884,21 @@
       "original": {
         "id": "systems",
         "type": "indirect"
+      }
+    },
+    "systems_11": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     },
     "systems_2": {
@@ -2216,6 +2250,27 @@
         "owner": "jakeschurch",
         "ref": "v1",
         "repo": "homelab",
+        "type": "github"
+      }
+    },
+    "wayland-vpets": {
+      "inputs": {
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785363517,
+        "narHash": "sha256-yuTO0nB5EY9wuc1lBlpCIcGBSVgYkFP58s/Djhqls5Q=",
+        "owner": "furudbat",
+        "repo": "wayland-vpets",
+        "rev": "6475987f0dbebaef56b1db3e8997ea4c9cfd100e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "furudbat",
+        "repo": "wayland-vpets",
         "type": "github"
       }
     },

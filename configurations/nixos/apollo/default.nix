@@ -17,6 +17,7 @@ in
     ./hyprland.nix
     ./greetd.nix
     ./vial.nix
+    ./vpets.nix
     (self + "/modules/nixos/tablet.nix")
     self.nixosModules.default
     inputs.disko.nixosModules.disko

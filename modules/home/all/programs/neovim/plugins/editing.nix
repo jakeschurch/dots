@@ -1,6 +1,9 @@
 { pkgs, ... }:
-with pkgs.vimPlugins;
+with pkgs;
 [
+  add-subtract-ex-nvim
+]
+++ (with pkgs.vimPlugins; [
   friendly-snippets
   guess-indent-nvim
   hop-nvim
@@ -12,4 +15,4 @@ with pkgs.vimPlugins;
   vim-matchup
   vim-repeat
   vim-unimpaired
-]
+])
