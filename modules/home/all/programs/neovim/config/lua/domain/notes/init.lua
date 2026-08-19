@@ -4,6 +4,7 @@ return {
   lazy = {
     ["img-clip"] = true,
     presenting = true,
+    callouts = true,
     ["render-markdown"] = true,
   },
 }

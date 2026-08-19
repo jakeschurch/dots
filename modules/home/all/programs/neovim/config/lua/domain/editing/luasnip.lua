@@ -1,5 +1,11 @@
 local ls = require("luasnip")
 
+-- Without this the `snippetType = "autosnippet"` snippets below are registered
+-- but never fire.
+ls.setup({
+  enable_autosnippets = true,
+})
+
 require("luasnip.loaders.from_snipmate").lazy_load()
 require("luasnip.loaders.from_vscode").lazy_load()
 
