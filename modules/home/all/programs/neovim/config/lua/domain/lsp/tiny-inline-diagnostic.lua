@@ -20,6 +20,9 @@ require("tiny-inline-diagnostic").setup({
       messages = true,
       display_count = true,
       use_max_severity = true,
+      -- Defaults to true, which repeats the glyph once per diagnostic: a line
+      -- with two errors reads "󱍷 󱍷 2". One glyph plus the count is enough.
+      show_multiple_glyphs = false,
     },
     multilines = {
       enabled = true,
