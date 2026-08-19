@@ -18,12 +18,37 @@ local LABEL_HL = "WikiLinkLabel"
 
 local FILETYPES = { markdown = true, vimwiki = true }
 
--- Story URLs shorten to `sc-<id>`; add further services here.
+-- Long service URLs shorten to their native shorthand. Matched in order, and a
+-- match overlapping an earlier one is skipped, so put the specific patterns
+-- first. Lua patterns have no alternation, hence issues and pulls separately.
+local TRAILING = "[^%s%)%]>`]*"
+
+local function issue(owner, repo, number)
+  return (" %s/%s#%s"):format(owner, repo, number)
+end
+
 local LABELS = {
   {
-    pattern = "https?://app%.shortcut%.com/[%w%-_]+/story/(%d+)[^%s%)%]>`]*",
+    pattern = "https?://app%.shortcut%.com/[%w%-_]+/story/(%d+)" .. TRAILING,
     label = function(id)
       return "󰓹 sc-" .. id
+    end,
+  },
+  {
+    pattern = "https?://github%.com/([%w%-%._]+)/([%w%-%._]+)/issues/(%d+)"
+      .. TRAILING,
+    label = issue,
+  },
+  {
+    pattern = "https?://github%.com/([%w%-%._]+)/([%w%-%._]+)/pull/(%d+)"
+      .. TRAILING,
+    label = issue,
+  },
+  {
+    pattern = "https?://github%.com/([%w%-%._]+)/([%w%-%._]+)/commit/(%x+)"
+      .. TRAILING,
+    label = function(owner, repo, sha)
+      return (" %s/%s@%s"):format(owner, repo, sha:sub(1, 7))
     end,
   },
 }
@@ -77,17 +102,24 @@ local function decorate(buf, row, line, spans)
   for _, rule in ipairs(LABELS) do
     local from = 1
     while true do
-      local first, last, id = line:find(rule.pattern, from)
+      local found = { line:find(rule.pattern, from) }
+      local first, last = found[1], found[2]
       if not first then
         break
       end
       -- Inside `[text](url)` the destination is already hidden by
       -- render-markdown, and the visible text is the author's own.
       local is_destination = line:sub(math.max(1, first - 2), first - 1) == "]("
-      if not is_destination and not inside(spans, first) then
+      if
+        not is_destination
+        and not inside(spans, first)
+        and not inside(concealed, first)
+      then
         mark(buf, row, first, last, {
           conceal = "",
-          virt_text = { { rule.label(id), LABEL_HL } },
+          virt_text = {
+            { rule.label(unpack(found, 3)), LABEL_HL },
+          },
           virt_text_pos = "inline",
         })
         concealed[#concealed + 1] = { first, last }

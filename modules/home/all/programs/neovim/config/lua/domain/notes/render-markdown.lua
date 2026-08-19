@@ -52,6 +52,7 @@ require("render-markdown").setup({
   link = {
     custom = {
       shortcut = { pattern = "app%.shortcut%.com", icon = "󰓹 " },
+      github = { pattern = "github%.com", icon = " " },
       terraform = { pattern = "registry%.terraform%.io", icon = "󱁢 " },
       aws = { pattern = "aws%.amazon%.com", icon = " " },
       k8s = { pattern = "kubernetes%.io", icon = "󱃾 " },
