@@ -1,0 +1,6 @@
+; extends
+
+[
+  (pair)
+  (comment)+
+] @fold
