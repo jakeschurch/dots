@@ -2,13 +2,13 @@ pkgs: {
   python = with pkgs; [
     pipenv
     pyright
-    pylint
+    # ruff covers formatting, import sorting and linting in one binary.
+    ruff
   ];
 
   elixir = with pkgs; [
     beamPackages.elixir_1_19
     expert
-    elixir-ls
   ];
 
   nix = with pkgs; [
@@ -71,7 +71,8 @@ pkgs: {
     terraform-docs
     tflint
     # tfenv
-    tfsec
+    # tfsec was archived upstream and folded into trivy.
+    trivy
     hclfmt
     packer
   ];
@@ -93,7 +94,6 @@ pkgs: {
   go = with pkgs; [
     go
     gopls
-    golint
     golines
     delve
     gofumpt
@@ -135,7 +135,7 @@ pkgs: {
     ghostscript
     codespell
     yaml-language-server
-    # actionlint
+    actionlint
     yamllint
     # semgrep
     hadolint

@@ -2,9 +2,12 @@ local conform = require("conform")
 
 conform.setup({
   formatters_by_ft = {
-    python = { "isort", "black" },
-    sh = { "shellharden" },
-    bash = { "shellharden" },
+    -- ruff replaces isort + black, and its linter half replaces flake8/pylint.
+    python = { "ruff_organize_imports", "ruff_format" },
+    -- shellharden is a safety rewriter (it adds quoting), not a formatter;
+    -- it stays available through :ShellHarden.
+    sh = { "shfmt" },
+    bash = { "shfmt" },
     lua = { "stylua" },
     nix = { "nixfmt" },
     go = { "goimports-reviser", "gofumpt", "golines" },
@@ -45,6 +48,9 @@ conform.setup({
     sqlfluff = {
       prepend_args = { "--dialect", "postgres" },
     },
+    shfmt = {
+      prepend_args = { "--indent", "2", "--case-indent", "--binary-next-line" },
+    },
     injected = {
       options = { ignore_errors = true },
     },
@@ -65,6 +71,10 @@ end, { range = true, desc = "Format buffer or range" })
 vim.keymap.set({ "n", "v" }, "<leader>f", function()
   conform.format({ async = true })
 end, { desc = "Format" })
+
+vim.api.nvim_create_user_command("ShellHarden", function()
+  conform.format({ async = true, formatters = { "shellharden" } })
+end, { desc = "Rewrite shell quoting with shellharden" })
 
 vim.api.nvim_create_user_command("FormatInjected", function()
   conform.format({ async = true, formatters = { "injected" } })

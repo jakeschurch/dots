@@ -4,10 +4,14 @@ local lint = require("lint")
 -- terraform_validate are covered by eslint-ls, bashls and terraformls; pyright
 -- covers what mypy was doing.
 lint.linters_by_ft = {
-  python = { "pylint" },
+  python = { "ruff" },
   nix = { "statix", "deadnix" },
   yaml = { "yamllint" },
-  terraform = { "tfsec" },
+  -- tflint catches provider and naming problems; trivy is the IaC security
+  -- scan that absorbed tfsec when Aqua archived it.
+  terraform = { "tflint", "trivy" },
+  ["yaml.github"] = { "actionlint" },
+  go = { "golangcilint" },
   dockerfile = { "hadolint" },
   elixir = { "credo" },
   css = { "stylelint" },
@@ -18,20 +22,6 @@ lint.linters_by_ft = {
   markdown = { "codespell" },
   vimwiki = { "codespell" },
   text = { "codespell" },
-}
-
-lint.linters.pylint.args = {
-  "--rcfile",
-  vim.fs.normalize("~/.pylintrc"),
-  "--disable=missing-module-docstring",
-  "--disable=missing-class-docstring",
-  "--disable=missing-function-docstring",
-  "-f",
-  "json",
-  "--from-stdin",
-  function()
-    return vim.api.nvim_buf_get_name(0)
-  end,
 }
 
 lint.linters.sqlfluff.args = {
