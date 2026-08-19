@@ -114,7 +114,11 @@ lualine.setup({
     theme = transparent,
     icons_enabled = true,
     globalstatus = true,
-    disabled_filetypes = { statusline = ignored_filetypes },
+    -- Only the winbar is disabled per-filetype. globalstatus means there is
+    -- exactly one statusline that cannot be hidden, so listing filetypes here
+    -- would blank it out rather than remove it — a bare bar in oil/fugitive
+    -- instead of the pills.
+    disabled_filetypes = { winbar = ignored_filetypes },
     always_show_tabline = false,
     -- The pills supply their own edges; lualine must not draw any of its own.
     component_separators = "",

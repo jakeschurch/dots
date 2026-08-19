@@ -184,6 +184,9 @@
       enable = true;
       enableFishIntegration = true;
     };
+    # `, <cmd>` runs a program without installing it. Ships its own wrapped
+    # copy of the prebuilt index, so there is nothing to build locally.
+    nix-index-database.comma.enable = true;
     command-not-found.enable = false;
 
     info.enable = true;

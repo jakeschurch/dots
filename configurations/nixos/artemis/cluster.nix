@@ -128,6 +128,17 @@ in
       mem = 12288;
     };
 
+    # Moved from apollo (was k3s-server-3) 2026-08-18 — etcd majority off the desktop.
+    vms.k3s-server-6 = {
+      role = "server";
+      ip = "192.168.101.15";
+      mac = "02:00:00:00:00:15";
+      vsockCid = 15;
+      readinessVsockPort = 9015;
+      vcpu = 6;
+      mem = 12288;
+    };
+
     # =========================================================================
     # MOCK (foundrybox-6j1j): worker-4/5/6 become Garage storage nodes.
     #   - coldStorageDevice: LVM LV on the 8TB HDD (VG coldvg, one LV per worker)
@@ -156,7 +167,8 @@ in
       # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      mem = 28672;
+      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
+      mem = 24576;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
@@ -177,7 +189,8 @@ in
       # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      mem = 28672;
+      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
+      mem = 24576;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
@@ -198,7 +211,8 @@ in
       # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      mem = 28672;
+      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
+      mem = 24576;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
@@ -215,7 +229,8 @@ in
     # (microvm-readiness-signal → kubelet healthz). Same priority = parallel,
     # which bounced all workers at once (kyverno admission outage 2026-06-17).
     # Workers first (no etcd impact), then etcd servers sequentially so the
-    # 5-member quorum never loses two at once.
+    # 5-member quorum never loses two at once. artemis holds 3 of 5 as of
+    # 2026-08-18 — a full host reboot here drops quorum.
     k3s-worker-4 = {
       restartPriority = 0;
       restartTimeout = 300;
@@ -236,6 +251,10 @@ in
       restartPriority = 4;
       restartTimeout = 300;
     };
+    k3s-server-6 = {
+      restartPriority = 5;
+      restartTimeout = 300;
+    };
   };
 
   # CPU affinity pinning (foundrybox-oh4q.4). Confine each guest's
@@ -250,6 +269,7 @@ in
     "microvm@k3s-worker-6".serviceConfig.CPUAffinity = "32-45 96-109";
     "microvm@k3s-server-4".serviceConfig.CPUAffinity = "28-30 92-94";
     "microvm@k3s-server-5".serviceConfig.CPUAffinity = "46-48 110-112";
+    "microvm@k3s-server-6".serviceConfig.CPUAffinity = "49-51 113-115";
   };
 
   networking.nat.externalInterface = self.nic;

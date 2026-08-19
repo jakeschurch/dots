@@ -80,16 +80,16 @@
       name = "k3s-server-2";
     }
     {
-      ip = "192.168.100.12";
-      name = "k3s-server-3";
-    }
-    {
       ip = "192.168.101.13";
       name = "k3s-server-4";
     }
     {
       ip = "192.168.101.14";
       name = "k3s-server-5";
+    }
+    {
+      ip = "192.168.101.15";
+      name = "k3s-server-6";
     }
   ];
 }

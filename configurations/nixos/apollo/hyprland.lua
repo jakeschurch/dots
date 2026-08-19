@@ -109,42 +109,42 @@ hl.config({
   plugin = {
     -- dynamic_cursors: enabled on NVIDIA; revert if cursor flicker/crashes appear
     dynamic_cursors = {
-      enabled   = true,
-      mode      = "rotate",
+      enabled = true,
+      mode = "rotate",
       threshold = 2,
-      rotate    = {
-        limit        = 4000,
+      rotate = {
+        limit = 4000,
         ["function"] = "linear",
-        window       = 100,
+        window = 100,
       },
-      shake     = {
-        enabled   = true,
-        nearest   = true,
+      shake = {
+        enabled = true,
+        nearest = true,
         threshold = 2.0,
-        base      = 1.5,
-        speed     = 3.0,
+        base = 1.5,
+        speed = 3.0,
         influence = 0.0,
-        limit     = 0.2,
-        timeout   = 100,
-        effects   = false,
-        ipc       = false,
+        limit = 0.2,
+        timeout = 100,
+        effects = false,
+        ipc = false,
       },
     },
     hyprcursor = {
-      nearest    = true,
-      enabled    = true,
+      nearest = true,
+      enabled = true,
       resolution = -1,
-      fallback   = "clientside",
+      fallback = "clientside",
     },
     hyprbars = {
-      bar_height            = 30,
-      on_double_click       = "hyprctl dispatch fullscreen 1",
-      bar_title_enabled     = false,
+      bar_height = 30,
+      on_double_click = "hyprctl dispatch fullscreen 1",
+      bar_title_enabled = false,
       bar_buttons_alignment = "right",
-      bar_part_of_window    = true,
-      bar_blur              = true,
-      bar_padding           = 12,
-      bar_button_padding    = 10,
+      bar_part_of_window = true,
+      bar_blur = true,
+      bar_padding = 12,
+      bar_button_padding = 10,
     },
   },
 })
@@ -152,15 +152,24 @@ hl.config({
 -- hyprbars buttons (R → L order): close · minimize · fullscreen.
 -- Minimize sends to special:MinimizedApps — peek it with SUPER+M, restore the
 -- focused window with SUPER+SHIFT+return (see keybindings below).
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(ff5f56)", size = 15, icon = "", action = "smart-kill" })
+hl.plugin.hyprbars.add_button({
+  bg_color = "rgb(ff5f56)",
+  size = 15,
+  icon = "",
+  action = "smart-kill",
+})
 hl.plugin.hyprbars.add_button({
   bg_color = "rgb(ffbd2e)",
   size = 15,
   icon = "",
-  action =
-  "hyprctl dispatch movetoworkspacesilent special:MinimizedApps"
+  action = "hyprctl dispatch movetoworkspacesilent special:MinimizedApps",
 })
-hl.plugin.hyprbars.add_button({ bg_color = "rgb(27c93f)", size = 15, icon = "", action = "hyprctl dispatch fullscreen 1" })
+hl.plugin.hyprbars.add_button({
+  bg_color = "rgb(27c93f)",
+  size = 15,
+  icon = "",
+  action = "hyprctl dispatch fullscreen 1",
+})
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -346,9 +355,9 @@ hl.define_submap("powermenu", "reset", function()
       hl.dispatch(hl.dsp.submap("reset"))
     end
   end
-  hl.bind("l", pm("hyprlock --immediate"))             -- lock
-  hl.bind("p", pm("systemctl poweroff"))               -- power off
-  hl.bind("r", pm("systemctl reboot"))                 -- reboot
+  hl.bind("l", pm("hyprlock --immediate")) -- lock
+  hl.bind("p", pm("systemctl poweroff")) -- power off
+  hl.bind("r", pm("systemctl reboot")) -- reboot
   hl.bind("s", pm("systemctl suspend-then-hibernate")) -- suspend
   hl.bind("return", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))

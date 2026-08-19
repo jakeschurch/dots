@@ -121,15 +121,7 @@ in
       mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
     };
 
-    vms.k3s-server-3 = {
-      role = "server";
-      ip = "192.168.100.12";
-      mac = "02:00:00:00:00:12";
-      vsockCid = 12;
-      readinessVsockPort = 9012;
-      vcpu = 3; # 4→3 (2026-06-28): 1 core freed for host; etcd floor is 2, 3 has headroom
-      mem = 12288; # 8→12Gi (2026-07-10): 8Gi starved the etcd voters (~122% of allocatable, 33k+ Event bloat) → apiserver lease writes timed out → ~2-min leader-election storms + registry 520s. Matches servers 4/5.
-    };
+    # k3s-server-3 moved to artemis as k3s-server-6 (2026-08-18).
 
     # 2026-07-14 rebuild: 3 workers → 2 BEEFY workers, mayastor on RAW BLOCK
     # only. img-on-btrfs pools are gone — the shared btrfs transaction between
@@ -206,12 +198,8 @@ in
       restartPriority = 2;
       restartTimeout = 300;
     };
-    k3s-server-3 = {
-      restartPriority = 3;
-      restartTimeout = 300;
-    };
     k3s-server-1 = {
-      restartPriority = 4;
+      restartPriority = 3;
       restartTimeout = 300;
     };
   };
@@ -226,7 +214,6 @@ in
     "microvm@k3s-worker-2".serviceConfig.CPUAffinity = "4-7 20-23";
     "microvm@k3s-server-1".serviceConfig.CPUAffinity = "8-9 24-25";
     "microvm@k3s-server-2".serviceConfig.CPUAffinity = "10-11 26-27";
-    "microvm@k3s-server-3".serviceConfig.CPUAffinity = "12-13 28-29";
   };
 
   # NAT for microVM external network access
