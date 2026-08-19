@@ -2,7 +2,6 @@ local M = {}
 
 M.ignored_filetypes = {
   "oil",
-  "codecompanion",
   "alpha",
   "dashboard",
   "fugitive",

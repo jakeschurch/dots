@@ -1,6 +1,6 @@
 require("render-markdown").setup({
   completions = { blink = { enabled = true } },
-  file_types = { "markdown", "vimwiki", "Avante", "help", "codecompanion" },
+  file_types = { "markdown", "vimwiki", "help" },
   quote = {
     enabled = true,
     repeat_linebreak = true,

@@ -1,2 +1,1 @@
-require("octo").setup()
-require("telescope").load_extension("octo")
+require("octo").setup({ picker = "fzf-lua" })

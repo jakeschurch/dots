@@ -41,7 +41,7 @@ in
     vimAlias = true;
     withNodeJs = false;
     withRuby = false;
-    withPython3 = true;
+    withPython3 = false;
     vimdiffAlias = true;
     plugins = nvimPlugins;
   };
@@ -51,30 +51,20 @@ in
     PSQL_EDITOR = "nvim";
   };
 
+  # Everything under config/ is symlinked back out of the store so edits are
+  # live — no rebuild between changing a lua file and restarting nvim.
   xdg.configFile =
     let
-      mapToXdgConfigFile = entryName: path: {
-        name = entryName;
-        value = {
-          source = path;
-          recursive = true;
-        };
-      };
-
-      bindings = {
-        "nvim/after" = ./config/after;
-        "nvim/lua" = ./config/lua;
-        "nvim/snippets" = ./config/snippets;
-      };
-
       inherit (config.lib.file) mkOutOfStoreSymlink;
       inherit (config.home) homeDirectory;
 
       mkOutOfStoreNeovimSymlink =
         path: mkOutOfStoreSymlink "${homeDirectory}/.dots/modules/home/all/programs/neovim/${path}";
     in
-    (lib.mapAttrs' mapToXdgConfigFile bindings)
-    // {
+    {
+      "nvim/after".source = mkOutOfStoreNeovimSymlink "config/after";
+      "nvim/lua".source = mkOutOfStoreNeovimSymlink "config/lua";
+      "nvim/snippets".source = mkOutOfStoreNeovimSymlink "config/snippets";
       "nvim/spell/en.utf-8.add".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add";
       "nvim/spell/en.utf-8.add.spl".source = mkOutOfStoreNeovimSymlink "config/spell/en.utf-8.add.spl";
       "nvim/manpager.lua".source = mkOutOfStoreNeovimSymlink "config/manpager.lua";

@@ -48,11 +48,6 @@ local config = {
 
     per_filetype = {
       markdown = { inherit_defaults = true },
-      codecompanion = {
-        "codecompanion",
-        "copilot",
-        "lsp",
-      },
     },
 
     -- REVIEW:
