@@ -104,18 +104,22 @@ pkgs: {
   markdown = with pkgs; [
     vale-ls
 
-    python313Packages.mdformat
-    python313Packages.mdformat-admon
-    python313Packages.mdformat-beautysh
-    python313Packages.mdformat-footnote
-    python313Packages.mdformat-frontmatter
-    python313Packages.mdformat-gfm
-    python313Packages.mdformat-gfm-alerts
-    python313Packages.mdformat-mkdocs
-    python313Packages.mdformat-myst
-    python313Packages.mdformat-nix-alejandra
-    python313Packages.mdformat-simple-breaks
-    python313Packages.mdformat-gfm
+    # Plugins have to share mdformat's python env or it cannot discover them;
+    # installed side by side they were silently inert.
+    (mdformat.withPlugins (
+      ps: with ps; [
+        mdformat-admon
+        mdformat-beautysh
+        mdformat-footnote
+        mdformat-frontmatter
+        mdformat-gfm
+        mdformat-gfm-alerts
+        mdformat-mkdocs
+        mdformat-myst
+        mdformat-nix-alejandra
+        mdformat-simple-breaks
+      ]
+    ))
   ];
 
   html = with pkgs; [

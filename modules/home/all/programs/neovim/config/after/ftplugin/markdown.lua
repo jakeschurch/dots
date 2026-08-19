@@ -26,17 +26,34 @@ vim.opt_local.comments = "n:>"
 vim.opt_local.formatlistpat =
   [[^\s*\%(>\s*\)*\%([-*+]\|\d\+[.)]\)\s\+\%(\[[ xX~/-]\]\s\+\)\?]]
 
-vim.opt_local.formatexpr = "v:lua.require'md_format'.formatexpr()"
+vim.opt_local.formatexpr = "v:lua.require'lib.md_format'.formatexpr()"
 
-vim.keymap.set("n", "gw", function()
-  vim.o.operatorfunc = "v:lua.require'md_format'.opfunc"
-  return "g@"
-end, { buffer = true, expr = true, desc = "Format (treesitter-aware)" })
+local function operator(motion)
+  return function()
+    vim.o.operatorfunc = "v:lua.require'lib.md_format'.opfunc"
+    return "g@" .. motion
+  end
+end
+
+vim.keymap.set("n", "gw", operator(""), {
+  buffer = true,
+  expr = true,
+  desc = "Format (treesitter-aware)",
+})
+
+-- gww / gwgw: the line-wise forms, which a bare `g@` would swallow as a motion.
+for _, lhs in ipairs({ "gww", "gwgw" }) do
+  vim.keymap.set("n", lhs, operator("_"), {
+    buffer = true,
+    expr = true,
+    desc = "Format line (treesitter-aware)",
+  })
+end
 
 vim.keymap.set(
   "x",
   "gw",
-  "<cmd>lua require('md_format').visual()<cr>",
+  "<cmd>lua require('lib.md_format').visual()<cr>",
   { buffer = true, desc = "Format (treesitter-aware)" }
 )
 

@@ -30,11 +30,9 @@ in
       vscode-langservers-extracted
     ];
     defaultEditor = true;
-    extraConfig = ''
-      lua <<EOF
+    extraLuaConfig = ''
       ${nvimPkgSrc}
-      EOF
-      ${builtins.readFile ./init.vim}
+      ${builtins.readFile ./init.lua}
     '';
 
     viAlias = true;

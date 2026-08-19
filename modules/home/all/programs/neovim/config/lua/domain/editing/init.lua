@@ -1,0 +1,5 @@
+return {
+  lazy = {
+    luasnip = "InsertEnter",
+  },
+}

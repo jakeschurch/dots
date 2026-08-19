@@ -1,0 +1,5 @@
+return {
+  lazy = {
+    toggleterm = true,
+  },
+}
