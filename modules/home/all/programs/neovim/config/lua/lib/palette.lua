@@ -1,10 +1,10 @@
 -- Single source of colour for the pills, winbar, lspsaga and TODO highlights.
 --
 -- Values are read out of the active colorscheme rather than hardcoded, so
--- swapping schemes needs no edits here. The fallbacks are Katmai's, for the
--- window before a scheme has loaded. Indexing goes through a cache that
--- ColorScheme clears, because lualine bakes colours in at setup time and has
--- to be able to re-read them.
+-- swapping schemes needs no edits here. The fallbacks are gruvbox soft dark,
+-- for the window before a scheme has loaded. Indexing goes through a cache
+-- that ColorScheme clears, because lualine bakes colours in at setup time and
+-- has to be able to re-read them.
 
 local M = {}
 
@@ -16,23 +16,23 @@ end
 
 function M.build()
   return {
-    bg0 = hl("Normal", "bg", "#191512"),
-    bg1 = hl("CursorLine", "bg", "#201c19"),
-    bg2 = hl("Pmenu", "bg", "#24201d"),
-    bg3 = hl("PmenuSel", "bg", "#2c2723"),
+    bg0 = hl("Normal", "bg", "#32302f"),
+    bg1 = hl("CursorLine", "bg", "#3c3836"),
+    bg2 = hl("Pmenu", "bg", "#504945"),
+    bg3 = hl("PmenuSel", "bg", "#665c54"),
 
-    fg1 = hl("Normal", "fg", "#e5ddd2"),
-    fg4 = hl("LineNr", "fg", "#726c66"),
-    gray = hl("Comment", "fg", "#9d968e"),
+    fg1 = hl("Normal", "fg", "#ebdbb2"),
+    fg4 = hl("LineNr", "fg", "#a89984"),
+    gray = hl("Comment", "fg", "#928374"),
 
-    red = hl("DiagnosticError", "fg", "#d85854"),
-    yellow = hl("DiagnosticWarn", "fg", "#ddb850"),
-    blue = hl("DiagnosticInfo", "fg", "#6c99d0"),
-    aqua = hl("DiagnosticHint", "fg", "#60b4ad"),
-    green = hl("String", "fg", "#8aaf5d"),
-    purple = hl("@variable.parameter", "fg", "#b187c5"),
-    orange = hl("@module", "fg", "#df8944"),
-    accent = hl("@keyword", "fg", "#e07a5a"),
+    red = hl("DiagnosticError", "fg", "#fb4934"),
+    yellow = hl("DiagnosticWarn", "fg", "#fabd2f"),
+    blue = hl("DiagnosticInfo", "fg", "#83a598"),
+    aqua = hl("DiagnosticHint", "fg", "#8ec07c"),
+    green = hl("String", "fg", "#b8bb26"),
+    purple = hl("@variable.parameter", "fg", "#d3869b"),
+    orange = hl("@module", "fg", "#fe8019"),
+    accent = hl("@keyword", "fg", "#fe8019"),
   }
 end
 

@@ -1,7 +1,7 @@
 -- Loads lua/domain/<capability>/*.lua.
 --
 -- Each domain has an init.lua returning a spec:
---   first = { "katmai" }         modules loaded before the rest of the domain
+--   first = { "gruvbox" }        modules loaded before the rest of the domain
 --   lazy  = { colorizer = true } true  -> after the first screen draw
 --                               "Event" -> on that autocmd, once
 -- Anything not listed loads eagerly, in alphabetical order.
