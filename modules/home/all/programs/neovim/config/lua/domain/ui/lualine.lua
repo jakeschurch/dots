@@ -22,10 +22,22 @@ end
 local bar = pills.bar_bg()
 
 -- lualine only paints the regions it draws; the rest of the bar (and the `%=`
--- fill) uses StatusLine, so that has to match too.
-for _, group in ipairs({ "StatusLine", "StatusLineNC", "WinBar", "WinBarNC" }) do
-  vim.api.nvim_set_hl(0, group, { bg = bar, fg = c.fg4 })
+-- fill) uses StatusLine, so that has to match too. Re-applied on ColorScheme
+-- because loading a scheme resets these to its own solid bar, which leaves the
+-- pill caps visible against it instead of blending into the buffer.
+local function set_bar_highlights()
+  for _, group in ipairs({ "StatusLine", "StatusLineNC", "WinBar", "WinBarNC" }) do
+    vim.api.nvim_set_hl(0, group, { bg = bar, fg = c.fg4 })
+  end
 end
+
+set_bar_highlights()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("lualine-pills", { clear = true }),
+  callback = set_bar_highlights,
+  desc = "Keep the statusline transparent behind the pills",
+})
 
 local empty = { bg = bar, fg = c.fg4 }
 local transparent = {}

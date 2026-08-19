@@ -115,5 +115,3 @@ local mappings = {
 
 local which_key = require("which-key")
 which_key.add(mappings)
-
-require("gruvbox").load()
