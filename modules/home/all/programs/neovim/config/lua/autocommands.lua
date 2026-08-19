@@ -3,7 +3,7 @@ vim.cmd([[
 augroup _general_settings
 autocmd!
 autocmd FileType qf,help,man,lspinfo nnoremap <silent> <buffer> q :close<CR>
-autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual = true}
+autocmd TextYankPost * silent! lua vim.hl.on_yank{on_visual = true}
 augroup END
 
 augroup _git
@@ -13,9 +13,6 @@ autocmd FileType gitcommit setlocal spell
 augroup END
 
 hi myTodo cterm=bold,italic gui=bold,italic guibg=#32302f guifg=#fabd2f
-
-" trim new lines
-autocmd BufWritePre * silent! :%s/\s\+$//e
 
 augroup HiglightTODO
 autocmd!
@@ -30,6 +27,13 @@ autocmd WinEnter,VimEnter * :silent!
 augroup END
 
 ]])
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("trim_on_write", { clear = true }),
+  callback = function(ev)
+    require("trim").buffer(ev.buf)
+  end,
+})
 
 vim.api.nvim_create_autocmd({ "BufReadPost" }, {
   pattern = { "*" },

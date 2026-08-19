@@ -2,9 +2,7 @@ local null_ls = require("null-ls")
 
 null_ls.setup({
   sources = {
-    -- Generic
-    require("none-ls.formatting.trim_newlines"),
-    require("none-ls.formatting.trim_whitespace"),
+    -- Whitespace/invisible-character trimming lives in lua/trim.lua.
 
     -- Python
     null_ls.builtins.formatting.isort,
