@@ -3,7 +3,7 @@ local group = vim.api.nvim_create_augroup("highlight", { clear = true })
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = group,
   callback = function()
-    pcall(vim.hl.on_yank, { on_visual = true })
+    pcall(vim.hl.hl_op, { on_visual = true })
   end,
   desc = "Flash the yanked region",
 })
