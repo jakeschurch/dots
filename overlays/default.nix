@@ -66,6 +66,18 @@ in
     pkgs = super;
   };
 
+  # tmux 3.7's configure aborts on darwin unless jemalloc is explicitly enabled
+  # or disabled (macOS calloc(3) does not always zero allocations). nixpkgs
+  # passes neither, so the darwin build fails; enable it with the dependency.
+  tmux =
+    if super.stdenv.hostPlatform.isDarwin then
+      super.tmux.overrideAttrs (old: {
+        buildInputs = (old.buildInputs or [ ]) ++ [ super.jemalloc ];
+        configureFlags = (old.configureFlags or [ ]) ++ [ "--enable-jemalloc" ];
+      })
+    else
+      super.tmux;
+
   # Pin claude-code ahead of nixpkgs (2.1.161 as of 2026-06-10).
   # Checksums from https://downloads.claude.ai/claude-code-releases/<version>/manifest.json
   claude-code = super.claude-code.overrideAttrs (
