@@ -7,7 +7,7 @@ pkgs: {
   ];
 
   elixir = with pkgs; [
-    beamPackages.elixir_1_19
+    beamMinimal29Packages.elixir_1_20
     expert
   ];
 
