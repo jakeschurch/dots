@@ -1,0 +1,7 @@
+# repeated_keys: flagging `programs.foo = {...}; programs.bar = {...};` as a
+# lint fights how NixOS/home-manager modules are normally written, statix has
+# no autofix for it, and its suggested rewrite is sometimes malformed
+# (`nix = { settings.netrc-file=...; extraOptions=...; =...; }`).
+disabled = [ "repeated_keys" ]
+
+ignore = [ ".direnv", "result" ]

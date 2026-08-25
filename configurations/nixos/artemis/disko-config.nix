@@ -1,7 +1,7 @@
 # Disk layout for Samsung SSD 980 PRO 2TB (~1.82 TiB) on /dev/nvme0n1
 # VM storage uses ext4 to isolate from BTRFS — prevents unbootable system on hard poweroff
 # Snapshot archive uses a separate BTRFS partition so it can't starve root FS free space
-{ ... }:
+_:
 {
   # coldvg holds no host filesystem (LVs are passed raw into worker VMs), so
   # nothing else pulls LVM in. Enable it explicitly: lvm2 + udev autoactivation

@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   system.activationScripts.disableNixSpotlight.text = ''
     touch /nix/.metadata_never_index

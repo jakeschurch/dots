@@ -15,7 +15,7 @@
   home = {
     stateVersion = "25.05";
     enableNixpkgsReleaseCheck = false;
-    username = flake.config.me.username;
+    inherit (flake.config.me) username;
 
     packages = with pkgs; [
       mosh

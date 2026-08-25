@@ -1,4 +1,4 @@
-{ ... }:
+_:
 let
   clusterData = import ../../../modules/data/cluster.nix;
   self = clusterData.hosts.artemis;
@@ -8,23 +8,18 @@ in
   services.microvm-host = {
     enable = true;
     network = {
-      gateway = self.gateway;
-      subnet = self.subnet;
+      inherit (self) gateway subnet;
       externalInterface = self.nic;
-      vip = clusterData.vip;
+      inherit (clusterData) vip;
       bgp = {
         enable = true;
-        asn = self.asn;
+        inherit (self) asn;
         localAsn = self.asn;
-        peerAsn = clusterData.bgp.peerAsn;
+        inherit (clusterData.bgp) peerAsn ciliumPeerAsn;
         peerSubnet = self.subnet;
-        ciliumPeerAsn = clusterData.bgp.ciliumPeerAsn;
         ciliumPeerSubnet = self.subnet;
         peers = [
-          {
-            lanIp = peer.lanIp;
-            asn = peer.asn;
-          }
+          { inherit (peer) lanIp asn; }
         ];
         lanInterface = self.nic;
         noMasqueradeCidrs = [
@@ -34,7 +29,7 @@ in
         extraPeerSubnets = [ peer.subnet ];
         # Advertise the API VIP /32 to the UDM (AS64511) so external clients get
         # ECMP/failover across hosts instead of a static pin to apollo. (2026-06-24)
-        upstreamPeers = clusterData.bgp.upstreamPeers;
+        inherit (clusterData.bgp) upstreamPeers;
       };
       vxlan = {
         enable = false;
@@ -49,15 +44,15 @@ in
     # Not the bootstrap host — no cluster-init, no gateway/dns assertions
     primary = false;
     token = "my-cluster-token-12345";
-    vip = clusterData.vip;
+    inherit (clusterData) vip;
     bgp = {
       enable = true;
-      asn = self.asn;
-      peerAsn = clusterData.bgp.peerAsn;
+      inherit (self) asn;
+      inherit (clusterData.bgp) peerAsn;
       extraHostPeers = [
         {
           address = peer.gateway;
-          asn = peer.asn;
+          inherit (peer) asn;
         }
       ];
     };
@@ -88,16 +83,13 @@ in
     };
 
     network = {
-      prefix = self.prefix;
-      firstServerIp = clusterData.firstServerIp; # apollo's initial server — unchanged
-      gateway = self.gateway;
-      dns = self.dns;
+      inherit (self) prefix gateway dns;
+      inherit (clusterData) firstServerIp clusterNodeCidrs; # firstServerIp: apollo's initial server — unchanged
       nodeCidr = self.subnet;
-      clusterNodeCidrs = clusterData.clusterNodeCidrs;
       hostId = "artemis";
     };
 
-    sshKeys = clusterData.sshKeys;
+    inherit (clusterData) sshKeys;
 
     # Non-initial server — expands etcd quorum from 3 → 5
     vms.k3s-server-4 = {
