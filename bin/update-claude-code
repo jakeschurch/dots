@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# vim:filetype=sh
+#
+# Refresh overlays/claude-code.json from the claude-code release manifests.
+#
+#   update-claude-code           # newest stable release
+#   update-claude-code latest    # newest release, stable or not
+#   update-claude-code 2.1.245   # a specific version
+
+set -euo pipefail
+
+BASE="https://downloads.claude.ai/claude-code-releases"
+PIN="$(dirname "$(dirname "$(realpath "$0")")")/overlays/claude-code.json"
+
+CHANNEL="${1:-stable}"
+
+case "$CHANNEL" in
+stable | latest)
+	VERSION="$(curl -fsSL "$BASE/$CHANNEL")"
+	;;
+*)
+	VERSION="$CHANNEL"
+	CHANNEL="pinned"
+	;;
+esac
+
+CURRENT="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "$PIN")"
+
+if [ "$VERSION" == "$CURRENT" ]; then
+	echo "claude-code already at $VERSION ($CHANNEL)"
+	exit 0
+fi
+
+curl -fsSL "$BASE/$VERSION/manifest.json" |
+	CHANNEL="$CHANNEL" PIN="$PIN" python3 -c '
+import json, os, sys
+
+manifest = json.load(sys.stdin)
+platforms = ("darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64")
+pin = {
+    "version": manifest["version"],
+    "channel": os.environ["CHANNEL"],
+    "checksums": {
+        p: manifest["platforms"][p]["checksum"]
+        for p in platforms
+        if p in manifest["platforms"]
+    },
+}
+with open(os.environ["PIN"], "w") as f:
+    f.write(json.dumps(pin, indent=2) + "\n")
+'
+
+echo "claude-code $CURRENT -> $VERSION ($CHANNEL)"

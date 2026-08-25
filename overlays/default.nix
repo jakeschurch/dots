@@ -78,18 +78,16 @@ in
     else
       super.tmux;
 
-  # Pin claude-code ahead of nixpkgs (2.1.161 as of 2026-06-10).
-  # Checksums from https://downloads.claude.ai/claude-code-releases/<version>/manifest.json
+  # Pin claude-code ahead of nixpkgs. Version and checksums live in
+  # claude-code.json; refresh them with `bin/update-claude-code` (stable channel
+  # by default, `bin/update-claude-code latest` or an explicit version too).
   claude-code = super.claude-code.overrideAttrs (
     _old:
     let
-      version = "2.1.170";
+      pin = builtins.fromJSON (builtins.readFile ./claude-code.json);
+      inherit (pin) version;
       platformKey = "${super.stdenv.hostPlatform.node.platform}-${super.stdenv.hostPlatform.node.arch}";
-      checksums = {
-        linux-x64 = "849e007277a0442ab27570d3e3d6d43787507946590e8dd1947e5a39b7081f9e";
-        linux-arm64 = "1bb9d032440a75532f7dd4cafbc687f220aaf16c63eba17e192dfbec2f04bd25";
-        darwin-arm64 = "e903646d8b7a31882a80ecd27569a27d8ac57b3708745f349709632c84117fdf";
-      };
+      inherit (pin) checksums;
     in
     {
       inherit version;

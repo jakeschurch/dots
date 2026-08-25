@@ -1,0 +1,10 @@
+{
+  "version": "2.1.245",
+  "channel": "latest",
+  "checksums": {
+    "darwin-arm64": "9f7c2260251765a18d0b35198669dacc1912f6e8129a3b01f6b58d93365ff1f1",
+    "darwin-x64": "de044bb543e826352f31587a74356e1b2dae94dc1b9c960a362d9f07df96c2a7",
+    "linux-arm64": "d0da299303d710a7cc5cdece9629958f5128ce1a727e15463c651ed5cf385c7f",
+    "linux-x64": "16ad2b94deaf7b29abed966d981c9991a47af0420f5be8ed4a3f83bea9f678bc"
+  }
+}
