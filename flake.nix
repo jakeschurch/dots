@@ -86,8 +86,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # NOTE: no nixpkgs.follows -- upstream flake uses beamPackages.extend, which
+    # our nixpkgs no longer has (beam sets are makeScope now, overrideScope only).
     expert.url = "github:elixir-lang/expert";
-    expert.inputs.nixpkgs.follows = "nixpkgs";
 
     vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
