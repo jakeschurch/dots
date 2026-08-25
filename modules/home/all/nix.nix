@@ -80,6 +80,13 @@
 
     extraOptions = ''
       accept-flake-config = true
+
+      # GitHub API token for flake inputs (avoids 60 req/hr anonymous rate limit).
+      # Absolute path: nix.conf itself is a store symlink, so a relative include
+      # would resolve inside /nix/store. Leading `!` makes it optional, so
+      # machines without the file still work. Contents:
+      #   access-tokens = github.com=ghp_...
+      !include ${config.xdg.configHome}/nix/access-tokens.conf
       min-free = ${toString (100 * 1024 * 1024)}
       max-free = ${toString (1024 * 1024 * 1024)}
 
