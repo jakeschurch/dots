@@ -35,6 +35,8 @@
         "x-scheme-handler/about" = ff;
         "x-scheme-handler/unknown" = ff;
         "application/xhtml+xml" = ff;
+        # Open directories in PCManFM, not zathura's comic-book handler.
+        "inode/directory" = "pcmanfm.desktop";
       };
   };
 }
