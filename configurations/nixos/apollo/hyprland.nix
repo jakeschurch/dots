@@ -95,52 +95,6 @@ in
         [ -t 1 ] && exec ${pkgs.tmux}/bin/tmux attach -t "$session"
       '')
 
-      (pkgs.writeShellScriptBin "hypr-focus-toggle" ''
-        HYPRCTL="${pkgs.hyprland}/bin/hyprctl"
-        JQ="${pkgs.jq}/bin/jq"
-
-        ACTIVE=$($HYPRCTL activewindow -j)
-        ACTIVE_ADDR=$(echo "$ACTIVE" | $JQ -r '.address')
-        ACTIVE_WS=$(echo "$ACTIVE" | $JQ -r '.workspace.id')
-        ACTIVE_FS=$(echo "$ACTIVE" | $JQ -r '.fullscreen')
-
-        # If the active window is fullscreen/maximized (e.g. from SUPER+SHIFT+F),
-        # SUPER+F just exits that — re-dispatch the current mode to toggle it off,
-        # and leave focus mode untouched.
-        if [ "$ACTIVE_FS" != "0" ] && [ "$ACTIVE_FS" != "null" ]; then
-          $HYPRCTL dispatch "hl.dsp.window.fullscreen($ACTIVE_FS)"
-          exit 0
-        fi
-
-        # Per-workspace stash: special:focusstash-N isolates stashes per workspace
-        # Hyprland 0.55+ IPC uses Lua dispatch: hyprctl dispatch '<lua expr>'
-        # Old hyprlang syntax (e.g. "movetoworkspace 1,address:0x...") fails with Lua parser
-        STASH_WS="focusstash-$ACTIVE_WS"
-        STASH_FILE="/tmp/hypr-focus-stash-$ACTIVE_WS"
-
-        if [ -f "$STASH_FILE" ]; then
-          # Exit focus mode: restore all windows stashed from this workspace
-          while true; do
-            STASH_WIN=$($HYPRCTL clients -j | $JQ -r --arg s "special:$STASH_WS" \
-              '[.[] | select(.workspace.name == $s)] | first | .address // empty')
-            [ -z "$STASH_WIN" ] && break
-            $HYPRCTL dispatch "hl.dsp.window.move({workspace = $ACTIVE_WS, window = 'address:$STASH_WIN'})"
-          done
-          rm -f "$STASH_FILE"
-        else
-          # Enter focus mode: stash all other windows in active workspace
-          touch "$STASH_FILE"
-          OTHERS=$($HYPRCTL clients -j | $JQ -r --arg ws "$ACTIVE_WS" --arg addr "$ACTIVE_ADDR" \
-            '[.[] | select(.workspace.id == ($ws | tonumber) and .address != $addr and .mapped == true)] | .[].address')
-          for ADDR in $OTHERS; do
-            $HYPRCTL dispatch "hl.dsp.window.move({workspace = 'special:$STASH_WS', window = 'address:$ADDR'})"
-          done
-          # Re-focus kept window: stash opens the special workspace, shifting focus there.
-          # Without this, the stashed window follows workspace switches.
-          $HYPRCTL dispatch "hl.dsp.focus({window = 'address:$ACTIVE_ADDR'})"
-        fi
-      '')
-
       (tesseract5.override {
         enableLanguages = [
           "eng"

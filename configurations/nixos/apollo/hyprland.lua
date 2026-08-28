@@ -187,6 +187,129 @@ end
 local mod = "SUPER"
 local ctrl = "CTRL"
 
+-----------------------
+---- WINDOW HELPERS ----
+-----------------------
+
+-- Native replacements for the old hypr-focus-toggle shell script. hl.get_windows
+-- queries live state, hl.dispatch fires a dispatcher imperatively, and upvalue
+-- tables persist for the compositor's lifetime — no /tmp files or hyprctl shelling.
+
+local function active_window()
+  for _, w in ipairs(hl.get_windows({ mapped = true })) do
+    if w.active then
+      return w
+    end
+  end
+  return nil
+end
+
+local function tiled_on(ws)
+  local out = {}
+  for _, w in ipairs(hl.get_windows({ mapped = true })) do
+    if w.workspace and w.workspace.id == ws and not w.floating then
+      out[#out + 1] = w
+    end
+  end
+  return out
+end
+
+-- `at` is an [x, y] array; guard for a {x=, y=} table just in case.
+local function win_x(w)
+  local a = w.at
+  return a[1] or a.x or 0
+end
+local function win_y(w)
+  local a = w.at
+  return a[2] or a.y or 0
+end
+
+-- Focus mode: hide every other tiled window on the workspace so the kept one
+-- gets the single-window 4:3 aspect. The old script restored windows in
+-- clients-array (creation) order, so dwindle rebuilt the tree scrambled. Here we
+-- record the original top-left → bottom-right order on enter; on exit we empty
+-- the workspace (stash the anchor too) and re-insert every window in that order.
+-- With force_split = 2 each moved-back window becomes focused and splits right of
+-- the previous, so the row rebuilds exactly — anchor back in its own slot.
+local focus_order = {} -- ws id -> ordered list of addresses
+
+local function focus_toggle()
+  local aw = active_window()
+  if not aw then
+    return
+  end
+  local ws = aw.workspace.id
+  local addr = aw.address
+
+  -- Maximized/fullscreen (e.g. from SUPER+SHIFT+F): just clear it.
+  if aw.fullscreen ~= 0 then
+    hl.dispatch(hl.dsp.window.fullscreen(aw.fullscreen))
+    return
+  end
+
+  local stash = "special:focusstash-" .. ws
+
+  if focus_order[ws] then
+    hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. addr }))
+    for _, a in ipairs(focus_order[ws]) do
+      hl.dispatch(hl.dsp.window.move({ workspace = ws, window = "address:" .. a }))
+    end
+    hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
+    focus_order[ws] = nil
+  else
+    local wins = tiled_on(ws)
+    table.sort(wins, function(x, y)
+      if win_y(x) == win_y(y) then
+        return win_x(x) < win_x(y)
+      end
+      return win_y(x) < win_y(y)
+    end)
+    local order = {}
+    for _, w in ipairs(wins) do
+      order[#order + 1] = w.address
+    end
+    focus_order[ws] = order
+    for _, w in ipairs(wins) do
+      if w.address ~= addr then
+        hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. w.address }))
+      end
+    end
+    hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
+  end
+end
+
+-- Equalize: make every tiled window on the focused monitor the same size.
+-- dwindle has no native balance, but force_split = 2 lays windows out in a
+-- horizontal row, so setting each to width = usable/N at full height evens them.
+local function equalize()
+  local mon
+  for _, m in ipairs(hl.get_monitors()) do
+    if m.focused then
+      mon = m
+    end
+  end
+  if not mon or not mon.active_workspace then
+    return
+  end
+  local wins = tiled_on(mon.active_workspace.id)
+  local n = #wins
+  if n < 2 then
+    return
+  end
+
+  local gaps_out, gaps_in = 10, 3
+  local r = mon.reserved or { 0, 0, 0, 0 } -- [left, top, right, bottom]
+  local w = mon.width / mon.scale
+  local h = mon.height / mon.scale
+  local tw = math.floor((w - (r[1] or 0) - (r[3] or 0) - 2 * gaps_out - (n - 1) * gaps_in) / n)
+  local th = math.floor(h - (r[2] or 0) - (r[4] or 0) - 2 * gaps_out)
+
+  for _, win in ipairs(wins) do
+    hl.dispatch(hl.dsp.focus({ window = "address:" .. win.address }))
+    hl.dispatch(hl.dsp.window.resize({ exact = true, x = tw, y = th }))
+  end
+end
+
 -- Launcher / terminal / clipboard / files
 hl.bind(
   mod .. " + space",
@@ -216,9 +339,11 @@ hl.bind(
 hl.bind(mod .. " + O", hl.dsp.exec_cmd("ocr-shot"))
 
 -- Focus toggle (stash other windows → single window gets 4:3 aspect)
-hl.bind(mod .. " + F", hl.dsp.exec_cmd("hypr-focus-toggle"))
+hl.bind(mod .. " + F", focus_toggle)
 -- Fullscreen
 hl.bind(mod .. " + SHIFT + F", hl.dsp.window.fullscreen(1))
+-- Equalize all tiled windows on the focused monitor to the same size
+hl.bind(mod .. " + equal", equalize)
 -- Toggle floating
 hl.bind(mod .. " + SHIFT + space", hl.dsp.window.float({ action = "toggle" }))
 
