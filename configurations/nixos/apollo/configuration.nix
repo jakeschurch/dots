@@ -50,6 +50,12 @@
     # not systemd-networkd — no "25-wireless" block here, else the two race.
   };
 
+  # networkd-wait-online has no clean success condition on an NM+networkd hybrid
+  # (NM owns the routable wifi link, networkd only holds the static enp5s0), so it
+  # timed out for 120s every boot and failed. NetworkManager-wait-online.service
+  # already provides network-online.target, so disable the networkd one.
+  systemd.network.wait-online.enable = false;
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
