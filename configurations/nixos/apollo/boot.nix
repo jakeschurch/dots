@@ -29,6 +29,15 @@
       "vfio-pci.ids=8086:e211"
     ];
 
+    # AC-9260 (iwlwifi) defaults to power_scheme=2 (balanced), which parks the radio
+    # between frames. On a desktop that never sleeps and carries the k3s control
+    # plane over wifi, that showed up as ~60% tx retries and rate collapse to MCS1
+    # at -69 dBm. Pin the radio active and disable U-APSD. (2026-08-28)
+    extraModprobeConfig = ''
+      options iwlmvm power_scheme=1
+      options iwlwifi power_save=0 uapsd_disable=3
+    '';
+
     initrd.kernelModules = [
       "nvidia"
       "nvidia_modeset"
