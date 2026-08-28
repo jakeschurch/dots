@@ -123,14 +123,14 @@ hl.config({
       enabled = true,
       mode = "rotate",
       threshold = 2,
+      -- rotate only takes length + offset; limit/window/function belong to the
+      -- stretch and tilt modes, and were rejected as unknown keys here.
       rotate = {
-        limit = 4000,
-        ["function"] = "linear",
-        window = 100,
+        length = 20,
+        offset = 0.0,
       },
       shake = {
         enabled = true,
-        nearest = true,
         threshold = 2.0,
         base = 1.5,
         speed = 3.0,
@@ -140,12 +140,14 @@ hl.config({
         effects = false,
         ipc = false,
       },
-    },
-    hyprcursor = {
-      nearest = true,
-      enabled = true,
-      resolution = -1,
-      fallback = "clientside",
+      -- hyprcursor lives under dynamic-cursors (plugin:dynamic-cursors:hyprcursor:*),
+      -- not as a top-level plugin namespace — it was unknown keys out here.
+      hyprcursor = {
+        nearest = true,
+        enabled = true,
+        resolution = -1,
+        fallback = "clientside",
+      },
     },
     hyprbars = {
       bar_height = 30,
@@ -172,18 +174,21 @@ if hl.plugin.hyprbars then
   pcall(function()
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(ff5f56)",
+      fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
       action = "smart-kill",
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(ffbd2e)",
+      fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
       action = "hyprctl dispatch movetoworkspacesilent special:MinimizedApps",
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(27c93f)",
+      fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
       action = "hyprctl dispatch fullscreen 1",
