@@ -234,15 +234,25 @@ local function win_y(w)
   local a = w.at
   return a[2] or a.y or 0
 end
+-- `size` is a [w, h] array; same table guard.
+local function win_w(w)
+  local s = w.size
+  return s[1] or s.x or 0
+end
+local function win_h(w)
+  local s = w.size
+  return s[2] or s.y or 0
+end
 
 -- Focus mode: hide every other tiled window on the workspace so the kept one
 -- gets the single-window 4:3 aspect. The old script restored windows in
 -- clients-array (creation) order, so dwindle rebuilt the tree scrambled. Here we
--- record the original top-left → bottom-right order on enter; on exit we empty
--- the workspace (stash the anchor too) and re-insert every window in that order.
--- With force_split = 2 each moved-back window becomes focused and splits right of
--- the previous, so the row rebuilds exactly — anchor back in its own slot.
-local focus_order = {} -- ws id -> ordered list of addresses
+-- record each window's original order AND pixel size on enter; on exit we empty
+-- the workspace (stash the anchor too), re-insert every window in that order
+-- (force_split = 2 splits each right of the previous, so the row rebuilds in the
+-- same order — anchor back in its slot), then resize each back to its recorded
+-- size so dwindle doesn't reset everything to even 0.5 splits.
+local focus_state = {} -- ws id -> ordered list of { addr, w, h }
 
 local function focus_toggle()
   local aw = active_window()
@@ -260,13 +270,20 @@ local function focus_toggle()
 
   local stash = "special:focusstash-" .. ws
 
-  if focus_order[ws] then
+  if focus_state[ws] then
+    -- Empty the workspace, then re-insert in recorded order to rebuild the tree.
     hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. addr }))
-    for _, a in ipairs(focus_order[ws]) do
-      hl.dispatch(hl.dsp.window.move({ workspace = ws, window = "address:" .. a }))
+    for _, it in ipairs(focus_state[ws]) do
+      hl.dispatch(hl.dsp.window.move({ workspace = ws, window = "address:" .. it.addr }))
+    end
+    -- Then restore each window's original size (dwindle would otherwise reset the
+    -- whole workspace to even 0.5 splits).
+    for _, it in ipairs(focus_state[ws]) do
+      hl.dispatch(hl.dsp.focus({ window = "address:" .. it.addr }))
+      hl.dispatch(hl.dsp.window.resize({ exact = true, x = it.w, y = it.h }))
     end
     hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
-    focus_order[ws] = nil
+    focus_state[ws] = nil
   else
     local wins = tiled_on(ws)
     table.sort(wins, function(x, y)
@@ -275,11 +292,11 @@ local function focus_toggle()
       end
       return win_y(x) < win_y(y)
     end)
-    local order = {}
+    local state = {}
     for _, w in ipairs(wins) do
-      order[#order + 1] = w.address
+      state[#state + 1] = { addr = w.address, w = win_w(w), h = win_h(w) }
     end
-    focus_order[ws] = order
+    focus_state[ws] = state
     for _, w in ipairs(wins) do
       if w.address ~= addr then
         hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. w.address }))
