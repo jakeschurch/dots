@@ -104,6 +104,17 @@ hl.config({
   },
 })
 
+-- Load plugins BEFORE their config block, else every plugin.* key below is
+-- "unknown" (a raw lua config replaces the generated hyprland.conf that would
+-- otherwise load them). Paths come from the environment (set in hyprland.nix) so
+-- no store paths live in this file; a missing/empty var is skipped quietly.
+for _, env in ipairs({ "HYPR_PLUGIN_HYPRBARS", "HYPR_PLUGIN_DYNAMIC_CURSORS" }) do
+  local so = os.getenv(env)
+  if so and #so > 0 then
+    hl.plugin.load(so)
+  end
+end
+
 -- Plugin config
 hl.config({
   plugin = {

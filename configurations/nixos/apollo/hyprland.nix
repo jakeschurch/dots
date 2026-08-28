@@ -6,6 +6,11 @@
 }:
 let
   inherit (flake) inputs;
+
+  # Same derivations used for both the compositor's plugin list AND the .so paths
+  # exported below, so the loaded binaries always match the running Hyprland ABI.
+  hyprbars = inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars;
+  dynamic-cursors = inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors;
 in
 {
   programs.hyprland = {
@@ -13,9 +18,9 @@ in
     xwayland.enable = true;
     withUWSM = true;
 
-    plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
+    plugins = [
       hyprbars
-      inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+      dynamic-cursors
     ];
   };
 
@@ -127,6 +132,14 @@ in
 
     variables = {
       NIXOS_OZONE_WL = "1";
+      # Plugin .so paths for hyprland.lua to hl.plugin.load() at config parse.
+      # A raw lua config replaces the generated hyprland.conf where programs.
+      # hyprland.plugins would inject its load lines, so nothing loads the plugins
+      # unless the lua does it. Passing the paths through the environment keeps the
+      # store paths out of the lua file while guaranteeing an ABI match (same
+      # derivations as programs.hyprland.plugins above).
+      HYPR_PLUGIN_HYPRBARS = "${hyprbars}/lib/libhyprbars.so";
+      HYPR_PLUGIN_DYNAMIC_CURSORS = "${dynamic-cursors}/lib/libhypr-dynamic-cursors.so";
       # phonto (wallpaper) uses GStreamer but ships as raw ELF without GST_PLUGIN_PATH
       # decodebin3 lives in gst-plugins-base/lib/gstreamer-1.0/libgstplayback.so
       GST_PLUGIN_PATH = lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" (
