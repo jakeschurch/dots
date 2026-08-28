@@ -152,24 +152,33 @@ hl.config({
 -- hyprbars buttons (R → L order): close · minimize · fullscreen.
 -- Minimize sends to special:MinimizedApps — peek it with SUPER+M, restore the
 -- focused window with SUPER+SHIFT+return (see keybindings below).
-hl.plugin.hyprbars.add_button({
-  bg_color = "rgb(ff5f56)",
-  size = 15,
-  icon = "",
-  action = "smart-kill",
-})
-hl.plugin.hyprbars.add_button({
-  bg_color = "rgb(ffbd2e)",
-  size = 15,
-  icon = "",
-  action = "hyprctl dispatch movetoworkspacesilent special:MinimizedApps",
-})
-hl.plugin.hyprbars.add_button({
-  bg_color = "rgb(27c93f)",
-  size = 15,
-  icon = "",
-  action = "hyprctl dispatch fullscreen 1",
-})
+--
+-- Guard: if hyprbars fails to load (e.g. a plugin/compositor version mismatch
+-- after a rebuild before relogin), hl.plugin.hyprbars is nil. Calling it raw
+-- throws and aborts the rest of this config — so NO keybinds register. Wrap in
+-- pcall + nil-check so a dead plugin degrades to "no bars" instead of "no binds".
+if hl.plugin.hyprbars then
+  pcall(function()
+    hl.plugin.hyprbars.add_button({
+      bg_color = "rgb(ff5f56)",
+      size = 15,
+      icon = "",
+      action = "smart-kill",
+    })
+    hl.plugin.hyprbars.add_button({
+      bg_color = "rgb(ffbd2e)",
+      size = 15,
+      icon = "",
+      action = "hyprctl dispatch movetoworkspacesilent special:MinimizedApps",
+    })
+    hl.plugin.hyprbars.add_button({
+      bg_color = "rgb(27c93f)",
+      size = 15,
+      icon = "",
+      action = "hyprctl dispatch fullscreen 1",
+    })
+  end)
+end
 
 ---------------------
 ---- KEYBINDINGS ----

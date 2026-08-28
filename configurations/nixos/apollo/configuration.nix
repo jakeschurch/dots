@@ -23,23 +23,31 @@
 
   networking = {
     hostName = "apollo";
-    networkmanager.enable = false;
+    # NetworkManager owns wlp6s0 (wifi) so the noctalia WiFi widget can scan/connect
+    # over NM's D-Bus API. enp5s0 stays on the static systemd-networkd config below —
+    # mark it unmanaged so NM doesn't fight networkd over the ethernet link.
+    networkmanager.enable = true;
+    networkmanager.unmanaged = [ "interface-name:enp5s0" ];
     firewall.enable = false;
   };
 
   # vmetal generates 01-external.network with DHCP — override with static IP
-  systemd.network.networks."01-external" = lib.mkForce {
-    matchConfig.Name = "enp5s0";
-    networkConfig = {
-      DHCP = "no";
-      IPv6PrivacyExtensions = "kernel";
-      Address = "10.10.5.7/24";
+  systemd.network.networks = {
+    "01-external" = lib.mkForce {
+      matchConfig.Name = "enp5s0";
+      networkConfig = {
+        DHCP = "no";
+        IPv6PrivacyExtensions = "kernel";
+        Address = "10.10.5.7/24";
+      };
+      routes = [ { Gateway = "10.10.5.1"; } ];
+      # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
+      # Enables 9000 MTU end-to-end for cross-host pod + Mayastor NVMf traffic.
+      # microvm-br + TAP + VM eth0 already set to 9000 in vmetal. (2026-06-24)
+      linkConfig.MTUBytes = 9000;
     };
-    routes = [ { Gateway = "10.10.5.1"; } ];
-    # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
-    # Enables 9000 MTU end-to-end for cross-host pod + Mayastor NVMf traffic.
-    # microvm-br + TAP + VM eth0 already set to 9000 in vmetal. (2026-06-24)
-    linkConfig.MTUBytes = 9000;
+    # wlp6s0 is managed by NetworkManager (see networking.networkmanager above),
+    # not systemd-networkd — no "25-wireless" block here, else the two race.
   };
 
   # Set your time zone.
@@ -70,20 +78,9 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       wireplumber.enable = true;
-      # Prefer HDMI (monitor) output; deprioritize S/PDIF so it stops
-      # grabbing the default sink on boot/replug.
-      wireplumber.extraConfig."51-default-sink" = {
-        "monitor.alsa.rules" = [
-          {
-            matches = [ { "node.name" = "alsa_output.pci-0000_09_00.1.hdmi-stereo"; } ];
-            actions.update-props."priority.session" = 2000;
-          }
-          {
-            matches = [ { "node.name" = "alsa_output.pci-0000_0b_00.4.iec958-stereo"; } ];
-            actions.update-props."priority.session" = 100;
-          }
-        ];
-      };
+      # No default-sink priority rules: they re-asserted HDMI on every boot/replug
+      # and overrode manual sink selection from the noctalia audio panel. Without
+      # them, wireplumber persists whichever sink you pick as the default.
     };
   };
 
