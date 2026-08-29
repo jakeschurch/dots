@@ -10,6 +10,11 @@ in
     network = {
       inherit (self) gateway subnet;
       externalInterface = self.nic;
+      # apollo currently runs off wifi (same LAN IP) while the wired NIC is
+      # unplugged. Declaring it here gets masquerade + eBGP input rules on
+      # wlp6s0 without moving DHCP/jumbo-MTU off enp5s0, so plugging the cable
+      # back in needs no config change. (2026-08-28)
+      uplinkInterfaces = ["wlp6s0"];
       inherit (clusterData) vip;
       bgp = {
         enable = true;
