@@ -32,11 +32,14 @@
           # it has to stay above catHeight or the sprite gets clipped.
           overlayHeight = 120;
           catHeight = 96;
-          catAlign = "right";
-          # Offset from the right edge. Has to be >= movement_radius or the
-          # sprite spends half its wander clamped against the screen edge.
-          catXOffset = 280;
+          catAlign = "left";
+          # Offset from the left edge. With cat_align=left the movement range
+          # is [0, +2r] -- it starts at the anchor and wanders right.
+          catXOffset = 120;
 
+          # 60fps leaves ~16ms per animation tick, which reads as a twitch.
+          # Upstream's walking example uses 15.
+          fps = 15;
           layer = "overlay";
           enableAntialiasing = false; # pixel sprites
 
@@ -50,13 +53,21 @@
           # it picks the *set* (pkmn) that random then draws from.
           extraConfig = ''
             animation_name=pmd:Pikachu
-            random=1
-            random_on_reload=1
+            random=0
 
-            # Wander instead of sitting still. radius is px from the anchor
-            # point, speed is px travelled per move animation.
-            movement_radius=250
-            movement_speed=60
+            # Movement values mirrored from upstream's only known-working
+            # walking config, examples/moving-digimon.bongocat.conf. The ones
+            # that matter and are easy to miss:
+            #  - idle_animation=1: movement only starts from row_state Idle
+            #  - fps=15: 60 leaves ~16ms per tick, which reads as a twitch
+            #  - radius is in px, and cat_align=left makes the range [0, +2r],
+            #    i.e. it only ever travels right of the anchor. 1600 gives a
+            #    3200px span, most of this 3440px screen. Travel per burst is
+            #    radius/4 above r=300 (get_movement_part_from_radius), so 400px
+            idle_animation=1
+            animation_speed=500
+            movement_radius=1600
+            movement_speed=25
 
             # Sprite advances along its evolution line as uptime accumulates.
             evolution=uptime
