@@ -82,7 +82,7 @@
 
     noctalia = {
       # pinned: main is mid-v5 rewrite (binary renamed, settings schema in flux)
-      url = "github:noctalia-dev/noctalia-shell/v4.7.7";
+      url = "github:noctalia-dev/noctalia-shell/v5.0.0-beta.10";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
