@@ -77,8 +77,9 @@
             # Custom sheet: stock bongocat frames composited with a drawn
             # keyboard under the paws (scratch-generated, see git history).
             # Rows: Idle(1) / Writing(3: left,right,both) / Sleep(1).
-            animation_name=custom
+            # filename must precede animation_name=custom or the parser warns
             custom_sprite_sheet_filename=${./bongocat-keyboard.png}
+            animation_name=custom
             custom_idle_frames=1
             custom_writing_frames=3
             custom_sleep_frames=1
