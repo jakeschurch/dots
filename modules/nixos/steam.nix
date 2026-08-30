@@ -55,14 +55,6 @@
     ];
 
     hardware.steam-hardware.enable = true;
-    programs.gamemode = {
-      enable = true;
-      settings.custom = {
-        # phonto is wrapped by makeWrapper, so the running process name is
-        # `.phonto-wrapped`, not `phonto`.
-        start = "/run/current-system/sw/bin/pkill -x .phonto-wrapped; /run/current-system/sw/bin/pkill -x quickshell";
-        end = "/run/current-system/sw/bin/uwsm app -- phonto --rand; /run/current-system/sw/bin/uwsm app -- noctalia-shell";
-      };
-    };
+    programs.gamemode.enable = true;
   };
 }
