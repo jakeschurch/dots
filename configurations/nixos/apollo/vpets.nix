@@ -60,7 +60,6 @@
           enable_scheduled_sleep=1
           sleep_begin=23:00
           sleep_end=07:00
-          keyboard_name=bongobeat
           hotplug_scan_interval=30
           custom_sprite_sheet_filename=${./bongocat-drums.png}
           animation_name=custom
@@ -75,13 +74,23 @@
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
           BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \
             ${beatPython}/bin/python3 ${./bongocat-beatd.py} &
-          # bongocat scans inputs once at startup and gives up when it finds
-          # none, so wait for beatd's bongobeat uinput device to exist first.
+          # bongocat needs an explicit keyboard_device (keyboard_name alone
+          # counts as "no devices specified"), and beatd's uinput node gets a
+          # fresh eventN each start — so wait for it, resolve the path, and
+          # hand bongocat a runtime copy of the conf pointing at it.
+          dev=""
           for _ in $(seq 1 50); do
-            grep -q bongobeat /sys/class/input/event*/device/name 2>/dev/null && break
+            n=$(grep -l bongobeat /sys/class/input/event*/device/name 2>/dev/null | head -1)
+            if [ -n "$n" ]; then
+              dev=/dev/input/$(basename "$(dirname "$(dirname "$n")")")
+              break
+            fi
             sleep 0.1
           done
-          exec "$1" --config ${drumsConf}
+          conf="$XDG_RUNTIME_DIR/bongocat-drums.conf"
+          cp ${drumsConf} "$conf"
+          [ -n "$dev" ] && printf 'keyboard_device=%s\n' "$dev" >>"$conf"
+          exec "$1" --config "$conf"
         '';
 
         jukebox = pkgs.writeShellScript "bongocat-jukebox" ''
