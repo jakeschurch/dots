@@ -30,12 +30,29 @@
           overlayPosition = "bottom";
           # overlayHeight is the layer-shell surface the sprite draws inside, so
           # it has to stay above catHeight or the sprite gets clipped.
-          overlayHeight = 240;
-          catHeight = 200; # module max (10..200)
-          catAlign = "left";
-          # Offset from the left edge. With cat_align=left the movement range
-          # is [0, +2r] -- it starts at the anchor and wanders right.
-          catXOffset = 120;
+          overlayHeight = 170;
+          catHeight = 150;
+          catAlign = "right";
+          # With cat_align=right the offset pulls the sprite back from the
+          # right edge; negative moves it toward the corner.
+          catXOffset = -40;
+
+          # Default is /dev/input/event4, which on apollo is the Logitech
+          # MOUSE alone — the cat never saw a keypress. by-id paths are stable
+          # across re-enumeration; list every keyboard/mouse/pad so it reacts
+          # to all of them. xremap grabs the physical keyboards (EVIOCGRAB is
+          # exclusive), so its virtual device — matched by name below — is the
+          # one that actually emits key events.
+          inputDevices = [
+            "/dev/input/by-id/usb-Keebio_Quefrency_Rev._4-event-kbd"
+            "/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd"
+            "/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse"
+            "/dev/input/by-id/usb-Logitech_USB_Receiver-if03-event-mouse"
+            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-kbd"
+            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-mouse"
+            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-event-joystick"
+          ];
+          inputDeviceNames = [ "xremap" ];
 
           # 60fps leaves ~16ms per animation tick, which reads as a twitch.
           # Upstream's walking example uses 15.
@@ -52,19 +69,7 @@
             animation_name=bongocat
             random=0
 
-            # Movement values mirrored from upstream's only known-working
-            # walking config, examples/moving-digimon.bongocat.conf. The ones
-            # that matter and are easy to miss:
-            #  - idle_animation=1: movement only starts from row_state Idle
-            #  - fps=15: 60 leaves ~16ms per tick, which reads as a twitch
-            #  - radius is in px, and cat_align=left makes the range [0, +2r],
-            #    i.e. it only ever travels right of the anchor. 1600 gives a
-            #    3200px span, most of this 3440px screen. Travel per burst is
-            #    radius/4 above r=300 (get_movement_part_from_radius), so 400px
-            idle_animation=1
-            animation_speed=500
-            movement_radius=1600
-            movement_speed=25
+            # No movement config: cat stays parked in the corner.
           '';
         };
       }
