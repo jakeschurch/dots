@@ -30,8 +30,8 @@
           overlayPosition = "bottom";
           # overlayHeight is the layer-shell surface the sprite draws inside, so
           # it has to stay above catHeight or the sprite gets clipped.
-          overlayHeight = 120;
-          catHeight = 106;
+          overlayHeight = 240;
+          catHeight = 200; # module max (10..200)
           catAlign = "left";
           # Offset from the left edge. With cat_align=left the movement range
           # is [0, +2r] -- it starts at the anchor and wanders right.
@@ -48,17 +48,9 @@
           sleepBegin = "23:00";
           sleepEnd = "07:00";
 
-          # Bare species name — the `pkmn:` prefix form was rejected by the parser.
-          # animation_name still has to name a real sprite even with random on:
-          # it picks the *set* (pkmn) that random then draws from.
           extraConfig = ''
-            animation_name=pmd:Pikachu
-            # Safe to randomise now: this build has PKMN off and PMD on, so a
-            # random index lands inside the 862 PMD sprites, which all have
-            # movement frames. With the plain pkmn set it would have rolled
-            # 2-frame idle-only sheets that cannot walk.
-            random=1
-            random_on_reload=1
+            animation_name=bongocat
+            random=0
 
             # Movement values mirrored from upstream's only known-working
             # walking config, examples/moving-digimon.bongocat.conf. The ones
@@ -73,9 +65,6 @@
             animation_speed=500
             movement_radius=1600
             movement_speed=25
-
-            # Sprite advances along its evolution line as uptime accumulates.
-            evolution=uptime
           '';
         };
       }
