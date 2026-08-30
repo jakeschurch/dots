@@ -37,9 +37,10 @@
           overlayHeight = 64;
           catHeight = 44;
           catAlign = "right";
-          # Pull left past the right-side widget cluster so it sits in the
-          # empty stretch of bar.
-          catXOffset = -320;
+          # ALIGN_RIGHT math is x = width - cat_width - offset, so POSITIVE
+          # pulls the cat left, away from the edge (negative goes off-screen).
+          # 320 clears the right-side widget cluster.
+          catXOffset = 320;
           # Rest on the bar's baseline (bar content ends at y=65, overlay is
           # 0..64; nudge down so feet touch the bottom of the bar).
           catYOffset = 8;
