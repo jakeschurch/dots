@@ -90,7 +90,7 @@
               dev=/dev/input/$(basename "$(dirname "$(dirname "$n")")")
               break
             fi
-            sleep 0.1
+            sleep 0.05
           done
           conf="$XDG_RUNTIME_DIR/bongocat-drums.conf"
           # cp from the store keeps mode 444; make the copy writable or the
@@ -115,7 +115,7 @@
             elif "$sctl" --user -q is-active wayland-bongocat-drums.service; then
               "$sctl" --user start wayland-bongocat.service
             fi
-            sleep 5
+            sleep 2
           done
         '';
       in

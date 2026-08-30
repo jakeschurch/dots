@@ -17,10 +17,11 @@ import subprocess
 import sys
 import time
 
-import aubio
-import numpy as np
 from evdev import UInput, ecodes as e
-from scipy.signal import butter, lfilter, lfilter_zi
+
+# NOTE: aubio/numpy/scipy are imported lazily in run() — they cost 1-3s,
+# and the uinput device must exist FIRST so the drums cat can start
+# instantly (its launch script waits for the device to appear).
 
 PW_RECORD = os.environ.get("BEATD_PWRECORD", "pw-record")
 RATE = 22050
@@ -56,6 +57,10 @@ def tap(ui, key):
 
 
 def run(ui):
+    import aubio
+    import numpy as np
+    from scipy.signal import butter, lfilter, lfilter_zi
+
     lo_b, lo_a = butter(2, KICK_HZ / (RATE / 2), "low")
     hi_b, hi_a = butter(2, HAT_HZ / (RATE / 2), "high")
     zlo = lfilter_zi(lo_b, lo_a) * 0
