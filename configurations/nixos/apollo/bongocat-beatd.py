@@ -1,9 +1,9 @@
 """Beat detector -> virtual keyboard for bongocat.
 
 Taps the default PipeWire sink monitor, runs a simple adaptive
-energy-onset detector, and emits alternating keypresses (KEY_A /
-KEY_SEMICOLON = left / right paw with enable_hand_mapping) on a
-'bongobeat' uinput device. bongocat's drums variant listens only to
+energy-onset detector, and emits alternating button events
+(BTN_TRIGGER_HAPPY1/2 - joystick-range codes that produce NO text and
+are ignored by the compositor) on a 'bongobeat' uinput device. bongocat's drums variant listens only to
 this device, so the cat drums along with whatever is playing.
 """
 
@@ -25,7 +25,7 @@ FLOOR = 1.5e5  # ignore silence/noise (s16 mean-square units)
 COOLDOWN = 0.18  # min seconds between slaps (~330 BPM ceiling)
 DEBUG = bool(os.environ.get("BEATD_DEBUG"))
 
-KEYS = [e.KEY_A, e.KEY_SEMICOLON]  # left paw, right paw
+KEYS = [e.BTN_TRIGGER_HAPPY1, e.BTN_TRIGGER_HAPPY2]  # no text output, ever
 
 
 def record_cmd():

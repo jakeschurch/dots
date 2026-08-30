@@ -55,7 +55,6 @@
           overlay_opacity=0
           layer=overlay
           fps=15
-          enable_hand_mapping=1
           keypress_duration=120
           idle_sleep_timeout=900
           enable_scheduled_sleep=1
