@@ -55,6 +55,14 @@
     ];
 
     hardware.steam-hardware.enable = true;
-    programs.gamemode.enable = true;
+    programs.gamemode = {
+      enable = true;
+      settings.custom = {
+        # Swap bongocat to the controller sprite while a game runs. The units
+        # carry mutual Conflicts=, so each start stops the other.
+        start = "/run/current-system/sw/bin/systemctl --user start wayland-bongocat-game.service";
+        end = "/run/current-system/sw/bin/systemctl --user start wayland-bongocat.service";
+      };
+    };
   };
 }

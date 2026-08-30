@@ -5,8 +5,62 @@
   home-manager.sharedModules = [
     flake.inputs.wayland-vpets.homeManagerModules.default
     (
-      { pkgs, ... }:
+      { pkgs, config, ... }:
+      let
+        gameConf = pkgs.writeText "bongocat-game.conf" ''
+          # Same layout as the keyboard conf, but the controller sprite sheet.
+          cat_x_offset=320
+          cat_y_offset=3
+          cat_height=44
+          cat_align=right
+          enable_antialiasing=0
+          overlay_position=top
+          overlay_height=80
+          overlay_opacity=0
+          layer=overlay
+          fps=15
+          enable_hand_mapping=1
+          idle_sleep_timeout=900
+          enable_scheduled_sleep=1
+          sleep_begin=23:00
+          sleep_end=07:00
+          keyboard_device=/dev/input/by-id/usb-Keebio_Quefrency_Rev._4-event-kbd
+          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd
+          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse
+          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-if03-event-mouse
+          keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-kbd
+          keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-mouse
+          keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-event-joystick
+          keyboard_name=xremap
+          hotplug_scan_interval=30
+          custom_sprite_sheet_filename=${./bongocat-controller.png}
+          animation_name=custom
+          custom_idle_frames=1
+          custom_writing_frames=3
+          custom_sleep_frames=1
+          random=0
+        '';
+      in
       {
+        # Controller-cat variant for gaming. gamemode start/end hooks (see
+        # modules/nixos/steam.nix) swap between this and the normal unit;
+        # mutual Conflicts= guarantees only one cat at a time.
+        systemd.user.services.wayland-bongocat-game = {
+          Unit = {
+            Description = "Wayland Bongo Cat Overlay (controller)";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+            Conflicts = [ "wayland-bongocat.service" ];
+          };
+          Service = {
+            Type = "exec";
+            ExecStart = "${config.programs.wayland-bongocat.package}/bin/bongocat --config ${gameConf}";
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+        };
+        systemd.user.services.wayland-bongocat.Unit.Conflicts = [ "wayland-bongocat-game.service" ];
+
         programs.wayland-bongocat = {
           enable = true;
           autostart = true;
