@@ -75,6 +75,12 @@
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
           BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \
             ${beatPython}/bin/python3 ${./bongocat-beatd.py} &
+          # bongocat scans inputs once at startup and gives up when it finds
+          # none, so wait for beatd's bongobeat uinput device to exist first.
+          for _ in $(seq 1 50); do
+            grep -q bongobeat /sys/class/input/event*/device/name 2>/dev/null && break
+            sleep 0.1
+          done
           exec "$1" --config ${drumsConf}
         '';
 
