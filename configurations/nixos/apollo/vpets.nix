@@ -73,6 +73,7 @@
           p.evdev
           p.aubio-ledfx # aubio fork packaged in nixpkgs; imports as `aubio`
           p.numpy
+          p.scipy # band-split filters (kick vs hi-hat)
         ]);
 
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
