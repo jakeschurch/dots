@@ -88,7 +88,11 @@
             sleep 0.1
           done
           conf="$XDG_RUNTIME_DIR/bongocat-drums.conf"
+          # cp from the store keeps mode 444; make the copy writable or the
+          # keyboard_device append is silently denied.
+          rm -f "$conf"
           cp ${drumsConf} "$conf"
+          chmod u+w "$conf"
           [ -n "$dev" ] && printf 'keyboard_device=%s\n' "$dev" >>"$conf"
           exec "$1" --config "$conf"
         '';
