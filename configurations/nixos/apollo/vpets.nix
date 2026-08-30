@@ -74,10 +74,17 @@
           sleepEnd = "07:00";
 
           extraConfig = ''
-            animation_name=bongocat
+            # Custom sheet: stock bongocat frames composited with a drawn
+            # keyboard under the paws (scratch-generated, see git history).
+            # Rows: Idle(1) / Writing(3: left,right,both) / Sleep(1).
+            animation_name=custom
+            custom_sprite_sheet_filename=${./bongocat-keyboard.png}
+            custom_idle_frames=1
+            custom_writing_frames=3
+            custom_sleep_frames=1
             random=0
 
-            # No movement config: cat stays parked in the corner.
+            # No movement config: cat stays parked in the bar.
           '';
         };
       }
