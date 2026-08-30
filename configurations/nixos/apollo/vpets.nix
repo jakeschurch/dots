@@ -5,7 +5,12 @@
   home-manager.sharedModules = [
     flake.inputs.wayland-vpets.homeManagerModules.default
     (
-      { pkgs, config, ... }:
+      {
+        pkgs,
+        config,
+        lib,
+        ...
+      }:
       let
         gameConf = pkgs.writeText "bongocat-game.conf" ''
           # Same layout as the keyboard conf, but the controller sprite sheet.
@@ -137,7 +142,7 @@
             Type = "exec";
             ExecStart = "${config.programs.wayland-bongocat.package}/bin/bongocat --config ${gameConf}";
             Restart = "on-failure";
-            RestartSec = "5s";
+            RestartSec = "1s";
           };
         };
 
@@ -158,7 +163,7 @@
             Type = "exec";
             ExecStart = "${drumsLaunch} ${config.programs.wayland-bongocat.package}/bin/bongocat";
             Restart = "on-failure";
-            RestartSec = "5s";
+            RestartSec = "1s";
           };
         };
 
@@ -174,11 +179,14 @@
             Type = "exec";
             ExecStart = "${jukebox}";
             Restart = "on-failure";
-            RestartSec = "5s";
+            RestartSec = "1s";
           };
           Install.WantedBy = [ "graphical-session.target" ];
         };
 
+        # Module default is 5s; a crash during a swap race leaves the screen
+        # catless that long. 1s recovery.
+        systemd.user.services.wayland-bongocat.Service.RestartSec = lib.mkForce "1s";
         systemd.user.services.wayland-bongocat.Unit.Conflicts = [
           "wayland-bongocat-game.service"
           "wayland-bongocat-drums.service"
