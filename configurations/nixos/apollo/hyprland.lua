@@ -22,7 +22,7 @@ hl.on("hyprland.start", function()
   )
   hl.exec_cmd("uwsm app -- hyprsunset")
   hl.exec_cmd("uwsm app -- phonto --rand")
-  hl.exec_cmd("uwsm app -- noctalia-shell")
+  hl.exec_cmd("uwsm app -- noctalia")
   hl.exec_cmd("uwsm app -- wl-clip-persist --clipboard both") -- keep clipboard alive on focus switch
   hl.exec_cmd("wl-paste --type text --watch cliphist store")
   hl.exec_cmd("wl-paste --type image --watch cliphist store")
@@ -277,9 +277,13 @@ local function focus_toggle()
 
   if focus_state[ws] then
     -- Empty the workspace, then re-insert in recorded order to rebuild the tree.
-    hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. addr }))
+    hl.dispatch(
+      hl.dsp.window.move({ workspace = stash, window = "address:" .. addr })
+    )
     for _, it in ipairs(focus_state[ws]) do
-      hl.dispatch(hl.dsp.window.move({ workspace = ws, window = "address:" .. it.addr }))
+      hl.dispatch(
+        hl.dsp.window.move({ workspace = ws, window = "address:" .. it.addr })
+      )
     end
     -- Then restore each window's original size (dwindle would otherwise reset the
     -- whole workspace to even 0.5 splits).
@@ -304,7 +308,12 @@ local function focus_toggle()
     focus_state[ws] = state
     for _, w in ipairs(wins) do
       if w.address ~= addr then
-        hl.dispatch(hl.dsp.window.move({ workspace = stash, window = "address:" .. w.address }))
+        hl.dispatch(
+          hl.dsp.window.move({
+            workspace = stash,
+            window = "address:" .. w.address,
+          })
+        )
       end
     end
     hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
@@ -334,7 +343,9 @@ local function equalize()
   local r = mon.reserved or { 0, 0, 0, 0 } -- [left, top, right, bottom]
   local w = mon.width / mon.scale
   local h = mon.height / mon.scale
-  local tw = math.floor((w - (r[1] or 0) - (r[3] or 0) - 2 * gaps_out - (n - 1) * gaps_in) / n)
+  local tw = math.floor(
+    (w - (r[1] or 0) - (r[3] or 0) - 2 * gaps_out - (n - 1) * gaps_in) / n
+  )
   local th = math.floor(h - (r[2] or 0) - (r[4] or 0) - 2 * gaps_out)
 
   for _, win in ipairs(wins) do
@@ -344,10 +355,7 @@ local function equalize()
 end
 
 -- Launcher / terminal / clipboard / files
-hl.bind(
-  mod .. " + space",
-  hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle")
-)
+hl.bind(mod .. " + space", hl.dsp.exec_cmd("noctalia ipc call launcher toggle"))
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus"))
 hl.bind(mod .. " + return", hl.dsp.exec_cmd("wezterm"))
 hl.bind(mod .. " + Q", hl.dsp.window.close())

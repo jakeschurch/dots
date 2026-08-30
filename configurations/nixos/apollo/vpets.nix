@@ -40,6 +40,61 @@
           custom_sleep_frames=1
           random=0
         '';
+
+        drumsConf = pkgs.writeText "bongocat-drums.conf" ''
+          # Drummer cat: same placement, drum-kit sheet, and it listens ONLY
+          # to the virtual 'bongobeat' uinput device fed by the beat daemon -
+          # so the paws hit on detected beats, not on typing.
+          cat_x_offset=320
+          cat_y_offset=3
+          cat_height=44
+          cat_align=right
+          enable_antialiasing=0
+          overlay_position=top
+          overlay_height=80
+          overlay_opacity=0
+          layer=overlay
+          fps=15
+          enable_hand_mapping=1
+          keypress_duration=120
+          idle_sleep_timeout=900
+          enable_scheduled_sleep=1
+          sleep_begin=23:00
+          sleep_end=07:00
+          keyboard_name=bongobeat
+          hotplug_scan_interval=30
+          custom_sprite_sheet_filename=${./bongocat-drums.png}
+          animation_name=custom
+          custom_idle_frames=1
+          custom_writing_frames=3
+          custom_sleep_frames=1
+          random=0
+        '';
+
+        beatPython = pkgs.python3.withPackages (p: [ p.evdev ]);
+
+        drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
+          BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \
+            ${beatPython}/bin/python3 ${./bongocat-beatd.py} &
+          exec "$1" --config ${drumsConf}
+        '';
+
+        jukebox = pkgs.writeShellScript "bongocat-jukebox" ''
+          sctl=/run/current-system/sw/bin/systemctl
+          pctl=${pkgs.playerctl}/bin/playerctl
+          while true; do
+            st=$("$pctl" status 2>/dev/null | head -1)
+            if "$sctl" --user -q is-active wayland-bongocat-game.service; then
+              : # game cat outranks the drummer
+            elif [ "$st" = "Playing" ]; then
+              "$sctl" --user -q is-active wayland-bongocat-drums.service \
+                || "$sctl" --user start wayland-bongocat-drums.service
+            elif "$sctl" --user -q is-active wayland-bongocat-drums.service; then
+              "$sctl" --user start wayland-bongocat.service
+            fi
+            sleep 5
+          done
+        '';
       in
       {
         # Controller-cat variant for gaming. gamemode start/end hooks (see
@@ -50,7 +105,10 @@
             Description = "Wayland Bongo Cat Overlay (controller)";
             After = [ "graphical-session.target" ];
             PartOf = [ "graphical-session.target" ];
-            Conflicts = [ "wayland-bongocat.service" ];
+            Conflicts = [
+              "wayland-bongocat.service"
+              "wayland-bongocat-drums.service"
+            ];
           };
           Service = {
             Type = "exec";
@@ -59,7 +117,49 @@
             RestartSec = "5s";
           };
         };
-        systemd.user.services.wayland-bongocat.Unit.Conflicts = [ "wayland-bongocat-game.service" ];
+
+        # Drummer cat + its beat daemon in one cgroup: the wrapper backgrounds
+        # beatd (uinput 'bongobeat' device fed from the default sink monitor)
+        # and execs bongocat; unit stop kills both.
+        systemd.user.services.wayland-bongocat-drums = {
+          Unit = {
+            Description = "Wayland Bongo Cat Overlay (drums, beat-driven)";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+            Conflicts = [
+              "wayland-bongocat.service"
+              "wayland-bongocat-game.service"
+            ];
+          };
+          Service = {
+            Type = "exec";
+            ExecStart = "${drumsLaunch} ${config.programs.wayland-bongocat.package}/bin/bongocat";
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+        };
+
+        # Poller: music playing -> drummer cat; stopped/paused -> keyboard
+        # cat; never preempts the game cat. 5s cadence, self-healing.
+        systemd.user.services.bongocat-jukebox = {
+          Unit = {
+            Description = "Swap bongocat variant with music playback";
+            After = [ "graphical-session.target" ];
+            PartOf = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "exec";
+            ExecStart = "${jukebox}";
+            Restart = "on-failure";
+            RestartSec = "5s";
+          };
+          Install.WantedBy = [ "graphical-session.target" ];
+        };
+
+        systemd.user.services.wayland-bongocat.Unit.Conflicts = [
+          "wayland-bongocat-game.service"
+          "wayland-bongocat-drums.service"
+        ];
 
         programs.wayland-bongocat = {
           enable = true;

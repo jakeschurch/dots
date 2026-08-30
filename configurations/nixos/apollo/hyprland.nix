@@ -45,11 +45,11 @@ in
       # NOTE: do NOT use `pkill -x quickshell` here — the Nix wrapper's comm is
       # ".quickshell-wrapped", so an exact-name match never fires and the old
       # instance survives (a stale store path leaves the launcher IPC dead while
-      # a duplicate stacks on top). Kill by the real PIDs that `noctalia-shell
+      # a duplicate stacks on top). Kill by the real PIDs that `noctalia
       # list` reports; that works regardless of store path.
       (pkgs.writeShellScriptBin "reload-noctalia" ''
         pids() {
-          noctalia-shell list 2>/dev/null \
+          noctalia list 2>/dev/null \
             | ${pkgs.gawk}/bin/awk '/Process ID:/ { print $NF }'
         }
         for pid in $(pids); do kill "$pid" 2>/dev/null || true; done
@@ -58,7 +58,7 @@ in
           [ -z "$(pids)" ] && break
           sleep 0.1
         done
-        ${pkgs.uwsm}/bin/uwsm app -- noctalia-shell
+        ${pkgs.uwsm}/bin/uwsm app -- noctalia
         ${pkgs.libnotify}/bin/notify-send 'noctalia reloaded 👍'
       '')
 
