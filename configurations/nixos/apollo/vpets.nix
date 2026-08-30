@@ -9,7 +9,7 @@
       let
         gameConf = pkgs.writeText "bongocat-game.conf" ''
           # Same layout as the keyboard conf, but the controller sprite sheet.
-          cat_x_offset=320
+          cat_x_offset=560
           cat_y_offset=3
           cat_height=44
           cat_align=right
@@ -45,7 +45,7 @@
           # Drummer cat: same placement, drum-kit sheet, and it listens ONLY
           # to the virtual 'bongobeat' uinput device fed by the beat daemon -
           # so the paws hit on detected beats, not on typing.
-          cat_x_offset=320
+          cat_x_offset=560
           cat_y_offset=3
           cat_height=44
           cat_align=right
@@ -195,7 +195,7 @@
           # ALIGN_RIGHT math is x = width - cat_width - offset, so POSITIVE
           # pulls the cat left, away from the edge (negative goes off-screen).
           # 320 clears the right-side widget cluster.
-          catXOffset = 320;
+          catXOffset = 560;
           catYOffset = 3;
 
           # Default is /dev/input/event4, which on apollo is the Logitech
