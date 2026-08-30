@@ -69,7 +69,11 @@
           random=0
         '';
 
-        beatPython = pkgs.python3.withPackages (p: [ p.evdev ]);
+        beatPython = pkgs.python3.withPackages (p: [
+          p.evdev
+          p.aubio-ledfx # aubio fork packaged in nixpkgs; imports as `aubio`
+          p.numpy
+        ]);
 
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
           BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \

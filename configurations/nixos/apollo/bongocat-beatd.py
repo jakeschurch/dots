@@ -1,28 +1,27 @@
-"""Beat detector -> virtual keyboard for bongocat.
+"""Beat tracker -> virtual gamepad for bongocat.
 
-Taps the default PipeWire sink monitor, runs a simple adaptive
-energy-onset detector, and emits alternating button events
-(BTN_TRIGGER_HAPPY1/2 - joystick-range codes that produce NO text and
-are ignored by the compositor) on a 'bongobeat' uinput device. bongocat's drums variant listens only to
-this device, so the cat drums along with whatever is playing.
+Taps the default PipeWire sink monitor and runs aubio's streaming tempo
+tracker (real beat detection: onset + tempo estimation + phase lock,
+NOT a loudness gate), emitting alternating BTN_TRIGGER_HAPPY1/2 events
+- joystick-range codes that produce no text and are ignored by the
+compositor - on a 'bongobeat' uinput device. bongocat's drums variant
+listens only to this device, so the cat drums on the beat.
 """
 
-import collections
 import os
 import subprocess
 import sys
 import time
-from array import array
 
+import aubio
+import numpy as np
 from evdev import UInput, ecodes as e
 
 PW_RECORD = os.environ.get("BEATD_PWRECORD", "pw-record")
 RATE = 22050
-CHUNK = 512  # samples (~23ms)
-WINDOW = 40  # chunks of history (~0.93s)
-RATIO = 1.7  # onset = energy > RATIO * rolling average
-FLOOR = 1.5e5  # ignore silence/noise (s16 mean-square units)
-COOLDOWN = 0.18  # min seconds between slaps (~330 BPM ceiling)
+HOP = 512  # samples (~23ms)
+WIN = 1024
+SILENCE_FLOOR = 1e-4  # mean-square, float scale: don't drum at silence
 DEBUG = bool(os.environ.get("BEATD_DEBUG"))
 
 KEYS = [e.BTN_TRIGGER_HAPPY1, e.BTN_TRIGGER_HAPPY2]  # no text output, ever
@@ -41,28 +40,17 @@ def record_cmd():
 
 
 def run(ui):
-    hist = collections.deque(maxlen=WINDOW)
-    last = 0.0
+    tracker = aubio.tempo("default", WIN, HOP, RATE)
     which = 0
     proc = subprocess.Popen(record_cmd(), stdout=subprocess.PIPE)
     try:
         while True:
-            raw = proc.stdout.read(CHUNK * 2)
-            if not raw or len(raw) < CHUNK * 2:
+            raw = proc.stdout.read(HOP * 2)
+            if not raw or len(raw) < HOP * 2:
                 return  # stream ended (device change etc.) -> restart
-            samples = array("h", raw)
-            energy = sum(v * v for v in samples) / len(samples)
-            avg = (sum(hist) / len(hist)) if hist else 0.0
-            hist.append(energy)
-            now = time.monotonic()
-            if (
-                len(hist) > 10
-                and energy > FLOOR
-                and avg > 0
-                and energy > RATIO * avg
-                and now - last > COOLDOWN
-            ):
-                last = now
+            samples = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+            is_beat = tracker(samples)[0]
+            if is_beat and float(np.mean(samples * samples)) > SILENCE_FLOOR:
                 key = KEYS[which]
                 which ^= 1
                 ui.write(e.EV_KEY, key, 1)
@@ -70,7 +58,7 @@ def run(ui):
                 ui.write(e.EV_KEY, key, 0)
                 ui.syn()
                 if DEBUG:
-                    print(f"beat {energy:.0f} avg {avg:.0f}", flush=True)
+                    print(f"beat bpm={tracker.get_bpm():.1f}", flush=True)
     finally:
         proc.kill()
         proc.wait()
