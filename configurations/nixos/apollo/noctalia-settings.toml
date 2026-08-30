@@ -1,0 +1,102 @@
+# Noctalia v5 settings — ported from the v4 settings.json (repo history has
+# the original). v5 moved to TOML with a new schema; the v4 file is ignored.
+
+[bar]
+order = [ "default" ]
+
+[bar.default]
+position = "top"
+capsule = true
+background_opacity = 0.39
+margin_edge = 18
+margin_ends = 18
+radius = 12
+thickness = 40
+widget_spacing = 6
+font_scale = 1.0
+reserve_space = true
+show_on_workspace_switch = true
+start = [ "launcher", "cpu", "temp", "ram", "network_rx", "active_window" ]
+center = [ "workspaces", "clock", "media" ]
+end = [
+  "tray",
+  "notifications",
+  "network",
+  "bluetooth",
+  "output_volume",
+  "input_volume",
+  "brightness",
+  "battery",
+  "control-center",
+]
+
+[widget.cpu]
+type = "sysmon"
+stat = "cpu_usage"
+
+[widget.temp]
+type = "sysmon"
+stat = "cpu_temp"
+
+[widget.ram]
+type = "sysmon"
+stat = "ram_used"
+
+[widget.network_rx]
+type = "sysmon"
+stat = "net_rx"
+
+[widget.active_window]
+type = "active_window"
+max_length = 145.0
+
+[widget.media]
+type = "media"
+max_length = 500.0
+
+[widget.output_volume]
+type = "volume"
+device = "output"
+
+[widget.input_volume]
+type = "volume"
+device = "input"
+
+[location]
+auto_locate = true
+
+[weather]
+enabled = true
+effects = true
+unit = "imperial"
+
+[nightlight]
+enabled = true
+force = true
+temperature_night = 4000
+temperature_day = 6500
+
+[notification]
+position = "top_right"
+
+[dock]
+enabled = true
+auto_hide = true
+position = "bottom"
+
+[shell]
+avatar_path = "/home/jake/.face"
+time_format = "{:%-I:%M %p}"
+date_format = "%A, %x"
+
+[shell.screen_corners]
+enabled = true
+size = 32
+
+[theme]
+source = "builtin"
+builtin = "Gruvbox"
+mode = "dark"
+
+[brightness]
+enable_ddcutil = true

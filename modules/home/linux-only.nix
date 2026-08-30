@@ -63,8 +63,9 @@
         "${config.xdg.configHome}/hypr/theme/hyprlock/transparent/fg2.png".source = ./fg2.png;
       };
 
-      xdg.configFile."noctalia/settings.json".source =
-        ../../configurations/nixos/apollo/noctalia-settings.json;
+      # v5 reads settings.toml; the old v4 settings.json schema is ignored.
+      xdg.configFile."noctalia/settings.toml".source =
+        ../../configurations/nixos/apollo/noctalia-settings.toml;
 
       services.hypridle = {
         enable = false;
