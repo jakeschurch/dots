@@ -27,15 +27,22 @@
             ];
           });
 
-          overlayPosition = "bottom";
+          # Perch the cat "inside" the noctalia bar: overlay anchored to the
+          # top edge, sized to the bar band (bar content is y=18..65 with the
+          # 64px exclusion zone). Cat draws on the overlay layer, which stacks
+          # above the bar's top layer — so it reads as sitting in the bar.
+          overlayPosition = "top";
           # overlayHeight is the layer-shell surface the sprite draws inside, so
           # it has to stay above catHeight or the sprite gets clipped.
-          overlayHeight = 170;
-          catHeight = 150;
+          overlayHeight = 64;
+          catHeight = 44;
           catAlign = "right";
-          # With cat_align=right the offset pulls the sprite back from the
-          # right edge; negative moves it toward the corner.
-          catXOffset = -40;
+          # Pull left past the right-side widget cluster so it sits in the
+          # empty stretch of bar.
+          catXOffset = -320;
+          # Rest on the bar's baseline (bar content ends at y=65, overlay is
+          # 0..64; nudge down so feet touch the bottom of the bar).
+          catYOffset = 8;
 
           # Default is /dev/input/event4, which on apollo is the Logitech
           # MOUSE alone — the cat never saw a keypress. by-id paths are stable
