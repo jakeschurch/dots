@@ -14,6 +14,7 @@ in
     ./boot.nix
     ./storage.nix
     ./cluster.nix
+    ./disaster-cache.nix
     ./hyprland.nix
     ./greetd.nix
     ./vial.nix
