@@ -278,18 +278,22 @@ in
         };
         prSections = [
           {
-            title = "My PRs";
-            filters = "is:open author:@me org:fieldguide draft:false";
-          }
-          {
-            title = "My Draft PRs";
-            filters = "is:open author:@me org:fieldguide draft:true";
+            title = "Inbox";
+            filters = "org:fieldguide is:open involves:@me -author:@dependabot";
           }
           {
             title = "PR Reviews Needed";
             filters = "org:fieldguide is:open -is:draft
             review-requested:@me review-requested:Platform
             -author:@dependabot";
+          }
+          {
+            title = "My PRs";
+            filters = "is:open author:@me org:fieldguide draft:false";
+          }
+          {
+            title = "My Draft PRs";
+            filters = "is:open author:@me org:fieldguide draft:true";
           }
         ];
       };

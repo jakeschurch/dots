@@ -106,16 +106,18 @@ pkgs: {
 
     # Plugins have to share mdformat's python env or it cannot discover them;
     # installed side by side they were silently inert.
+    # mdformat-admon and mdformat-myst are omitted on purpose: mdformat-mkdocs
+    # already renders admonitions and math, and loading both makes mdformat
+    # pick a renderer arbitrarily, which trips its "output renders to
+    # different HTML" bail-out.
     (mdformat.withPlugins (
       ps: with ps; [
-        mdformat-admon
         mdformat-beautysh
         mdformat-footnote
         mdformat-frontmatter
         mdformat-gfm
         mdformat-gfm-alerts
         mdformat-mkdocs
-        mdformat-myst
         mdformat-nix-alejandra
         mdformat-simple-breaks
       ]
