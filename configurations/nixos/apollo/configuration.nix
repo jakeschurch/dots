@@ -40,7 +40,11 @@
         IPv6PrivacyExtensions = "kernel";
         Address = "10.10.5.7/24";
       };
-      routes = [ { Gateway = "10.10.5.1"; } ];
+      # Metric 100 beats the NM wifi DHCP default route (600): with the cable
+      # in, traffic prefers ethernet; wifi stays as automatic fallback. Both
+      # links carry 10.10.5.7 (wifi via UDM DHCP reservation), and arp_filter
+      # below keeps inbound ARP on whichever link the routing table prefers.
+      routes = [ { Gateway = "10.10.5.1"; Metric = 100; } ];
       # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
       # Enables 9000 MTU end-to-end for cross-host pod + Mayastor NVMf traffic.
       # microvm-br + TAP + VM eth0 already set to 9000 in vmetal. (2026-06-24)
@@ -168,6 +172,13 @@
   # MTU blackhole detection — switches to MTU-capped segments when a path
   # silently drops oversized packets. Safe on cluster networks. (2026-06-23)
   boot.kernel.sysctl."net.ipv4.tcp_mtu_probing" = 2;
+
+  # Same IP (10.10.5.7) lives on enp5s0 and wlp6s0. Without arp_filter both
+  # interfaces answer ARP for it (ARP flux) and inbound can land on wifi even
+  # when ethernet is up. arp_filter=1 makes the kernel answer only on the
+  # interface it would route the reply out of, so ARP follows route metrics:
+  # ethernet when the cable is in, wifi otherwise. (2026-09-01)
+  boot.kernel.sysctl."net.ipv4.conf.all.arp_filter" = 1;
 
   # This value defines the first NixOS version you installed on this machine.
   # Do NOT change this value unless you have manually inspected all changes it would make.
