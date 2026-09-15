@@ -18,6 +18,7 @@ let
     installPhase = ''
       mkdir -p $out/bin
       cp ${postgresql}/bin/psql $out/bin
+      cp ${postgresql}/bin/vacuumdb $out/bin
     '';
   };
 in
