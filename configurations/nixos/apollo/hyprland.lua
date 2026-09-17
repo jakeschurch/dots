@@ -355,7 +355,7 @@ local function equalize()
 end
 
 -- Launcher / terminal / clipboard / files
-hl.bind(mod .. " + space", hl.dsp.exec_cmd("noctalia ipc call launcher toggle"))
+hl.bind(mod .. " + space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus"))
 hl.bind(mod .. " + return", hl.dsp.exec_cmd("wezterm"))
 hl.bind(mod .. " + Q", hl.dsp.window.close())
