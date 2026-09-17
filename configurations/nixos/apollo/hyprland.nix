@@ -42,21 +42,18 @@ in
       # quickshell's IPC socket — so the running instance must be replaced. Only
       # the shell process is touched; the compositor/session is left alone.
       #
-      # NOTE: do NOT use `pkill -x quickshell` here — the Nix wrapper's comm is
-      # ".quickshell-wrapped", so an exact-name match never fires and the old
-      # instance survives (a stale store path leaves the launcher IPC dead while
-      # a duplicate stacks on top). Kill by the real PIDs that `noctalia
-      # list` reports; that works regardless of store path.
+      # NOTE: do NOT use `pkill -x quickshell` here — Noctalia's Nix wrapper
+      # runs as `.noctalia-wrapped`. `noctalia list` was removed in v5, so find
+      # precisely that wrapper instead. This works regardless of its store path.
       (pkgs.writeShellScriptBin "reload-noctalia" ''
         pids() {
-          noctalia list 2>/dev/null \
-            | ${pkgs.gawk}/bin/awk '/Process ID:/ { print $NF }'
+          ${pkgs.procps}/bin/pgrep -f '/bin/\.noctalia-wrapped($| )' || true
         }
         for pid in $(pids); do kill "$pid" 2>/dev/null || true; done
         # wait for the IPC socket to drain so the relaunch isn't seen as a dup
         for _ in $(seq 1 20); do
           [ -z "$(pids)" ] && break
-          sleep 0.1
+          ${pkgs.coreutils}/bin/sleep 0.1
         done
         ${pkgs.uwsm}/bin/uwsm app -- noctalia
         ${pkgs.libnotify}/bin/notify-send 'noctalia reloaded 👍'
