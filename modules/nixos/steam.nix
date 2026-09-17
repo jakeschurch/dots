@@ -58,10 +58,11 @@
     programs.gamemode = {
       enable = true;
       settings.custom = {
-        # Swap bongocat to the controller sprite while a game runs. The units
-        # carry mutual Conflicts=, so each start stops the other.
-        start = "/run/current-system/sw/bin/systemctl --user start wayland-bongocat-game.service";
-        end = "/run/current-system/sw/bin/systemctl --user start wayland-bongocat.service";
+        # Set a temporary controller override while a game runs.  On exit the
+        # selector returns to the user's manual choice or MPRIS-driven Auto
+        # state, rather than always flashing back to keyboard cat.
+        start = "/run/current-system/sw/bin/systemctl --user start bongocat-game-start.service";
+        end = "/run/current-system/sw/bin/systemctl --user start bongocat-game-end.service";
       };
     };
   };
