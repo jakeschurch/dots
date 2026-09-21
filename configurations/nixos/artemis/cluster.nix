@@ -41,6 +41,12 @@ in
 
   services.k3s-cluster = {
     enable = true;
+
+    # The other physical host, so `k3s-upgrade-roll` can serialize a control-
+    # plane roll across BOTH hosts — etcd quorum spans them, and this module
+    # only ever sees its own VMs. sshd refuses root on both hosts, so this is
+    # an unprivileged target and the remote systemctl goes through sudo.
+    peerHosts.apollo.ssh = "-p ${toString peer.sshPort} jake@${peer.lanIp}";
     # Not the bootstrap host — no cluster-init, no gateway/dns assertions
     primary = false;
     token = "my-cluster-token-12345";

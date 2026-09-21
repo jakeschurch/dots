@@ -46,6 +46,12 @@ in
 
   services.k3s-cluster = {
     enable = true;
+
+    # The other physical host, so `k3s-upgrade-roll` can serialize a control-
+    # plane roll across BOTH hosts — etcd quorum spans them, and this module
+    # only ever sees its own VMs. sshd refuses root on both hosts, so this is
+    # an unprivileged target and the remote systemctl goes through sudo.
+    peerHosts.artemis.ssh = "-p ${toString peer.sshPort} jake@${peer.lanIp}";
     primary = true;
     # TODO(secrets): move to SOPS once vmetal services.k3s-cluster gains a
     # tokenFile option — current module only accepts an inline string.
