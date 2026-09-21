@@ -1471,6 +1471,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-k3s": {
+      "locked": {
+        "lastModified": 1789844176,
+        "narHash": "sha256-COQmpo4lFIzMgUjr3ntDpjH0NwrCnf7N0uhR+6WPGP8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "79b35bf0bda5cd110f856aa5b5b2c5ba4460dbf5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "79b35bf0bda5cd110f856aa5b5b2c5ba4460dbf5",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1782614948,
@@ -1716,6 +1732,7 @@
         "nixGL": "nixGL",
         "nixos-unified": "nixos-unified",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-k3s": "nixpkgs-k3s",
         "noctalia": "noctalia",
         "nur": "nur",
         "phonto": "phonto",
@@ -2157,11 +2174,11 @@
       },
       "locked": {
         "dir": "vmetal",
-        "lastModified": 1790029798,
-        "narHash": "sha256-JqjTQ8/zWsbJ6VmcYTrTfx+cgnoTJUak3WwbL9kd934=",
+        "lastModified": 1790031446,
+        "narHash": "sha256-ToA15MglQOGdks7NZLjPl8FFMmvpFaCNUo7Qm8LZmL8=",
         "owner": "jakeschurch",
         "repo": "homelab",
-        "rev": "19a61a0f851ae64ea2c3d5a91cbe42a97ca60858",
+        "rev": "9ae95e61de97add994b5f25207a42691698cc45d",
         "type": "github"
       },
       "original": {

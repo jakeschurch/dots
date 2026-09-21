@@ -1,6 +1,7 @@
-_:
+{ flake, pkgs, ... }:
 let
   clusterData = import ../../../modules/data/cluster.nix;
+  k3sPkgs = flake.inputs.nixpkgs-k3s.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   self = clusterData.hosts.apollo;
   peer = clusterData.hosts.artemis;
 in
@@ -61,6 +62,13 @@ in
     # time and gates on etcd + DiskPool health. Set back to true (or delete
     # the line) once the cluster is on its target version.
     restartVmsOnSwitch = false;
+
+    # Kubernetes version for every VM in this cluster, from the narrow
+    # nixpkgs-k3s input rather than the flake-wide nixpkgs — k3s has to move
+    # one minor at a time on its own schedule (see the input's comment).
+    # Bumping this stages the new k3s; nothing moves until k3s-upgrade-roll
+    # restarts the VMs one at a time.
+    k3sPackage = k3sPkgs.k3s_1_36;
     primary = true;
     # TODO(secrets): move to SOPS once vmetal services.k3s-cluster gains a
     # tokenFile option — current module only accepts an inline string.
