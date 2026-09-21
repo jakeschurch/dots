@@ -90,6 +90,14 @@
     # our nixpkgs no longer has (beam sets are makeScope now, overrideScope only).
     expert.url = "github:elixir-lang/expert";
 
+    # k3s ONLY. Pinned separately from the flake-wide nixpkgs because
+    # Kubernetes forbids skipping a control-plane minor, so the cluster's k3s
+    # has to advance on its own schedule: tying it to `nixpkgs` would mean
+    # either dragging the whole system closure along to pick up a newer k3s,
+    # or being stuck whenever the pinned nixpkgs has not caught up. Consumed
+    # via services.k3s-cluster.k3sPackage; see configurations/nixos/*/cluster.nix.
+    nixpkgs-k3s.url = "github:nixos/nixpkgs/79b35bf0bda5cd110f856aa5b5b2c5ba4460dbf5";
+
     vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
     vmetal.inputs.sops-nix.follows = "sops-nix";
