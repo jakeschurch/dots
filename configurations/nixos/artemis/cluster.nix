@@ -63,7 +63,7 @@ in
     # one minor at a time on its own schedule (see the input's comment).
     # Bumping this stages the new k3s; nothing moves until k3s-upgrade-roll
     # restarts the VMs one at a time.
-    k3sPackage = k3sPkgs.k3s_1_36;
+    k3sPackage = k3sPkgs.k3s_1_37;
     # Not the bootstrap host — no cluster-init, no gateway/dns assertions
     primary = false;
     token = "my-cluster-token-12345";
