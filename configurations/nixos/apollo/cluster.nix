@@ -68,7 +68,7 @@ in
     # one minor at a time on its own schedule (see the input's comment).
     # Bumping this stages the new k3s; nothing moves until k3s-upgrade-roll
     # restarts the VMs one at a time.
-    k3sPackage = k3sPkgs.k3s_1_36;
+    k3sPackage = k3sPkgs.k3s_1_37;
     primary = true;
     # TODO(secrets): move to SOPS once vmetal services.k3s-cluster gains a
     # tokenFile option — current module only accepts an inline string.
