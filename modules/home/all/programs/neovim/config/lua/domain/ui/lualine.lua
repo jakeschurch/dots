@@ -84,16 +84,26 @@ local function gap(cond)
   }
 end
 
---- Interleave spacers between pills, preserving each pill's `cond`.
+--- Interleave spacers between pills, preserving each pill's `cond`, and bracket
+--- the section with unconditional ones.
+---
+--- The bracketing spacers are what keep a pill's colour inside its own capsule.
+--- A table `separator` is a *transitional* separator: lualine emits `%z{}`/`%Z{}`
+--- and colours the cap `fg` = this pill, `bg` = the next highlight group it finds
+--- in the statusline string. At a section boundary that next group is the first
+--- pill of the *next* section, so e.g. the branch pill's right cap was painted
+--- with the error pill's red and the colour appeared to spill out of the pill.
+--- A spacer at each edge makes the cap transition into the bar instead.
 ---@param components table[]
 local function spaced(components)
-  local out = {}
+  local out = { gap() }
   for i, component in ipairs(components) do
     if i > 1 then
       table.insert(out, gap(component.cond))
     end
     table.insert(out, component)
   end
+  table.insert(out, gap())
   return out
 end
 
