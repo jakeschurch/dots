@@ -6,14 +6,13 @@
 }:
 let
   cachesData = import ../../../modules/data/caches.nix;
-  # Apollo's direct cache set (differs from the base set: adds
-  # numtide, drops neovim-nightly/nix-gaming which apollo builds itself).
-  apolloCaches = [
-    "nixos"
-    "nix-community"
-    "hyprland"
-    "numtide"
-  ];
+  # Apollo's delta from the shared default set: it builds neovim-nightly and
+  # nix-gaming itself, so substituting them is pointless. Expressed as a
+  # subtraction so new caches added to the default list reach apollo too.
+  apolloCaches = lib.subtractLists [
+    "neovim-nightly"
+    "nix-gaming"
+  ] (cachesData.defaultFor "linux");
 in
 {
   nix.settings.substituters = lib.mkForce (cachesData.urls apolloCaches);

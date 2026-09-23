@@ -5,6 +5,11 @@
   lib,
   ...
 }:
+let
+  cachesData = import ../../data/caches.nix;
+  # home-manager runs on both; scope caches to whichever host we are on.
+  cachePlatform = if pkgs.stdenv.hostPlatform.isDarwin then "darwin" else "linux";
+in
 {
   home.packages = [
     config.nix.package
@@ -43,23 +48,9 @@
       sandbox = "relaxed";
       sandbox-fallback = true;
 
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-        "https://hyprland.cachix.org"
-      ];
-
-      trusted-substituters = [
-        "https://cache.nixos.org"
-        "https://nix-community.cachix.org"
-        "https://hyprland.cachix.org"
-      ];
-
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
+      substituters = cachesData.defaultUrlsFor cachePlatform;
+      trusted-substituters = cachesData.defaultUrlsFor cachePlatform;
+      trusted-public-keys = cachesData.defaultKeysFor cachePlatform;
 
       always-allow-substitutes = true;
       auto-allocate-uids = true;

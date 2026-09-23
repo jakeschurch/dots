@@ -11,15 +11,6 @@ let
   inherit (inputs) self;
 
   cachesData = import ../../data/caches.nix;
-  # Base cache set every host trusts. Hosts can mkForce-override this when they
-  # need a different selection of upstream caches.
-  baseCaches = [
-    "nix-community"
-    "nixos"
-    "hyprland"
-    "neovim-nightly"
-    "nix-gaming"
-  ];
 in
 {
   sops.secrets.netrc = {
@@ -95,9 +86,9 @@ in
         "flakes"
         "auto-allocate-uids"
       ];
-      substituters = cachesData.urls baseCaches;
-      trusted-substituters = cachesData.urls baseCaches;
-      trusted-public-keys = cachesData.keys baseCaches;
+      substituters = cachesData.defaultUrlsFor "linux";
+      trusted-substituters = cachesData.defaultUrlsFor "linux";
+      trusted-public-keys = cachesData.defaultKeysFor "linux";
       extra-platforms =
         if pkgs.stdenv.isDarwin then
           "aarch64-darwin x86_64-darwin"
