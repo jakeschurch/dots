@@ -8,6 +8,29 @@
 let
   inherit (flake) inputs;
 
+  llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+
+  # agent-deck's TestRuntimeHealthHeadlessWebStartup binds a TCP socket, which
+  # the darwin sandbox denies ("bind: operation not permitted"); linux passes
+  # because its sandbox netns has loopback up. Normally harmless: numtide
+  # prebuilds agent-deck and we substitute it, so the test never runs here.
+  #
+  # Flip this to true only when numtide has not yet published the version we
+  # pin. It skips the test so the build succeeds -- but overrideAttrs changes
+  # the output hash, so it also guarantees a cache miss and a ~6min local
+  # build on every bump. Flip back once cache.numtide.com catches up.
+  skipSandboxUnsafeAgentDeckTests = false;
+
+  agent-deck =
+    if skipSandboxUnsafeAgentDeckTests && pkgs.stdenv.hostPlatform.isDarwin then
+      llmAgents.agent-deck.overrideAttrs (old: {
+        checkFlags = (old.checkFlags or [ ]) ++ [
+          "-skip=TestRuntimeHealthHeadlessWebStartup"
+        ];
+      })
+    else
+      llmAgents.agent-deck;
+
   cavemanBlock = pkgs.writeText "caveman-global.md" ''
     <!-- BEGIN CAVEMAN GLOBAL -->
     ## Caveman Mode
@@ -22,12 +45,12 @@ let
   '';
 in
 {
-  home.packages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-    claude-code
-    claude-plugins
+  home.packages = [
     agent-deck
-    codex
-    pi
+    llmAgents.claude-code
+    llmAgents.claude-plugins
+    llmAgents.codex
+    llmAgents.pi
   ];
 
   home.activation.enable-caveman-for-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
