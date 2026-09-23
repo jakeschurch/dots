@@ -11,8 +11,7 @@
 # NARs keep their existing signatures, so cluster nix.conf trust needs no
 # change. Consumed via node.cacheURIs / controller.nixCache.urls in
 # homelab vmetal/lib/apps/nix-csi-go.nix (http://10.10.5.7:8082).
-{ ... }:
-{
+_: {
   systemd.tmpfiles.rules = [
     "d /var/lib/foundry-disaster-cache 0755 jake users -"
   ];

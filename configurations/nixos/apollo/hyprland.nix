@@ -9,7 +9,7 @@ let
 
   # Same derivations used for both the compositor's plugin list AND the .so paths
   # exported below, so the loaded binaries always match the running Hyprland ABI.
-  hyprbars = inputs.hyprland-plugins.packages.${pkgs.system}.hyprbars;
+  inherit (inputs.hyprland-plugins.packages.${pkgs.system}) hyprbars;
   dynamic-cursors = inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors;
 in
 {
