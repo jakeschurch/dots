@@ -1,5 +1,29 @@
 local palette = require("lib.palette")
 
+-- Neovim 0.13 dropped vim.lsp.util._get_line_byte_from_position; lspsaga still
+-- calls it from its definition/finder/callhierarchy handlers, so gd/gr blow up
+-- with "attempt to call field '_get_line_byte_from_position' (a nil value)".
+-- Restore the old implementation until lspsaga migrates to vim.str_byteindex.
+if not vim.lsp.util._get_line_byte_from_position then
+  function vim.lsp.util._get_line_byte_from_position(
+    bufnr,
+    position,
+    position_encoding
+  )
+    local col = position.character
+    if col == 0 then
+      return col
+    end
+    local line = vim.api.nvim_buf_get_lines(
+      bufnr,
+      position.line,
+      position.line + 1,
+      false
+    )[1] or ""
+    return vim.str_byteindex(line, position_encoding or "utf-16", col, false)
+  end
+end
+
 local quit_keys = { "<ESC>", "q" }
 local open_keys = { "<CR>", "o", "e" }
 local edit_keys = { "a", "i" }
