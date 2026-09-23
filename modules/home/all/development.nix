@@ -151,6 +151,25 @@
       line_length=100
       force_to_top=True
     '';
+
+    # Point cgo at Apple's clang on darwin.
+    #
+    # `go env CC` is the unqualified "clang", so Go resolves it from PATH. A
+    # nix clang wrapper arrives transitively on the profile PATH (ghc, python3
+    # and the mkScript packages all reference clang-wrapper) and wins over
+    # /usr/bin/clang. That wrapper only knows the macOS SDK when the nix stdenv
+    # has exported its sysroot flags, which nothing does in an interactive
+    # shell, so any cgo link that touches a system library fails:
+    #
+    #   ld: library not found for -lresolv
+    #
+    # Go's net package asks for -lresolv on darwin whenever cgo is enabled, so
+    # this hits `go build` on essentially anything that opens a socket.
+    # /usr/bin/clang finds its own SDK without help.
+    sessionVariables = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      CC = "/usr/bin/clang";
+      CXX = "/usr/bin/clang++";
+    };
   };
 
   xdg.configFile = {
