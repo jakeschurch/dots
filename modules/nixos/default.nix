@@ -50,6 +50,7 @@ in
     with pkgs;
     [
       google-chrome
+      chatgpt
       pcmanfm
     ]
   );
