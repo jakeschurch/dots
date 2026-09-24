@@ -132,6 +132,7 @@ pkgs: {
 
   misc = with pkgs; [
     ast-grep
+    taplo
     tree-sitter
     lazygit
     ghostscript

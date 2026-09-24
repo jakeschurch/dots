@@ -5,6 +5,7 @@
 {
   pkgs,
   lib,
+  config,
   osConfig,
   ...
 }:
@@ -24,6 +25,8 @@ lib.mkMerge [
         package = pkgs.adwaita-icon-theme;
       };
       gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+      # Keep the pre-26.05 behavior explicitly: GTK4 uses the configured GTK theme.
+      gtk4.theme = config.gtk.theme;
       gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
     };
 

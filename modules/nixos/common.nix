@@ -5,7 +5,7 @@
   ...
 }:
 {
-  security.sudo = lib.optionalAttrs pkgs.stdenv.isLinux {
+  security.sudo = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     enable = true;
     wheelNeedsPassword = false;
     extraConfig = ''

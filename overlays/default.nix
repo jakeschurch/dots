@@ -49,17 +49,17 @@ in
 
   VimPlugins.blink-pairs = inputs.blink-pairs;
 
-  expert = inputs.expert.packages.${super.system}.default;
-  mcp-hub = inputs.mcp-hub.packages.${super.system}.default;
+  expert = inputs.expert.packages.${super.stdenv.hostPlatform.system}.default;
+  mcp-hub = inputs.mcp-hub.packages.${super.stdenv.hostPlatform.system}.default;
   neovim-nightly =
-    inputs.neovim-nightly-overlay.packages.${super.system}.default.overrideAttrs
+    inputs.neovim-nightly-overlay.packages.${super.stdenv.hostPlatform.system}.default.overrideAttrs
       (old: {
         postInstall = (old.postInstall or "") + ''
           mkdir -p $out/share/applications
           touch $out/share/applications/nvim.desktop
         '';
       });
-  bun2nix = inputs.bun2nix.packages.${super.system}.default;
+  bun2nix = inputs.bun2nix.packages.${super.stdenv.hostPlatform.system}.default;
 
   nur = import inputs.nur {
     nurpkgs = super;

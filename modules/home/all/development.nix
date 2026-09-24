@@ -133,7 +133,7 @@
         ccache
       ]
       # Wayland/X11 forwarding helpers — not available on darwin.
-      ++ lib.optionals pkgs.stdenv.isLinux [
+      ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
         waypipe
         xauth
       ];

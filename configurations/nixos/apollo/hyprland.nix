@@ -9,8 +9,9 @@ let
 
   # Same derivations used for both the compositor's plugin list AND the .so paths
   # exported below, so the loaded binaries always match the running Hyprland ABI.
-  inherit (inputs.hyprland-plugins.packages.${pkgs.system}) hyprbars;
-  dynamic-cursors = inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors;
+  inherit (inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}) hyprbars;
+  dynamic-cursors =
+    inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors;
 in
 {
   programs.hyprland = {
@@ -113,9 +114,9 @@ in
       wl-clip-persist
       nautilus
       tuigreet
-      inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
-      inputs.phonto.packages.${pkgs.system}.default
-      inputs.noctalia.packages.${pkgs.system}.default
+      inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.phonto.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
       wl-clipboard-rs
       libnotify
     ];

@@ -92,7 +92,9 @@ hl.config({
   misc = {
     force_default_wallpaper = 1,
     disable_hyprland_logo = true,
-    vrr = 0,
+    -- LG SMART WQHD advertises HDMI VRR from 48–100 Hz. Keep the desktop at
+    -- a steady refresh rate, but enable Adaptive Sync for fullscreen games.
+    vrr = 2,
   },
 
   xwayland = {

@@ -45,7 +45,7 @@ in
       "${pkgs.alejandra}/bin"
       "/usr/local/bin"
     ]
-    ++ lib.optionals pkgs.stdenv.isDarwin [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
       "/run/current-system/sw/bin/"
       "/opt/local/homebrew/bin"
       "/System/Volumes/Data/usr/local/bin"

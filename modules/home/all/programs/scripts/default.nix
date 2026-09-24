@@ -137,7 +137,7 @@ let
     propagatedBuildInputs = [
       jq
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.cliphist
       pkgs.wtype
     ];
@@ -149,7 +149,7 @@ let
     propagatedBuildInputs = [
       jq
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.cliphist
       pkgs.wtype
     ];
@@ -158,7 +158,7 @@ let
   termcopy = mkScript {
     pname = "termcopy";
     src = ./termcopy.sh;
-    propagatedBuildInputs = lib.optionals pkgs.stdenv.isLinux [
+    propagatedBuildInputs = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.wl-clipboard
       pkgs.xclip
       pkgs.xsel
@@ -168,7 +168,7 @@ let
   termpaste = mkScript {
     pname = "termpaste";
     src = ./termpaste.sh;
-    propagatedBuildInputs = lib.optionals pkgs.stdenv.isLinux [
+    propagatedBuildInputs = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.wl-clipboard
       pkgs.xclip
       pkgs.xsel
@@ -181,7 +181,7 @@ let
     propagatedBuildInputs = [
       jq
     ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.cliphist
       pkgs.wtype
     ];
@@ -205,7 +205,7 @@ in
     termpaste
     # spell-check-env-vars
   ]
-  ++ lib.optionals pkgs.stdenv.isLinux [
+  ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
     clipboard-key
     cliphist-pick
     cliphist-pic

@@ -90,7 +90,7 @@ in
       trusted-substituters = cachesData.defaultUrlsFor "linux";
       trusted-public-keys = cachesData.defaultKeysFor "linux";
       extra-platforms =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "aarch64-darwin x86_64-darwin"
         else if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
           "i686-linux" # build true-i686 derivations (steam 32-bit, perl IO-Tty) natively

@@ -26,7 +26,12 @@
   bubblewrap,
   git,
   systemd,
-  xorg,
+  libX11,
+  libXcomposite,
+  libXdamage,
+  libXext,
+  libXfixes,
+  libXrandr,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "chatgpt";
@@ -64,12 +69,12 @@ stdenv.mkDerivation (finalAttrs: {
     pango
     stdenv.cc.cc
     systemd
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
+    libX11
+    libXcomposite
+    libXdamage
+    libXext
+    libXfixes
+    libXrandr
   ];
 
   unpackPhase = ''

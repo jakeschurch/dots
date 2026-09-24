@@ -3,7 +3,7 @@
   lib,
   ...
 }:
-lib.mkIf (pkgs.system == "x86_64-linux") {
+lib.mkIf (pkgs.stdenv.hostPlatform.system == "x86_64-linux") {
   services.redshift = {
     enable = false;
     provider = "geoclue2";

@@ -85,6 +85,7 @@ return {
     cmd = { "emmet-ls", "--stdio" },
   },
   nixd = {},
+  taplo = {},
   pyright = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },

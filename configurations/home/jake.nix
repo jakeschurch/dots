@@ -24,16 +24,18 @@ in
     profiles.desktop.enable = true;
   };
 
-  programs.tablet-calibration = lib.mkIf (pkgs.stdenv.isLinux && osConfig.profiles.desktop.enable) {
-    enable = true;
-    hyprDeviceName = "wacom-intuos-s-pen";
-    mapToOutput = "HDMI-A-1";
-    proDrawingMode.enable = true;
-    toggleKeybind = "$mod, T";
-  };
+  programs.tablet-calibration =
+    lib.mkIf (pkgs.stdenv.hostPlatform.isLinux && osConfig.profiles.desktop.enable)
+      {
+        enable = true;
+        hyprDeviceName = "wacom-intuos-s-pen";
+        mapToOutput = "HDMI-A-1";
+        proDrawingMode.enable = true;
+        toggleKeybind = "$mod, T";
+      };
 
   # Only add this attribute on Linux
-  xdg.configFile = lib.optionalAttrs pkgs.stdenv.isLinux {
+  xdg.configFile = lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     "uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
   };
 }

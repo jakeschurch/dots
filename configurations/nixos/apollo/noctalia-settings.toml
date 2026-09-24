@@ -78,6 +78,17 @@ temperature_day = 6500
 
 [notification]
 position = "top_right"
+filter_order = [ "wezterm" ]
+
+# WezTerm sends terminal-originated desktop notifications (for example, from
+# long-running commands). Keep them entirely out of Noctalia: no toast, sound,
+# or notification-history entry.
+[notification.filter.wezterm]
+enabled = true
+match = "wezterm"
+show_toast = false
+save_history = false
+play_sound = false
 
 [dock]
 enabled = true

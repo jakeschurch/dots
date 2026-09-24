@@ -282,11 +282,13 @@
           # frames to play and the sprite is necessarily static. PMD sheets are
           # multi-row and animated (0001_bulbasaur.png is 704x476). PMD replaces
           # the pkmn set rather than adding to it.
-          package = flake.inputs.wayland-vpets.packages.${pkgs.system}.default.overrideAttrs (old: {
-            cmakeFlags = (old.cmakeFlags or [ ]) ++ [
-              "-DFEATURE_PMD_EMBEDDED_ASSETS=ON"
-            ];
-          });
+          package =
+            flake.inputs.wayland-vpets.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+              (old: {
+                cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+                  "-DFEATURE_PMD_EMBEDDED_ASSETS=ON"
+                ];
+              });
 
           # Perch the cat "inside" the noctalia bar: overlay anchored to the
           # top edge, sized to the bar band (bar content is y=18..65 with the

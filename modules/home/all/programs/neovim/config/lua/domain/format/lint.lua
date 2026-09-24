@@ -40,6 +40,16 @@ local function try_lint()
   if vim.bo.buftype ~= "" then
     return
   end
+  if vim.bo.filetype == "elixir" then
+    -- Credo is a project dependency, so nvim-lint correctly invokes it as
+    -- `mix credo`. Only run it from a Mix project root; standalone .ex files
+    -- should not emit a missing-project error.
+    local mix_root = vim.fs.root(0, { "mix.exs" })
+    if mix_root then
+      lint.try_lint("credo", { cwd = mix_root })
+    end
+    return
+  end
   lint.try_lint()
 end
 

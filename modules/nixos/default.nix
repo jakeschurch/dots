@@ -39,6 +39,7 @@ in
     ./printing.nix
     ./steam.nix
     ./ssh.nix
+
     # ./ollama-intel.nix
 
     self.nixosModules.common

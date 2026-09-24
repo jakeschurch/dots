@@ -22,7 +22,7 @@
   home.sessionVariables.BROWSER = "firefox";
 
   # Linux-only: darwin has no xdg mime database (macOS uses LaunchServices).
-  xdg.mimeApps = lib.mkIf pkgs.stdenv.isLinux {
+  xdg.mimeApps = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     enable = true;
     defaultApplications =
       let
