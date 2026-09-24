@@ -25,7 +25,6 @@
     };
 
     llm-agents.url = "github:numtide/llm-agents.nix";
-    llm-agents.inputs.nixpkgs.follows = "nixpkgs";
 
     bun2nix = {
       url = "github:nix-community/bun2nix";
