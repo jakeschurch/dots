@@ -77,6 +77,19 @@ stdenv.mkDerivation (finalAttrs: {
     libXrandr
   ];
 
+  # The upstream Electron bundle contains fallback Qt 5/6 shims plus musl Node
+  # addons alongside the glibc addons used on NixOS. Neither set can resolve on
+  # a glibc-based NixOS system, and neither is loaded at runtime.
+  autoPatchelfIgnoreMissingDeps = [
+    "libQt5Core.so.5"
+    "libQt5Gui.so.5"
+    "libQt5Widgets.so.5"
+    "libQt6Core.so.6"
+    "libQt6Gui.so.6"
+    "libQt6Widgets.so.6"
+    "libc.musl-x86_64.so.1"
+  ];
+
   unpackPhase = ''
     ar x "$src"
     tar -xJf data.tar.xz
