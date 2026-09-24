@@ -19,6 +19,7 @@
         (pipx.overridePythonAttrs (_: {
           doCheck = false;
         }))
+        uv
         nix-update
         ssm-session-manager-plugin
         kind
