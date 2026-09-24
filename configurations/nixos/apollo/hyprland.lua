@@ -308,12 +308,10 @@ local function focus_toggle()
     focus_state[ws] = state
     for _, w in ipairs(wins) do
       if w.address ~= addr then
-        hl.dispatch(
-          hl.dsp.window.move({
-            workspace = stash,
-            window = "address:" .. w.address,
-          })
-        )
+        hl.dispatch(hl.dsp.window.move({
+          workspace = stash,
+          window = "address:" .. w.address,
+        }))
       end
     end
     hl.dispatch(hl.dsp.focus({ window = "address:" .. addr }))
@@ -355,7 +353,10 @@ local function equalize()
 end
 
 -- Launcher / terminal / clipboard / files
-hl.bind(mod .. " + space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
+hl.bind(
+  mod .. " + space",
+  hl.dsp.exec_cmd("noctalia msg panel-toggle launcher")
+)
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus"))
 hl.bind(mod .. " + return", hl.dsp.exec_cmd("wezterm"))
 hl.bind(mod .. " + Q", hl.dsp.window.close())

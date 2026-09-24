@@ -44,7 +44,12 @@
       # in, traffic prefers ethernet; wifi stays as automatic fallback. Both
       # links carry 10.10.5.7 (wifi via UDM DHCP reservation), and arp_filter
       # below keeps inbound ARP on whichever link the routing table prefers.
-      routes = [ { Gateway = "10.10.5.1"; Metric = 100; } ];
+      routes = [
+        {
+          Gateway = "10.10.5.1";
+          Metric = 100;
+        }
+      ];
       # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
       # Enables 9000 MTU end-to-end for cross-host pod + Mayastor NVMf traffic.
       # microvm-br + TAP + VM eth0 already set to 9000 in vmetal. (2026-06-24)

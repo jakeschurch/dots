@@ -63,12 +63,18 @@
           random=0
         '';
 
-        beatd = pkgs.runCommand "bongocat-beatd" {
-          nativeBuildInputs = [ pkgs.rustc pkgs.stdenv.cc ];
-        } ''
-          mkdir -p "$out/bin"
-          rustc -C opt-level=3 -C strip=symbols ${./bongocat-beatd.rs} -o "$out/bin/bongocat-beatd"
-        '';
+        beatd =
+          pkgs.runCommand "bongocat-beatd"
+            {
+              nativeBuildInputs = [
+                pkgs.rustc
+                pkgs.stdenv.cc
+              ];
+            }
+            ''
+              mkdir -p "$out/bin"
+              rustc -C opt-level=3 -C strip=symbols ${./bongocat-beatd.rs} -o "$out/bin/bongocat-beatd"
+            '';
 
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
           BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \
