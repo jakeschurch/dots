@@ -40,6 +40,7 @@
   hosts = {
     apollo = {
       lanIp = "10.10.5.7";
+      sshPort = 22222;
       asn = 64512;
       nic = "enp5s0";
       subnet = "192.168.100.0/24";
@@ -49,6 +50,7 @@
     };
     artemis = {
       lanIp = "10.10.5.110";
+      sshPort = 22222;
       asn = 64520;
       nic = "bond0";
       subnet = "192.168.101.0/24";

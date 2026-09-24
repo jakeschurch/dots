@@ -37,14 +37,9 @@
           # Same layout as the keyboard conf, but the controller sprite sheet.
           ${catLayout}
           enable_hand_mapping=1
-          keyboard_device=/dev/input/by-id/usb-Keebio_Quefrency_Rev._4-event-kbd
-          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd
-          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse
-          keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-if03-event-mouse
-          keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-kbd
-          keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-mouse
+          # Game mode must not read keyboard or mouse devices: Bongo Cat's
+          # direct evdev access can conflict with xremap and interrupt typing.
           keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-event-joystick
-          keyboard_name=xremap
           custom_sprite_sheet_filename=${./bongocat-controller.png}
           animation_name=custom
           custom_idle_frames=1
@@ -55,10 +50,11 @@
 
         drumsConf = pkgs.writeText "bongocat-drums.conf" ''
           # Drummer cat: same placement, drum-kit sheet, and it listens ONLY
-          # to the virtual 'bongobeat' uinput device fed by the beat daemon -
-          # so the paws hit on detected beats, not on typing.
+          # to the virtual 'bongobeat' uinput device fed by the tempo daemon -
+          # so each beat-grid pulse plays the complete drum motion.
           ${catLayout}
-          keypress_duration=120
+          animation_speed=50
+          keypress_duration=150
           custom_sprite_sheet_filename=${./bongocat-drums.png}
           animation_name=custom
           custom_idle_frames=1
@@ -67,16 +63,16 @@
           random=0
         '';
 
-        beatPython = pkgs.python3.withPackages (p: [
-          p.evdev
-          p.aubio-ledfx # aubio fork packaged in nixpkgs; imports as `aubio`
-          p.numpy
-          p.scipy # band-split filters (kick vs hi-hat)
-        ]);
+        beatd = pkgs.runCommand "bongocat-beatd" {
+          nativeBuildInputs = [ pkgs.rustc pkgs.stdenv.cc ];
+        } ''
+          mkdir -p "$out/bin"
+          rustc -C opt-level=3 -C strip=symbols ${./bongocat-beatd.rs} -o "$out/bin/bongocat-beatd"
+        '';
 
         drumsLaunch = pkgs.writeShellScript "bongocat-drums-launch" ''
           BEATD_PWRECORD=${pkgs.pipewire}/bin/pw-record \
-            ${beatPython}/bin/python3 ${./bongocat-beatd.py} &
+            ${beatd}/bin/bongocat-beatd &
           # bongocat needs an explicit keyboard_device (keyboard_name alone
           # counts as "no devices specified"), and beatd's uinput node gets a
           # fresh eventN each start — so wait for it, resolve the path, and
@@ -108,6 +104,7 @@
           pctl=${pkgs.playerctl}/bin/playerctl
           state_dir="''${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is required}"
           game="$state_dir/bongocat-game-active"
+          pid_file="$state_dir/bongocat.pid"
           exec 9>"$state_dir/bongocat-mode.lock"
           ${pkgs.util-linux}/bin/flock -x 9
 
@@ -115,7 +112,10 @@
             if [ -e "$game" ]; then
               wanted=controller
             else
-              [ "$("$pctl" status 2>/dev/null | head -1)" = Playing ] && wanted=drums || wanted=keyboard
+              # playerctl's default player is arbitrary.  Music mode belongs
+              # to any actively playing MPRIS player, not whichever player
+              # happens to be listed first.
+              "$pctl" --all-players status 2>/dev/null | grep -qx Playing && wanted=drums || wanted=keyboard
             fi
             case "$wanted" in
               keyboard) unit=wayland-bongocat.service ;;
@@ -123,6 +123,25 @@
               controller) unit=wayland-bongocat-game.service ;;
               *) exit 2 ;;
             esac
+            "$sctl" --user -q is-active "$unit" && return
+
+            # Conflicts= schedules the stop and start together.  Bongo Cat
+            # owns a single runtime PID file, though, so that brief overlap
+            # can leave two input readers alive or make the new variant fail
+            # to start.  Finish the old process' cleanup before launching the
+            # next one.
+            for other in \
+              wayland-bongocat.service \
+              wayland-bongocat-drums.service \
+              wayland-bongocat-game.service; do
+              [ "$other" = "$unit" ] || "$sctl" --user stop "$other"
+            done
+            attempt=0
+            while [ -e "$pid_file" ] && [ "$attempt" -lt 40 ]; do
+              sleep 0.05
+              attempt=$((attempt + 1))
+            done
+            [ ! -e "$pid_file" ] || exit 1
             "$sctl" --user start "$unit"
           }
 
@@ -143,7 +162,7 @@
           pctl=${pkgs.playerctl}/bin/playerctl
           "$mode" reconcile
           while true; do
-            "$pctl" --follow status 2>/dev/null | while IFS= read -r _; do
+          "$pctl" --all-players --follow status 2>/dev/null | while IFS= read -r _; do
               "$mode" reconcile
             done
             sleep 5
@@ -202,14 +221,11 @@
             Restart = "on-failure";
             RestartSec = "1s";
             Environment = [
-              "BEATD_THRESHOLD=0.4"
+              "BEATD_THRESHOLD=0.3"
               "BEATD_ADAPTIVE_THRESHOLD=1"
               "BEATD_TARGET_RMS=0.10"
               "BEATD_MIN_THRESHOLD=0.15"
               "BEATD_MAX_THRESHOLD=0.80"
-              "BEATD_KICK_MIN_IOI_MS=120"
-              "BEATD_HAT_MIN_IOI_MS=90"
-              "BEATD_SILENCE_FLOOR=1e-4"
               # pw-record defaults to 100ms; use a 256-sample capture quantum
               # so detected hits reach the cat close to the audible transient.
               "BEATD_LATENCY=256"
@@ -284,22 +300,12 @@
           catXOffset = 560;
           catYOffset = 3;
 
-          # Default is /dev/input/event4, which on apollo is the Logitech
-          # MOUSE alone — the cat never saw a keypress. by-id paths are stable
-          # across re-enumeration; list every keyboard/mouse/pad so it reacts
-          # to all of them. xremap grabs the physical keyboards (EVIOCGRAB is
-          # exclusive), so its virtual device — matched by name below — is the
-          # one that actually emits key events.
-          inputDevices = [
-            "/dev/input/by-id/usb-Keebio_Quefrency_Rev._4-event-kbd"
-            "/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd"
-            "/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse"
-            "/dev/input/by-id/usb-Logitech_USB_Receiver-if03-event-mouse"
-            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-kbd"
-            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-mouse"
-            "/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-event-joystick"
-          ];
-          inputDeviceNames = [ "xremap" ];
+          # Never open physical input nodes.  Bongo Cat's evdev reader can
+          # compete with xremap and make the desktop unable to type.  Keyboard
+          # cat stays a passive overlay; drummer and controller have their own
+          # virtual beat and gamepad-only inputs above.
+          inputDevices = [ ];
+          inputDeviceNames = [ ];
 
           # 60fps leaves ~16ms per animation tick, which reads as a twitch.
           # Upstream's walking example uses 15.
