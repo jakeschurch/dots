@@ -179,21 +179,21 @@ if hl.plugin.hyprbars then
       fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
-      action = "smart-kill",
+      action = [[hyprctl dispatch 'hl.dsp.exec_cmd("smart-kill")']],
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(ffbd2e)",
       fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
-      action = "hyprctl dispatch movetoworkspacesilent special:MinimizedApps",
+      action = [[hyprctl dispatch 'hl.dsp.window.move({ workspace = "special:MinimizedApps" })']],
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(27c93f)",
       fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
-      action = "hyprctl dispatch fullscreen 1",
+      action = [[hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })']],
     })
   end)
 end

@@ -33,6 +33,16 @@
           hotplug_scan_interval=30
         '';
 
+        keyboardConf = pkgs.writeText "bongocat-keyboard.conf" ''
+          ${catLayout}
+          custom_sprite_sheet_filename=${./bongocat-keyboard.png}
+          animation_name=custom
+          custom_idle_frames=1
+          custom_writing_frames=3
+          custom_sleep_frames=1
+          random=0
+        '';
+
         gameConf = pkgs.writeText "bongocat-game.conf" ''
           # Same layout as the keyboard conf, but the controller sprite sheet.
           ${catLayout}
@@ -99,6 +109,28 @@
           cp ${drumsConf} "$conf"
           chmod u+w "$conf"
           [ -n "$dev" ] && printf 'keyboard_device=%s\n' "$dev" >>"$conf"
+          exec "$1" --config "$conf"
+        '';
+
+        # xremap exclusively grabs physical keyboards, then emits the remapped
+        # events through this stable uinput device. Listening there means the
+        # cat sees every final keystroke without touching physical input.
+        keyboardLaunch = pkgs.writeShellScript "bongocat-keyboard-launch" ''
+          dev=""
+          for _ in $(seq 1 100); do
+            n=$(grep -lx bongocat-keyboard /sys/class/input/event*/device/name 2>/dev/null | head -1)
+            if [ -n "$n" ]; then
+              dev=/dev/input/$(basename "$(dirname "$(dirname "$n")")")
+              break
+            fi
+            sleep 0.05
+          done
+          [ -n "$dev" ] || exit 1
+          conf="$XDG_RUNTIME_DIR/bongocat-keyboard.conf"
+          rm -f "$conf"
+          cp ${keyboardConf} "$conf"
+          chmod u+w "$conf"
+          printf 'keyboard_device=%s\n' "$dev" >>"$conf"
           exec "$1" --config "$conf"
         '';
 
@@ -260,9 +292,19 @@
         systemd.user.services.bongocat-game-start = gameModeService "game-start";
         systemd.user.services.bongocat-game-end = gameModeService "game-end";
 
-        # Module default is 5s; a crash during a swap race leaves the screen
-        # catless that long. 1s recovery.
-        systemd.user.services.wayland-bongocat.Service.RestartSec = lib.mkForce "1s";
+        # xremap owns physical input. Start the keyboard cat only once its
+        # post-remap virtual keyboard exists, and recover quickly after a
+        # device reconnect or a swap race.
+        systemd.user.services.wayland-bongocat = {
+          Unit = {
+            After = [ "xremap.service" ];
+            Wants = [ "xremap.service" ];
+          };
+          Service = {
+            ExecStart = lib.mkForce "${keyboardLaunch} ${config.programs.wayland-bongocat.package}/bin/bongocat";
+            RestartSec = lib.mkForce "1s";
+          };
+        };
         systemd.user.services.wayland-bongocat.Unit.Conflicts = [
           "wayland-bongocat-game.service"
           "wayland-bongocat-drums.service"

@@ -17,6 +17,13 @@ in
     withWlroots = true; # enables app-specific remapping on Hyprland
     serviceMode = "user"; # run as user service so it can detect focused Wayland window
     userName = "jake";
+    # Keep remapping alive across USB/Bluetooth keyboard reconnects. The
+    # virtual output below is Bongo Cat's safe, post-remap input source.
+    watch = true;
+    extraArgs = [
+      "--output-device-name"
+      "bongocat-keyboard"
+    ];
     config = {
       keymap = [
         # Wezterm: Cmd+C/V → Ctrl+Shift+C/V (avoid SIGINT)
