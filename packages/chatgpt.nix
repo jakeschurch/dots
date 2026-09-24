@@ -95,6 +95,13 @@ stdenv.mkDerivation (finalAttrs: {
     tar -xJf data.tar.xz
   '';
 
+  # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan. Its
+  # process.report fallback trips Electron's CFI, so use the glibc watcher.
+  postPatch = ''
+    sed -i "s|const family = familySync();|const family = 'glibc'     ;|" \
+      usr/lib/chatgpt/resources/app.asar
+  '';
+
   installPhase = ''
     mkdir -p "$out"
     cp -R usr/lib "$out/lib"
