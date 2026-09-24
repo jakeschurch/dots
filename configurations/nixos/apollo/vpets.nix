@@ -12,8 +12,10 @@
         ...
       }:
       let
-        gameConf = pkgs.writeText "bongocat-game.conf" ''
-          # Same layout as the keyboard conf, but the controller sprite sheet.
+        # Keep the three variants in the same layer-shell "seat".  Sprite
+        # sheets differ, but their geometry must not or swapping looks like a
+        # jump in the bar.
+        catLayout = ''
           cat_x_offset=560
           cat_y_offset=3
           cat_height=44
@@ -24,11 +26,17 @@
           overlay_opacity=0
           layer=overlay
           fps=15
-          enable_hand_mapping=1
           idle_sleep_timeout=900
           enable_scheduled_sleep=1
           sleep_begin=23:00
           sleep_end=07:00
+          hotplug_scan_interval=30
+        '';
+
+        gameConf = pkgs.writeText "bongocat-game.conf" ''
+          # Same layout as the keyboard conf, but the controller sprite sheet.
+          ${catLayout}
+          enable_hand_mapping=1
           keyboard_device=/dev/input/by-id/usb-Keebio_Quefrency_Rev._4-event-kbd
           keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-event-kbd
           keyboard_device=/dev/input/by-id/usb-Logitech_USB_Receiver-if01-event-mouse
@@ -37,7 +45,6 @@
           keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-if01-event-mouse
           keyboard_device=/dev/input/by-id/usb-Razer_Razer_Wolverine_V3_Tournament_Edition_for_PC_LBJ1627_V1.02.02-event-joystick
           keyboard_name=xremap
-          hotplug_scan_interval=30
           custom_sprite_sheet_filename=${./bongocat-controller.png}
           animation_name=custom
           custom_idle_frames=1
@@ -50,22 +57,8 @@
           # Drummer cat: same placement, drum-kit sheet, and it listens ONLY
           # to the virtual 'bongobeat' uinput device fed by the beat daemon -
           # so the paws hit on detected beats, not on typing.
-          cat_x_offset=560
-          cat_y_offset=3
-          cat_height=44
-          cat_align=right
-          enable_antialiasing=0
-          overlay_position=top
-          overlay_height=80
-          overlay_opacity=0
-          layer=overlay
-          fps=15
+          ${catLayout}
           keypress_duration=120
-          idle_sleep_timeout=900
-          enable_scheduled_sleep=1
-          sleep_begin=23:00
-          sleep_end=07:00
-          hotplug_scan_interval=30
           custom_sprite_sheet_filename=${./bongocat-drums.png}
           animation_name=custom
           custom_idle_frames=1
@@ -107,22 +100,66 @@
           exec "$1" --config "$conf"
         '';
 
-        jukebox = pkgs.writeShellScript "bongocat-jukebox" ''
+        # The selector is the only code allowed to choose a cat service.
+        # A game flag temporarily takes precedence over MPRIS. flock makes
+        # simultaneous GameMode and player events deterministic.
+        bongocatMode = pkgs.writeShellScriptBin "bongocat-mode" ''
           sctl=/run/current-system/sw/bin/systemctl
           pctl=${pkgs.playerctl}/bin/playerctl
-          while true; do
-            st=$("$pctl" status 2>/dev/null | head -1)
-            if "$sctl" --user -q is-active wayland-bongocat-game.service; then
-              : # game cat outranks the drummer
-            elif [ "$st" = "Playing" ]; then
-              "$sctl" --user -q is-active wayland-bongocat-drums.service \
-                || "$sctl" --user start wayland-bongocat-drums.service
-            elif "$sctl" --user -q is-active wayland-bongocat-drums.service; then
-              "$sctl" --user start wayland-bongocat.service
+          state_dir="''${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is required}"
+          game="$state_dir/bongocat-game-active"
+          exec 9>"$state_dir/bongocat-mode.lock"
+          ${pkgs.util-linux}/bin/flock -x 9
+
+          select_mode() {
+            if [ -e "$game" ]; then
+              wanted=controller
+            else
+              [ "$("$pctl" status 2>/dev/null | head -1)" = Playing ] && wanted=drums || wanted=keyboard
             fi
-            sleep 2
+            case "$wanted" in
+              keyboard) unit=wayland-bongocat.service ;;
+              drums) unit=wayland-bongocat-drums.service ;;
+              controller) unit=wayland-bongocat-game.service ;;
+              *) exit 2 ;;
+            esac
+            "$sctl" --user start "$unit"
+          }
+
+          case "''${1:-reconcile}" in
+            game-start) touch "$game" ;;
+            game-end) rm -f "$game" ;;
+            reconcile) ;;
+            *) exit 2 ;;
+          esac
+          select_mode
+        '';
+
+        # playerctl --follow blocks until an MPRIS status changes, so normal
+        # playback produces no polling.  If no player exists it exits; retry
+        # slowly so a newly started player is still picked up.
+        jukebox = pkgs.writeShellScript "bongocat-jukebox" ''
+          mode=${bongocatMode}/bin/bongocat-mode
+          pctl=${pkgs.playerctl}/bin/playerctl
+          "$mode" reconcile
+          while true; do
+            "$pctl" --follow status 2>/dev/null | while IFS= read -r _; do
+              "$mode" reconcile
+            done
+            sleep 5
           done
         '';
+
+        gameModeService = command: {
+          Unit = {
+            Description = "Set Bongo Cat game state (${command})";
+            After = [ "graphical-session.target" ];
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${bongocatMode}/bin/bongocat-mode ${command}";
+          };
+        };
       in
       {
         # Controller-cat variant for gaming. gamemode start/end hooks (see
@@ -164,11 +201,24 @@
             ExecStart = "${drumsLaunch} ${config.programs.wayland-bongocat.package}/bin/bongocat";
             Restart = "on-failure";
             RestartSec = "1s";
+            Environment = [
+              "BEATD_THRESHOLD=0.4"
+              "BEATD_ADAPTIVE_THRESHOLD=1"
+              "BEATD_TARGET_RMS=0.10"
+              "BEATD_MIN_THRESHOLD=0.15"
+              "BEATD_MAX_THRESHOLD=0.80"
+              "BEATD_KICK_MIN_IOI_MS=120"
+              "BEATD_HAT_MIN_IOI_MS=90"
+              "BEATD_SILENCE_FLOOR=1e-4"
+              # pw-record defaults to 100ms; use a 256-sample capture quantum
+              # so detected hits reach the cat close to the audible transient.
+              "BEATD_LATENCY=256"
+            ];
           };
         };
 
-        # Poller: music playing -> drummer cat; stopped/paused -> keyboard
-        # cat; never preempts the game cat. 5s cadence, self-healing.
+        # MPRIS event listener: playing -> drummer and all other states ->
+        # keyboard, unless the selector sees an active game.
         systemd.user.services.bongocat-jukebox = {
           Unit = {
             Description = "Swap bongocat variant with music playback";
@@ -183,6 +233,10 @@
           };
           Install.WantedBy = [ "graphical-session.target" ];
         };
+
+        # One-shot entry points keep GameMode out of selector internals.
+        systemd.user.services.bongocat-game-start = gameModeService "game-start";
+        systemd.user.services.bongocat-game-end = gameModeService "game-end";
 
         # Module default is 5s; a crash during a swap race leaves the screen
         # catless that long. 1s recovery.
@@ -226,7 +280,7 @@
           catAlign = "right";
           # ALIGN_RIGHT math is x = width - cat_width - offset, so POSITIVE
           # pulls the cat left, away from the edge (negative goes off-screen).
-          # 320 clears the right-side widget cluster.
+          # 560 clears the right-side widget cluster.
           catXOffset = 560;
           catYOffset = 3;
 
