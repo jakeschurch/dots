@@ -47,6 +47,15 @@ in
     # only ever sees its own VMs. sshd refuses root on both hosts, so this is
     # an unprivileged target and the remote systemctl goes through sudo.
     peerHosts.apollo.ssh = "-p ${toString peer.sshPort} jake@${peer.lanIp}";
+
+    # UPGRADE WINDOW (k3s 1.35 -> 1.37, opened 2026-09-21). With this true a
+    # single switch bounces every changed VM on this host at once: on artemis
+    # that is three of five etcd voters, on apollo both Mayastor replica
+    # holders. False lets `nixos-rebuild switch` stage the new closures and
+    # leaves every restart to `k3s-upgrade-roll`, which goes one node at a
+    # time and gates on etcd + DiskPool health. Set back to true (or delete
+    # the line) once the cluster is on its target version.
+    restartVmsOnSwitch = false;
     # Not the bootstrap host — no cluster-init, no gateway/dns assertions
     primary = false;
     token = "my-cluster-token-12345";
