@@ -31,6 +31,13 @@ let
     else
       llmAgents.agent-deck;
 
+  # Serena MCP via uvx. Its Pillow wheel dlopens libz.so.1, which the system
+  # NIX_LD_LIBRARY_PATH lacks; extend it here only, not globally.
+  serena-mcp = pkgs.writeShellScriptBin "serena-mcp" ''
+    export NIX_LD_LIBRARY_PATH="''${NIX_LD_LIBRARY_PATH:+$NIX_LD_LIBRARY_PATH:}${pkgs.zlib}/lib"
+    exec ${pkgs.uv}/bin/uvx --from git+https://github.com/oraios/serena serena start-mcp-server "$@"
+  '';
+
   cavemanBlock = pkgs.writeText "caveman-global.md" ''
     <!-- BEGIN CAVEMAN GLOBAL -->
     ## Caveman Mode
@@ -50,6 +57,8 @@ in
     llmAgents.claude-code
     llmAgents.claude-plugins
     llmAgents.codex
+    pkgs.rtk
+    serena-mcp
   ];
 
   home.activation.enable-caveman-for-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
