@@ -50,52 +50,42 @@ in
     llmAgents.claude-code
     llmAgents.claude-plugins
     llmAgents.codex
-    llmAgents.pi
   ];
 
   home.activation.enable-caveman-for-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     start='<!-- BEGIN CAVEMAN GLOBAL -->'
     end='<!-- END CAVEMAN GLOBAL -->'
 
+    # Only Claude Code reads the static block; Codex gets caveman from the
+    # caveman plugin's SessionStart hook, so strip stale copies elsewhere.
     for file in \
       "${config.home.homeDirectory}/CLAUDE.md" \
       "${config.home.homeDirectory}/AGENTS.md" \
       "${config.home.homeDirectory}/GEMINI.md"
     do
-      mkdir -p "$(dirname "$file")"
-      touch "$file"
+      [ -f "$file" ] || continue
       ${pkgs.gnused}/bin/sed -i "/$start/,/$end/d" "$file"
-      if [ -s "$file" ]; then
-        printf '\n' >> "$file"
-      fi
-      cat ${cavemanBlock} >> "$file"
-    done
-
-    agents_skills_dir="${config.home.homeDirectory}/.agents/skills"
-    codex_skills_dir="${config.home.homeDirectory}/.codex/skills"
-    mkdir -p "$agents_skills_dir"
-    for skill in caveman caveman-commit caveman-review caveman-compress caveman-help caveman-stats; do
-      source="$codex_skills_dir/$skill"
-      target="$agents_skills_dir/$skill"
-      if [ -e "$source" ]; then
-        if [ -e "$target" ] && [ ! -L "$target" ]; then
-          echo "skip existing non-symlink $target"
-        else
-          ln -sfn "$source" "$target"
-        fi
+      if [ ! -s "$file" ] || ! ${pkgs.gnugrep}/bin/grep -q '[^[:space:]]' "$file"; then
+        rm -f "$file"
       fi
     done
-
-    pi_settings="${config.home.homeDirectory}/.pi/agent/settings.json"
-    mkdir -p "$(dirname "$pi_settings")"
-    if [ ! -f "$pi_settings" ]; then
-      printf '{}\n' > "$pi_settings"
+    file="${config.home.homeDirectory}/CLAUDE.md"
+    touch "$file"
+    # Drop trailing blank lines so repeated activations don't accumulate them.
+    ${pkgs.gnused}/bin/sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$file"
+    if [ -s "$file" ]; then
+      printf '\n' >> "$file"
     fi
-    tmp="$(${pkgs.coreutils}/bin/mktemp)"
-    ${pkgs.jq}/bin/jq '
-      .skills = (((.skills // []) + ["~/.agents/skills", "~/.codex/skills"]) | unique)
-      | .enableSkillCommands = true
-    ' "$pi_settings" > "$tmp"
-    mv "$tmp" "$pi_settings"
+    cat ${cavemanBlock} >> "$file"
+
+    # Standalone caveman skills duplicate the caveman plugin's bundled copies.
+    for skill in caveman caveman-commit caveman-review caveman-compress caveman-help caveman-stats cavecrew; do
+      link="${config.home.homeDirectory}/.agents/skills/$skill"
+      if [ -L "$link" ]; then
+        rm -f "$link"
+      fi
+      rm -rf "${config.home.homeDirectory}/.codex/skills/$skill"
+    done
+    rmdir --ignore-fail-on-non-empty "${config.home.homeDirectory}/.agents/skills" 2>/dev/null || true
   '';
 }
