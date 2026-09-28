@@ -9,6 +9,10 @@
     ./hardware-configuration.nix
   ];
 
+  # The NixOS system GC already reclaims old paths. Avoid a second,
+  # user-level GC racing an unclean shutdown during large store cleanups.
+  home-manager.users.jake.nix.gc.automatic = lib.mkForce false;
+
   tablet.enable = true;
   profiles.desktop.enable = true;
 
