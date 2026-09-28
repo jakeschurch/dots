@@ -191,6 +191,7 @@ in
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
       mem = 24576;
       disk = 200;
+      rancherImagePath = "/microvm-disks/k3s-worker-4/k3s-worker-4-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w4"; # cold data (HDD LV)
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
