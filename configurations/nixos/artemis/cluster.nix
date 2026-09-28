@@ -127,6 +127,8 @@ in
       # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
+      disk = 40;
+      rancherImagePath = "/microvm-disks/k3s-server-4/k3s-server-4-rancher.img";
     };
 
     vms.k3s-server-5 = {
@@ -141,6 +143,8 @@ in
       # 12G: 8G wedged repeatedly under the ~5G k3s server monolith +
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
+      disk = 40;
+      rancherImagePath = "/microvm-disks/k3s-server-5/k3s-server-5-rancher.img";
     };
 
     # Moved from apollo (was k3s-server-3) 2026-08-18 — etcd majority off the desktop.
@@ -152,6 +156,8 @@ in
       readinessVsockPort = 9015;
       vcpu = 6;
       mem = 12288;
+      disk = 40;
+      rancherImagePath = "/microvm-disks/k3s-server-6/k3s-server-6-rancher.img";
     };
 
     # =========================================================================
