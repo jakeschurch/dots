@@ -4,11 +4,17 @@
 -- NES (next edit suggestions) is off: it needs the proprietary copilot LSP and
 -- overlaps with the blink-copilot completion source already in use. Flip
 -- `nes.enabled` and add copilot-language-server to dev-packages to try it.
+--
+-- SIDEKICK_EDITOR_BLOCK makes flatten.nvim (terminal/flatten.lua) block on
+-- ctrl+g, so Claude's prompt opens in this instance and waits for it to close.
 
 require("sidekick").setup({
   nes = { enabled = false },
   cli = {
     watch = true,
+    tools = {
+      claude = { env = { SIDEKICK_EDITOR_BLOCK = "1" } },
+    },
     win = {
       layout = "left",
       -- A width <= 1 is read as a fraction of 'columns'.
