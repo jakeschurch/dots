@@ -141,7 +141,9 @@ in
           tool = "difftastic";
           colorMoved = "default";
           algorithm = "minimal";
-          external = "difftastic-inline";
+          # external diff set via GIT_EXTERNAL_DIFF by the shell wrappers below,
+          # only when stdout is a tty, so piped output stays a plain patch
+          # (https://github.com/Wilfred/difftastic/issues/965)
           sopsdiffer = {
             textconv = "sops -d";
           };
@@ -161,15 +163,15 @@ in
 
         log = {
           abbrevCommit = true;
-          showSignature = true;
+          showSignature = false;
         };
 
         color = {
-          ui = "always";
+          ui = "auto";
           diff = "auto";
-          status = "always";
+          status = "auto";
           branch = "auto";
-          interactive = "always";
+          interactive = "auto";
           grep = "auto";
           decorate = "auto";
           showbranch = "auto";
@@ -220,6 +222,27 @@ in
         url."ssh://git@github.com/".insteadOf = "https://github.com/";
       };
     };
+
+    fish.functions.git = {
+      wraps = "git";
+      body = ''
+        if isatty stdout
+            GIT_EXTERNAL_DIFF=difftastic-inline command git $argv
+        else
+            command env -u GIT_EXTERNAL_DIFF git $argv
+        end
+      '';
+    };
+
+    zsh.initContent = ''
+      git() {
+        if [[ -t 1 ]]; then
+          GIT_EXTERNAL_DIFF=difftastic-inline command git "$@"
+        else
+          command env -u GIT_EXTERNAL_DIFF git "$@"
+        fi
+      }
+    '';
 
     gh.enable = true;
 

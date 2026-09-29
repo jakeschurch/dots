@@ -39,8 +39,6 @@
   egrep = "${pkgs.gnugrep}/bin/egrep";
   fgrep = "${pkgs.gnugrep}/bin/fgrep";
 
-  git = "${pkgs.git}/bin/git";
-
   nix-gc = "nix-collect-garbage";
 
   groot = "cd $(git top)";
