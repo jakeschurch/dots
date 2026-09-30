@@ -24,6 +24,7 @@
       # gates bitwarden-desktop to Linux and macOS takes the cask instead.
       "bitwarden"
       "caffeine"
+      "chatgpt"
       # "moonlight"
       "wifiman"
       "google-chrome"
