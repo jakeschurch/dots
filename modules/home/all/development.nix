@@ -100,7 +100,6 @@
         (aspellWithDicts (
           ds: with ds; [
             en
-            en-science
           ]
         ))
         coreutils
