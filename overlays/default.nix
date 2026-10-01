@@ -78,6 +78,18 @@ in
     else
       super.tmux;
 
+  # mosh 1.4.0's configure probe compiles protoc output against abseil
+  # 20260817, whose btree_map using-declarations fail under mosh's default C++
+  # standard. Force C++20 until nixpkgs fixes it.
+  mosh = super.mosh.overrideAttrs (old: {
+    env = (old.env or { }) // {
+      NIX_CFLAGS_COMPILE = toString [
+        (old.env.NIX_CFLAGS_COMPILE or "")
+        "-std=c++20"
+      ];
+    };
+  });
+
   # Pin claude-code ahead of nixpkgs. Version and checksums live in
   # claude-code.json; refresh them with `bin/update-claude-code` (stable channel
   # by default, `bin/update-claude-code latest` or an explicit version too).
