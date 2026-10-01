@@ -31,6 +31,20 @@ let
     else
       llmAgents.agent-deck;
 
+  # codex >= 0.159 starts a shared app-server daemon by default, which copies
+  # its own package into ~/.codex and requires a codex-package.json beside
+  # bin/codex. The nix build ships bare binaries, so every invocation dies with
+  # "this CLI has no complete local package". Force the in-process server.
+  # Drop once llm-agents.nix ships the packaged layout.
+  codex = pkgs.symlinkJoin {
+    name = "codex-${llmAgents.codex.version}";
+    paths = [ llmAgents.codex ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/codex --add-flags --no-daemon
+    '';
+  };
+
   # Serena MCP via uvx. Its Pillow wheel dlopens libz.so.1, which the system
   # NIX_LD_LIBRARY_PATH lacks; extend it here only, not globally.
   serena-mcp = pkgs.writeShellScriptBin "serena-mcp" ''
@@ -56,7 +70,7 @@ in
     agent-deck
     llmAgents.claude-code
     llmAgents.claude-plugins
-    llmAgents.codex
+    codex
     pkgs.rtk
     serena-mcp
   ];
