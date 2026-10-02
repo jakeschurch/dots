@@ -27,6 +27,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("wl-paste --type text --watch cliphist store")
   hl.exec_cmd("wl-paste --type image --watch cliphist store")
   hl.exec_cmd("claude-workspaces")
+  hl.exec_cmd("uwsm app -- chatgpt")
 end)
 
 -- NOTE: noctalia restart is intentionally NOT wired to "config.reloaded".
