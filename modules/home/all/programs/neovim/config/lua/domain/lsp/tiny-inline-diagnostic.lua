@@ -59,4 +59,23 @@ require("tiny-inline-diagnostic").setup({
   },
 })
 
+-- Above this many diagnostics, the cursor line keeps its collapsed count pill
+-- instead of expanding into a wall of messages.
+local MAX_EXPANDED = 5
+
+-- The renderer expands the cursor line via `from_diagnostics`; past the
+-- threshold, render it the way it renders every other line. Passing -1 as the
+-- cursor line is what makes the chunk builder emit the count.
+local chunk_utils = require("tiny-inline-diagnostic.chunk")
+local virtual_text = require("tiny-inline-diagnostic.virtual_text")
+local from_diagnostics = virtual_text.from_diagnostics
+virtual_text.from_diagnostics = function(opts, diags, pos, buf, cursor_line)
+  if #diags <= MAX_EXPANDED then
+    return from_diagnostics(opts, diags, pos, buf, cursor_line)
+  end
+  local chunks = chunk_utils.get_chunks(opts, diags, 1, pos[1], -1, buf)
+  local max_width = chunk_utils.get_max_width_from_chunks(chunks.chunks)
+  return virtual_text.from_diagnostic(opts, chunks, 1, max_width, 1, -1)
+end
+
 vim.diagnostic.config({ virtual_text = false })
