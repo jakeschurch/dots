@@ -24,10 +24,13 @@ lint.linters_by_ft = {
   text = { "codespell" },
 }
 
+-- Keep the trailing "-": the linter feeds the buffer on stdin, and without it
+-- sqlfluff lints the whole cwd and every file's violations land on this buffer.
 lint.linters.sqlfluff.args = {
   "lint",
   "--format=json",
   "--dialect=postgres",
+  "-",
 }
 
 lint.linters.codespell.args = {

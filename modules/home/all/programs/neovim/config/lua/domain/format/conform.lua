@@ -49,8 +49,13 @@ conform.setup({
     mdformat = {
       prepend_args = { "--wrap", "80" },
     },
+    -- conform only runs sqlfluff under a .sqlfluff/pyproject root by default,
+    -- and `fix` exits 1 whenever unfixable violations remain even though it
+    -- still prints the fixed SQL.
     sqlfluff = {
       prepend_args = { "--dialect", "postgres" },
+      require_cwd = false,
+      exit_codes = { 0, 1 },
     },
     shfmt = {
       prepend_args = { "--indent", "2", "--case-indent", "--binary-next-line" },
