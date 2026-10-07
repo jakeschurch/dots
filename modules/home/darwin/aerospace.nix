@@ -71,6 +71,11 @@ in
     launchd.enable = true;
 
     settings = {
+      # v2 stops inferring persistent workspaces from keybindings; list them
+      # explicitly to keep the v1 behavior.
+      config-version = 2;
+      persistent-workspaces = workspaceNames;
+
       enable-normalization-flatten-containers = true;
       enable-normalization-opposite-orientation-for-nested-containers = true;
       automatically-unhide-macos-hidden-apps = true;
@@ -89,14 +94,14 @@ in
 
       gaps = {
         inner = {
-          horizontal = 48;
-          vertical = 48;
+          horizontal = 16;
+          vertical = 16;
         };
         outer = {
-          left = 24;
-          bottom = 24;
-          top = 24;
-          right = 24;
+          left = 12;
+          bottom = 12;
+          top = 12;
+          right = 12;
         };
       };
 
