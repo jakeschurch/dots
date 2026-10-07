@@ -27,6 +27,13 @@
       "rd.systemd.show_status=true"
       "amd_iommu=on"
       "vfio-pci.ids=8086:e211"
+      # Samsung 990 PRO (nvme0) controller hung under the weekly scrub twice
+      # (2026-09-28, 2026-10-05): reset failed with CSTS=0x1, root + swap vanished,
+      # init died and the box sat panicked for ~45h. Disable APST power states,
+      # the usual 990 PRO hang trigger. If it recurs, add "pcie_aspm=off".
+      "nvme_core.default_ps_max_latency_us=0"
+      # Reboot 10s after a panic instead of hanging until someone notices.
+      "panic=10"
     ];
 
     # AC-9260 (iwlwifi) defaults to power_scheme=2 (balanced), which parks the radio
