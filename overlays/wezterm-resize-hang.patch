@@ -1,0 +1,44 @@
+diff --git a/mux/src/tab.rs b/mux/src/tab.rs
+index b7e56b..41f160 100644
+--- a/mux/src/tab.rs
++++ b/mux/src/tab.rs
+@@ -384,6 +384,7 @@ fn adjust_x_size(tree: &mut Tree, mut x_adjust: isize, cell_dimensions: &Termina
+                     }
+                     SplitDirection::Horizontal => {
+                         // x_adjust is negative
++                        let before = x_adjust;
+                         if data.first.cols > 1 {
+                             adjust_x_size(&mut *left, -1, cell_dimensions);
+                             data.first.cols -= 1;
+@@ -398,6 +399,11 @@ fn adjust_x_size(tree: &mut Tree, mut x_adjust: isize, cell_dimensions: &Termina
+                                 data.second.cols.saturating_mul(cell_dimensions.pixel_width);
+                             x_adjust += 1;
+                         }
++                        if x_adjust == before {
++                            // Both sides are already at their minimum width;
++                            // nothing more can shrink, so stop rather than spin.
++                            return;
++                        }
+                     }
+                 }
+             }
+@@ -455,6 +461,7 @@ fn adjust_y_size(tree: &mut Tree, mut y_adjust: isize, cell_dimensions: &Termina
+                     }
+                     SplitDirection::Vertical => {
+                         // y_adjust is negative
++                        let before = y_adjust;
+                         if data.first.rows > 1 {
+                             adjust_y_size(&mut *left, -1, cell_dimensions);
+                             data.first.rows -= 1;
+@@ -471,6 +478,11 @@ fn adjust_y_size(tree: &mut Tree, mut y_adjust: isize, cell_dimensions: &Termina
+                                 .saturating_mul(cell_dimensions.pixel_height);
+                             y_adjust += 1;
+                         }
++                        if y_adjust == before {
++                            // Both sides are already at their minimum height;
++                            // nothing more can shrink, so stop rather than spin.
++                            return;
++                        }
+                     }
+                 }
+             }

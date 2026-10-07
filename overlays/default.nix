@@ -90,6 +90,14 @@ in
     };
   });
 
+  # mux::tab::adjust_{x,y}_size spin forever when a window shrinks past the
+  # point where every stacked pane is already 1 cell, freezing the GUI main
+  # thread (AeroSpace frame changes trigger it). Bail out when nothing can
+  # shrink. Upstream: https://github.com/wezterm/wezterm/issues/7765
+  wezterm = super.wezterm.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./wezterm-resize-hang.patch ];
+  });
+
   # Pin claude-code ahead of nixpkgs. Version and checksums live in
   # claude-code.json; refresh them with `bin/update-claude-code` (stable channel
   # by default, `bin/update-claude-code latest` or an explicit version too).
