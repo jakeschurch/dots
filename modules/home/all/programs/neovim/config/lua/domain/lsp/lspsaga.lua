@@ -28,8 +28,6 @@ local quit_keys = { "<ESC>", "q" }
 local open_keys = { "<CR>", "o", "e" }
 local edit_keys = { "a", "i" }
 
-vim.wo.signcolumn = "yes"
-
 require("lspsaga").setup({
   ui = {
     enable = true,
@@ -122,3 +120,17 @@ require("lspsaga").setup({
     },
   },
 })
+
+-- This module loads from the first LspAttach, so lspsaga's own LspAttach
+-- handler (the lightbulb) missed that event. Replay it for attached clients.
+vim.schedule(function()
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    for buf in pairs(client.attached_buffers) do
+      pcall(vim.api.nvim_exec_autocmds, "LspAttach", {
+        group = "SagaLightBulb",
+        buffer = buf,
+        data = { client_id = client.id },
+      })
+    end
+  end
+end)

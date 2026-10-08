@@ -24,9 +24,7 @@ pkgs: {
     prettier
     prettier-d-slim
     eslint
-    typescript
     vtsls
-    vscode-langservers-extracted
     vscode-js-debug
   ];
 
@@ -143,7 +141,6 @@ pkgs: {
     # semgrep
     hadolint
     helm-ls
-    regols
     regal
   ];
 

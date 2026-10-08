@@ -51,9 +51,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
       )
     end
 
-    buf_map("n", "K", vim.lsp.buf.hover, "Hover")
+    -- K (hover) is a Neovim default. gk stays the display-line motion.
     buf_map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-    buf_map("n", "gk", vim.lsp.buf.signature_help, "Signature help")
+    buf_map("n", "gK", vim.lsp.buf.signature_help, "Signature help")
 
     buf_map(
       "n",
@@ -62,7 +62,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       "Go to type definition"
     )
     buf_map("n", "gd", "<cmd>Lspsaga goto_definition<cr>", "Go to definition")
-    buf_map("n", "gr", "<cmd>Lspsaga finder<cr>", "Find references")
+    -- grr, not gr: a bare gr waits on Neovim's default grn/gra/grr/gri maps.
+    buf_map("n", "grr", "<cmd>Lspsaga finder<cr>", "Find references")
     buf_map("n", "gp", "<cmd>Lspsaga peek_definition<cr>", "Peek definition")
     buf_map("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", "Rename symbol")
 
@@ -99,16 +100,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-vim.lsp.config("*", {
-  capabilities = vim.tbl_deep_extend(
-    "force",
-    { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } },
-    require("blink.cmp").get_lsp_capabilities(
-      vim.lsp.protocol.make_client_capabilities()
-    )
-  ),
-  root_markers = { ".git" },
-})
+-- blink.cmp's plugin/ script merges its completion capabilities into "*".
+vim.lsp.config("*", { root_markers = { ".git" } })
 
 for server, config in pairs(require("domain.lsp.servers")) do
   vim.lsp.config(server, config)

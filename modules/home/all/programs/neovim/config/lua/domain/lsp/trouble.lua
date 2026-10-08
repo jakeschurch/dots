@@ -6,8 +6,6 @@ vim.keymap.set(
 )
 
 require("trouble").setup({
-  height = 10,
-  padding = false,
   auto_close = true,
   auto_preview = true,
 })

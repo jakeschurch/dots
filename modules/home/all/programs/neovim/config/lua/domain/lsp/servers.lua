@@ -1,16 +1,3 @@
-local default_publish_diagnostics =
-  vim.lsp.handlers["textDocument/publishDiagnostics"]
-local handlers = {
-  ["textDocument/publishDiagnostics"] = function(_, result, ctx, config)
-    result.diagnostics = vim.tbl_filter(function(d)
-      return not (
-        d.message:match("line too long") or d.message:match("line length")
-      )
-    end, result.diagnostics)
-    default_publish_diagnostics(_, result, ctx, config)
-  end,
-}
-
 return {
   -- vale-ls exits 1 when there is no .vale.ini, so only attach where a project
   -- actually configures vale. Run `vale sync` after writing one.
@@ -26,10 +13,6 @@ return {
     end,
   },
   regal = {},
-  regols = {
-    cmd = { "regols" },
-    filetypes = { "rego" },
-  },
   digestif = {}, -- latex
   yamlls = {
     settings = {
@@ -53,7 +36,6 @@ return {
         },
       },
     },
-    handlers = handlers,
   },
   helm_ls = {
     settings = {
@@ -65,6 +47,7 @@ return {
     },
   },
   emmet_ls = {
+    -- lspconfig's list plus the Phoenix template types.
     filetypes = {
       "astro",
       "css",
@@ -82,13 +65,10 @@ return {
       "heex",
       "leex",
     },
-    cmd = { "emmet-ls", "--stdio" },
   },
   nixd = {},
   taplo = {},
   pyright = {
-    cmd = { "pyright-langserver", "--stdio" },
-    filetypes = { "python" },
     settings = {
       python = {
         analysis = {
@@ -115,11 +95,7 @@ return {
       },
     },
   },
-  expert = {
-    cmd = { "expert", "--stdio" },
-    filetypes = { "elixir", "eelixir", "heex" },
-    root_markers = { "mix.exs", ".git" },
-  },
+  expert = {},
   hls = {},
   dockerls = {},
   bashls = {},
@@ -191,7 +167,7 @@ return {
     },
   },
   eslint = {},
-  jsonls = { cmd = { "vscode-json-languageserver", "--stdio" } },
+  jsonls = {},
   lua_ls = {
     settings = {
       Lua = {

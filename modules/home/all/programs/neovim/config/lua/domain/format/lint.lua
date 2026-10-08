@@ -33,6 +33,26 @@ lint.linters.sqlfluff.args = {
   "-",
 }
 
+-- Drop yamllint's line-length rule unless the project ships its own config.
+-- -d replaces config discovery, so a project file is passed through `extends`.
+lint.linters.yamllint.args = {
+  "-d",
+  function()
+    local own =
+      vim.fs.find({ ".yamllint", ".yamllint.yaml", ".yamllint.yml" }, {
+        upward = true,
+        path = vim.fs.dirname(vim.api.nvim_buf_get_name(0)),
+      })[1]
+    if own then
+      return ('{extends: "%s"}'):format(own)
+    end
+    return "{extends: default, rules: {line-length: disable}}"
+  end,
+  "--format",
+  "parsable",
+  "-",
+}
+
 lint.linters.codespell.args = {
   "--builtin",
   "clear,rare,code,usage",

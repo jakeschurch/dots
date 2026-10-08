@@ -21,7 +21,14 @@ M.list_github_tree = function()
     .. M.schema_catalog_branch
   local response =
     curl.get(url, { headers = M.github_headers, query = { recursive = 1 } })
-  local body = vim.fn.json_decode(response.body)
+  local ok, body = pcall(vim.json.decode, response.body)
+  if not ok or type(body) ~= "table" or type(body.tree) ~= "table" then
+    vim.notify(
+      "Schema catalog fetch failed: HTTP " .. tostring(response.status),
+      vim.log.levels.ERROR
+    )
+    return nil
+  end
   local trees = {}
   for _, tree in ipairs(body.tree) do
     if tree.type == "blob" and tree.path:match("%.json$") then
@@ -33,6 +40,9 @@ end
 
 M.init = function()
   local all_crds = M.list_github_tree()
+  if not all_crds then
+    return
+  end
   vim.ui.select(all_crds, { prompt = "Select schema: " }, function(selection)
     if not selection then
       vim.notify("Canceled.", vim.log.levels.WARN, {})
