@@ -19,118 +19,28 @@ require("match-up").setup({
 
 vim.opt.foldlevel = 99
 vim.opt.foldenable = true
-vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = ""
 
--- Configure treesitter highlighting via autocmd
+-- Treesitter highlighting and folds for every filetype with a parser, except
+-- ignored ones and files too big to parse comfortably.
+local MAX_FILESIZE = 1024 * 1024
+
 vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),
   callback = function(args)
-    -- Skip ignored filetypes
-    for _, ft in ipairs(ignored_filetypes) do
-      if args.match == ft then
-        return
-      end
-    end
-    -- Enable treesitter highlighting if parser exists
-    local ok = pcall(vim.treesitter.start, args.buf)
-    if not ok then
+    if vim.tbl_contains(ignored_filetypes, args.match) then
       return
+    end
+    local stat = vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf))
+    if stat and stat.size > MAX_FILESIZE then
+      return
+    end
+    if
+      pcall(vim.treesitter.start, args.buf)
+      and vim.api.nvim_get_current_buf() == args.buf
+    then
+      vim.wo[0][0].foldmethod = "expr"
     end
   end,
 })
-
--- TEMP: Configure nvim-treesitter-textobjects
--- require("nvim-treesitter-textobjects").setup({
---   select = {
---     lookahead = true,
---     selection_modes = {
---       ["@function.outer"] = "V",
---       ["@class.outer"] = "V",
---     },
---   },
---   move = {
---     set_jumps = true,
---   },
--- })
-
--- Textobject keymaps
--- local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
--- vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
--- vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
-
--- -- Select keymaps
--- vim.keymap.set({ "x", "o" }, "al", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@loop.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "il", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@loop.inner",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "ab", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@block.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "ib", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@block.inner",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "af", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@function.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "if", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@function.inner",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "ac", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@class.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "x", "o" }, "ic", function()
---   require("nvim-treesitter-textobjects.select").select_textobject(
---     "@class.inner",
---     "textobjects"
---   )
--- end)
---
--- -- Move keymaps
--- vim.keymap.set({ "n", "x", "o" }, "]]", function()
---   require("nvim-treesitter-textobjects.move").goto_next_start(
---     "@function.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "n", "x", "o" }, "]}", function()
---   require("nvim-treesitter-textobjects.move").goto_next_end(
---     "@function.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "n", "x", "o" }, "[[", function()
---   require("nvim-treesitter-textobjects.move").goto_previous_start(
---     "@function.outer",
---     "textobjects"
---   )
--- end)
--- vim.keymap.set({ "n", "x", "o" }, "[{", function()
---   require("nvim-treesitter-textobjects.move").goto_previous_end(
---     "@function.outer",
---     "textobjects"
---   )
--- end)

@@ -1,15 +1,12 @@
 ; extends
-(
-  (string_fragment) @lua
-  (#match? @lua "--\\s+lua")
-)
+((string_fragment) @injection.content
+  (#match? @injection.content "--\\s+lua")
+  (#set! injection.language "lua"))
 
-(
-  (string_fragment) @vim
-  (#match? @vim "\"\\s+vim")
-)
+((string_fragment) @injection.content
+  (#match? @injection.content "\"\\s+vim")
+  (#set! injection.language "vim"))
 
-(
-  (string_fragment) @yaml
-  (#match? @yaml "#\\s+yaml")
-)
+((string_fragment) @injection.content
+  (#match? @injection.content "#\\s+yaml")
+  (#set! injection.language "yaml"))
