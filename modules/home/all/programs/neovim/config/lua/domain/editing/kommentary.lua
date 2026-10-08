@@ -5,6 +5,12 @@ end
 
 require("ts_context_commentstring").setup({
   enable_autocmd = false,
+  -- Wiki prose uses vimwiki/Obsidian `%%` comments. Without an entry, the
+  -- commentstring of the last fenced block commented in stays in effect.
+  languages = {
+    markdown = "%% %s",
+    markdown_inline = "%% %s",
+  },
 })
 
 local lang_configs = {

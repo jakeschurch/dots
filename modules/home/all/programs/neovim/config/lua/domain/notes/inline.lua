@@ -2,6 +2,7 @@
 --
 --   @word            wiki tags, matching g:vimwiki_tag_format's `@` pre_mark
 --   shortcut URLs    concealed down to `sc-104714`
+--   %% comments      vimwiki/Obsidian style, whole-line or inline `%%…%%`
 --
 -- Extmarks rather than `syntax match`, because treesitter highlighting is what
 -- runs in these buffers and a syntax rule would not survive it.
@@ -15,6 +16,7 @@ local M = {}
 local NS = vim.api.nvim_create_namespace("notes-inline")
 local MENTION_HL = "WikiMention"
 local LABEL_HL = "WikiLinkLabel"
+local COMMENT_HL = "WikiComment"
 
 local FILETYPES = { markdown = true, vimwiki = true }
 
@@ -57,22 +59,51 @@ local function set_highlights()
   local palette = require("lib.palette")
   vim.api.nvim_set_hl(0, MENTION_HL, { fg = palette.red, bold = true })
   vim.api.nvim_set_hl(0, LABEL_HL, { fg = palette.blue, underline = true })
+  vim.api.nvim_set_hl(0, COMMENT_HL, { link = "Comment" })
 end
 
 --- Byte ranges covered by inline `code` spans, so a match inside one is skipped.
+--- A span closes on a backtick run of the same length as the one that opened
+--- it, so ``a `b` c`` is one span; an unmatched run is literal text.
 local function code_spans(line)
   local spans, from = {}, 1
   while true do
-    local open = line:find("`", from, true)
+    local open, open_end = line:find("`+", from)
     if not open then
       return spans
     end
-    local close = line:find("`", open + 1, true)
-    if not close then
+    local close
+    local search = open_end + 1
+    while true do
+      local s, e = line:find("`+", search)
+      if not s then
+        break
+      end
+      if e - s == open_end - open then
+        close = e
+        break
+      end
+      search = e + 1
+    end
+    if close then
+      spans[#spans + 1] = { open, close }
+      from = close + 1
+    else
+      from = open_end + 1
+    end
+  end
+end
+
+--- Byte ranges covered by bare URLs, so `@user` inside one is not a tag.
+local function url_spans(line)
+  local spans, from = {}, 1
+  while true do
+    local first, last = line:find("https?://[^%s%)%]>`]+", from)
+    if not first then
       return spans
     end
-    spans[#spans + 1] = { open, close }
-    from = close + 1
+    spans[#spans + 1] = { first, last }
+    from = last + 1
   end
 end
 
@@ -97,6 +128,30 @@ local function mark(buf, row, first, last, opts)
 end
 
 local function decorate(buf, row, line, spans)
+  -- A line opening with `%%` is a comment to the end: no tags or links inside.
+  local lead = line:match("^%s*()%%%%")
+  if lead then
+    mark(buf, row, lead, #line, { hl_group = COMMENT_HL })
+    return
+  end
+
+  -- Inline `%%…%%` comments, unless inside a code span; their contents are
+  -- then skipped like code.
+  local from = 1
+  while true do
+    local first, last = line:find("%%%%.-%%%%", from)
+    if not first then
+      break
+    end
+    if inside(spans, first) then
+      from = first + 2
+    else
+      mark(buf, row, first, last, { hl_group = COMMENT_HL })
+      spans[#spans + 1] = { first, last }
+      from = last + 1
+    end
+  end
+
   -- Shortened links first: a concealed URL must not also collect mention marks.
   local concealed = {}
   for _, rule in ipairs(LABELS) do
@@ -128,6 +183,7 @@ local function decorate(buf, row, line, spans)
     end
   end
 
+  local urls = url_spans(line)
   local from = 1
   while true do
     local first, last = line:find("@[%w][%w_%-]*", from)
@@ -140,6 +196,7 @@ local function decorate(buf, row, line, spans)
       not prev:match("[%w_]")
       and not inside(spans, first)
       and not inside(concealed, first)
+      and not inside(urls, first)
     then
       mark(buf, row, first, last, { hl_group = MENTION_HL })
     end
@@ -157,11 +214,23 @@ function M.render(buf)
 
   vim.api.nvim_buf_clear_namespace(buf, NS, 0, -1)
 
-  local fenced = false
+  -- A fence closes only on a bare run of the same character at least as long
+  -- as the opener, so a ``` inside a ~~~~ block does not end it.
+  local fence
   for lnum, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
-    if line:match("^%s*```") then
-      fenced = not fenced
-    elseif not fenced then
+    local marker = line:match("^%s*(```+)") or line:match("^%s*(~~~+)")
+    if fence then
+      if
+        marker
+        and marker:sub(1, 1) == fence:sub(1, 1)
+        and #marker >= #fence
+        and line:match("^%s*[`~]+%s*$")
+      then
+        fence = nil
+      end
+    elseif marker then
+      fence = marker
+    else
       decorate(buf, lnum - 1, line, code_spans(line))
     end
   end
@@ -177,22 +246,47 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   desc = "Keep inline note colours across colourscheme changes",
 })
 
-local pending
+-- One reusable debounce timer per buffer, so edits in one buffer never cancel
+-- another's pending render and no timer handles are leaked per keystroke.
+local timers = {}
 
 vim.api.nvim_create_autocmd(
   { "BufReadPost", "BufWritePost", "TextChanged", "TextChangedI", "FileType" },
   {
     group = group,
     callback = function(ev)
-      if pending then
-        pending:stop()
+      if not FILETYPES[vim.bo[ev.buf].filetype] then
+        return
       end
-      pending = vim.defer_fn(function()
-        M.render(ev.buf)
-      end, 120)
+      local timer = timers[ev.buf]
+      if not timer then
+        timer = assert(vim.uv.new_timer())
+        timers[ev.buf] = timer
+      end
+      timer:stop()
+      timer:start(
+        120,
+        0,
+        vim.schedule_wrap(function()
+          M.render(ev.buf)
+        end)
+      )
     end,
     desc = "Highlight @word tags and shorten story links",
   }
 )
+
+vim.api.nvim_create_autocmd("BufWipeout", {
+  group = group,
+  callback = function(ev)
+    local timer = timers[ev.buf]
+    if timer then
+      timer:stop()
+      timer:close()
+      timers[ev.buf] = nil
+    end
+  end,
+  desc = "Release the inline decoration timer",
+})
 
 return M

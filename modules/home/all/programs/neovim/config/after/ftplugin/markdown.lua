@@ -1,5 +1,5 @@
 vim.b.undo_ftplugin = (vim.b.undo_ftplugin or "")
-  .. "|setlocal wrap< linebreak< list< tw< wrapmargin< colorcolumn< comments< "
+  .. "|setlocal wrap< linebreak< list< tw< wrapmargin< colorcolumn< comments< commentstring< "
   .. "formatoptions< formatlistpat< formatexpr<|silent! nunmap <buffer> gw"
 
 vim.opt_local.wrap = true
@@ -19,8 +19,11 @@ vim.opt_local.spell = true
 -- both fight the treesitter formatter below.
 vim.opt_local.formatoptions = "tcqjnl"
 
--- Repeat the blockquote marker when wrapping.
-vim.opt_local.comments = "n:>"
+-- `%%` line comments, as in vimwiki and Obsidian; kommentary reads this too.
+vim.opt_local.commentstring = "%% %s"
+
+-- Repeat the comment and blockquote markers when wrapping.
+vim.opt_local.comments = "b:%%,n:>"
 
 -- Bullets and ordered items, optionally blockquoted, optionally a checkbox.
 vim.opt_local.formatlistpat =

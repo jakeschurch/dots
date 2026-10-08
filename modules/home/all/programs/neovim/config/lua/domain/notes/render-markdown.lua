@@ -1,6 +1,9 @@
 require("render-markdown").setup({
   completions = { blink = { enabled = true } },
   file_types = { "markdown", "vimwiki", "help" },
+  -- Stay rendered in every mode so typing does not flip the whole buffer back
+  -- to raw text; anti_conceal still shows the cursor line raw for editing.
+  render_modes = true,
   quote = {
     enabled = true,
     repeat_linebreak = true,
@@ -15,20 +18,8 @@ require("render-markdown").setup({
   checkbox = {
     checked = { scope_highlight = "@markup.strikethrough" },
   },
-  code = {
-    sign = false,
-    width = "full",
-    border = "none",
-    left_pad = 2,
-    right_pad = 0,
-    position = "right",
-    language_name = false,
-    above = nil,
-    below = nil,
-    style = "none",
-    highlight = "none",
-    highlight_inline = "none",
-  },
+  -- Leave fenced and inline code as plain text.
+  code = { enabled = false },
   dash = {
     width = 15,
   },
