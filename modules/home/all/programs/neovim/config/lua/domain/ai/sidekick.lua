@@ -31,6 +31,10 @@ require("sidekick").setup({
       },
     },
     picker = "fzf-lua",
+    -- Run the CLI inside tmux so sidekick can dump the pane's history: the
+    -- mouse wheel or leaving terminal mode opens a scrollable copy of it, and
+    -- `i` drops back into the live session. Sessions also survive restarts.
+    mux = { enabled = true, backend = "tmux" },
   },
 })
 
