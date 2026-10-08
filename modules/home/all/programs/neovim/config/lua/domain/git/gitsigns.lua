@@ -24,27 +24,11 @@ require("gitsigns").setup({
     topdelete = { text = "▔" },
   },
 
-  signs_staged_enable = true,
-  signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-  numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
-  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
-  word_diff = false,
-  watch_gitdir = {
-    interval = 100,
-    follow_files = true,
-  },
-  attach_to_untracked = false,
-  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
   current_line_blame_opts = {
-    virt_text = true,
-    virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
     delay = 100,
     ignore_whitespace = true,
   },
   current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
-  sign_priority = 6,
-  update_debounce = 100,
-  status_formatter = nil, -- Use default
   max_file_length = 4000, -- Disable if file is longer than this (in lines)
   preview_config = {
     -- Options passed to nvim_open_win
@@ -71,7 +55,7 @@ require("gitsigns").setup({
       else
         gitsigns.nav_hunk("next")
       end
-    end)
+    end, { desc = "Next hunk" })
 
     map("n", "[c", function()
       if vim.wo.diff then
@@ -79,39 +63,54 @@ require("gitsigns").setup({
       else
         gitsigns.nav_hunk("prev")
       end
-    end)
+    end, { desc = "Prev hunk" })
 
     -- Actions
-    map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>")
-    map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>")
-    map("n", "<leader>hS", gitsigns.stage_buffer)
-    map("n", "<leader>hu", gitsigns.undo_stage_hunk)
-    map("n", "<leader>hR", gitsigns.reset_buffer)
-    map("n", "<leader>hp", gitsigns.preview_hunk)
+    map(
+      { "n", "v" },
+      "<leader>hs",
+      ":Gitsigns stage_hunk<CR>",
+      { desc = "Stage/unstage hunk" }
+    )
+    map(
+      { "n", "v" },
+      "<leader>hr",
+      ":Gitsigns reset_hunk<CR>",
+      { desc = "Reset hunk" }
+    )
+    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage buffer" })
+    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset buffer" })
+    map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
     map("n", "<leader>hQ", function()
       gitsigns.setqflist("all")
-    end)
-    map("n", "<leader>hq", gitsigns.setqflist)
+    end, { desc = "All hunks to quickfix" })
+    map(
+      "n",
+      "<leader>hq",
+      gitsigns.setqflist,
+      { desc = "Buffer hunks to quickfix" }
+    )
     map("n", "<leader>hb", function()
       gitsigns.blame_line({ full = true })
-    end)
-    map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
-    map("n", "<leader>hd", gitsigns.diffthis)
+    end, { desc = "Blame line" })
+    map(
+      "n",
+      "<leader>tb",
+      gitsigns.toggle_current_line_blame,
+      { desc = "Toggle line blame" }
+    )
+    map("n", "<leader>hd", gitsigns.diffthis, { desc = "Diff against index" })
     map("n", "<leader>hD", function()
       gitsigns.diffthis("~")
-    end)
-    map("n", "<leader>td", gitsigns.toggle_deleted)
+    end, { desc = "Diff against last commit" })
+    map(
+      "n",
+      "<leader>td",
+      gitsigns.preview_hunk_inline,
+      { desc = "Preview hunk inline" }
+    )
 
     -- text objects
-    map("o", "ih", ":<C-U>Gitsigns select_hunk<CR>")
-    map("x", "ih", ":<C-U>Gitsigns select_hunk<CR>")
+    map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Hunk" })
   end,
 })
-
-local mappings = {
-  { "[c", "<cmd>lua require 'gitsigns'.prev_hunk()<CR>", desc = "Prev Hunk" },
-  { "]c", "<cmd>lua require 'gitsigns'.next_hunk()<CR>", desc = "Next Hunk" },
-}
-
-local which_key = require("which-key")
-which_key.add(mappings)

@@ -8,7 +8,7 @@ diffview.setup({
   icons = {
     folder_closed = "",
     folder_open = "",
-    folder_empty = "ﰊ",
+    folder_empty = "󰉖",
   },
   default_args = {
     DiffviewOpen = { "--untracked-files=no", "--imply-local" },
@@ -25,17 +25,16 @@ diffview.setup({
     },
   },
   keymaps = {
-    disable_defaults = true,
     view = {
       {
         "n",
-        "[h",
+        "]h",
         actions.select_next_entry,
         { desc = "Next entry" },
       },
       {
         "n",
-        "]h",
+        "[h",
         actions.select_prev_entry,
         { desc = "Previous entry" },
       },
@@ -77,7 +76,7 @@ diffview.setup({
       },
       {
         "n",
-        "<leader>hr",
+        "<leader>hn",
         actions.conflict_choose("none"),
         { desc = "Delete conflict" },
       },
@@ -105,7 +104,9 @@ diffview.setup({
   },
 })
 
-vim.keymap.set("n", "<leader>dv", function()
-  -- Simply use DiffviewOpen command - it auto-detects merge state
-  vim.cmd("DiffviewOpen")
-end, { desc = "Smart Git Diff (Diffview or merge tool)" })
+vim.keymap.set(
+  "n",
+  "<leader>gd",
+  "<cmd>DiffviewOpen<cr>",
+  { desc = "Diffview" }
+)
