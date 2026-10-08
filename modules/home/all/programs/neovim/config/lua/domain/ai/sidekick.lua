@@ -1,9 +1,8 @@
 -- Claude Code in a split, with buffer/selection/diagnostic context sent from
 -- Neovim. `cli.watch` reloads buffers the CLI edits underneath us.
 --
--- NES (next edit suggestions) is off: it needs the proprietary copilot LSP and
--- overlaps with the blink-copilot completion source already in use. Flip
--- `nes.enabled` and add copilot-language-server to dev-packages to try it.
+-- NES (next edit suggestions) is off: it needs the proprietary copilot LSP,
+-- and copilot is deliberately not installed.
 --
 -- SIDEKICK_EDITOR_BLOCK makes flatten.nvim (terminal/flatten.lua) block on
 -- ctrl+g, so Claude's prompt opens in this instance and waits for it to close.

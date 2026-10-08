@@ -1,17 +1,6 @@
 require("colorful-menu").setup()
 local lspkind = require("lspkind")
 
-local blink_copilot = require("blink-copilot")
-blink_copilot.setup({
-  max_completions = 3,
-  max_attempts = 4,
-  debounce = 50,
-  auto_refresh = {
-    backward = true,
-    forward = true,
-  },
-})
-
 local config = {
   cmdline = {
     enabled = true,
@@ -37,7 +26,6 @@ local config = {
 
   sources = {
     default = {
-      "copilot",
       "lsp",
       "buffer",
       "path",
@@ -66,25 +54,6 @@ local config = {
     providers = {
       snippets = {
         score_offset = 5,
-      },
-
-      copilot = {
-        enabled = true,
-        min_keyword_length = 0,
-        name = "copilot",
-        module = "blink-copilot",
-        score_offset = 50,
-        async = true,
-        transform_items = function(_, items)
-          local CompletionItemKind =
-            require("blink.cmp.types").CompletionItemKind
-          local kind_idx = #CompletionItemKind + 1
-          CompletionItemKind[kind_idx] = "Copilot"
-          for _, item in ipairs(items) do
-            item.kind = kind_idx
-          end
-          return items
-        end,
       },
 
       emoji = {
