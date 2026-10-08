@@ -80,14 +80,18 @@ in
 
   # mosh 1.4.0's configure probe compiles protoc output against abseil
   # 20260817, whose btree_map using-declarations fail under mosh's default C++
-  # standard. Force C++20 until nixpkgs fixes it.
+  # standard. Force C++20 until nixpkgs fixes it. CXXFLAGS rather than
+  # NIX_CFLAGS_COMPILE: the latter also reaches C compiles, where clang rejects
+  # -std=c++20 and configure's compiler check fails. C++20 also drops
+  # shared_ptr::unique(), so swap in the equivalent use_count() check.
   mosh = super.mosh.overrideAttrs (old: {
     env = (old.env or { }) // {
-      NIX_CFLAGS_COMPILE = toString [
-        (old.env.NIX_CFLAGS_COMPILE or "")
-        "-std=c++20"
-      ];
+      CXXFLAGS = "-g -O2 -std=c++20";
     };
+    postPatch = (old.postPatch or "") + ''
+      substituteInPlace src/terminal/terminalframebuffer.h \
+        --replace-fail 'mutable_row.unique()' '(mutable_row.use_count() == 1)'
+    '';
   });
 
   # mux::tab::adjust_{x,y}_size spin forever when a window shrinks past the
