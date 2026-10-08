@@ -1,10 +1,10 @@
 local fzf_lua = require("fzf-lua")
+
 local which_key = require("which-key")
 local M = {}
 
 local config = {
-  "ivy",
-  "fzf-native",
+  { "ivy", "fzf-native" },
   live_grep = {
     rg_glob = true,
     glob_flag = "--iglob", -- for case sensitive globs use '--glob'
@@ -20,29 +20,19 @@ local config = {
     fzf = {
       true,
       ["ctrl-q"] = "select-all+accept", -- Send all items to qf list
+      ["ctrl-n"] = "preview-page-down",
+      ["ctrl-p"] = "preview-page-up",
     },
-    ["ctrl-j"] = nil,
-    ["ctrl-k"] = nil,
-
-    ["ctrl-c"] = "abort",
-    ["esc"] = "abort",
-
-    ["ctrl-n"] = "preview-page-down",
-    ["ctrl-p"] = "preview-page-up",
   },
   files = {
-    prompt = nil,
     cwd_prompt_shorten_val = 3,
     cwd_prompt = true,
   },
-  globals = {
-    winopts = {
-      preview = {
-        default = "bat_native",
-        border = "noborder",
-        scrollbar = false,
-        title = nil,
-      },
+  winopts = {
+    preview = {
+      default = "bat_native",
+      border = "noborder",
+      scrollbar = false,
     },
   },
 }
@@ -79,8 +69,8 @@ end
 
 local function get_git_root_or_cwd()
   local buf_path = sanitize_buf_path(vim.api.nvim_get_current_buf())
-  if buf_path == "" then
-    -- No file loaded, fallback to current working directory
+  if not buf_path then
+    -- No real file loaded, fallback to current working directory
     return vim.fn.getcwd()
   end
 
@@ -95,146 +85,69 @@ end
 -- Create wrapped versions of commonly used fzf commands
 local wrapped = {
   git_files = function()
-    local git_root = get_git_root_or_cwd()
-    if git_root then
-      return fzf_lua.git_files()
-    else
-      vim.notify("Not in a git repository", vim.log.levels.WARN)
-    end
+    return fzf_lua.git_files({ cwd = get_git_root_or_cwd() })
   end,
   live_grep = function()
-    local git_root = get_git_root_or_cwd()
-    if git_root then
-      return fzf_lua.live_grep({ cwd = git_root })
-    else
-      vim.notify("Not in a git repository", vim.log.levels.WARN)
-    end
-  end,
-  grep = function()
-    local git_root = get_git_root_or_cwd()
-    if git_root then
-      return fzf_lua.grep({ cwd = git_root })
-    else
-      vim.notify("Not in a git repository", vim.log.levels.WARN)
-    end
+    return fzf_lua.live_grep({ cwd = get_git_root_or_cwd() })
   end,
 }
 
 local function recent_git_branches()
-  -- Use git reflog to get unique, most recently checked-out branches
-  local handle = io.popen(
-    "git reflog | grep 'checkout:' | awk '{print $NF}' | awk '!seen[$0]++'"
-  )
-  if not handle then
+  local root = get_git_root_or_cwd()
+  local result = vim
+    .system({ "git", "-C", root, "reflog" }, { text = true })
+    :wait()
+  if result.code ~= 0 then
+    vim.notify("Not in a git repository", vim.log.levels.WARN)
     return
   end
-  local result = handle:read("*a")
-  handle:close()
 
-  local branches = {}
-  for branch in result:gmatch("[^\r\n]+") do
-    table.insert(branches, branch)
+  -- Unique, most recently checked-out branches (skip detached SHAs)
+  local branches, seen = {}, {}
+  for line in result.stdout:gmatch("[^\r\n]+") do
+    local branch = line:match("checkout: moving from %S+ to (%S+)$")
+    if
+      branch
+      and not seen[branch]
+      and not branch:match("^%x%x%x%x%x%x%x+$")
+    then
+      seen[branch] = true
+      table.insert(branches, branch)
+    end
   end
 
   fzf_lua.fzf_exec(branches, {
     prompt = "Recent Branches> ",
+    cwd = root,
     actions = {
       ["default"] = function(selected)
-        vim.cmd("Git checkout " .. selected[1])
+        if not selected[1] then
+          return
+        end
+        vim.cmd("Git checkout " .. vim.fn.fnameescape(selected[1]))
       end,
     },
   })
 end
 
-vim.keymap.set({ "n", "v", "i" }, "<C-x><C-f>", function()
+vim.keymap.set("i", "<C-x><C-f>", function()
   fzf_lua.complete_path()
 end, { silent = true, desc = "Fuzzy complete path" })
 
 which_key.add({
-  {
-    "<leader>bb",
-    fzf_lua.buffers,
-    desc = "Show Buffers",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>fc",
-    fzf_lua.command_history,
-    desc = "Command History",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>fg",
-    recent_git_branches,
-    desc = "Git Branches",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>fh",
-    fzf_lua.help_tags,
-    desc = "Help Tags",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>fk",
-    fzf_lua.keymaps,
-    desc = "Keymaps",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>fm",
-    fzf_lua.manpages,
-    desc = "Man Pages",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>ja",
-    fzf_lua.resume,
-    desc = "Resume fzf lua search",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>jj",
-    wrapped.live_grep,
-    desc = "Grep",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>jk",
-    wrapped.git_files,
-    desc = "Git Files",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>gb",
-    recent_git_branches,
-    desc = "Checkout Branch",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>gc",
-    fzf_lua.git_commits,
-    desc = "Checkout Commit",
-    nowait = true,
-    remap = false,
-  },
-  {
-    "<leader>go",
-    fzf_lua.git_status,
-    desc = "Open Changed File",
-    nowait = true,
-    remap = false,
-  },
+  nowait = true,
+  remap = false,
+  { "<leader>bb", fzf_lua.buffers, desc = "Show Buffers" },
+  { "<leader>fc", fzf_lua.command_history, desc = "Command History" },
+  { "<leader>fh", fzf_lua.help_tags, desc = "Help Tags" },
+  { "<leader>fk", fzf_lua.keymaps, desc = "Keymaps" },
+  { "<leader>fm", fzf_lua.manpages, desc = "Man Pages" },
+  { "<leader>ja", fzf_lua.resume, desc = "Resume fzf lua search" },
+  { "<leader>jj", wrapped.live_grep, desc = "Grep" },
+  { "<leader>jk", wrapped.git_files, desc = "Git Files" },
+  { "<leader>gb", recent_git_branches, desc = "Checkout Branch" },
+  { "<leader>gc", fzf_lua.git_commits, desc = "Checkout Commit" },
+  { "<leader>go", fzf_lua.git_status, desc = "Open Changed File" },
 })
 
 return M
