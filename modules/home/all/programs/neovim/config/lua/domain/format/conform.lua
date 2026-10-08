@@ -14,7 +14,8 @@ conform.setup({
     elixir = { "mix" },
     eelixir = { "mix" },
     heex = { "mix" },
-    go = { "goimports-reviser", "gofumpt", "golines" },
+    -- golines formats through gofumpt (see below), so split lines keep its rules.
+    go = { "goimports-reviser", "golines" },
     json = { "prettier" },
     jsonc = { "prettier" },
     yaml = { "prettier" },
@@ -33,9 +34,6 @@ conform.setup({
     tf = { "terraform_fmt" },
     hcl = { "terragrunt_hclfmt" },
     sql = { "sqlfluff" },
-    -- Format fenced code blocks with their own language's formatter.
-    ["markdown.mdx"] = { "mdformat", "injected" },
-    ["_"] = { lsp_format = "fallback" },
   },
 
   default_format_opts = {
@@ -51,11 +49,15 @@ conform.setup({
     },
     -- conform only runs sqlfluff under a .sqlfluff/pyproject root by default,
     -- and `fix` exits 1 whenever unfixable violations remain even though it
-    -- still prints the fixed SQL.
+    -- still prints the fixed SQL. --dialect belongs to the `fix` subcommand, so
+    -- it can't go through prepend_args (that lands before `fix`).
     sqlfluff = {
-      prepend_args = { "--dialect", "postgres" },
+      args = { "fix", "--dialect", "postgres", "-" },
       require_cwd = false,
       exit_codes = { 0, 1 },
+    },
+    golines = {
+      prepend_args = { "--base-formatter", "gofumpt" },
     },
     shfmt = {
       prepend_args = { "--indent", "2", "--case-indent", "--binary-next-line" },
@@ -69,9 +71,11 @@ conform.setup({
 vim.api.nvim_create_user_command("Format", function(opts)
   local range = nil
   if opts.count ~= -1 then
+    local end_line =
+      vim.api.nvim_buf_get_lines(0, opts.line2 - 1, opts.line2, true)[1]
     range = {
       start = { opts.line1, 0 },
-      ["end"] = { opts.line2, math.huge },
+      ["end"] = { opts.line2, end_line:len() },
     }
   end
   conform.format({ async = true, range = range })
