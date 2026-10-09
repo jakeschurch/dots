@@ -7,6 +7,16 @@
 let
   gitBin = lib.getExe pkgs.git;
   fzfBin = lib.getExe pkgs.fzf;
+  git-license = pkgs.writeShellApplication {
+    name = "git-license";
+    runtimeInputs = with pkgs; [
+      git
+      curl
+      jq
+      coreutils
+    ];
+    text = builtins.readFile ./git-license.sh;
+  };
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
@@ -15,6 +25,7 @@ in
   home = {
     packages = with pkgs; [
       git-extras
+      git-license
       difftastic
       difftastic-inline
       perlPackages.TermReadKey
