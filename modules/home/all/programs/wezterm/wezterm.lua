@@ -186,12 +186,18 @@ config.window_frame = {
   font = wezterm.font_with_fallback(fonts),
   font_size = 12.0, -- or whatever you want
 }
-config.dpi = 96
 config.audible_bell = "Disabled"
 config.check_for_updates = false
 config.force_reverse_video_cursor = false
-config.front_end = "OpenGL"
-config.webgpu_power_preference = "LowPower"
+
+if wezterm.target_triple:find("darwin") then
+  -- OpenGL is deprecated on macOS and prone to hangs; WebGpu uses Metal.
+  config.front_end = "WebGpu"
+  config.webgpu_power_preference = "LowPower"
+else
+  config.dpi = 96
+  config.front_end = "OpenGL"
+end
 
 config.max_fps = 60
 config.animation_fps = 30
