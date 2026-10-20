@@ -215,6 +215,18 @@ in
       mem = 24576;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
+      # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
+      # pools ran 97-98% full with zero free VG extents while p5 Btrfs had
+      # ~828 GiB available. One fully preallocated NOCOW image, reserved by
+      # mayastor-bulk-reserve-k3s-worker-5 before the VM starts and attached
+      # sparse=off so it can never fall back to sparse overcommit. Budget
+      # 2026-10-20: p5 avail 889.19e9 B - 343.60e9 B = 545.59e9 B (43% of the
+      # fs); 295.70e9 B (23%) even if every existing p5 image fills. worker-5
+      # only: worker-4/6 carry the warm replicas of Foundry PG -7/-1, so their
+      # restart is the riskier attach. Takes effect on the next single,
+      # gated restart of this VM (restartVmsOnSwitch = false above).
+      mayastorBulkImagePath = "/microvm-disks/k3s-worker-5/k3s-worker-5-mayastor-bulk.img";
+      mayastorBulkImageGiB = 320;
       coldStorageDevice = "/dev/coldvg/cold-w5"; # cold data (HDD LV)
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
