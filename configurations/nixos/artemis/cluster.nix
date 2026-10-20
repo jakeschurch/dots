@@ -217,9 +217,9 @@ in
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
       # pools ran 97-98% full with zero free VG extents while p5 Btrfs had
-      # ~828 GiB available. One fully preallocated NOCOW image, reserved by
-      # mayastor-bulk-reserve-k3s-worker-5 before the VM starts and attached
-      # sparse=off so it can never fall back to sparse overcommit. Budget
+      # ~828 GiB available. One fully preallocated NOCOW image, created or
+      # re-validated by mayastor-bulk-prepare-k3s-worker-5 (microvm@
+      # ExecStartPre, 35% free floor) and attached sparse=off. Budget
       # 2026-10-20: p5 avail 889.19e9 B - 343.60e9 B = 545.59e9 B (43% of the
       # fs); 295.70e9 B (23%) even if every existing p5 image fills. worker-5
       # only: worker-4/6 carry the warm replicas of Foundry PG -7/-1, so their
