@@ -212,7 +212,14 @@ in
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      mem = 24576;
+      # 24G→28G (foundrybox-dgxp1.35.10.11): a CI Elixir test pod requests
+      # ~6.1Gi and no worker had that unreserved. Committed 3x12288 servers +
+      # 2x24576 workers + 28672 = 114688M of ~128620M host (13.6GiB reserve,
+      # >= 12GiB target). With an isolated 8GiB Mayastor test VM running the
+      # reserve is only 5.6GiB (the 2026-07-10 stall level): ACTIVATE ONLY when
+      # no isolated VM can run concurrently; a pre-GO capacity guard is still
+      # required for any future guest.
+      mem = 28672;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
