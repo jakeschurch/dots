@@ -106,6 +106,46 @@ in
     ];
   };
 
+  # restic shares nvme0n1 with the k3s server images (etcd WAL). kyber ignores
+  # IOSchedulingClass, so the bandwidth/IOPS caps (blk-throttle) and IOWeight
+  # (iocost, below) are what actually bound it; CPU idle/nice also apply.
+  systemd.services.restic-backups-home.serviceConfig = {
+    Nice = 19;
+    CPUSchedulingPolicy = "idle";
+    IOSchedulingClass = "idle";
+    IOWeight = 10;
+    IOReadBandwidthMax = "/dev/nvme0n1 100M";
+    IOReadIOPSMax = "/dev/nvme0n1 2000";
+    IOWriteBandwidthMax = "/dev/nvme0n1 50M";
+  };
+
+  # blk-iocost on nvme0n1 (259:0) so cgroup IOWeight is honoured under kyber
+  # (bfq would collapse blk-mq parallelism; see 1ba042^ for the original).
+  # vrate floor min=25 keeps a saturated device from throttling everyone to 1%.
+  # Live off-switch: echo "259:0 enable=0" > /sys/fs/cgroup/io.cost.qos
+  systemd.services.iocost-nvme = {
+    description = "Enable blk-iocost QoS on nvme0n1";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "iocost-nvme" ''
+        set -eu
+        dev=$(cat /sys/block/nvme0n1/dev)
+        echo "$dev ctrl=user model=linear \
+          rbps=6000000000 rseqiops=900000 rrandiops=750000 \
+          wbps=5500000000 wseqiops=850000 wrandiops=700000" \
+          > /sys/fs/cgroup/io.cost.model
+        echo "$dev enable=1 ctrl=user rpct=95.00 rlat=5000 wpct=95.00 wlat=5000 min=25.00 max=10000.00" \
+          > /sys/fs/cgroup/io.cost.qos
+      '';
+      ExecStop = pkgs.writeShellScript "iocost-nvme-off" ''
+        echo "$(cat /sys/block/nvme0n1/dev) enable=0" > /sys/fs/cgroup/io.cost.qos
+      '';
+    };
+  };
+
   # Monthly balance to consolidate sparse chunks; idle I/O so it doesn't interfere
   systemd.services.btrfs-balance = {
     description = "Btrfs balance";
