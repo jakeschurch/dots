@@ -232,8 +232,14 @@ in
   systemd.services = {
     "microvm@k3s-worker-1".serviceConfig.CPUAffinity = "0-3 16-19";
     "microvm@k3s-worker-2".serviceConfig.CPUAffinity = "4-7 20-23";
-    "microvm@k3s-server-1".serviceConfig.CPUAffinity = "8-9 24-25";
-    "microvm@k3s-server-2".serviceConfig.CPUAffinity = "10-11 26-27";
+    "microvm@k3s-server-1".serviceConfig = {
+      CPUAffinity = "8-9 24-25";
+      IOWeight = 1000;
+    };
+    "microvm@k3s-server-2".serviceConfig = {
+      CPUAffinity = "10-11 26-27";
+      IOWeight = 1000;
+    };
   };
 
   # NAT for microVM external network access
