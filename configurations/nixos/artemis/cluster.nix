@@ -128,7 +128,8 @@ in
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-4/k3s-server-4-rancher.img";
+      # ext4 p4, fully preallocated: worker sparse growth can't ENOSPC etcd.
+      rancherImagePath = "/var/lib/microvms/k3s-server-4/k3s-server-4-rancher.img";
     };
 
     vms.k3s-server-5 = {
