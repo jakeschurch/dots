@@ -146,7 +146,7 @@ in
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-5/k3s-server-5-rancher.img";
+      rancherImagePath = "/var/lib/microvms/k3s-server-5/k3s-server-5-rancher.img";
       nixStoreOverlayGiB = 8;
     };
 
