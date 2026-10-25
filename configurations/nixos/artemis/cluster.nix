@@ -130,6 +130,7 @@ in
       disk = 40;
       # ext4 p4, fully preallocated: worker sparse growth can't ENOSPC etcd.
       rancherImagePath = "/var/lib/microvms/k3s-server-4/k3s-server-4-rancher.img";
+      nixStoreOverlayGiB = 8;
     };
 
     vms.k3s-server-5 = {
@@ -146,6 +147,7 @@ in
       mem = 12288;
       disk = 40;
       rancherImagePath = "/microvm-disks/k3s-server-5/k3s-server-5-rancher.img";
+      nixStoreOverlayGiB = 8;
     };
 
     # Moved from apollo (was k3s-server-3) 2026-08-18 — etcd majority off the desktop.
@@ -159,6 +161,7 @@ in
       mem = 12288;
       disk = 40;
       rancherImagePath = "/microvm-disks/k3s-server-6/k3s-server-6-rancher.img";
+      nixStoreOverlayGiB = 8;
     };
 
     # =========================================================================
