@@ -193,7 +193,9 @@ in
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      mem = 24576;
+      # 24G→30G (2026-10-26): fit a 5Gi CI test alongside this node's services.
+      # With worker-5 at 26G, total VM RAM is 116G, leaving ~9.6G for the host.
+      mem = 30720;
       disk = 200;
       rancherImagePath = "/microvm-disks/k3s-worker-4/k3s-worker-4-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
@@ -216,7 +218,8 @@ in
       # (image pulls, nix builds) forced host reclaim, stalling etcd voters
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      mem = 24576;
+      # 24G→26G (2026-10-26): fit a 5Gi CI test without reducing pod requests.
+      mem = 26624;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
