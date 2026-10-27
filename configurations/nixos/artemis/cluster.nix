@@ -194,8 +194,9 @@ in
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
       # 24G→30G (2026-10-26): fit a 5Gi CI test alongside this node's services.
-      # With worker-5 at 26G, total VM RAM is 116G, leaving ~9.6G for the host.
-      mem = 30720;
+      # 30G→28G (2026-10-27): give worker-5 the same RAM without increasing
+      # the 116G VM total or reducing the host's ~9.6G reserve.
+      mem = 28672;
       disk = 200;
       rancherImagePath = "/microvm-disks/k3s-worker-4/k3s-worker-4-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
@@ -219,7 +220,8 @@ in
       # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
       # 24G→26G (2026-10-26): fit a 5Gi CI test without reducing pod requests.
-      mem = 26624;
+      # 26G→28G (2026-10-27): restore test-seat headroom as service requests grow.
+      mem = 28672;
       disk = 200;
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
