@@ -128,10 +128,9 @@
         nvd
         bc
         gotop
-        ccache
       ]
-      # Wayland/X11 forwarding helpers — not available on darwin.
       ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+        ccache
         waypipe
         xauth
       ];
