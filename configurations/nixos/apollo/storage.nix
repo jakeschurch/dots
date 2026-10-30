@@ -34,13 +34,12 @@ in
   # /sys/fs/btrfs/<uuid>/commit_stats to confirm commits stay low.
   systemd.services.systemd-journald.serviceConfig.WatchdogSec = "6min";
 
-  # Enable automatic BTRFS scrubbing to detect corruption early
-  # Throttled + moved off Monday 00:00, where it stacked with docker-prune and
-  # restic and drove the 990 PRO into a controller hang (see boot.nix). The unit's
-  # IOSchedulingClass=idle is a no-op under kyber, so cap throughput instead
-  # (~1.1TiB at 300M/s ≈ 1h).
+  # Disabled after another 990 PRO controller failure during the 2026-10-14
+  # scrub, despite the 300M/s limit. The APST workaround in boot.nix first
+  # became active after that failure; its effectiveness is still unproven.
+  # Keep the schedule and limit for a future supervised re-enable.
   services.btrfs.autoScrub = {
-    enable = true;
+    enable = false;
     interval = "Wed *-*-* 03:30:00";
     limit = "300M";
     fileSystems = [ "/" ];

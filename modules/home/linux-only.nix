@@ -39,7 +39,6 @@
     (lib.mkIf osConfig.profiles.desktop.enable {
       home.packages = with pkgs; [
         obs-studio
-        nixgl.nixVulkanIntel
         vulkan-tools
         rofi
         spotify

@@ -18,23 +18,21 @@
     };
   };
 
-  # Make Firefox the default browser for url/http(s)/html handlers.
-  home.sessionVariables.BROWSER = "firefox";
+  home.sessionVariables.BROWSER =
+    if pkgs.stdenv.hostPlatform.isLinux then "google-chrome-stable" else "firefox";
 
   # Linux-only: darwin has no xdg mime database (macOS uses LaunchServices).
   xdg.mimeApps = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     enable = true;
     defaultApplications =
       let
-        ff = "firefox.desktop";
+        chrome = "google-chrome.desktop";
       in
       {
-        "text/html" = ff;
-        "x-scheme-handler/http" = ff;
-        "x-scheme-handler/https" = ff;
-        "x-scheme-handler/about" = ff;
-        "x-scheme-handler/unknown" = ff;
-        "application/xhtml+xml" = ff;
+        "text/html" = chrome;
+        "x-scheme-handler/http" = chrome;
+        "x-scheme-handler/https" = chrome;
+        "application/xhtml+xml" = chrome;
         # Open directories in PCManFM, not zathura's comic-book handler.
         "inode/directory" = "pcmanfm.desktop";
       };

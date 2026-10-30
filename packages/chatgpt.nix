@@ -26,6 +26,7 @@
   bubblewrap,
   git,
   systemd,
+  tpm2-tss,
   libX11,
   libXcomposite,
   libXdamage,
@@ -33,13 +34,13 @@
   libXfixes,
   libXrandr,
 }:
-stdenv.mkDerivation (finalAttrs: {
+stdenv.mkDerivation (_finalAttrs: {
   pname = "chatgpt";
-  version = "26.917.71314";
+  version = "26.1027.30824";
 
   src = fetchurl {
     url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb";
-    hash = "sha256-J2tTQcPXSyYdOtUhBvf6ft3gaEHkdn/ipAy1QJmx8+0=";
+    hash = "sha256-ThOaRPfJF6ZD8t0BStMimN0wrsbTJNMjUksZD3ZnaEw=";
   };
 
   nativeBuildInputs = [
@@ -69,6 +70,7 @@ stdenv.mkDerivation (finalAttrs: {
     pango
     stdenv.cc.cc
     systemd
+    tpm2-tss
     libX11
     libXcomposite
     libXdamage

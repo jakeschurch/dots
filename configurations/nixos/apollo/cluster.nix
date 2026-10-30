@@ -4,6 +4,17 @@ let
   k3sPkgs = flake.inputs.nixpkgs-k3s.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   self = clusterData.hosts.apollo;
   peer = clusterData.hosts.artemis;
+  microvmCompat = {
+    disabledModules = [
+      (flake.inputs.vmetal.inputs.microvm.outPath + "/nixos-modules/microvm/optimization.nix")
+      (flake.inputs.vmetal.inputs.microvm.outPath + "/nixos-modules/microvm/mounts.nix")
+    ];
+    imports = [
+      ./microvm-optimization.nix
+      ./microvm-mounts.nix
+    ];
+    _module.args.microvmSource = flake.inputs.vmetal.inputs.microvm.outPath;
+  };
 in
 {
   services.microvm-host = {
@@ -121,6 +132,7 @@ in
     inherit (clusterData) sshKeys;
 
     vms.k3s-server-1 = {
+      extraModules = [ microvmCompat ];
       role = "server";
       ip = "192.168.100.10";
       mac = "02:00:00:00:00:10";
@@ -132,6 +144,7 @@ in
     };
 
     vms.k3s-server-2 = {
+      extraModules = [ microvmCompat ];
       role = "server";
       ip = "192.168.100.11";
       mac = "02:00:00:00:00:11";
@@ -167,7 +180,10 @@ in
       mayastorBlockDevice = "/dev/apollovg/mayastor-w1";
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [
+        microvmCompat
+        { boot.kernelParams = [ "hugepages=1024" ]; }
+      ];
     };
 
     vms.k3s-worker-2 = {
@@ -187,7 +203,10 @@ in
       mayastorBlockDevice = "/dev/nvmevg/mayastor-w2";
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [
+        microvmCompat
+        { boot.kernelParams = [ "hugepages=1024" ]; }
+      ];
       # GPU passthrough (vLLM) parked during 2-worker rebuild; re-add via
       # passthroughDevices = [{ bus = "pci"; path = "0000:0c:00.0"; }];
     };

@@ -69,7 +69,6 @@ in
   home.packages = [
     agent-deck
     llmAgents.claude-code
-    llmAgents.claude-plugins
     codex
     pkgs.rtk
     serena-mcp
