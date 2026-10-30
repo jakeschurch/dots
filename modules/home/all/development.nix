@@ -195,7 +195,7 @@
   };
 
   programs = {
-    zathura.enable = true;
+    zathura.enable = pkgs.stdenv.hostPlatform.isLinux;
 
     nix-index = {
       enable = true;
