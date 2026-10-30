@@ -80,12 +80,10 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia/v5.1.0";
+      url = "github:noctalia-dev/noctalia/v5.4.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # NOTE: no nixpkgs.follows -- upstream flake uses beamPackages.extend, which
-    # our nixpkgs no longer has (beam sets are makeScope now, overrideScope only).
     expert.url = "github:elixir-lang/expert";
 
     # k3s ONLY. Pinned separately from the flake-wide nixpkgs because
