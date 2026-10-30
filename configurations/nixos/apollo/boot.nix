@@ -19,7 +19,6 @@
     # which streams full kernel + systemd unit status. Override the shared quiet
     # defaults to make that view verbose.
     consoleLogLevel = 4;
-    initrd.verbose = true;
     # Merges with the shared common params (boot.shell_on_fail, udev.log_priority).
     kernelParams = [
       "splash"

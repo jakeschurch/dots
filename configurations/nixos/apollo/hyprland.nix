@@ -65,7 +65,7 @@ in
         if [ "$class" = "Steam" ] || [ "$class" = "Bitwarden" ]; then
           ${pkgs.xdotool}/bin/xdotool getactivewindow windowunmap
         else
-          ${pkgs.hyprland}/bin/hyprctl dispatch killactive ""
+          ${pkgs.hyprland}/bin/hyprctl dispatch 'hl.dsp.window.close()'
         fi
       '')
 

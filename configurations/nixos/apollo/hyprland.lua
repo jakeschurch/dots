@@ -154,7 +154,7 @@ hl.config({
     },
     hyprbars = {
       bar_height = 30,
-      on_double_click = "hyprctl dispatch fullscreen 1",
+      on_double_click = [[hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" })']],
       bar_title_enabled = false,
       bar_buttons_alignment = "right",
       bar_part_of_window = true,
@@ -187,7 +187,7 @@ if hl.plugin.hyprbars then
       fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
-      action = [[hyprctl dispatch 'hl.dsp.window.move({ workspace = "special:MinimizedApps" })']],
+      action = [[hyprctl dispatch 'hl.dsp.window.move({ workspace = "special:MinimizedApps", follow = false })']],
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(27c93f)",
@@ -406,7 +406,7 @@ hl.bind(
 hl.bind(mod .. " + M", hl.dsp.workspace.toggle_special("MinimizedApps"))
 hl.bind(
   mod .. " + SHIFT + M",
-  hl.dsp.window.move({ workspace = "special:MinimizedApps" })
+  hl.dsp.window.move({ workspace = "special:MinimizedApps", follow = false })
 )
 hl.bind(
   mod .. " + SHIFT + return",

@@ -20,7 +20,6 @@
     # Quiet-ish console by default; a verbose host (apollo's plymouth details
     # view) overrides these.
     consoleLogLevel = lib.mkDefault 3;
-    initrd.verbose = lib.mkDefault false;
     kernelParams = [
       "boot.shell_on_fail"
       "udev.log_priority=3"
