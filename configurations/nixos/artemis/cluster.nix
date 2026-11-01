@@ -4,6 +4,34 @@ let
   k3sPkgs = flake.inputs.nixpkgs-k3s.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   self = clusterData.hosts.artemis;
   peer = clusterData.hosts.apollo;
+  microvmCompat = {
+    disabledModules = [
+      (flake.inputs.vmetal.inputs.microvm.outPath + "/nixos-modules/microvm/optimization.nix")
+      (flake.inputs.vmetal.inputs.microvm.outPath + "/nixos-modules/microvm/mounts.nix")
+    ];
+    imports = [
+      ../apollo/microvm-optimization.nix
+      ../apollo/microvm-mounts.nix
+      ({ config, pkgs, ... }: {
+        # Cloud Hypervisor 54 requires the generated store disk's format.
+        microvm.cloud-hypervisor.package =
+          (pkgs.writeShellScriptBin "cloud-hypervisor" ''
+            args=("$@")
+            for i in "''${!args[@]}"; do
+              case "''${args[$i]}" in
+                *image_type=*) ;;
+                *path=/nix/store/*-microvm-store-disk.*) args[$i]="image_type=raw,''${args[$i]}" ;;
+              esac
+            done
+            exec ${config.microvm.vmHostPackages.cloud-hypervisor}/bin/cloud-hypervisor "''${args[@]}"
+          '').overrideAttrs
+            (_: {
+              inherit (config.microvm.vmHostPackages.cloud-hypervisor) version;
+            });
+      })
+    ];
+    _module.args.microvmSource = flake.inputs.vmetal.inputs.microvm.outPath;
+  };
 in
 {
   services.microvm-host = {
@@ -116,6 +144,7 @@ in
 
     # Non-initial server — expands etcd quorum from 3 → 5
     vms.k3s-server-4 = {
+      extraModules = [ microvmCompat ];
       role = "server";
       ip = "192.168.101.13";
       mac = "02:00:00:00:00:13";
@@ -134,6 +163,7 @@ in
     };
 
     vms.k3s-server-5 = {
+      extraModules = [ microvmCompat ];
       role = "server";
       ip = "192.168.101.14";
       mac = "02:00:00:00:00:14";
@@ -152,6 +182,7 @@ in
 
     # Moved from apollo (was k3s-server-3) 2026-08-18 — etcd majority off the desktop.
     vms.k3s-server-6 = {
+      extraModules = [ microvmCompat ];
       role = "server";
       ip = "192.168.101.15";
       mac = "02:00:00:00:00:15";
@@ -204,7 +235,10 @@ in
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [
+        microvmCompat
+        { boot.kernelParams = [ "hugepages=1024" ]; }
+      ];
     };
 
     vms.k3s-worker-5 = {
@@ -223,6 +257,7 @@ in
       # 26G→28G (2026-10-27): restore test-seat headroom as service requests grow.
       mem = 28672;
       disk = 200;
+      rancherImagePath = "/microvm-disks/k3s-worker-5/k3s-worker-5-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       # Bulk Mayastor pool on p5 (foundrybox-dgxp1.52.1.3): Apollo's two raw
       # pools ran 97-98% full with zero free VG extents while p5 Btrfs had
@@ -240,7 +275,10 @@ in
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [
+        microvmCompat
+        { boot.kernelParams = [ "hugepages=1024" ]; }
+      ];
     };
 
     vms.k3s-worker-6 = {
@@ -257,12 +295,16 @@ in
       # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
       mem = 24576;
       disk = 200;
+      rancherImagePath = "/microvm-disks/k3s-worker-6/k3s-worker-6-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
       coldStorageDevice = "/dev/coldvg/cold-w6"; # cold data (HDD LV)
       podStoreGiB = 64; # nix-csi pod store (foundrybox-b20x.4)
       nixStoreOverlayGiB = 32; # CSI churn moves to pod store; delete old img on recreate
       extraLabels = [ "openebs.io/engine=mayastor" ];
-      extraModules = [ { boot.kernelParams = [ "hugepages=1024" ]; } ];
+      extraModules = [
+        microvmCompat
+        { boot.kernelParams = [ "hugepages=1024" ]; }
+      ];
     };
   };
 

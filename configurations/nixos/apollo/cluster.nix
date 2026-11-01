@@ -12,6 +12,23 @@ let
     imports = [
       ./microvm-optimization.nix
       ./microvm-mounts.nix
+      ({ config, pkgs, ... }: {
+        # Cloud Hypervisor 54 requires the format even for the generated store disk.
+        microvm.cloud-hypervisor.package =
+          (pkgs.writeShellScriptBin "cloud-hypervisor" ''
+            args=("$@")
+            for i in "''${!args[@]}"; do
+              case "''${args[$i]}" in
+                *image_type=*) ;;
+                *path=/nix/store/*-microvm-store-disk.*) args[$i]="image_type=raw,''${args[$i]}" ;;
+              esac
+            done
+            exec ${config.microvm.vmHostPackages.cloud-hypervisor}/bin/cloud-hypervisor "''${args[@]}"
+          '').overrideAttrs
+            (_: {
+              inherit (config.microvm.vmHostPackages.cloud-hypervisor) version;
+            });
+      })
     ];
     _module.args.microvmSource = flake.inputs.vmetal.inputs.microvm.outPath;
   };
