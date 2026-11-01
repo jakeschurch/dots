@@ -21,6 +21,7 @@ if wezterm.target_triple:find("linux") then
 end
 
 config.keys = {
+  { key = "L", mods = "CTRL|SHIFT", action = act.ShowDebugOverlay },
   { key = ".", mods = "ALT|SHIFT", action = act.MoveTabRelative(1) },
   { key = ",", mods = "ALT|SHIFT", action = act.MoveTabRelative(-1) },
 
@@ -193,6 +194,8 @@ config.force_reverse_video_cursor = false
 config.front_end = "WebGpu"
 if wezterm.target_triple:find("darwin") then
   config.webgpu_power_preference = "LowPower"
+else
+  config.webgpu_power_preference = "HighPerformance"
 end
 
 config.max_fps = 60
