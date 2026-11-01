@@ -278,6 +278,43 @@ in
     };
   };
 
+  # CPU and IO priority of the VMs over user sessions (2026-11-01). Local
+  # builds, test runs and games run in user.slice (or nix-daemon.service in
+  # system.slice) and starved the VMs: worker-1 showed 0.29 CPU steal per vCPU
+  # and an apollo stall took JetStream quorum down at 15:58 UTC.
+  # cpu.weight and io.weight (iocost is on for nvme0n1, see storage.nix) only
+  # divide contended capacity between siblings, so one weight on the VM units is
+  # not enough:
+  #  - root: system.slice and user.slice both default to 100, so a weight inside
+  #    system.slice alone leaves the VMs at half of a contended machine at best.
+  #    user.slice yields (drop-in: the unit file is systemd's own).
+  #  - system.slice: system-microvm.slice outweighs nix-daemon and the rest, and
+  #    so does virtiofsd's slice. "-" is escaped in slice names, so
+  #    system-microvm\x2dvirtiofsd.slice is a sibling, not a child, of
+  #    system-microvm.slice. It carries the guests' /nix/store and so is in
+  #    their IO path.
+  #  - inside system-microvm.slice, the per-VM IOWeight/CPUAffinity above are
+  #    unchanged: etcd servers keep their 10:1 IO edge over the workers.
+  # Idle machines are unaffected; weights apply only under contention. Slice
+  # weights apply on daemon-reload, no VM restart.
+  systemd.slices = {
+    user = {
+      overrideStrategy = "asDropin";
+      sliceConfig = {
+        CPUWeight = 50;
+        IOWeight = 50;
+      };
+    };
+    system-microvm.sliceConfig = {
+      CPUWeight = 1000;
+      IOWeight = 1000;
+    };
+    "system-microvm\\x2dvirtiofsd".sliceConfig = {
+      CPUWeight = 1000;
+      IOWeight = 1000;
+    };
+  };
+
   # NAT for microVM external network access
   networking.nat.externalInterface = self.nic;
 
