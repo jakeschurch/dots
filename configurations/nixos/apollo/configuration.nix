@@ -25,6 +25,14 @@
     neededForUsers = true;
   };
 
+  # Forgejo PAT (user jake, scope write:repository) for git over HTTPS; read by
+  # the credential helper in modules/home/all/programs/git/default.nix.
+  sops.secrets."forgejo-git-token" = {
+    sopsFile = ../../../secrets/netrc.yaml;
+    owner = "jake";
+    mode = "0400";
+  };
+
   networking = {
     hostName = "apollo";
     # NetworkManager owns wlp6s0 (wifi) so the noctalia WiFi widget can scan/connect

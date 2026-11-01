@@ -231,6 +231,17 @@ in
         };
 
         url."ssh://git@github.com/".insteadOf = "https://github.com/";
+
+        # Forgejo is HTTPS + PAT only from workstations; there is no public SSH
+        # route. Existing ssh:// remotes keep working through the rewrite.
+        url."https://git.jakeschurch.com/".insteadOf = [
+          "ssh://git@git.jakeschurch.com/"
+          "git@git.jakeschurch.com:"
+        ];
+        credential."https://git.jakeschurch.com" = {
+          username = "jake";
+          helper = "!f() { test \"$1\" = get && test -r /run/secrets/forgejo-git-token && echo \"password=$(cat /run/secrets/forgejo-git-token)\"; }; f";
+        };
       };
     };
 
