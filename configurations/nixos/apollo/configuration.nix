@@ -90,6 +90,9 @@
   programs.xwayland.enable = true;
 
   services = {
+    # Install the WARP desktop app, CLI, and daemon; enroll in Zero Trust separately.
+    cloudflare-warp.enable = true;
+
     xserver = {
       # Configure keymap in X11
       xkb.layout = "us";
