@@ -165,8 +165,9 @@ enabled = [
 ]
 
 # Each rule is a GitHub search fragment, prefixed with "is:pr is:open".
+# Panel badges show review state (approved / changes requested) + CI per PR.
 [plugin_settings."raycursive/github-prs"]
-rules = [ "review-requested:@me", "author:@me review:approved" ]
+rules = [ "author:@me", "review-requested:@me" ]
 
 [plugin_settings."fr4j4/hyprland-minimize"]
 restore_to = "origin"

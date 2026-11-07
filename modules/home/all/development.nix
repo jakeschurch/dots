@@ -58,8 +58,28 @@
               (toPythonModule (pkgs.solaar.override { python3Packages = ps; }))
             ]
           )).override
-            # solaar vendors hid_parser AND propagates python-hid-parser
-            { ignoreCollisions = true; }
+            {
+              # solaar vendors hid_parser AND propagates python-hid-parser
+              ignoreCollisions = true;
+              # logitech_receiver.diversion does gi.require_version("Gdk", "3.0");
+              # solaar's own wrapper sets GI_TYPELIB_PATH, bare python doesn't.
+              makeWrapperArgs = lib.optionals pkgs.stdenv.isLinux [
+                "--prefix"
+                "GI_TYPELIB_PATH"
+                ":"
+                (lib.makeSearchPath "lib/girepository-1.0" (
+                  map lib.getLib [
+                    gtk3
+                    pango
+                    gdk-pixbuf
+                    atk
+                    harfbuzz
+                    glib
+                    gobject-introspection
+                  ]
+                ))
+              ];
+            }
         )
 
         mermaid-cli
