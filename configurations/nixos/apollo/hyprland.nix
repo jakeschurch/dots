@@ -9,14 +9,22 @@ let
 
   # Nixpkgs builds these plugins against its matching Hyprland package.
   inherit (pkgs.hyprlandPlugins) hyprbars;
-  # Nixpkgs' cursor plugin predates Hyprland 0.56.2. Use upstream's
-  # compatibility pin until nixpkgs updates it alongside the compositor.
+  # Keep upstream compatibility pins aligned with the compositor's render API.
+  new-render-contexts = lib.versionAtLeast pkgs.hyprland.version "0.57";
   dynamic-cursors = pkgs.hyprlandPlugins.hypr-dynamic-cursors.overrideAttrs {
     src = pkgs.fetchFromGitHub {
       owner = "VirtCode";
       repo = "hypr-dynamic-cursors";
-      rev = "5a224284872208b5324759d535d65061043725de";
-      hash = "sha256-BQjuQplkQFA30/7evDxmEAvr2ArIG09JffEBQhuzo80=";
+      rev =
+        if new-render-contexts then
+          "2a8d0b735328d874a78ca93b2f201649f712a74a"
+        else
+          "5a224284872208b5324759d535d65061043725de";
+      hash =
+        if new-render-contexts then
+          "sha256-PSt/SRtemvsoGYNFJ7YLiXGxT8EJe3AhmGwt5Vt79aA="
+        else
+          "sha256-BQjuQplkQFA30/7evDxmEAvr2ArIG09JffEBQhuzo80=";
     };
   };
 in
