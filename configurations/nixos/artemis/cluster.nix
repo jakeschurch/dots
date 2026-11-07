@@ -277,7 +277,13 @@ in
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [
         microvmCompat
-        { boot.kernelParams = [ "hugepages=1024" ]; }
+        ({ lib, ... }: {
+          boot.kernelParams = [ "hugepages=1024" ];
+          # 2026-11-07: swappiness=10 favored disk-backed cache reclaim over
+          # zram, repeatedly faulting containerd's metadata DB during CI churn.
+          # Keep this measured adjustment scoped to worker-5.
+          boot.kernel.sysctl."vm.swappiness" = lib.mkForce 60;
+        })
       ];
     };
 
