@@ -111,13 +111,36 @@ in
         rg --hidden --pcre2 --vimgrep $argv | nvim -q - -c copen
       end
 
-      function __wezterm_set_user_var
-        printf "\033]1337;SetUserVar=%s=%s\007" $argv[1] (echo -n $argv[2] | base64)
+      # Set explicit tab titles on shell events instead of formatting them in Lua.
+      function __wezterm_set_tab_title
+        test -n "$WEZTERM_PANE"; or return
+
+        set -l title "$argv[1]"
+        if set -q __wezterm_last_tab_title; and test "$title" = "$__wezterm_last_tab_title"
+          return
+        end
+
+        # Bound the IPC wait so an unavailable GUI cannot hang the shell.
+        if ${pkgs.coreutils}/bin/timeout 0.25s ${pkgs.wezterm}/bin/wezterm cli --no-auto-start set-tab-title --pane-id "$WEZTERM_PANE" -- "$title" >/dev/null 2>&1
+          set -g __wezterm_last_tab_title "$title"
+        end
       end
 
-      function __fish_postexec --on-event fish_postexec
-        __wezterm_set_user_var WEZTERM_LAST_EXIT_STATUS $status
+      function __wezterm_tab_preexec --on-event fish_preexec
+        # An empty explicit title lets the foreground app supply its own title.
+        __wezterm_set_tab_title ""
       end
+
+      function __wezterm_tab_postexec --on-event fish_postexec
+        set -l command_status $status
+        set -l symbol ✔
+        if test $command_status -ne 0
+          set symbol ✖
+        end
+        __wezterm_set_tab_title "$symbol "(path basename -- "$PWD")
+      end
+
+      __wezterm_set_tab_title (path basename -- "$PWD")
 
       function nix-shell
         nix-your-shell fish nix-shell -- $argv

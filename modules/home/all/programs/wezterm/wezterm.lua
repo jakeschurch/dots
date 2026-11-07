@@ -204,6 +204,7 @@ config.animation_fps = 30
 config.tab_bar_at_bottom = true
 config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = true
+config.show_tab_index_in_tab_bar = true
 config.window_padding = {
   left = 8,
   right = 8,
@@ -214,12 +215,13 @@ config.use_resize_increments = false
 config.cursor_blink_ease_in = "Constant"
 config.cursor_blink_ease_out = "Constant"
 config.default_cursor_style = "SteadyBlock"
+local email_pattern = [[\b[\w.%+-]+@[\w-]+(?:\.[\w-]+)+\b]]
 config.quick_select_patterns = {
   -- match things that look like sha1 hashes
   -- (this is actually one of the default patterns)
   "[0-9a-f]{6,40}",
   -- emails
-  "\\b\\w+://[\\w.-]+\\.[a-z]{2,15}\\S*\\b",
+  email_pattern,
 }
 
 config.mouse_bindings = {
@@ -241,68 +243,23 @@ config.set_environment_variables = {
   ),
 }
 
--- Hyperlink rules for clickable URLs
-config.hyperlink_rules = {
-  -- Match http/https URLs
-  {
-    regex = [[https?://\S+]],
-    format = "$0",
-  },
-  -- Match www URLs
-  {
-    regex = [[www\.\S+\.\S+]],
-    format = "https://$0",
-  },
-  -- Match email addresses
-  {
-    regex = [[\b[\w\.-]+@[\w\.-]+\.\w{2,}\b]],
-    format = "mailto:$0",
-  },
-  -- Match git@ URLs
-  {
-    regex = [[\b\w+@[\w\.-]+:[\w./-]+\b]],
-    format = "ssh://$0",
-  },
-}
+-- Keep built-in handling of URI schemes, wrapping punctuation and balanced parens.
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+table.insert(config.hyperlink_rules, {
+  regex = [=[\bwww\.[^\s<>"'()\[\]{}]+[_/a-zA-Z0-9-]]=],
+  format = "https://$0",
+})
+table.insert(config.hyperlink_rules, {
+  regex = email_pattern,
+  format = "mailto:$0",
+})
+table.insert(config.hyperlink_rules, {
+  -- Convert Git's user@host:path syntax to an SSH URI with a path, not a port.
+  regex = [[\b([\w.-]+)@([\w.-]+):/?([\w./~+-]*[\w/~+-])]],
+  format = "ssh://$1@$2/$3",
+})
 
 -- Enable shell integration
 config.enable_kitty_graphics = true
-
-wezterm.on(
-  "format-tab-title",
-  function(tab, tabs, panes, config, hover, max_width)
-    local exit_status = tab.active_pane.user_vars.WEZTERM_LAST_EXIT_STATUS
-    local bg_color = "#3c3836" -- default gruvbox bg
-    local fg_color = "#ebdbb2" -- default gruvbox fg
-
-    local symbol = ""
-    local symbol_fg = fg_color
-
-    if exit_status == "0" then
-      symbol = "✔"
-      symbol_fg = "#b8bb26" -- green
-    elseif exit_status and exit_status ~= "" then
-      symbol = "✖"
-      symbol_fg = "#fb4934" -- red
-    end
-
-    local active_marker = tab.is_active and "*" or " "
-
-    local title = string.format(
-      " %s%d: %s ",
-      active_marker,
-      tab.tab_index + 1,
-      tab.active_pane.title
-    )
-
-    return {
-      { Background = { Color = bg_color } },
-      { Foreground = { Color = symbol_fg } },
-      { Text = symbol .. " " },
-      { Foreground = { Color = fg_color } },
-      { Text = title },
-    }
-  end
-)
 
 return config
