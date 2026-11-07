@@ -410,7 +410,7 @@ hl.bind(mod .. " + SHIFT + return", hl.dsp.exec_cmd(minimize .. "restore-last"))
 -- Noctalia plugin panels (SUPER+C/A/S/T/... are taken by xremap's mac-style copy etc.)
 hl.bind(
   mod .. " + I",
-  hl.dsp.exec_cmd("noctalia msg panel-toggle lfdominguez/claude-sessions:panel")
+  hl.dsp.exec_cmd("noctalia msg panel-toggle jakeschurch/agents:panel")
 )
 hl.bind(
   mod .. " + G",

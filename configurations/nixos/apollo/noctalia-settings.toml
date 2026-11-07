@@ -18,7 +18,8 @@ reserve_space = true
 show_on_workspace_switch = true
 start = [
   "launcher",
-  "claude_sessions",
+  "claude_agents",
+  "codex_agents",
   "cpu",
   "temp",
   "ram",
@@ -68,8 +69,13 @@ max_length = 500.0
 
 # ── Community-plugin widgets (type = "<author>/<plugin>:<entry>") ──
 
-[widget.claude_sessions]
-type = "lfdominguez/claude-sessions:bar"
+[widget.claude_agents]
+type = "jakeschurch/agents:bar"
+provider = "claude"
+
+[widget.codex_agents]
+type = "jakeschurch/agents:bar"
+provider = "codex"
 
 [widget.minimized]
 type = "fr4j4/hyprland-minimize:bar"
@@ -155,7 +161,7 @@ enable_ddcutil = true
 
 [plugins]
 enabled = [
-  "lfdominguez/claude-sessions",
+  "jakeschurch/agents",
   "alexmnrs/github-activity",
   "raycursive/github-prs",
   "fr4j4/hyprland-minimize",

@@ -128,6 +128,7 @@ in
       qrencode # screen-toolkit: QR encode
       imagemagick # screen-toolkit: palette / lens / annotate
       translate-shell # screen-toolkit: OCR translate
+      sqlite # jakeschurch/agents: reads Codex state/log dbs
 
       hyprshot
       hyprpicker
