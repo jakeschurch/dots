@@ -32,22 +32,35 @@
         beads
 
         nodejs
-        (python313.withPackages (
-          ps: with ps; [
-            requests
-            pip
-            debugpy
-            proselint
-            poetry-core
-            toolz
-            pylama
-            black
-            isort
-            flake8
-            neovim
-            mypy
-          ]
-        ))
+        (
+          (python313.withPackages (
+            ps:
+            with ps;
+            [
+              requests
+              pip
+              debugpy
+              proselint
+              poetry-core
+              toolz
+              pylama
+              black
+              isort
+              flake8
+              neovim
+              mypy
+            ]
+            # Solaar's HID++ libs (logitech_receiver) for the noctalia
+            # mx-control plugin, which runs its helper with the bare `python3`
+            # on PATH. Rebuilt against this interpreter: the top-level solaar is
+            # built for nixpkgs' default python and its C deps won't load here.
+            ++ lib.optionals pkgs.stdenv.isLinux [
+              (toPythonModule (pkgs.solaar.override { python3Packages = ps; }))
+            ]
+          )).override
+            # solaar vendors hid_parser AND propagates python-hid-parser
+            { ignoreCollisions = true; }
+        )
 
         mermaid-cli
 

@@ -121,6 +121,9 @@
 
   # Define a user account. Don't forget to set a password with 'passwd'.
   hardware.i2c.enable = true; # DDC/CI for monitor brightness (noctalia)
+  # Logitech udev rules (hidraw access) for the Bolt receiver — the noctalia
+  # mx-control plugin talks HID++ through Solaar's libraries.
+  hardware.logitech.wireless.enable = true;
 
   users.users.jake = {
     isNormalUser = true;
@@ -145,6 +148,8 @@
     # which installs the binary and owns the profile. No system-level dup needed.
     zsh.enable = true;
     git.enable = true;
+    # cap_sys_admin wrapper; screen-toolkit's recording backend (NVIDIA-friendly)
+    gpu-screen-recorder.enable = true;
     bash.enable = true;
     gnupg.agent = {
       enable = true;

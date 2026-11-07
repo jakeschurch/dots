@@ -16,9 +16,21 @@ widget_spacing = 6
 font_scale = 1.0
 reserve_space = true
 show_on_workspace_switch = true
-start = [ "launcher", "cpu", "temp", "ram", "network_rx", "active_window" ]
-center = [ "workspaces", "clock", "media" ]
+start = [
+  "launcher",
+  "claude_sessions",
+  "cpu",
+  "temp",
+  "ram",
+  "network_rx",
+  "active_window",
+]
+center = [ "workspaces", "minimized", "clock", "media" ]
 end = [
+  "github_prs",
+  "github_activity",
+  "screen_toolkit",
+  "mx",
   "tray",
   "notifications",
   "network",
@@ -53,6 +65,30 @@ max_length = 145.0
 [widget.media]
 type = "media"
 max_length = 500.0
+
+# ── Community-plugin widgets (type = "<author>/<plugin>:<entry>") ──
+
+[widget.claude_sessions]
+type = "lfdominguez/claude-sessions:bar"
+
+[widget.minimized]
+type = "fr4j4/hyprland-minimize:bar"
+mode = "list"
+hide_when_empty = true
+
+[widget.github_prs]
+type = "raycursive/github-prs:bar"
+hide_when_zero = true
+
+[widget.github_activity]
+type = "alexmnrs/github-activity:activity"
+display_mode = "icon_only"
+
+[widget.screen_toolkit]
+type = "alexander/screen-toolkit:widget"
+
+[widget.mx]
+type = "gamaraan/mx-control:mx"
 
 [widget.output_volume]
 type = "volume"
@@ -111,3 +147,32 @@ mode = "dark"
 
 [brightness]
 enable_ddcutil = true
+
+# ── Plugins ───────────────────────────────────────────────────────────────────
+# Code comes from the built-in `community` git source; Noctalia clones and
+# exports it under ~/.local/state/noctalia/plugins/. Runtime deps live in
+# configurations/nixos/apollo/hyprland.nix (+ solaar in the dev python env).
+
+[plugins]
+enabled = [
+  "lfdominguez/claude-sessions",
+  "alexmnrs/github-activity",
+  "raycursive/github-prs",
+  "fr4j4/hyprland-minimize",
+  "gamaraan/mx-control",
+  "alexander/screen-toolkit",
+  "egno/vial_keymap",
+]
+
+# Each rule is a GitHub search fragment, prefixed with "is:pr is:open".
+[plugin_settings."raycursive/github-prs"]
+rules = [ "review-requested:@me", "author:@me review:approved" ]
+
+[plugin_settings."fr4j4/hyprland-minimize"]
+restore_to = "origin"
+
+[plugin_settings."egno/vial_keymap"]
+vil_path = "~/keymap.vil"
+# xkb_legends.py dlopens "libxkbcommon.so.0" by soname, which isn't on the
+# loader path on NixOS — and there's only one OS layout anyway.
+alt_layout_enabled = false

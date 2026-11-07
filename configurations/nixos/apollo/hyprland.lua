@@ -166,8 +166,8 @@ hl.config({
 })
 
 -- hyprbars buttons (R → L order): close · minimize · fullscreen.
--- Minimize sends to special:MinimizedApps — peek it with SUPER+M, restore the
--- focused window with SUPER+SHIFT+return (see keybindings below).
+-- Minimize goes through the noctalia hyprland-minimize plugin (special:minimized)
+-- so its bar widget/panel track the window — see the keybindings below.
 --
 -- Guard: if hyprbars fails to load (e.g. a plugin/compositor version mismatch
 -- after a rebuild before relogin), hl.plugin.hyprbars is nil. Calling it raw
@@ -187,7 +187,7 @@ if hl.plugin.hyprbars then
       fg_color = "rgb(1a1a1a)",
       size = 15,
       icon = "",
-      action = [[hyprctl dispatch 'hl.dsp.window.move({ workspace = "special:MinimizedApps", follow = false })']],
+      action = "noctalia msg plugin fr4j4/hyprland-minimize:service all minimize",
     })
     hl.plugin.hyprbars.add_button({
       bg_color = "rgb(27c93f)",
@@ -399,18 +399,26 @@ hl.bind(
   hl.dsp.window.move({ workspace = "special:magic" })
 )
 
--- Minimize stash (special:MinimizedApps)
--- SUPER+M peeks/hides the stash; SUPER+SHIFT+M minimizes the focused window;
--- SUPER+SHIFT+return restores the focused stashed window to the workspace you
--- came from ("previous" = last-active normal workspace before the toggle).
-hl.bind(mod .. " + M", hl.dsp.workspace.toggle_special("MinimizedApps"))
+-- Minimize (noctalia hyprland-minimize plugin; windows live in special:minimized)
+-- SUPER+M toggles the minimized-windows panel; SUPER+SHIFT+M minimizes the
+-- focused window; SUPER+SHIFT+return restores the most recently minimized one.
+local minimize = "noctalia msg plugin fr4j4/hyprland-minimize:service all "
+hl.bind(mod .. " + M", hl.dsp.exec_cmd(minimize .. "panel"))
+hl.bind(mod .. " + SHIFT + M", hl.dsp.exec_cmd(minimize .. "minimize"))
+hl.bind(mod .. " + SHIFT + return", hl.dsp.exec_cmd(minimize .. "restore-last"))
+
+-- Noctalia plugin panels (SUPER+C/A/S/T/... are taken by xremap's mac-style copy etc.)
 hl.bind(
-  mod .. " + SHIFT + M",
-  hl.dsp.window.move({ workspace = "special:MinimizedApps", follow = false })
+  mod .. " + I",
+  hl.dsp.exec_cmd("noctalia msg panel-toggle lfdominguez/claude-sessions:panel")
 )
 hl.bind(
-  mod .. " + SHIFT + return",
-  hl.dsp.window.move({ workspace = "previous" })
+  mod .. " + G",
+  hl.dsp.exec_cmd("noctalia msg panel-toggle alexander/screen-toolkit:panel")
+)
+hl.bind(
+  mod .. " + slash",
+  hl.dsp.exec_cmd("noctalia msg panel-toggle egno/vial_keymap:keymap")
 )
 
 -- Reload + cycle wallpaper

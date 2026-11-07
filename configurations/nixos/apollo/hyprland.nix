@@ -59,7 +59,10 @@ in
       # precisely that wrapper instead. This works regardless of its store path.
       (pkgs.writeShellScriptBin "reload-noctalia" ''
         pids() {
-          ${pkgs.procps}/bin/pgrep -f '/bin/\.noctalia-wrapped($| )' || true
+          # Older builds ran as `.noctalia-wrapped`; current ones exec
+          # `.../bin/noctalia` directly. Anchor at end-of-cmdline so
+          # `noctalia msg ...` clients never match.
+          ${pkgs.procps}/bin/pgrep -f '/bin/(\.noctalia-wrapped|noctalia)$' || true
         }
         for pid in $(pids); do kill "$pid" 2>/dev/null || true; done
         # wait for the IPC socket to drain so the relaunch isn't seen as a dup
@@ -118,6 +121,13 @@ in
       slurp
       grim
       xdotool
+
+      # noctalia community-plugin runtime deps (spawned from noctalia's PATH)
+      socat # hyprland-minimize: reads Hyprland's event socket
+      zbar # screen-toolkit: QR decode
+      qrencode # screen-toolkit: QR encode
+      imagemagick # screen-toolkit: palette / lens / annotate
+      translate-shell # screen-toolkit: OCR translate
 
       hyprshot
       hyprpicker
