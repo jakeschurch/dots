@@ -231,6 +231,11 @@ in
         };
 
         url."ssh://git@github.com/".insteadOf = "https://github.com/";
+        # Longest insteadOf prefix wins: keep noctalia's public plugin sources
+        # on anonymous HTTPS. The shell fetches them from the Hyprland session,
+        # whose SSH_AUTH_SOCK (gpg-agent) holds no keys, so the SSH rewrite
+        # made every plugin update fail silently.
+        url."https://github.com/noctalia-dev/".insteadOf = "https://github.com/noctalia-dev/";
 
         # Forgejo is HTTPS + PAT only from workstations; there is no public SSH
         # route. Existing ssh:// remotes keep working through the rewrite.
