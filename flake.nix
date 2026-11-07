@@ -70,6 +70,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # jakeschurch/agents noctalia plugin (Claude Code + Codex sessions in the bar)
+    noctalia-agents = {
+      url = "github:jakeschurch/noctalia-agents";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     expert.url = "github:elixir-lang/expert";
 
     # k3s ONLY. Pinned separately from the flake-wide nixpkgs because

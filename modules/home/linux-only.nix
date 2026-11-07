@@ -1,4 +1,5 @@
 {
+  flake,
   pkgs,
   lib,
   config,
@@ -6,6 +7,8 @@
   ...
 }:
 {
+  imports = [ flake.inputs.noctalia-agents.homeManagerModules.default ];
+
   config = lib.mkMerge [
     {
       # Fonts are deliberately not gated on the desktop profile: headless hosts
@@ -65,6 +68,9 @@
       # v5 reads settings.toml; the old v4 settings.json schema is ignored.
       xdg.configFile."noctalia/settings.toml".source =
         ../../configurations/nixos/apollo/noctalia-settings.toml;
+
+      # Installs the plugin into ~/.local/share/noctalia/plugins/agents (enabled in the toml above).
+      programs.noctalia-agents.enable = true;
 
       services.hypridle = {
         enable = false;

@@ -1343,7 +1343,8 @@
         "treefmt-nix": "treefmt-nix_3",
         "vmetal": "vmetal",
         "wayland-vpets": "wayland-vpets",
-        "xremap-flake": "xremap-flake"
+        "xremap-flake": "xremap-flake",
+        "noctalia-agents": "noctalia-agents"
       }
     },
     "rose-pine-hyprcursor": {
@@ -1881,6 +1882,26 @@
       "original": {
         "owner": "xremap",
         "repo": "nix-flake",
+        "type": "github"
+      }
+    },
+    "noctalia-agents": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794066886,
+        "narHash": "sha256-NAPF+9KV0kFo0gSAloIfmmL10IBiC1Ik8Z/UEYUTaWw=",
+        "owner": "jakeschurch",
+        "repo": "noctalia-agents",
+        "rev": "0adf9926e473c0729241a7746d47c15cd0f93242",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jakeschurch",
+        "repo": "noctalia-agents",
         "type": "github"
       }
     }
