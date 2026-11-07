@@ -43,6 +43,17 @@
     firewall.enable = false;
   };
 
+  # WARP falls back to resolv.conf when its parser rejects NixOS's systemd
+  # version. NSS must follow that file instead of bypassing it through resolve.
+  # When WARP is off, resolv.conf still points to systemd-resolved's stub.
+  system.nssDatabases.hosts = lib.mkForce [
+    "mymachines"
+    "mdns4_minimal [NOTFOUND=return]"
+    "files"
+    "myhostname"
+    "dns"
+  ];
+
   # vmetal generates 01-external.network with DHCP — override with static IP
   systemd.network.networks = {
     "01-external" = lib.mkForce {
@@ -60,6 +71,17 @@
         {
           Gateway = "10.10.5.1";
           Metric = 100;
+        }
+      ];
+      # Only host-originated traffic belongs in the desktop WARP tunnel.
+      # Forwarded VM/container packets retain the main table and existing NAT.
+      routingPolicyRules = [
+        {
+          Family = "both";
+          IncomingInterface = "lo";
+          InvertRule = true;
+          Table = "main";
+          Priority = 1000;
         }
       ];
       # Jumbo frames — CSS326 passes 9204 natively; UDM Pro jumbo toggle = 9000.
