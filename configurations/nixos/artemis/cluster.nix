@@ -10,6 +10,16 @@ let
   k3sPkgs = flake.inputs.nixpkgs-k3s.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   self = clusterData.hosts.artemis;
   peer = clusterData.hosts.apollo;
+  # 2026-11-09: large workers have44GiB/34vCPU;200 pods leaves
+  # address headroom within each existing /24 PodCIDR. Servers stay at80.
+  largeWorkerCapacity = {
+    services.k3s.extraFlags = [ "--kubelet-arg=--max-pods=200" ];
+    # The live rollout uses a kubelet drop-in to avoid a second VM reboot.
+    # On the next boot this flag owns the setting; remove the bridge file.
+    systemd.tmpfiles.rules = [
+      "r /var/lib/rancher/k3s/agent/etc/kubelet.conf.d/99-ramday-max-pods.conf - - - -"
+    ];
+  };
   microvmCompat = {
     disabledModules = [
       (flake.inputs.vmetal.inputs.microvm.outPath + "/nixos-modules/microvm/optimization.nix")
@@ -249,6 +259,7 @@ in
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [
         microvmCompat
+        largeWorkerCapacity
         { boot.kernelParams = [ "hugepages=1024" ]; }
       ];
     };
@@ -285,6 +296,7 @@ in
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [
         microvmCompat
+        largeWorkerCapacity
         ({ lib, ... }: {
           boot.kernelParams = [ "hugepages=1024" ];
           # 2026-11-07: swappiness=10 favored disk-backed cache reclaim over
@@ -315,6 +327,7 @@ in
       extraLabels = [ "openebs.io/engine=mayastor" ];
       extraModules = [
         microvmCompat
+        largeWorkerCapacity
         { boot.kernelParams = [ "hugepages=1024" ]; }
       ];
     };
