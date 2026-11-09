@@ -35,8 +35,10 @@ in
       allowed-users = [ "*" ];
       # builders = "@/etc/nix/machines";
       extra-experimental-features = [
-        "nix-command flakes auto-allocate-uids"
-      ];
+        "nix-command"
+        "flakes"
+      ]
+      ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ "auto-allocate-uids" ];
       # Build locally when a substituter is unreachable. With this off, a cache
       # outage (e.g. garnix 503) hard-fails paths nix could trivially build
       # itself, like the firefox-addons .xpi fetchurl FODs.
@@ -45,7 +47,7 @@ in
       cores = 0;
       max-jobs = "auto";
       max-substitution-jobs = 40;
-      sandbox = "relaxed";
+      sandbox = if pkgs.stdenv.hostPlatform.isDarwin then false else "relaxed";
       sandbox-fallback = true;
 
       substituters = cachesData.defaultUrlsFor cachePlatform;
@@ -53,7 +55,6 @@ in
       trusted-public-keys = cachesData.defaultKeysFor cachePlatform;
 
       always-allow-substitutes = true;
-      auto-allocate-uids = true;
       fsync-metadata = false;
       preallocate-contents = true;
 
@@ -62,6 +63,9 @@ in
       tarball-ttl = 3600 * 5;
 
       use-xdg-base-directories = true;
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+      auto-allocate-uids = true;
     };
 
     gc = {

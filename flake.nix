@@ -119,8 +119,7 @@
     download-buffer-size = 904857600; # 900 MiB
     fallback = true;
 
-    sandbox = "relaxed";
-    sandbox-fallback = true;
+    # Sandbox policy is host-specific; use the system/home Nix settings.
     cores = 0;
     max-jobs = "auto";
     max-substitution-jobs = 16;

@@ -19,7 +19,8 @@ in
       experimental-features = "nix-command flakes";
       max-jobs = "auto";
       require-sigs = true;
-      sandbox = "relaxed";
+      # Large Home Manager closures exceed macOS sandbox profile size limits.
+      sandbox = false;
       sandbox-fallback = lib.mkForce true;
       substituters = cachesData.defaultUrlsFor "darwin";
       trusted-substituters = cachesData.defaultUrlsFor "darwin";
