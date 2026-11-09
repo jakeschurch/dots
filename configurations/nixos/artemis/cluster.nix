@@ -14,6 +14,11 @@ let
   # address headroom within each existing /24 PodCIDR. Servers stay at80.
   largeWorkerCapacity = {
     services.k3s.extraFlags = [ "--kubelet-arg=--max-pods=200" ];
+    # The live rollout uses a kubelet drop-in to avoid a second VM reboot.
+    # On the next boot this flag owns the setting; remove the bridge file.
+    systemd.tmpfiles.rules = [
+      "r /var/lib/rancher/k3s/agent/etc/kubelet.conf.d/99-ramday-max-pods.conf - - - -"
+    ];
   };
   microvmCompat = {
     disabledModules = [
