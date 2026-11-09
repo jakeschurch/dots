@@ -1,4 +1,10 @@
-{ flake, pkgs, ... }:
+{
+  config,
+  flake,
+  lib,
+  pkgs,
+  ...
+}:
 let
   clusterData = import ../../../modules/data/cluster.nix;
   k3sPkgs = flake.inputs.nixpkgs-k3s.legacyPackages.${pkgs.stdenv.hostPlatform.system};
@@ -34,6 +40,17 @@ let
   };
 in
 {
+  # 2026-11-09 RAM upgrade: 188.5 GiB usable, with 20.5 GiB retained
+  # for host services and filesystem cache. CPU scheduling remains shared.
+  assertions = [
+    {
+      assertion =
+        lib.foldl' (total: vm: total + vm.mem) 0 (builtins.attrValues config.services.k3s-cluster.vms)
+        <= 172032;
+      message = "Artemis guest RAM exceeds the 168 GiB budget; preserve host memory headroom.";
+    }
+  ];
+
   services.microvm-host = {
     enable = true;
     network = {
@@ -218,16 +235,11 @@ in
       mac = "02:00:00:00:00:23";
       vsockCid = 23;
       readinessVsockPort = 9023;
-      vcpu = 28;
-      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
-      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
-      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
-      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      # 24G→30G (2026-10-26): fit a 5Gi CI test alongside this node's services.
-      # 30G→28G (2026-10-27): give worker-5 the same RAM without increasing
-      # the 116G VM total or reducing the host's ~9.6G reserve.
-      mem = 28672;
+      vcpu = 34;
+      # 2026-11-09: RAM day funds 44 GiB per worker while retaining
+      # 20.5 GiB host headroom. 34 vCPUs share the host scheduler;
+      # total guest vCPUs are 120 on 128 SMT threads, without pinning.
+      mem = 45056;
       disk = 200;
       rancherImagePath = "/microvm-disks/k3s-worker-4/k3s-worker-4-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
@@ -247,15 +259,11 @@ in
       mac = "02:00:00:00:00:24";
       vsockCid = 24;
       readinessVsockPort = 9024;
-      vcpu = 28;
-      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
-      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
-      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
-      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      # 24G→26G (2026-10-26): fit a 5Gi CI test without reducing pod requests.
-      # 26G→28G (2026-10-27): restore test-seat headroom as service requests grow.
-      mem = 28672;
+      vcpu = 34;
+      # 2026-11-09: RAM day funds 44 GiB per worker while retaining
+      # 20.5 GiB host headroom. 34 vCPUs share the host scheduler;
+      # total guest vCPUs are 120 on 128 SMT threads, without pinning.
+      mem = 45056;
       disk = 200;
       rancherImagePath = "/microvm-disks/k3s-worker-5/k3s-worker-5-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
@@ -293,13 +301,11 @@ in
       mac = "02:00:00:00:00:25";
       vsockCid = 25;
       readinessVsockPort = 9025;
-      vcpu = 28;
-      # 32G→28G (2026-07-10): 3×32G workers + 2×12G servers = 120G committed
-      # on a 125G host left ~4G for kernel/page-cache/virtiofsd — any IO burst
-      # (image pulls, nix builds) forced host reclaim, stalling etcd voters
-      # 4/5 → recurring apiserver flaps. Workers ran ~28% used; 28G is ample.
-      # 28G→24G (2026-08-18): funds k3s-server-6; total stays 110592M.
-      mem = 24576;
+      vcpu = 34;
+      # 2026-11-09: RAM day funds 44 GiB per worker while retaining
+      # 20.5 GiB host headroom. 34 vCPUs share the host scheduler;
+      # total guest vCPUs are 120 on 128 SMT threads, without pinning.
+      mem = 45056;
       disk = 200;
       rancherImagePath = "/microvm-disks/k3s-worker-6/k3s-worker-6-rancher.img";
       mayastorPoolGiB = 16; # warm metadata pool (NVMe)
