@@ -45,13 +45,17 @@ let
   # forgejo-operator writes (ForgejoAccessToken forgejo/jake-workstation-human ->
   # Secret jake-workstation-token), so rotating it is a rotationNonce bump with no
   # copy to update. Cached 15 minutes under $XDG_RUNTIME_DIR; falls back to the
-  # sops copy (/run/secrets/forgejo-git-token) when the cluster is unreachable.
+  # sops copy (/run/secrets/forgejo-git-token) when the cluster is unreachable,
+  # and on hosts without sops-nix (macOS) decrypts that same secret from the
+  # repo's netrc.yaml with the local age key (a netrc.yaml recipient in
+  # .sops.yaml).
   forgejo-git-credential = pkgs.writeShellApplication {
     name = "forgejo-git-credential";
     runtimeInputs = with pkgs; [
       kubectl
       coreutils
       findutils
+      sops
     ];
     text = ''
       [ "''${1:-}" = get ] || exit 0
@@ -68,6 +72,10 @@ let
           token=$(cat "$cache")
         elif [ -r /run/secrets/forgejo-git-token ]; then
           token=$(cat /run/secrets/forgejo-git-token)
+        else
+          token=$(SOPS_AGE_KEY_FILE="''${SOPS_AGE_KEY_FILE:-$HOME/.config/sops/age/keys.txt}" \
+            sops -d --extract '["forgejo-git-token"]' ${../../../../../secrets/netrc.yaml} \
+            2>/dev/null || true)
         fi
       fi
       [ -n "$token" ] && printf 'username=jake\npassword=%s\n' "$token"
