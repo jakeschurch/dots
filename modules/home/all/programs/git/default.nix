@@ -77,10 +77,39 @@ let
     difft --display inline "$@"
   '';
 
-  # Forgejo CLI. Logs in from env at call time using the same token source as
-  # git (forgejo-git-credential: k8s Secret, then cache, then sops), so the
-  # token never lands in ~/.config/tea/config.yml. An explicit GITEA_TOKEN in
-  # the environment skips the lookup.
+  # tea's token: jake-agent-token (homelab forgejo-operator), whose scopes
+  # include read:user/read:organization that tea needs to resolve the login.
+  # Cached 15 min like forgejo-git-credential; falls back to the git token
+  # (git-scoped only) when the cluster is unreachable.
+  forgejo-tea-token = pkgs.writeShellApplication {
+    name = "forgejo-tea-token";
+    runtimeInputs = with pkgs; [
+      kubectl
+      coreutils
+      findutils
+      gnused
+    ];
+    text = ''
+      cache="''${XDG_RUNTIME_DIR:-/tmp}/forgejo-tea-token"
+      if [ -n "$(find "$cache" -mmin -15 2>/dev/null)" ]; then
+        cat "$cache"
+        exit 0
+      fi
+      token=$(timeout 5 kubectl get secret -n forgejo jake-agent-token \
+        -o jsonpath='{.data.token}' 2>/dev/null | base64 -d 2>/dev/null || true)
+      if [ -n "$token" ]; then
+        (umask 077 && printf '%s' "$token" >"$cache")
+      elif [ -r "$cache" ]; then
+        token=$(cat "$cache")
+      else
+        token=$(${lib.getExe forgejo-git-credential} get | sed -n 's/^password=//p')
+      fi
+      printf '%s' "$token"
+    '';
+  };
+
+  # Forgejo CLI. Logs in from env at call time so the token never lands in
+  # ~/.config/tea/config.yml. An explicit GITEA_TOKEN skips the lookup.
   tea = pkgs.symlinkJoin {
     name = "tea-${pkgs.tea.version}";
     paths = [ pkgs.tea ];
@@ -88,7 +117,7 @@ let
     postBuild = ''
       wrapProgram $out/bin/tea --run '
         if [ -z "''${GITEA_TOKEN:-}" ]; then
-          GITEA_TOKEN="$(${lib.getExe forgejo-git-credential} get | ${pkgs.gnused}/bin/sed -n "s/^password=//p")"
+          GITEA_TOKEN="$(${lib.getExe forgejo-tea-token})"
           if [ -n "$GITEA_TOKEN" ]; then
             export GITEA_LOGIN_VIA_ENV=1 GITEA_INSTANCE_URL=https://git.jakeschurch.com GITEA_TOKEN
           else
