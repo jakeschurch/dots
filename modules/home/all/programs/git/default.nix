@@ -17,6 +17,30 @@ let
     ];
     text = builtins.readFile ./git-license.sh;
   };
+  # Repositories whose GitHub copy is a read-only push mirror of Forgejo
+  # (git.jakeschurch.com). A push to GitHub is rewritten to an unresolvable host
+  # that names the right remote, so it fails before reaching GitHub; fetches are
+  # untouched. Forgejo's own push mirror runs server-side and is unaffected.
+  forgejoMirrored = [
+    "homelab"
+    "foundrybox"
+    "statuspage"
+    "argocd-tag-updater"
+    "forgejo-operator"
+    "harbor-operator"
+    "margo"
+    "microvm.nix"
+  ];
+  noGithubPush = builtins.listToAttrs (
+    map (repo: {
+      name = "https://read-only-github-mirror.invalid/push-to-git.jakeschurch.com-instead/${repo}";
+      value.pushInsteadOf = [
+        "https://github.com/jakeschurch/${repo}"
+        "git@github.com:jakeschurch/${repo}"
+        "ssh://git@github.com/jakeschurch/${repo}"
+      ];
+    }) forgejoMirrored
+  );
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
@@ -230,19 +254,21 @@ in
           writeCommitGraph = true;
         };
 
-        url."ssh://git@github.com/".insteadOf = "https://github.com/";
-        # Longest insteadOf prefix wins: keep noctalia's public plugin sources
-        # on anonymous HTTPS. The shell fetches them from the Hyprland session,
-        # whose SSH_AUTH_SOCK (gpg-agent) holds no keys, so the SSH rewrite
-        # made every plugin update fail silently.
-        url."https://github.com/noctalia-dev/".insteadOf = "https://github.com/noctalia-dev/";
+        url = noGithubPush // {
+          "ssh://git@github.com/".insteadOf = "https://github.com/";
+          # Longest insteadOf prefix wins: keep noctalia's public plugin sources
+          # on anonymous HTTPS. The shell fetches them from the Hyprland session,
+          # whose SSH_AUTH_SOCK (gpg-agent) holds no keys, so the SSH rewrite
+          # made every plugin update fail silently.
+          "https://github.com/noctalia-dev/".insteadOf = "https://github.com/noctalia-dev/";
 
-        # Forgejo is HTTPS + PAT only from workstations; there is no public SSH
-        # route. Existing ssh:// remotes keep working through the rewrite.
-        url."https://git.jakeschurch.com/".insteadOf = [
-          "ssh://git@git.jakeschurch.com/"
-          "git@git.jakeschurch.com:"
-        ];
+          # Forgejo is HTTPS + PAT only from workstations; there is no public SSH
+          # route. Existing ssh:// remotes keep working through the rewrite.
+          "https://git.jakeschurch.com/".insteadOf = [
+            "ssh://git@git.jakeschurch.com/"
+            "git@git.jakeschurch.com:"
+          ];
+        };
         credential."https://git.jakeschurch.com" = {
           username = "jake";
           helper = "!f() { test \"$1\" = get && test -r /run/secrets/forgejo-git-token && echo \"password=$(cat /run/secrets/forgejo-git-token)\"; }; f";
