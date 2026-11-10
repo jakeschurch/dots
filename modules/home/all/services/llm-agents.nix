@@ -74,6 +74,44 @@ in
     serena-mcp
   ];
 
+  # Skills live in ./agent-skills/{shared,claude,codex}/<name>/SKILL.md.
+  # shared -> both agents, claude/codex -> that agent only. Linked per skill
+  # (not the whole dir) so ~/.claude/skills/synced (claude.ai sync) survives,
+  # and out of store so edits apply on next session start without a rebuild.
+  home.file =
+    let
+      skillsSrc = ./agent-skills;
+      skillsLive = "${config.home.homeDirectory}/.dots/modules/home/all/services/agent-skills";
+      skillsIn =
+        bucket:
+        builtins.attrNames (
+          lib.filterAttrs (_: type: type == "directory") (builtins.readDir (skillsSrc + "/${bucket}"))
+        );
+      linkBucket =
+        target: bucket:
+        lib.listToAttrs (
+          map (name: {
+            name = "${target}/${name}";
+            value = {
+              source = config.lib.file.mkOutOfStoreSymlink "${skillsLive}/${bucket}/${name}";
+              force = true;
+            };
+          }) (skillsIn bucket)
+        );
+    in
+    linkBucket ".claude/skills" "shared"
+    // linkBucket ".claude/skills" "claude"
+    // linkBucket ".agents/skills" "shared"
+    // linkBucket ".agents/skills" "codex"
+    // {
+      # Out-of-store so Claude Code (/config, plugin installs) still writes it
+      # live, and those edits land in this repo.
+      ".claude/settings.json" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.dots/modules/home/all/services/claude/settings.json";
+        force = true;
+      };
+    };
+
   home.activation.enable-caveman-for-agents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     start='<!-- BEGIN CAVEMAN GLOBAL -->'
     end='<!-- END CAVEMAN GLOBAL -->'

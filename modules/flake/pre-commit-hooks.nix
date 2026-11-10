@@ -9,7 +9,11 @@
         detect-private-keys.enable = true;
         end-of-file-fixer.enable = true;
         nixfmt.enable = true;
-        pretty-format-json.enable = true;
+        pretty-format-json = {
+          enable = true;
+          # Claude Code rewrites this file in its own key order on /config.
+          excludes = [ "modules/home/all/services/claude/settings\\.json" ];
+        };
         pre-commit-hook-ensure-sops.enable = true;
         shellcheck.enable = true;
         sort-simple-yaml.enable = true;
