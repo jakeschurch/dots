@@ -41,6 +41,38 @@ let
       ];
     }) forgejoMirrored
   );
+  # Forgejo PAT for git over HTTPS, read when used from the Secret
+  # forgejo-operator writes (ForgejoAccessToken forgejo/jake-workstation-human ->
+  # Secret jake-workstation-token), so rotating it is a rotationNonce bump with no
+  # copy to update. Cached 15 minutes under $XDG_RUNTIME_DIR; falls back to the
+  # sops copy (/run/secrets/forgejo-git-token) when the cluster is unreachable.
+  forgejo-git-credential = pkgs.writeShellApplication {
+    name = "forgejo-git-credential";
+    runtimeInputs = with pkgs; [
+      kubectl
+      coreutils
+      findutils
+    ];
+    text = ''
+      [ "''${1:-}" = get ] || exit 0
+      cache="''${XDG_RUNTIME_DIR:-/tmp}/forgejo-git-token"
+      token=""
+      if [ -n "$(find "$cache" -mmin -15 2>/dev/null)" ]; then
+        token=$(cat "$cache")
+      else
+        token=$(timeout 5 kubectl get secret -n forgejo jake-workstation-token \
+          -o jsonpath='{.data.token}' 2>/dev/null | base64 -d 2>/dev/null || true)
+        if [ -n "$token" ]; then
+          (umask 077 && printf '%s' "$token" >"$cache")
+        elif [ -r "$cache" ]; then
+          token=$(cat "$cache")
+        elif [ -r /run/secrets/forgejo-git-token ]; then
+          token=$(cat /run/secrets/forgejo-git-token)
+        fi
+      fi
+      [ -n "$token" ] && printf 'username=jake\npassword=%s\n' "$token"
+    '';
+  };
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
@@ -271,7 +303,7 @@ in
         };
         credential."https://git.jakeschurch.com" = {
           username = "jake";
-          helper = "!f() { test \"$1\" = get && test -r /run/secrets/forgejo-git-token && echo \"password=$(cat /run/secrets/forgejo-git-token)\"; }; f";
+          helper = "${lib.getExe forgejo-git-credential}";
         };
       };
     };
