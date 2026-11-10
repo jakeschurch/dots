@@ -76,10 +76,31 @@ let
   difftastic-inline = pkgs.writeShellScriptBin "difftastic-inline" ''
     difft --display inline "$@"
   '';
+
+  # Forgejo CLI. Logs in from env at call time so the token stays in the sops
+  # secret instead of ~/.config/tea/config.yml; `tea login add` still works if
+  # the secret is absent.
+  # TODO: the git PAT lacks read:user etc. -- mint a broader one for tea.
+  tea = pkgs.symlinkJoin {
+    name = "tea-${pkgs.tea.version}";
+    paths = [ pkgs.tea ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/tea --run '
+        if [ -z "''${GITEA_TOKEN:-}" ] && [ -r /run/secrets/forgejo-git-token ]; then
+          export GITEA_LOGIN_VIA_ENV=1
+          export GITEA_INSTANCE_URL=https://git.jakeschurch.com
+          GITEA_TOKEN="$(cat /run/secrets/forgejo-git-token)"
+          export GITEA_TOKEN
+        fi
+      '
+    '';
+  };
 in
 {
   home = {
     packages = with pkgs; [
+      tea
       git-extras
       git-license
       difftastic
