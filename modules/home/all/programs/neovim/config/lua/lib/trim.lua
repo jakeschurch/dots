@@ -1,3 +1,4 @@
+--# selene: allow(bad_string_escape) -- \u{...} is valid in LuaJIT
 local M = {}
 
 -- Zero-width, non-breaking and exotic spaces. LLM output is full of these.

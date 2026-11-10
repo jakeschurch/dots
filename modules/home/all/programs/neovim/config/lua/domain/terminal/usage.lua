@@ -116,8 +116,8 @@ end
 
 -- Complete the first arg against $PATH, later args against the subcommands
 -- the tool's own help lists.
-local function complete(lead, line)
-  local args = vim.split(vim.trim(line), "%s+", { trimempty = true })
+local function complete(lead, cmdline)
+  local args = vim.split(vim.trim(cmdline), "%s+", { trimempty = true })
   table.remove(args, 1) -- drop ":Usage"
   if lead ~= "" then
     table.remove(args) -- drop the partial word

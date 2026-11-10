@@ -2,7 +2,7 @@ local Rule = require("nvim-autopairs.rule")
 local npairs = require("nvim-autopairs")
 local cond = require("nvim-autopairs.conds")
 
-local function is_inside_nix_block(opts)
+local function is_inside_nix_block(_opts)
   if vim.bo.filetype ~= "nix" then
     return false
   end
@@ -123,7 +123,7 @@ npairs.add_rules({
   -- Add semicolon after =
   Rule("=", ";", { "nix" }):with_pair(function(opts)
     return is_inside_nix_block(opts)
-  end):with_move(function(opts)
+  end):with_move(function()
     return false -- Don't move over the semicolon
   end),
 
@@ -145,7 +145,7 @@ npairs.add_rules({
   -- Add semicolon after inherit keyword
   Rule("inherit", ";", { "nix" }):with_pair(function(opts)
     return is_inside_nix_block(opts)
-  end):with_move(function(opts)
+  end):with_move(function()
     return false -- Don't move over the semicolon
   end),
 

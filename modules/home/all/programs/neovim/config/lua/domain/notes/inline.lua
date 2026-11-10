@@ -155,7 +155,7 @@ local function decorate(buf, row, line, spans)
   -- Shortened links first: a concealed URL must not also collect mention marks.
   local concealed = {}
   for _, rule in ipairs(LABELS) do
-    local from = 1
+    from = 1
     while true do
       local found = { line:find(rule.pattern, from) }
       local first, last = found[1], found[2]
@@ -184,7 +184,7 @@ local function decorate(buf, row, line, spans)
   end
 
   local urls = url_spans(line)
-  local from = 1
+  from = 1
   while true do
     local first, last = line:find("@[%w][%w_%-]*", from)
     if not first then

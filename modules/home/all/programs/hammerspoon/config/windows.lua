@@ -219,6 +219,7 @@ function hs.window.fullscreenWidth(win)
   })
 end
 
+-- selene: allow(unused_variable) -- global, called from the Hammerspoon console
 function focus(callback)
   local win = hs.window.focusedWindow()
   if win == nil then

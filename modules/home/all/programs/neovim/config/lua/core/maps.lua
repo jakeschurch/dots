@@ -116,7 +116,7 @@ local function Cycle(direction)
   }
 
   for bool, replacement in pairs(booleans) do
-    local start_pos, end_pos = string.find(line, "%f[%a]" .. bool .. "%f[%A]") -- Match whole word
+    local start_pos = string.find(line, "%f[%a]" .. bool .. "%f[%A]") -- Match whole word
 
     if start_pos then
       vim.api.nvim_win_set_cursor(
