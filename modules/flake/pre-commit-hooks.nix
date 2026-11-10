@@ -8,6 +8,7 @@
         deadnix.enable = true;
         detect-private-keys.enable = true;
         end-of-file-fixer.enable = true;
+        gitleaks.enable = true;
         nixfmt.enable = true;
         pretty-format-json = {
           enable = true;
