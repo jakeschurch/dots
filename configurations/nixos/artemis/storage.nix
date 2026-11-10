@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   # The single NVMe that holds everything latency-sensitive on artemis: the
   # etcd voters' disks (k3s-server-4 on ext4 /var/lib/microvms = nvme0n1p4,
@@ -27,6 +27,9 @@ in
     limit = "200M";
     fileSystems = [ "/" ];
   };
+  # nixpkgs sets AccuracySec=1d on the scrub timer, which lets systemd fire it
+  # anywhere in the 24h after OnCalendar and defeats the chosen window.
+  systemd.timers."btrfs-scrub@".timerConfig.AccuracySec = lib.mkForce "15min";
 
   services.btrbk.instances.btrbk = {
     onCalendar = "hourly";
