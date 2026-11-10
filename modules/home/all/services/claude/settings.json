@@ -2,7 +2,7 @@
   "advisorModel": "opus",
   "agentPushNotifEnabled": true,
   "crossSessionInbound": "accept",
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "enabledPlugins": {
     "agent-deck@agent-deck": true,
     "caveman@caveman": true,

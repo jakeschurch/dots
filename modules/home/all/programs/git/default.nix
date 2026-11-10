@@ -77,21 +77,23 @@ let
     difft --display inline "$@"
   '';
 
-  # Forgejo CLI. Logs in from env at call time so the token stays in the sops
-  # secret instead of ~/.config/tea/config.yml; `tea login add` still works if
-  # the secret is absent.
-  # TODO: the git PAT lacks read:user etc. -- mint a broader one for tea.
+  # Forgejo CLI. Logs in from env at call time using the same token source as
+  # git (forgejo-git-credential: k8s Secret, then cache, then sops), so the
+  # token never lands in ~/.config/tea/config.yml. An explicit GITEA_TOKEN in
+  # the environment skips the lookup.
   tea = pkgs.symlinkJoin {
     name = "tea-${pkgs.tea.version}";
     paths = [ pkgs.tea ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/tea --run '
-        if [ -z "''${GITEA_TOKEN:-}" ] && [ -r /run/secrets/forgejo-git-token ]; then
-          export GITEA_LOGIN_VIA_ENV=1
-          export GITEA_INSTANCE_URL=https://git.jakeschurch.com
-          GITEA_TOKEN="$(cat /run/secrets/forgejo-git-token)"
-          export GITEA_TOKEN
+        if [ -z "''${GITEA_TOKEN:-}" ]; then
+          GITEA_TOKEN="$(${lib.getExe forgejo-git-credential} get | ${pkgs.gnused}/bin/sed -n "s/^password=//p")"
+          if [ -n "$GITEA_TOKEN" ]; then
+            export GITEA_LOGIN_VIA_ENV=1 GITEA_INSTANCE_URL=https://git.jakeschurch.com GITEA_TOKEN
+          else
+            unset GITEA_TOKEN
+          fi
         fi
       '
     '';
