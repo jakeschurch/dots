@@ -203,7 +203,9 @@ in
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-5/k3s-server-5-rancher.img";
+      # ext4 p4, fully preallocated (same as server-4): btrfs p5 discard=async
+      # added fsync latency for etcd.
+      rancherImagePath = "/var/lib/microvms/k3s-server-5/k3s-server-5-rancher.img";
       nixStoreOverlayGiB = 8;
     };
 
@@ -218,7 +220,9 @@ in
       vcpu = 6;
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-6/k3s-server-6-rancher.img";
+      # ext4 p4, fully preallocated (same as server-4): btrfs p5 discard=async
+      # added fsync latency for etcd.
+      rancherImagePath = "/var/lib/microvms/k3s-server-6/k3s-server-6-rancher.img";
       nixStoreOverlayGiB = 8;
     };
 
@@ -377,9 +381,54 @@ in
     "microvm@k3s-worker-4".serviceConfig.CPUAffinity = "0-13 64-77";
     "microvm@k3s-worker-5".serviceConfig.CPUAffinity = "14-27 78-91";
     "microvm@k3s-worker-6".serviceConfig.CPUAffinity = "32-45 96-109";
-    "microvm@k3s-server-4".serviceConfig.CPUAffinity = "28-30 92-94";
-    "microvm@k3s-server-5".serviceConfig.CPUAffinity = "46-48 110-112";
-    "microvm@k3s-server-6".serviceConfig.CPUAffinity = "49-51 113-115";
+    # IOWeight=1000 (workers keep the default 100): etcd voters get a 10:1 IO
+    # edge over the workers on the shared 980 PRO. Only enforced because
+    # iocost is on for nvme0n1 (storage.nix); applies on daemon-reload.
+    "microvm@k3s-server-4".serviceConfig = {
+      CPUAffinity = "28-30 92-94";
+      IOWeight = 1000;
+    };
+    "microvm@k3s-server-5".serviceConfig = {
+      CPUAffinity = "46-48 110-112";
+      IOWeight = 1000;
+    };
+    "microvm@k3s-server-6".serviceConfig = {
+      CPUAffinity = "49-51 113-115";
+      IOWeight = 1000;
+    };
+  };
+
+  # CPU and IO priority of the VMs over everything else, mirroring apollo
+  # (apollo/cluster.nix, 2026-11-01). Weights only divide contended capacity
+  # between siblings, so the per-VM IOWeight above needs the parents too:
+  #  - root: system.slice and user.slice both default to 100; user.slice
+  #    yields (drop-in: the unit file is systemd's own). artemis is headless,
+  #    but ssh sessions and ad-hoc builds/benchmarks land there.
+  #  - system.slice: system-microvm.slice outweighs nix-daemon, btrbk, scrub
+  #    and the rest, and so does virtiofsd's slice. "-" is escaped in slice
+  #    names, so system-microvm\x2dvirtiofsd.slice is a sibling, not a child,
+  #    of system-microvm.slice; it serves the guests' /nix/store, /etc/ssh and
+  #    age keys and so is in their IO path.
+  #  - inside system-microvm.slice, the per-VM IOWeight above gives the etcd
+  #    servers their 10:1 edge over the workers.
+  # Idle machines are unaffected; weights apply only under contention. Slice
+  # weights apply on daemon-reload, no VM restart.
+  systemd.slices = {
+    user = {
+      overrideStrategy = "asDropin";
+      sliceConfig = {
+        CPUWeight = 50;
+        IOWeight = 50;
+      };
+    };
+    system-microvm.sliceConfig = {
+      CPUWeight = 1000;
+      IOWeight = 1000;
+    };
+    "system-microvm\\x2dvirtiofsd".sliceConfig = {
+      CPUWeight = 1000;
+      IOWeight = 1000;
+    };
   };
 
   networking.nat.externalInterface = self.nic;

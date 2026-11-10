@@ -86,7 +86,7 @@
     # via services.k3s-cluster.k3sPackage; see configurations/nixos/*/cluster.nix.
     nixpkgs-k3s.url = "github:nixos/nixpkgs/79b35bf0bda5cd110f856aa5b5b2c5ba4460dbf5";
 
-    vmetal.url = "github:jakeschurch/homelab/v1?dir=vmetal";
+    vmetal.url = "git+https://git.jakeschurch.com/jake/homelab?ref=v1&dir=vmetal";
     vmetal.inputs.nixpkgs.follows = "nixpkgs";
     vmetal.inputs.sops-nix.follows = "sops-nix";
 

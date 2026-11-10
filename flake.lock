@@ -234,21 +234,6 @@
         "type": "github"
       }
     },
-    "easykubenix_2": {
-      "locked": {
-        "lastModified": 1780954303,
-        "narHash": "sha256-pxg6zHRmxE1z4+Em1u7LJLDI5UQMiqL1y1eVyvOgwVI=",
-        "owner": "lillecarl",
-        "repo": "easykubenix",
-        "rev": "be2a497523e34eb021df272a618b6b3920364347",
-        "type": "github"
-      },
-      "original": {
-        "owner": "lillecarl",
-        "repo": "easykubenix",
-        "type": "github"
-      }
-    },
     "expert": {
       "inputs": {
         "beam-flakes": "beam-flakes",
@@ -318,22 +303,6 @@
       }
     },
     "flake-compat_4": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767039857,
-        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
-    "flake-compat_5": {
       "flake": false,
       "locked": {
         "lastModified": 1767039857,
@@ -564,7 +533,7 @@
     },
     "flake-utils_3": {
       "inputs": {
-        "systems": "systems_10"
+        "systems": "systems_9"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -593,7 +562,9 @@
           "vmetal",
           "nixpkgs"
         ],
-        "vmetal": "vmetal_2"
+        "vmetal": [
+          "vmetal"
+        ]
       },
       "locked": {
         "lastModified": 1794037991,
@@ -745,48 +716,12 @@
         "type": "github"
       }
     },
-    "import-tree_3": {
-      "locked": {
-        "lastModified": 1778781969,
-        "narHash": "sha256-Jjuz5CmSkur8KvLDoGa+vylEp+RkQtv4mt/qcMznpH0=",
-        "owner": "vic",
-        "repo": "import-tree",
-        "rev": "d321337efd0f23a9eb14a42adb7b2c29313ab274",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vic",
-        "repo": "import-tree",
-        "type": "github"
-      }
-    },
     "kubenix": {
       "inputs": {
         "flake-compat": "flake-compat_4",
         "nixpkgs": "nixpkgs_5",
         "systems": "systems_8",
         "treefmt": "treefmt"
-      },
-      "locked": {
-        "lastModified": 1778924636,
-        "narHash": "sha256-VP2XWSN2eBSAv6oij/z3pwLehivkZBX+OL7DgVmT2Ls=",
-        "owner": "hall",
-        "repo": "kubenix",
-        "rev": "0849b2ddb0df03190517b914d73cdcb142dfc2f8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hall",
-        "repo": "kubenix",
-        "type": "github"
-      }
-    },
-    "kubenix_2": {
-      "inputs": {
-        "flake-compat": "flake-compat_5",
-        "nixpkgs": "nixpkgs_6",
-        "systems": "systems_9",
-        "treefmt": "treefmt_2"
       },
       "locked": {
         "lastModified": 1778924636,
@@ -849,33 +784,9 @@
       "inputs": {
         "nixpkgs": [
           "vmetal",
-          "foundrybox",
-          "vmetal",
           "nixpkgs"
         ],
         "spectrum": "spectrum"
-      },
-      "locked": {
-        "lastModified": 1780686659,
-        "narHash": "sha256-g9wYtr1zu2eKH/KUHEXVLEI0e+WJDPVuVVFTVRNOqdk=",
-        "owner": "jakeschurch",
-        "repo": "microvm.nix",
-        "rev": "dd5a3ffc24e9eedec03800204847b21c7c37bd0d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jakeschurch",
-        "repo": "microvm.nix",
-        "type": "github"
-      }
-    },
-    "microvm_2": {
-      "inputs": {
-        "nixpkgs": [
-          "vmetal",
-          "nixpkgs"
-        ],
-        "spectrum": "spectrum_2"
       },
       "locked": {
         "lastModified": 1783966297,
@@ -1009,29 +920,6 @@
       }
     },
     "nix2container_2": {
-      "inputs": {
-        "nixpkgs": [
-          "vmetal",
-          "foundrybox",
-          "vmetal",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775487831,
-        "narHash": "sha256-2lguQpLPQaxpQCJjXhmEEAfabwsAhkP29Z7fgLzHARA=",
-        "owner": "nlewo",
-        "repo": "nix2container",
-        "rev": "76be9608a7f4d6c985d28b0e7be903ae2547df3e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nlewo",
-        "repo": "nix2container",
-        "type": "github"
-      }
-    },
-    "nix2container_3": {
       "inputs": {
         "nixpkgs": [
           "vmetal",
@@ -1242,22 +1130,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_6": {
-      "locked": {
-        "lastModified": 1772736753,
-        "narHash": "sha256-au/m3+EuBLoSzWUCb64a/MZq6QUtOV8oC0D9tY2scPQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "917fec990948658ef1ccd07cef2a1ef060786846",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "noctalia": {
       "inputs": {
         "nixpkgs": [
@@ -1436,46 +1308,7 @@
         "type": "github"
       }
     },
-    "sops-nix_2": {
-      "inputs": {
-        "nixpkgs": [
-          "vmetal",
-          "foundrybox",
-          "vmetal",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780547341,
-        "narHash": "sha256-Gq8KNx5A7hBB3uGJaj6eQfLDIz5YdLu92gqBcvHvoUo=",
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "rev": "9ed65852b6257fbeae4355bc24ecfea307ca759a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "type": "github"
-      }
-    },
     "spectrum": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1772189877,
-        "narHash": "sha256-i1p90Rgssb//aNiTDFq46ZG/fk3LmyRLChtp/9lddyA=",
-        "ref": "refs/heads/main",
-        "rev": "fe39e122d898f66e89ffa17d4f4209989ccb5358",
-        "revCount": 1255,
-        "type": "git",
-        "url": "https://spectrum-os.org/git/spectrum"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://spectrum-os.org/git/spectrum"
-      }
-    },
-    "spectrum_2": {
       "flake": false,
       "locked": {
         "lastModified": 1783694892,
@@ -1503,21 +1336,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "triplet",
-        "type": "github"
-      }
-    },
-    "systems_10": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
         "type": "github"
       }
     },
@@ -1635,15 +1453,14 @@
         "type": "github"
       },
       "original": {
-        "id": "systems",
-        "type": "indirect"
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     },
     "treefmt": {
       "inputs": {
         "nixpkgs": [
-          "vmetal",
-          "foundrybox",
           "vmetal",
           "kubenix",
           "nixpkgs"
@@ -1725,28 +1542,6 @@
         "type": "github"
       }
     },
-    "treefmt_2": {
-      "inputs": {
-        "nixpkgs": [
-          "vmetal",
-          "kubenix",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1772660329,
-        "narHash": "sha256-IjU1FxYqm+VDe5qIOxoW+pISBlGvVApRjiw/Y/ttJzY=",
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "rev": "3710e0e1218041bbad640352a0440114b1e10428",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
     "utils": {
       "inputs": {
         "systems": "systems_2"
@@ -1787,10 +1582,10 @@
       "inputs": {
         "easykubenix": "easykubenix",
         "foundrybox": "foundrybox",
-        "import-tree": "import-tree_3",
-        "kubenix": "kubenix_2",
-        "microvm": "microvm_2",
-        "nix2container": "nix2container_3",
+        "import-tree": "import-tree_2",
+        "kubenix": "kubenix",
+        "microvm": "microvm",
+        "nix2container": "nix2container_2",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -1800,54 +1595,19 @@
       },
       "locked": {
         "dir": "vmetal",
-        "lastModified": 1794238963,
-        "narHash": "sha256-AyPF0OEjoepqCNTbh3yIE+q9IwlrPem5qsDQiGATp3E=",
-        "owner": "jakeschurch",
-        "repo": "homelab",
-        "rev": "549d493d6b7f3d96e915f75eb3095a9d5b2910f9",
-        "type": "github"
+        "lastModified": 1794317581,
+        "narHash": "sha256-jz0dsFGImg4LRrlnBHZm3xKG74i7lEn9IGa6TU8apNk=",
+        "ref": "v1",
+        "rev": "742d1fbd64e740d018b8c55222e3d94ed6b42b67",
+        "revCount": 5348,
+        "type": "git",
+        "url": "https://git.jakeschurch.com/jake/homelab"
       },
       "original": {
         "dir": "vmetal",
-        "owner": "jakeschurch",
         "ref": "v1",
-        "repo": "homelab",
-        "type": "github"
-      }
-    },
-    "vmetal_2": {
-      "inputs": {
-        "easykubenix": "easykubenix_2",
-        "foundrybox": [
-          "vmetal",
-          "foundrybox"
-        ],
-        "import-tree": "import-tree_2",
-        "kubenix": "kubenix",
-        "microvm": "microvm",
-        "nix2container": "nix2container_2",
-        "nixpkgs": [
-          "vmetal",
-          "foundrybox",
-          "nixpkgs"
-        ],
-        "sops-nix": "sops-nix_2"
-      },
-      "locked": {
-        "dir": "vmetal",
-        "lastModified": 1781145717,
-        "narHash": "sha256-82bnJq7O+EnRwYS4VDiajb41MMg1ql51bJnl6/JyRBY=",
-        "owner": "jakeschurch",
-        "repo": "homelab",
-        "rev": "3f88d5df68d9358fc5b23c9452a022c9f0029199",
-        "type": "github"
-      },
-      "original": {
-        "dir": "vmetal",
-        "owner": "jakeschurch",
-        "ref": "v1",
-        "repo": "homelab",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.jakeschurch.com/jake/homelab"
       }
     },
     "wayland-vpets": {
