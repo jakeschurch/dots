@@ -10,7 +10,6 @@
     ./hammerspoon
     ./hyprland
     ./k9s
-    ./krita.nix
     ./neovim
     ./psql.nix
     ./ripgrep.nix
