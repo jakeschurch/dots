@@ -10,6 +10,19 @@
 
       pre-commit = {
         settings.hooks = {
+          check-added-large-files = {
+            enable = true;
+            # Wallpapers top out under 1 MiB; anything bigger is a mistake.
+            args = [ "--maxkb=1024" ];
+          };
+          check-case-conflicts.enable = true;
+          check-executables-have-shebangs.enable = true;
+          check-toml.enable = true;
+          check-yaml.enable = true;
+          convco.enable = true;
+          mixed-line-endings.enable = true;
+          selene.enable = true;
+          trim-trailing-whitespace.enable = true;
           check-merge-conflicts.enable = true;
           check-shebang-scripts-are-executable.enable = true;
           check-symlinks.enable = true;
@@ -25,7 +38,6 @@
           };
           pre-commit-hook-ensure-sops.enable = true;
           shellcheck.enable = true;
-          sort-simple-yaml.enable = true;
           statix.enable = true;
           treefmt.enable = true;
         };

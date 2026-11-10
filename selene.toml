@@ -1,0 +1,9 @@
+# Neovim (LuaJIT), Hammerspoon (Lua 5.4, 5.3-compatible) and Hyprland configs share one std:
+# Lua 5.3 base plus 5.1-only globals and each host's injected globals (dots.yml).
+std = "dots"
+
+[lints]
+# lazy.nvim / keymap specs mix positional and named keys by design.
+mixed_table = "allow"
+# _G is how Neovim configs expose functions to v:lua / keymap strings.
+global_usage = "allow"

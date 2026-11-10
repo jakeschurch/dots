@@ -1,0 +1,24 @@
+---
+base: lua53
+name: dots
+lua_versions:
+  - lua51
+  - lua52
+  - lua53
+globals:
+  # LuaJIT / Lua 5.1 globals Neovim code still uses.
+  unpack:
+    any: true
+  setfenv:
+    any: true
+  getfenv:
+    any: true
+  jit:
+    any: true
+  # Host-injected APIs: Neovim, Hammerspoon, Hyprland.
+  vim:
+    any: true
+  hs:
+    any: true
+  hl:
+    any: true
