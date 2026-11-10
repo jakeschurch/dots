@@ -203,7 +203,9 @@ in
       # workload (full thrash 2026-06-12/13 even after kube-reserved+zram).
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-5/k3s-server-5-rancher.img";
+      # ext4 p4, fully preallocated (same as server-4): btrfs p5 discard=async
+      # added fsync latency for etcd.
+      rancherImagePath = "/var/lib/microvms/k3s-server-5/k3s-server-5-rancher.img";
       nixStoreOverlayGiB = 8;
     };
 
@@ -218,7 +220,9 @@ in
       vcpu = 6;
       mem = 12288;
       disk = 40;
-      rancherImagePath = "/microvm-disks/k3s-server-6/k3s-server-6-rancher.img";
+      # ext4 p4, fully preallocated (same as server-4): btrfs p5 discard=async
+      # added fsync latency for etcd.
+      rancherImagePath = "/var/lib/microvms/k3s-server-6/k3s-server-6-rancher.img";
       nixStoreOverlayGiB = 8;
     };
 
