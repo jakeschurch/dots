@@ -78,6 +78,11 @@
 
     expert.url = "github:elixir-lang/expert";
 
+    argonaut = {
+      url = "github:darksworm/argonaut";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # k3s ONLY. Pinned separately from the flake-wide nixpkgs because
     # Kubernetes forbids skipping a control-plane minor, so the cluster's k3s
     # has to advance on its own schedule: tying it to `nixpkgs` would mean

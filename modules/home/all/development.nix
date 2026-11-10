@@ -115,6 +115,10 @@
         kubernetes-helm
         kubernetes-helmPlugins.helm-diff
         kubelogin-oidc
+        # Upstream tests need git + network in the sandbox; skip them.
+        (flake.inputs.argonaut.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs {
+          doCheck = false;
+        })
 
         lazydocker
         docker-credential-helpers
